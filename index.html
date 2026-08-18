@@ -155,20 +155,20 @@ input,select,textarea{font:inherit}
 #box{position:absolute;border:2.5px solid var(--or);background:rgba(16,185,129,.14);
   display:none;pointer-events:none;border-radius:3px;z-index:10}
 
-/* teststud.io Kırpma Üzerinde Yüzen Şık & Onay Paneli */
+/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
-  background:rgba(14,26,23,0.95);
-  backdrop-filter:blur(8px);
+  background:rgba(14,26,23,0.96);
+  backdrop-filter:blur(10px);
   border:1px solid #2C3A36;
   border-radius:14px;
   padding:8px 10px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.5);
-  z-index:50;
+  box-shadow:0 12px 32px rgba(0,0,0,0.55);
+  z-index:60;
   flex-direction:column;
   gap:6px;
-  min-width:260px;
+  min-width:270px;
 }
 .cfb-row{display:flex;align-items:center;gap:4px}
 .cfb-btn{
@@ -408,6 +408,7 @@ input,select,textarea{font:inherit}
 
   <div id="main">
 
+    <!-- 1. Ekran: Kaynak -->
     <div class="scr on" id="s-home">
       <div class="card" style="--accent:var(--cy)" onclick="pick('pdf')">
         <div class="ic" style="background:var(--cy)">📄</div>
@@ -441,6 +442,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
+    <!-- 2. Ekran: Görüntüleyici (Orijinal Tam Ekran Kırpma Alanı) -->
     <div class="scr" id="s-view">
       <div id="bar">
         <div class="brow" id="files"></div>
@@ -476,6 +478,7 @@ input,select,textarea{font:inherit}
           <div id="veil"></div>
           <div id="box"></div>
           
+          <!-- teststud.io Kırpma Üzerinde Yüzen Şık & Onay Paneli -->
           <div id="cropFloatingBar">
             <div class="cfb-row">
               <button onclick="setFloatingOpt('A')" class="cfb-btn on">A</button>
@@ -499,6 +502,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
+    <!-- Yapay Zeka -->
     <div class="scr" id="s-ai">
       <div class="aibody">
         <div class="modetabs">
@@ -589,6 +593,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
+    <!-- Kitaplık -->
     <div class="scr" id="s-lib">
       <div class="ltabs">
         <button class="lt on" id="lt-b" onclick="libTab('bank')">Bankam</button>
@@ -600,6 +605,7 @@ input,select,textarea{font:inherit}
       <div class="lfoot" id="lfoot"></div>
     </div>
 
+    <!-- 3. Ekran: Düzen & Ayarlar -->
     <div class="scr" id="s-set">
       <div id="editbar"></div>
 
@@ -728,6 +734,7 @@ input,select,textarea{font:inherit}
       <button class="ghost" style="margin-top:10px" onclick="saveBank()">💾 Soruları bankaya kaydet</button>
     </div>
 
+    <!-- 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı -->
     <div class="scr" id="s-prev">
       <div id="pbar">
         <button id="b-back" onclick="go('set')">← Ayarlar</button>
@@ -2094,14 +2101,14 @@ function headerImage(cfg){
   g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
   g.textBaseline='top';
 
-  // teststud.io 3 Parçalı Renkli Başlık Anteti
+  // teststud.io 3 Parçalı Renkli Başlık Anteti (Videodaki Birebir Şablon)
   if(cfg.template==='studio'){
     const pad=1.5*K;
     const leftW=c.width*0.25, rightW=c.width*0.30;
     const centerW=c.width - leftW - rightW - pad*2;
     const bh=c.height-2*K;
 
-    // Sol Blok (Ders)
+    // Sol Kutu (Ders & Sınıf)
     g.fillStyle='#064E3B';
     if(g.roundRect) g.roundRect(0, 0, leftW, bh, 1.5*K); else g.fillRect(0, 0, leftW, bh);
     g.fill();
@@ -2109,14 +2116,14 @@ function headerImage(cfg){
     g.textAlign='center';
     g.fillText((cfg.lesson||'KİMYA').toUpperCase(), leftW/2, bh/2 - 1.8*K);
 
-    // Orta Blok (Konu)
+    // Orta Kutu (Konu & Başlık)
     g.fillStyle='#047857';
     if(g.roundRect) g.roundRect(leftW+pad, 0, centerW, bh, 1.5*K); else g.fillRect(leftW+pad, 0, centerW, bh);
     g.fill();
     g.fillStyle='#FFFFFF'; g.font='800 '+(3.8*K)+'px Arial, sans-serif';
     g.fillText((cfg.topic||cfg.title||'KAZANIM TESTİ').toUpperCase(), leftW+pad + centerW/2, bh/2 - 1.9*K);
 
-    // Sağ Blok (Öğretmen)
+    // Sağ Kutu (Öğretmen / Yayın)
     g.fillStyle='#064E3B';
     if(g.roundRect) g.roundRect(leftW+centerW+pad*2, 0, rightW, bh, 1.5*K); else g.fillRect(leftW+centerW+pad*2, 0, rightW, bh);
     g.fill();
@@ -2528,6 +2535,26 @@ function drawBook(doc, book, first){
         doc.text('('+(it.q.pt||0)+' puan)', it.x+it.colW, it.y+4, {align:'right'});
       }
       doc.addImage(it.q.img,'JPEG',it.x,it.y+TITLE_H,it.w,it.h);
+
+      // PDF İçi Çözüm Izgarası Çizimi
+      if(it.sol>0 && CFG){
+        const solType = CFG.soltype || 'blank';
+        const sy = it.y+TITLE_H+it.h+1.5;
+        const sh = it.sol - 3;
+        if(solType === 'grid'){
+          doc.setDrawColor(203, 213, 225);
+          doc.setLineWidth(0.18);
+          for(let gx = it.x; gx <= it.x + it.colW; gx += 4){ doc.line(gx, sy, gx, sy + sh); }
+          for(let gy = sy; gy <= sy + sh; gy += 4){ doc.line(it.x, gy, it.x + it.colW, gy); }
+          doc.rect(it.x, sy, it.colW, sh);
+        } else if(solType === 'lined'){
+          doc.setDrawColor(203, 213, 225);
+          doc.setLineWidth(0.2);
+          for(let gy = sy + 5; gy <= sy + sh; gy += 6){ doc.line(it.x, gy, it.x + it.colW, gy); }
+          doc.rect(it.x, sy, it.colW, sh);
+        }
+      }
+
       if(it.sol>0 && CFG.sep!=='yok'){
         doc.setDrawColor(170); doc.setLineWidth(CFG.sep==='duz'?0.25:0.2);
         if(doc.setLineDashPattern && CFG.sep==='kesik') doc.setLineDashPattern([1.2,1.2],0);
@@ -2678,6 +2705,7 @@ async function sharePdf(){
 }
 </script>
 
+<!-- ════════ Öğretmen Paneli & İstatistik Modülü ════════ -->
 <script>
 (function(){
 "use strict";
