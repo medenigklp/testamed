@@ -121,7 +121,7 @@ input,select,textarea{font:inherit}
 #engine.ok{color:var(--gr)} #engine.err{color:var(--or)}
 #engine::before{content:'● ';font-size:8px;vertical-align:middle}
 
-/* 2. Ekran: Görüntüleyici & Tuval */
+/* 2. Ekran: Görüntüleyici & Tuval (teststud.io Kırpma Alanı) */
 #bar{background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0}
 .brow{display:flex;align-items:center;gap:6px;padding:7px 10px}
 .brow+.brow{border-top:1px solid var(--bg)}
@@ -147,37 +147,43 @@ input,select,textarea{font:inherit}
   font-weight:600;white-space:nowrap;flex-shrink:0;background:var(--w)}
 .ftab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
-#stage{flex:1;overflow:auto;background:#3A3F44;display:flex;justify-content:center;
-  align-items:flex-start;padding:10px;-webkit-overflow-scrolling:touch;position:relative}
-#wrap{position:relative;display:inline-block;line-height:0;box-shadow:0 4px 20px rgba(0,0,0,.3);background:#fff}
+#stage{flex:1;overflow:auto;background:#2B3833;display:flex;justify-content:center;
+  align-items:flex-start;padding:12px;-webkit-overflow-scrolling:touch;position:relative}
+#wrap{position:relative;display:inline-block;line-height:0;box-shadow:0 8px 30px rgba(0,0,0,.45);background:#fff}
 #page{display:block}
 
-/* Kırpma Perdesi ve Kutusu (Hata Düzeltildi) */
-#veil{position:absolute;inset:0;touch-action:none;cursor:crosshair;z-index:25}
+/* Kırpma Perdesi & Seçim Kutusu */
+#veil{
+  position:absolute;
+  inset:0;
+  touch-action:none !important;
+  cursor:crosshair;
+  z-index:20;
+}
 #box{
   position:absolute;
-  border:2.5px solid var(--or);
+  border:2.5px dashed var(--or);
   background:rgba(16,185,129,.18);
   display:none;
   pointer-events:none !important;
-  border-radius:4px;
-  z-index:15;
+  border-radius:3px;
+  z-index:25;
 }
 
-/* teststud.io Kırpma Üzerinde Yüzen Şık & Onay Paneli */
+/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
   background:rgba(14,26,23,0.96);
   backdrop-filter:blur(10px);
-  border:1px solid #2C3A36;
+  border:1.5px solid #2C3A36;
   border-radius:14px;
   padding:8px 10px;
-  box-shadow:0 12px 32px rgba(0,0,0,0.55);
+  box-shadow:0 12px 32px rgba(0,0,0,0.6);
   z-index:60;
   flex-direction:column;
   gap:6px;
-  min-width:270px;
+  min-width:280px;
 }
 .cfb-row{display:flex;align-items:center;gap:4px}
 .cfb-btn{
@@ -234,7 +240,6 @@ input,select,textarea{font:inherit}
 .f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(6,182,212,.13)}
 .f input::placeholder{color:#B5BEB9}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .chk{display:flex;align-items:center;gap:12px;background:var(--w);border:1px solid var(--line);
   border-radius:12px;padding:12px 13px;margin-bottom:7px;transition:.14s}
 .chk:active{background:var(--bg)}
@@ -306,7 +311,7 @@ input,select,textarea{font:inherit}
   font-size:12px;font-weight:600;line-height:1.5;margin-bottom:10px}
 #dl-view{display:none;width:100%;height:320px;border:none;border-radius:10px;
   margin-top:10px;background:#fff}
-#pv{flex:1;overflow:auto;background:#3A3F44;padding:12px;-webkit-overflow-scrolling:touch}
+#pv{flex:1;overflow:auto;background:#2B3833;padding:12px;-webkit-overflow-scrolling:touch}
 #pages{display:flex;flex-direction:column;gap:14px;align-items:center}
 .pg{position:relative;width:100%;max-width:520px;aspect-ratio:210/297;background:#fff;
   box-shadow:0 6px 26px rgba(0,0,0,.3);border-radius:3px;overflow:hidden}
@@ -326,9 +331,9 @@ input,select,textarea{font:inherit}
 .sol-grid-box{
   position:absolute;
   background-color:#ffffff;
-  background-image:linear-gradient(rgba(148,163,184,0.25) 1px, transparent 1px),
-                   linear-gradient(90deg, rgba(148,163,184,0.25) 1px, transparent 1px);
-  background-size:4mm 4mm;
+  background-image:linear-gradient(rgba(148,163,184,0.28) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(148,163,184,0.28) 1px, transparent 1px);
+  background-size:5mm 5mm;
   border:1px solid #cbd5e1;
   border-radius:4px;
 }
@@ -336,7 +341,7 @@ input,select,textarea{font:inherit}
   position:absolute;
   background-color:#ffffff;
   background-image:linear-gradient(rgba(148,163,184,0.3) 1px, transparent 1px);
-  background-size:100% 6mm;
+  background-size:100% 7mm;
   border:1px solid #cbd5e1;
   border-radius:4px;
 }
@@ -451,7 +456,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
-    <!-- 2. Ekran: Görüntüleyici (Orijinal Tam Ekran Kırpma Alanı) -->
+    <!-- 2. Ekran: Görüntüleyici & Tuval -->
     <div class="scr" id="s-view">
       <div id="bar">
         <div class="brow" id="files"></div>
@@ -499,7 +504,7 @@ input,select,textarea{font:inherit}
               <button onclick="cancelFloatingCrop()" class="cfb-cancel" title="İptal"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="cfb-row">
-              <input type="text" id="floatingCustomText" placeholder="Özel: Cevap yaz..." style="background:#1E2824; border:1px solid #2C3A36; border-radius:6px; color:#fff; font-size:11px; padding:3px 6px; flex:1; outline:none;"/>
+              <input type="text" id="floatingCustomText" placeholder="Özel: Cevap yaz..." style="background:#1E2824; border:1px solid #2C3A36; border-radius:6px; color:#fff; font-size:11px; padding:4px 8px; flex:1; outline:none;"/>
             </div>
           </div>
 
@@ -886,7 +891,7 @@ function drawFiles(){
 function quality(){ return Math.min(3,(window.devicePixelRatio||1)*1.5); }
 
 async function fitPage(){
-  const avail=$('stage').clientWidth-20;
+  const avail=$('stage').clientWidth-24;
   const rot=active.rot||0, swap=(rot===90||rot===270);
   if(active.kind==='pdf'){
     const p=await active.pdf.getPage(pageNo);
@@ -974,7 +979,7 @@ function mode(){
   hideBox();
 }
 
-/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma — Hata Düzeltildi) */
+/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma — Hatasızlaştırıldı) */
 const veil=$('veil'), boxEl=$('box');
 let drag=null, pinch=null;
 function hideBox(){ boxEl.style.display='none'; }
@@ -1208,7 +1213,7 @@ function showFloatingCropBar(x, y){
   const bar = $('cropFloatingBar');
   const wrap = $('wrap').getBoundingClientRect();
   bar.style.display = 'flex';
-  bar.style.left = Math.max(10, Math.min(wrap.width - 280, x)) + 'px';
+  bar.style.left = Math.max(10, Math.min(wrap.width - 290, x)) + 'px';
   bar.style.top = (y + 8) + 'px';
   setFloatingOpt('A');
   $('floatingCustomText').value = '';
@@ -2128,7 +2133,7 @@ function headerImage(cfg){
   g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
   g.textBaseline='top';
 
-  // teststud.io 3 Parçalı Renkli Başlık Anteti
+  // teststud.io 3 Parçalı Renkli Başlık Anteti (Videodaki Birebir Dizilim)
   if(cfg.template==='studio'){
     const pad=1.5*K;
     const leftW=c.width*0.25, rightW=c.width*0.30;
@@ -2509,7 +2514,7 @@ const QR=(function(){
         const row=up?size-1-k:k;
         for(let c=0;c<2;c++){const cc=col-c;
           if(m[row][cc]===null){let v=bi<bytes.length*8?bit():0;
-            if((row+cc)%2===0)v^=1; // mask 0
+            if((row+cc)%2===0)v^=1;
             m[row][cc]=v;}}
       }
       up=!up;
@@ -2591,8 +2596,8 @@ function drawBook(doc, book, first){
       }
     });
 
-    const nc=Math.max(1,CFG.cols||1);
-    if(nc>1 && (CFG.vsep!=='yok' || CFG.gutter)){
+    const nc=Math.max(1,(CFG&&CFG.cols)||1);
+    if(nc>1 && (CFG.vsep!=='yok'||CFG.gutter)){
       const cw=colWidthMm(CFG);
       const top=(i===0)?PAGE.m+headerH(CFG):PAGE.m;
       const bot=PAGE.h-PAGE.m-4;
