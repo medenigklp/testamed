@@ -2462,6 +2462,33 @@ function liveDrop(e){
   recalcAndRedrawPages(); drawRows(); drawTray(); renderPool();
   toast('Soru taşındı');
 }
+
+function initSidePanel(){
+  const c=$('tpl-clrs'); if(!c) return; c.innerHTML='';
+  TEMPLATES.forEach(t=>{
+    const b=document.createElement('button'); b.className='clr'; b.title=t.name;
+    b.style.setProperty('--c1',t.c1); b.style.setProperty('--c2',t.c2);
+    if((window._selTpl||'default')===t.id) b.classList.add('on');
+    b.onclick=()=>{ window._selTpl=t.id; initSidePanel(); recalcAndRedrawPages(); };
+    c.appendChild(b);
+  });
+  const fb=$('font-btns'); if(fb) fb.querySelectorAll('button').forEach(b=>{
+    b.classList.toggle('on', (CFG&&CFG.font||'default')===b.dataset.f);
+    b.onclick=()=>{ $('f-font').value=b.dataset.f; recalcAndRedrawPages(); };
+  });
+  const cb=$('col-btns'); if(cb) cb.querySelectorAll('button').forEach(b=>{
+    b.classList.toggle('on', parseInt(b.dataset.c)===(CFG&&CFG.cols||2));
+  });
+  const sb=$('sol-btns'); if(sb) sb.querySelectorAll('button').forEach(b=>{
+    b.classList.toggle('on', parseInt(b.dataset.s)===(CFG&&CFG.sol||24));
+  });
+  const lp=$('lo-port'); if(lp) lp.classList.toggle('on', (CFG&&CFG.orient)!=='landscape');
+  const ll=$('lo-land'); if(ll) ll.classList.toggle('on', (CFG&&CFG.orient)==='landscape');
+}
+function setLO(v){ $('f-orient').value=v; recalcAndRedrawPages(); const lp=$('lo-port'), ll=$('lo-land'); if(lp)lp.classList.toggle('on',v!=='landscape'); if(ll)ll.classList.toggle('on',v==='landscape'); }
+function setCols(n){ $('f-cols').value=n; recalcAndRedrawPages(); const cb=$('col-btns'); if(cb) cb.querySelectorAll('button').forEach(b=>b.classList.toggle('on', parseInt(b.dataset.c)===n)); }
+function setSol(n){ $('f-sol').value=n; recalcAndRedrawPages(); const sb=$('sol-btns'); if(sb) sb.querySelectorAll('button').forEach(b=>b.classList.toggle('on', parseInt(b.dataset.s)===n)); }
+
 function recalcAndRedrawPages(){
   if(BOOKS.length && BOOKS[currentBookIdx]){
     BOOKS[currentBookIdx].pages = layout(BOOKS[currentBookIdx].list, CFG);
