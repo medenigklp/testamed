@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#10B981"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="testamed"/>
-<title>testamed</title>
+<title>testamed — Soru & Test Dizgi Stüdyosu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&display=swap"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap"/>
 <script>
 (function(){
   const url='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="26" fill="%2310B981"/><text x="50%" y="68%" font-family="sans-serif" font-weight="900" font-size="58" fill="%23042f2e" text-anchor="middle">t</text></svg>';
@@ -121,7 +121,7 @@ input,select,textarea{font:inherit}
 #engine.ok{color:var(--gr)} #engine.err{color:var(--or)}
 #engine::before{content:'● ';font-size:8px;vertical-align:middle}
 
-/* 2. Ekran: Görüntüleyici (Orijinal Tam Ekran Kırpma) */
+/* 2. Ekran: Görüntüleyici & Tuval */
 #bar{background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0}
 .brow{display:flex;align-items:center;gap:6px;padding:7px 10px}
 .brow+.brow{border-top:1px solid var(--bg)}
@@ -148,12 +148,51 @@ input,select,textarea{font:inherit}
 .ftab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
 #stage{flex:1;overflow:auto;background:#3A3F44;display:flex;justify-content:center;
-  align-items:flex-start;padding:10px;-webkit-overflow-scrolling:touch}
+  align-items:flex-start;padding:10px;-webkit-overflow-scrolling:touch;position:relative}
 #wrap{position:relative;display:inline-block;line-height:0;box-shadow:0 4px 20px rgba(0,0,0,.3);background:#fff}
 #page{display:block}
 #veil{position:absolute;inset:0;touch-action:none}
 #box{position:absolute;border:2.5px solid var(--or);background:rgba(16,185,129,.14);
-  display:none;pointer-events:none;border-radius:3px}
+  display:none;pointer-events:none;border-radius:3px;z-index:10}
+
+/* teststud.io Kırpma Üzerinde Yüzen Şık & Onay Paneli */
+#cropFloatingBar{
+  position:absolute;
+  display:none;
+  background:rgba(14,26,23,0.95);
+  backdrop-filter:blur(8px);
+  border:1px solid #2C3A36;
+  border-radius:14px;
+  padding:8px 10px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.5);
+  z-index:50;
+  flex-direction:column;
+  gap:6px;
+  min-width:260px;
+}
+.cfb-row{display:flex;align-items:center;gap:4px}
+.cfb-btn{
+  flex:1;
+  background:#2C3A36;
+  color:#fff;
+  font-family:var(--disp);
+  font-size:12px;
+  font-weight:700;
+  padding:6px 0;
+  border-radius:8px;
+  text-align:center;
+  transition:.12s;
+}
+.cfb-btn.on{background:var(--or);color:#042f2e;font-weight:900}
+.cfb-ok{
+  width:32px;height:30px;background:var(--or);color:#042f2e;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;
+  box-shadow:0 2px 8px rgba(16,185,129,.3);
+}
+.cfb-cancel{
+  width:30px;height:30px;background:rgba(220,38,38,0.85);color:#fff;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+}
 
 #tray{background:var(--w);border-top:1px solid var(--line);padding:8px 12px;flex-shrink:0;
   padding-bottom:calc(8px + var(--safe))}
@@ -186,6 +225,7 @@ input,select,textarea{font:inherit}
 .f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(6,182,212,.13)}
 .f input::placeholder{color:#B5BEB9}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .chk{display:flex;align-items:center;gap:12px;background:var(--w);border:1px solid var(--line);
   border-radius:12px;padding:12px 13px;margin-bottom:7px;transition:.14s}
 .chk:active{background:var(--bg)}
@@ -273,20 +313,39 @@ input,select,textarea{font:inherit}
   letter-spacing:.04em}
 .pg .pf{position:absolute;right:5%;bottom:2%;font-size:9px;color:#b0b0b0;font-family:var(--mono)}
 
-/* A4 Üzerinde Doğrudan Soru Değiştirme / Taşıma Butonları */
-.q-live-wrap{
+/* teststud.io Kareli & Çizgili Çözüm Alanı Izgaraları */
+.sol-grid-box{
+  position:absolute;
+  background-color:#ffffff;
+  background-image:linear-gradient(rgba(148,163,184,0.25) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(148,163,184,0.25) 1px, transparent 1px);
+  background-size:4mm 4mm;
+  border:1px solid #cbd5e1;
+  border-radius:4px;
+}
+.sol-lined-box{
+  position:absolute;
+  background-color:#ffffff;
+  background-image:linear-gradient(rgba(148,163,184,0.3) 1px, transparent 1px);
+  background-size:100% 6mm;
+  border:1px solid #cbd5e1;
+  border-radius:4px;
+}
+
+/* Canlı A4 Üzerinden Soru Taşıma & Çıkarma */
+.q-live-box{
   position:absolute;
   border-radius:4px;
   user-select:none;
   transition:box-shadow .12s, outline .12s;
 }
-.q-live-wrap:hover{
+.q-live-box:hover{
   outline:2px dashed var(--or);
   background:rgba(16,185,129,.03);
 }
 .q-live-ctrls{
   position:absolute;
-  top:-11px;
+  top:-12px;
   right:0;
   display:none;
   align-items:center;
@@ -294,10 +353,10 @@ input,select,textarea{font:inherit}
   background:var(--ink);
   padding:2px 4px;
   border-radius:6px;
-  box-shadow:0 3px 10px rgba(0,0,0,.3);
-  z-index:20;
+  box-shadow:0 3px 10px rgba(0,0,0,.35);
+  z-index:30;
 }
-.q-live-wrap:hover .q-live-ctrls{
+.q-live-box:hover .q-live-ctrls{
   display:flex;
 }
 .ql-btn{
@@ -349,7 +408,6 @@ input,select,textarea{font:inherit}
 
   <div id="main">
 
-    <!-- 1. Ekran: Kaynak -->
     <div class="scr on" id="s-home">
       <div class="card" style="--accent:var(--cy)" onclick="pick('pdf')">
         <div class="ic" style="background:var(--cy)">📄</div>
@@ -375,15 +433,14 @@ input,select,textarea{font:inherit}
         <b>Nasıl çalışır?</b>
         <ol>
           <li>Sayfayı büyüt, parmağınla veya fareyle sorunun etrafına kutu çiz</li>
-          <li>Seçtiklerin alt şeritte birikir</li>
-          <li>Sırala, puanla, cevabını işaretle</li>
+          <li>Açılan yüzen panelden şıkkı seç ve onayla</li>
+          <li>Sırala, puanla, cevap anahtarını al</li>
           <li>A4 test olarak yazdır veya PDF kaydet</li>
         </ol>
         <div id="engine">PDF motoru yükleniyor…</div>
       </div>
     </div>
 
-    <!-- 2. Ekran: Görüntüleyici (Orijinal Tam Ekran Kırpma Alanı) -->
     <div class="scr" id="s-view">
       <div id="bar">
         <div class="brow" id="files"></div>
@@ -414,7 +471,27 @@ input,select,textarea{font:inherit}
         <button class="bb" onclick="setFine(0)">Sıfırla</button>
       </div>
       <div id="stage">
-        <div id="wrap"><canvas id="page"></canvas><div id="veil"></div><div id="box"></div></div>
+        <div id="wrap">
+          <canvas id="page"></canvas>
+          <div id="veil"></div>
+          <div id="box"></div>
+          
+          <div id="cropFloatingBar">
+            <div class="cfb-row">
+              <button onclick="setFloatingOpt('A')" class="cfb-btn on">A</button>
+              <button onclick="setFloatingOpt('B')" class="cfb-btn">B</button>
+              <button onclick="setFloatingOpt('C')" class="cfb-btn">C</button>
+              <button onclick="setFloatingOpt('D')" class="cfb-btn">D</button>
+              <button onclick="setFloatingOpt('E')" class="cfb-btn">E</button>
+              <button onclick="confirmFloatingCrop()" class="cfb-ok" title="Havuza Ekle"><i class="fa-solid fa-check"></i></button>
+              <button onclick="cancelFloatingCrop()" class="cfb-cancel" title="İptal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="cfb-row">
+              <input type="text" id="floatingCustomText" placeholder="Özel: Cevap yaz..." style="background:#1E2824; border:1px solid #2C3A36; border-radius:6px; color:#fff; font-size:11px; padding:3px 6px; flex:1; outline:none;"/>
+            </div>
+          </div>
+
+        </div>
       </div>
       <div id="tray">
         <h3>Seçilen sorular <span id="cnt">0</span></h3>
@@ -422,7 +499,6 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
-    <!-- Yapay Zeka -->
     <div class="scr" id="s-ai">
       <div class="aibody">
         <div class="modetabs">
@@ -513,7 +589,6 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
-    <!-- Kitaplık -->
     <div class="scr" id="s-lib">
       <div class="ltabs">
         <button class="lt on" id="lt-b" onclick="libTab('bank')">Bankam</button>
@@ -525,21 +600,41 @@ input,select,textarea{font:inherit}
       <div class="lfoot" id="lfoot"></div>
     </div>
 
-    <!-- 3. Ekran: Düzen & Ayarlar -->
     <div class="scr" id="s-set">
       <div id="editbar"></div>
-      <div class="sec">Sınav künyesi</div>
-      <div class="f"><label>Okul</label><input id="f-school" placeholder="Okul adı"/></div>
+
+      <div class="sec">Şablon Stili (teststud.io)</div>
       <div class="r2">
-        <div class="f"><label>Ders</label><input id="f-lesson" value="Kimya"/></div>
+        <div class="f">
+          <label>Başlık Şablonu</label>
+          <select id="f-template" onchange="preview()">
+            <option value="classic">Klasik MEB Anteti</option>
+            <option value="studio" selected>teststud.io 3'lü Renkli Başlık</option>
+            <option value="minimal">Minimal Çizgili</option>
+          </select>
+        </div>
+        <div class="f">
+          <label>Çözüm Alanı Deseni</label>
+          <select id="f-soltype" onchange="preview()">
+            <option value="blank" selected>Düz Çerçeveli Boşluk</option>
+            <option value="grid">Kareli Defter Izgarası (5x5 mm)</option>
+            <option value="lined">Çizgili Defter Alanı</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sec">Sınav künyesi</div>
+      <div class="f"><label>Okul / Kurum Adı</label><input id="f-school" placeholder="Okul veya Yayın Adı"/></div>
+      <div class="r2">
+        <div class="f"><label>Ders (Sol Kutu)</label><input id="f-lesson" value="Kimya"/></div>
         <div class="f"><label>Sınıf</label><input id="f-class" placeholder="11-A"/></div>
       </div>
       <div class="r2">
-        <div class="f"><label>Konu</label><input id="f-topic" placeholder="Mol Kavramı"/></div>
-        <div class="f"><label>Öğretmen</label><input id="f-teacher" placeholder="Ad Soyad"/></div>
+        <div class="f"><label>Konu (Orta Kutu)</label><input id="f-topic" placeholder="Kimyasal Türler Arası Etkileşimler"/></div>
+        <div class="f"><label>Öğretmen (Sağ Kutu)</label><input id="f-teacher" placeholder="Ad Soyad / Branş"/></div>
       </div>
       <div class="r2">
-        <div class="f"><label>Başlık</label>
+        <div class="f"><label>Başlık / Tür</label>
           <select id="f-kind">
             <option>YAZILI SINAV</option><option selected>TEST</option><option>QUIZ</option>
             <option>ÖDEV</option><option>A KİTAPÇIĞI</option><option>B KİTAPÇIĞI</option>
@@ -591,23 +686,21 @@ input,select,textarea{font:inherit}
         </div>
       </div>
       <div class="f"><label>Sütun arasına yazı (isteğe bağlı)</label>
-        <input id="f-gutter" placeholder="Örn. A. Yılmaz · testamed"/>
+        <input id="f-gutter" placeholder="Örn. testamed yayınları"/>
       </div>
       <div class="f"><label>Her sorudan sonra çözüm boşluğu</label>
         <select id="f-sol">
           <option value="0">Yok — en çok soru sığar</option>
-          <option value="8">Çok dar — 8 mm</option>
-          <option value="12" selected>Dar — 12 mm</option>
-          <option value="20">Orta — 20 mm</option>
-          <option value="32">Geniş — 32 mm</option>
-          <option value="45">Çok geniş — 45 mm</option>
+          <option value="12">Dar — 12 mm</option>
+          <option value="24" selected>Orta (teststud.io) — 24 mm</option>
+          <option value="40">Geniş — 40 mm</option>
         </select>
       </div>
       <div class="chk"><input type="checkbox" id="f-info" checked/><label for="f-info">Ad Soyad / Sınıf / Puan tablosu</label></div>
       <div class="chk"><input type="checkbox" id="f-pts"/><label for="f-pts">Her soruda puan yazsın</label></div>
       <div class="chk"><input type="checkbox" id="f-key"/><label for="f-key">Sona cevap anahtarı sayfası</label></div>
 
-      <div class="sec">Kitapçık</div>
+      <div class="sec">Kitapçık & Ekler</div>
       <div class="f"><label>Kaç kitapçık</label>
         <select id="f-book">
           <option value="1" selected>Tek kitapçık</option>
@@ -635,7 +728,6 @@ input,select,textarea{font:inherit}
       <button class="ghost" style="margin-top:10px" onclick="saveBank()">💾 Soruları bankaya kaydet</button>
     </div>
 
-    <!-- 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı -->
     <div class="scr" id="s-prev">
       <div id="pbar">
         <button id="b-back" onclick="go('set')">← Ayarlar</button>
@@ -682,6 +774,7 @@ const $=id=>document.getElementById(id);
 let docs=[], active=null, pageNo=1, scale=1, fit=1;
 let qs=[], selectMode=true, ratio=1, engineReady=false;
 let screen='home', html='', editingTest=null, currentBookIdx=0;
+let pendingCropData=null, pendingCropOpt='A';
 const FRAMED=(function(){try{return window.self!==window.top;}catch(_){return true;}})();
 
 function toast(msg,isErr){
@@ -865,7 +958,7 @@ function mode(){
   hideBox();
 }
 
-/* Alan Seçimi (Mobilde Dokunmatik & Masaüstünde Fareyle Elle Soru Kırpma) */
+/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma) */
 const veil=$('veil'), boxEl=$('box');
 let drag=null, pinch=null;
 function hideBox(){ boxEl.style.display='none'; }
@@ -879,6 +972,7 @@ veil.addEventListener('pointerdown',e=>{
   veil.setPointerCapture(e.pointerId);
   drag=rel(e);
   boxEl.style.cssText='display:block;left:'+drag.x+'px;top:'+drag.y+'px;width:0;height:0';
+  hideFloatingCropBar();
 });
 veil.addEventListener('pointermove',e=>{
   if(!drag) return;
@@ -893,8 +987,8 @@ veil.addEventListener('pointerup',e=>{
   const p=rel(e);
   const x=Math.min(drag.x,p.x), y=Math.min(drag.y,p.y);
   const w=Math.abs(p.x-drag.x), h=Math.abs(p.y-drag.y);
-  drag=null; hideBox();
-  if(w<24||h<24) return;
+  drag=null;
+  if(w<24||h<24){ hideBox(); return; }
   grab(x,y,w,h);
 });
 veil.addEventListener('pointercancel',()=>{drag=null;hideBox();});
@@ -1053,7 +1147,7 @@ async function rotate(){
   toast('90° döndürüldü');
 }
 
-/* Soru Kırpma */
+/* Soru Kırpma & teststud.io Yüzen Panel Tetikleyici */
 function grab(x,y,w,h){
   const cv=$('page');
   const sx=x*ratio, sy=y*ratio, sw=w*ratio, sh=h*ratio;
@@ -1065,12 +1159,63 @@ function grab(x,y,w,h){
   c.imageSmoothingQuality='high';
   c.fillStyle='#fff'; c.fillRect(0,0,t.width,t.height);
   c.drawImage(cv,sx,sy,sw,sh,PAD,PAD,dw,dh);
-  qs.push({id:'q_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), 
-           img:t.toDataURL('image/jpeg',.88),
-           w:t.width, h:t.height, pt:0, ans:''});
-  drawTray();
-  toast('Soru kırpıldı');
+
+  pendingCropData = {
+    img: t.toDataURL('image/jpeg',.88),
+    w: t.width,
+    h: t.height
+  };
+
+  // Yüzen Paneli Kırpma Alanının Altında Aç (Videodaki teststud.io formatı)
+  showFloatingCropBar(x, y + h);
 }
+
+function showFloatingCropBar(x, y){
+  const bar = $('cropFloatingBar');
+  const wrap = $('wrap').getBoundingClientRect();
+  bar.style.display = 'flex';
+  bar.style.left = Math.max(10, Math.min(wrap.width - 270, x)) + 'px';
+  bar.style.top = (y + 10) + 'px';
+  setFloatingOpt('A');
+  $('floatingCustomText').value = '';
+}
+
+function hideFloatingCropBar(){
+  $('cropFloatingBar').style.display = 'none';
+  hideBox();
+}
+
+function setFloatingOpt(opt){
+  pendingCropOpt = opt;
+  document.querySelectorAll('.cfb-btn').forEach(b => {
+    b.classList.toggle('on', b.innerText === opt);
+  });
+}
+
+function confirmFloatingCrop(){
+  if(!pendingCropData) return;
+  const custom = $('floatingCustomText').value.trim();
+  const finalAns = custom || pendingCropOpt;
+
+  qs.push({
+    id: 'q_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    img: pendingCropData.img,
+    w: pendingCropData.w,
+    h: pendingCropData.h,
+    pt: 0,
+    ans: finalAns
+  });
+
+  drawTray();
+  hideFloatingCropBar();
+  toast('Soru eklendi (' + finalAns + ')');
+}
+
+function cancelFloatingCrop(){
+  pendingCropData = null;
+  hideFloatingCropBar();
+}
+
 function undo(){ if(qs.length){ qs.pop(); drawTray(); } }
 function drawTray(){
   const t=$('thumbs'); t.innerHTML='';
@@ -1091,7 +1236,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-sol','f-max','f-book'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-sol','f-max','f-book','f-template','f-soltype'];
 function loadTmpl(){
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
@@ -1123,7 +1268,7 @@ function fillSettings(){
   drawEditBar();
   if(!$('f-date').value) $('f-date').value=new Date().toLocaleDateString('tr-TR');
   spread();
-  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill'].forEach(id=>{
+  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype'].forEach(id=>{
     const e=$(id); if(e && !e._w){ e._w=1;
       e.addEventListener('change',()=>{ preview(); saveTmpl(); });
       e.addEventListener('input',saveTmpl);
@@ -1812,6 +1957,8 @@ function openTest(t,edit){
     set('f-topic',c.topic);set('f-teacher',c.teacher);set('f-kind',c.kind);
     set('f-cols',c.cols);set('f-sol',c.sol);set('f-max',c.max);
     set('f-book',c.book);set('f-sep',c.sep);set('f-vsep',c.vsep);set('f-gutter',c.gutter);set('f-fill',c.fill);
+    set('f-template',c.template||'studio');
+    set('f-soltype',c.soltype||'blank');
     $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key;
     $('f-optic').checked=!!c.optic;$('f-qr').checked=!!c.qr;
   }
@@ -1825,7 +1972,11 @@ function openTest(t,edit){
 const PAGE={w:210,h:297,m:13};
 const GAP=8, TITLE_H=5, AFTER=4, SOFT_K=0.88;
 
-function headerH(cfg){ return cfg.info?30:17; }
+function headerH(cfg){ 
+  if(cfg.template==='minimal') return 14;
+  if(cfg.template==='studio') return 20;
+  return cfg.info?30:17; 
+}
 function slotFix(cfg){ return TITLE_H+cfg.sol+AFTER; }
 function availOf(i,cfg){ return (PAGE.h-PAGE.m) - (i===0 ? PAGE.m+headerH(cfg) : PAGE.m); }
 function topOf(i,cfg){ return i===0 ? PAGE.m+headerH(cfg) : PAGE.m; }
@@ -1943,6 +2094,55 @@ function headerImage(cfg){
   g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
   g.textBaseline='top';
 
+  // teststud.io 3 Parçalı Renkli Başlık Anteti
+  if(cfg.template==='studio'){
+    const pad=1.5*K;
+    const leftW=c.width*0.25, rightW=c.width*0.30;
+    const centerW=c.width - leftW - rightW - pad*2;
+    const bh=c.height-2*K;
+
+    // Sol Blok (Ders)
+    g.fillStyle='#064E3B';
+    if(g.roundRect) g.roundRect(0, 0, leftW, bh, 1.5*K); else g.fillRect(0, 0, leftW, bh);
+    g.fill();
+    g.fillStyle='#34D399'; g.font='800 '+(3.6*K)+'px Arial, sans-serif';
+    g.textAlign='center';
+    g.fillText((cfg.lesson||'KİMYA').toUpperCase(), leftW/2, bh/2 - 1.8*K);
+
+    // Orta Blok (Konu)
+    g.fillStyle='#047857';
+    if(g.roundRect) g.roundRect(leftW+pad, 0, centerW, bh, 1.5*K); else g.fillRect(leftW+pad, 0, centerW, bh);
+    g.fill();
+    g.fillStyle='#FFFFFF'; g.font='800 '+(3.8*K)+'px Arial, sans-serif';
+    g.fillText((cfg.topic||cfg.title||'KAZANIM TESTİ').toUpperCase(), leftW+pad + centerW/2, bh/2 - 1.9*K);
+
+    // Sağ Blok (Öğretmen)
+    g.fillStyle='#064E3B';
+    if(g.roundRect) g.roundRect(leftW+centerW+pad*2, 0, rightW, bh, 1.5*K); else g.fillRect(leftW+centerW+pad*2, 0, rightW, bh);
+    g.fill();
+    g.fillStyle='#ECFDF5'; g.font='700 '+(3.2*K)+'px Arial, sans-serif';
+    g.fillText(cfg.teacher||cfg.school||'testamed', leftW+centerW+pad*2 + rightW/2, bh/2 - 1.6*K);
+
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.92);
+  }
+
+  if(cfg.template==='minimal'){
+    g.fillStyle='#111';
+    g.font='700 '+(3.8*K)+'px Arial, sans-serif';
+    g.fillText((cfg.title||'SINAV').toUpperCase(), 0, 1.5*K);
+
+    g.fillStyle='#666';
+    g.font=''+(3.0*K)+'px Arial, sans-serif';
+    const sub=(cfg.lesson||'')+' · '+(cfg.date||'');
+    g.fillText(sub, c.width - g.measureText(sub).width, 2*K);
+
+    g.fillStyle='#111';
+    g.fillRect(0, c.height-1*K, c.width, 1*K);
+    return c.toDataURL('image/jpeg',0.92);
+  }
+
+  // Klasik MEB Formatı
   let y=2*K;
   if(cfg.school){
     g.fillStyle='#111'; g.font='700 '+(4.2*K)+'px Arial, sans-serif';
@@ -2006,7 +2206,7 @@ function drawBookPick(active){
   });
 }
 
-/* ════════ A4 Önizleme & Soru Yerini Değiştirme Fonksiyonları ════════ */
+/* A4 Üzerinden Soru Taşıma / Silme Fonksiyonları */
 function recalcAndRedrawPages(){
   if(BOOKS.length && BOOKS[currentBookIdx]){
     BOOKS[currentBookIdx].pages = layout(BOOKS[currentBookIdx].list, CFG);
@@ -2034,7 +2234,7 @@ function moveQuestionInPreview(qId, dir){
     drawTray();
   }
   recalcAndRedrawPages();
-  toast('Sıralama güncellendi');
+  toast('Soru sırası güncellendi');
 }
 
 function removeQuestionFromPreview(qId){
@@ -2065,7 +2265,7 @@ function drawPages(){
 
     pg.items.forEach(it=>{
       const qBox = document.createElement('div');
-      qBox.className = 'q-live-wrap';
+      qBox.className = 'q-live-box';
       
       const boxW = it.w;
       const boxH = TITLE_H + it.h + (it.sol || 0);
@@ -2085,7 +2285,23 @@ function drawPages(){
       im.style.cssText = `left:0; top:${pct(TITLE_H, boxH)}; width:100%;`;
       qBox.appendChild(im);
 
-      // A4 Üzerinden Hızlı Taşıma / Silme Butonları
+      // teststud.io Kareli / Çizgili Çözüm Alanı
+      if(it.sol > 0 && CFG){
+        const solType = CFG.soltype || 'blank';
+        if(solType === 'grid'){
+          const sg = document.createElement('div');
+          sg.className = 'sol-grid-box';
+          sg.style.cssText = `left:0; top:${pct(TITLE_H + it.h + 2, boxH)}; width:100%; height:${pct(it.sol - 4, boxH)};`;
+          qBox.appendChild(sg);
+        } else if(solType === 'lined'){
+          const sl = document.createElement('div');
+          sl.className = 'sol-lined-box';
+          sl.style.cssText = `left:0; top:${pct(TITLE_H + it.h + 2, boxH)}; width:100%; height:${pct(it.sol - 4, boxH)};`;
+          qBox.appendChild(sl);
+        }
+      }
+
+      // Canlı A4 Üzerinden Taşıma & Silme Kontrolleri
       const ctrls = document.createElement('div');
       ctrls.className = 'q-live-ctrls';
       ctrls.innerHTML = `
@@ -2154,6 +2370,8 @@ function cfgNow(){
     sol:parseInt($('f-sol').value)||0, max:parseInt($('f-max').value)||0,
     sep:$('f-sep').value, vsep:$('f-vsep').value, gutter:$('f-gutter').value.trim(),
     fill:$('f-fill').value,
+    template:$('f-template').value||'studio',
+    soltype:$('f-soltype').value||'blank',
     info:$('f-info').checked, pts:$('f-pts').checked, key:$('f-key').checked,
     book:parseInt($('f-book').value)||1, optic:$('f-optic').checked, qr:$('f-qr').checked
   };
@@ -2460,7 +2678,6 @@ async function sharePdf(){
 }
 </script>
 
-<!-- ════════ Öğretmen Paneli & İstatistik Modülü ════════ -->
 <script>
 (function(){
 "use strict";
