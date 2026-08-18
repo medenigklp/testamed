@@ -3,54 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>testamed — PDF Soru Kesici & Dizgi Stüdyosu</title>
+  <title>testamed — Soru Seçimli Sınav Stüdyosu</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- PDF.js Motoru (PDF Dosyalarını Tarayıcıda Açmak İçin) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- KaTeX Formül Desteği -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   <!-- FontAwesome İkonlar -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* A4 Baskı / Yazdırma Ayarları */
     @media print {
       body { background: white !important; color: black !important; padding: 0 !important; }
       .no-print { display: none !important; }
-      .print-area { display: block !important; width: 100% !important; margin: 0 !important; padding: 10mm 12mm !important; box-shadow: none !important; border: none !important; }
-      .exam-columns { columns: 2; column-gap: 30px; column-rule: 1px solid #cbd5e1; }
-      .exam-q-card { break-inside: avoid; page-break-inside: avoid; margin-bottom: 20px; }
-      .answer-key-box { break-inside: avoid; page-break-inside: avoid; margin-top: 24px; }
+      .print-area { display: block !important; width: 100% !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; border: none !important; }
+      .a4-sheet { box-shadow: none !important; border: none !important; padding: 10mm 12mm !important; margin: 0 !important; width: 100% !important; min-height: auto !important; }
+      .exam-columns { columns: 2; column-gap: 28px; column-rule: 1px solid #e2e8f0; }
+      .exam-q-card { break-inside: avoid; page-break-inside: avoid; margin-bottom: 22px; }
+      .answer-key-print { break-inside: avoid; page-break-inside: avoid; margin-top: 20px; }
     }
-
-    .a4-sheet {
-      width: 210mm;
+    
+    .a4-preview {
+      width: 100%;
+      max-width: 210mm;
       min-height: 297mm;
       background: white;
       color: #0f172a;
     }
     .exam-columns {
       columns: 2;
-      column-gap: 30px;
+      column-gap: 24px;
       column-rule: 1px dashed #cbd5e1;
     }
     .exam-q-card {
       break-inside: avoid;
       page-break-inside: avoid;
     }
-
-    /* Kırpma Alanı / Bounding Box */
-    #cropBox {
-      position: absolute;
-      border: 2px dashed #10b981;
-      background-color: rgba(16, 185, 129, 0.15);
-      display: none;
-      pointer-events: none;
-    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
 
-  <!-- Üst Bar & Navigasyon -->
+  <!-- Üst Menü / Navbar -->
   <header class="no-print border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
       
@@ -61,538 +55,396 @@
         </div>
         <div>
           <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent lowercase">testamed</span>
-          <span class="text-[10px] ml-1.5 px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">dizgi stüdyosu</span>
+          <span class="text-[10px] ml-1.5 px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">test stud.io modu</span>
         </div>
       </div>
 
-      <!-- 3 Adımlı Sekmeler -->
-      <div class="flex items-center gap-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
-        <button onclick="switchTab('tab-pdf')" id="btn-tab-pdf" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 bg-emerald-500 text-slate-950 shadow">
-          <i class="fa-solid fa-file-pdf"></i> 1. PDF Aç & Soru Kes
+      <!-- Sayaç ve Hızlı Aksiyonlar -->
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
+          <span class="text-slate-400">Teste Eklenen:</span>
+          <span id="selectedCountBadge" class="font-bold text-emerald-400">0 Soru</span>
+        </div>
+
+        <button onclick="openAddModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+          <i class="fa-solid fa-plus-circle"></i> + Yeni Soru Kırp / Ekle
         </button>
-        <button onclick="switchTab('tab-pool')" id="btn-tab-pool" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 text-slate-400 hover:text-slate-200">
-          <i class="fa-solid fa-layer-group"></i> 2. Soru Havuzu (<span id="pool-count">0</span>)
-        </button>
-        <button onclick="switchTab('tab-layout')" id="btn-tab-layout" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 text-slate-400 hover:text-slate-200">
-          <i class="fa-solid fa-table-columns"></i> 3. A4 Sınav Dizgisi
+
+        <button onclick="window.print()" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-lg transition shadow-md shadow-emerald-500/20 flex items-center gap-1.5">
+          <i class="fa-solid fa-file-pdf"></i> A4 PDF Al
         </button>
       </div>
 
-      <!-- Yazdırma Butonu -->
-      <div class="flex items-center gap-2">
-        <button onclick="window.print()" class="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-lg transition shadow-md shadow-emerald-500/20 flex items-center gap-1.5">
-          <i class="fa-solid fa-print"></i> Sınavı Yazdır / PDF Al
-        </button>
-      </div>
     </div>
   </header>
 
-  <!-- Ana Çalışma Alanı -->
-  <main class="max-w-7xl mx-auto p-4 md:p-6">
+  <!-- Ana Çalışma Masası (Split Layout) -->
+  <main class="max-w-7xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- ==================== SEKME 1: PDF AÇ & SORU KES ==================== -->
-    <div id="tab-pdf" class="tab-content block">
+    <!-- SOL KOLON: SORU BANKASI / HAVUZ (Seçim Paneli) -->
+    <section class="no-print lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col h-[calc(100vh-100px)] sticky top-20">
       
-      <!-- PDF Yüklenmemişse Gösterilecek Dropzone -->
-      <div id="pdfUploadBox" class="bg-slate-900 border-2 border-dashed border-slate-700 hover:border-emerald-500/60 rounded-3xl p-12 text-center transition cursor-pointer max-w-2xl mx-auto my-8">
-        <input type="file" id="pdfFileInput" accept="application/pdf" class="hidden" onchange="loadPDFFile(this.files[0])">
-        <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-500/20">
-          <i class="fa-solid fa-file-pdf"></i>
-        </div>
-        <h3 class="text-base font-bold text-slate-200">Soru Bankası PDF'inizi Yükleyin</h3>
-        <p class="text-xs text-slate-400 mt-2">Bilgisayarınızdaki veya telefonunuzdaki herhangi bir PDF dosyasını seçin.</p>
-        <button onclick="document.getElementById('pdfFileInput').click()" class="mt-5 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20">
-          PDF Dosyası Seç
-        </button>
-      </div>
-
-      <!-- PDF Yüklendiğinde Açılacak Çalışma Masası -->
-      <div id="pdfWorkArea" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        <!-- Sol/Orta: PDF Sayfası ve Kırpma Alanı -->
-        <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col items-center">
-          
-          <!-- PDF Araç Çubuğu (Sayfa Değiştirme / Zoom) -->
-          <div class="w-full flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800 mb-4 text-xs">
-            <div class="flex items-center gap-2">
-              <button onclick="changePage(-1)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 font-bold">
-                <i class="fa-solid fa-chevron-left"></i> Önceki
-              </button>
-              <span class="text-slate-300 font-medium font-mono">
-                Sayfa <span id="pageNum" class="text-emerald-400 font-bold">1</span> / <span id="pageCount">1</span>
-              </span>
-              <button onclick="changePage(1)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 font-bold">
-                Sonraki <i class="fa-solid fa-chevron-right"></i>
-              </button>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <span class="text-[11px] text-slate-400">💡 Farenizle sorunun etrafını seçin</span>
-              <button onclick="document.getElementById('pdfFileInput').click()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[11px]">
-                Farklı PDF Aç
-              </button>
-            </div>
-          </div>
-
-          <!-- PDF Canvas & Crop Overlay Kutusu -->
-          <div id="pdfViewerContainer" class="relative overflow-auto max-h-[750px] w-full border border-slate-800 rounded-lg bg-slate-950 flex justify-center cursor-crosshair">
-            <canvas id="pdfCanvas" class="shadow-lg"></canvas>
-            <div id="cropBox"></div>
-          </div>
-        </div>
-
-        <!-- Sağ Panel: Kırpılan Soruyu Havuza Ekleme -->
-        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 h-fit sticky top-20">
+      <!-- Havuz Başlığı & Filtreler -->
+      <div class="pb-3 border-b border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
           <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-            <i class="fa-solid fa-scissors text-emerald-400"></i> Kırpılan Soru Önizlemesi
+            <i class="fa-solid fa-boxes-stacked text-emerald-400"></i> Soru Havuzu (<span id="totalPoolCount">0</span>)
           </h2>
-
-          <div id="cropPreviewBox" class="border border-slate-800 rounded-xl p-3 bg-slate-950 min-h-[160px] flex items-center justify-center">
-            <p id="cropPlaceholder" class="text-xs text-slate-500 text-center italic">
-              Soldaki PDF üzerinden farenizle bir soru kutucuğu seçin.
-            </p>
-            <img id="cropPreviewImg" class="max-h-60 w-full object-contain rounded hidden bg-white p-1">
-          </div>
-
-          <!-- Doğru Cevap Seçimi -->
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1.5">Doğru Cevap Şıkkı</label>
-            <div class="flex gap-1.5">
-              <button type="button" onclick="selectAnswer('A')" class="opt-btn flex-1 py-1.5 bg-emerald-500 text-slate-950 text-xs font-bold rounded-lg border border-emerald-400 shadow">A</button>
-              <button type="button" onclick="selectAnswer('B')" class="opt-btn flex-1 py-1.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-lg border border-slate-700">B</button>
-              <button type="button" onclick="selectAnswer('C')" class="opt-btn flex-1 py-1.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-lg border border-slate-700">C</button>
-              <button type="button" onclick="selectAnswer('D')" class="opt-btn flex-1 py-1.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-lg border border-slate-700">D</button>
-              <button type="button" onclick="selectAnswer('E')" class="opt-btn flex-1 py-1.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-lg border border-slate-700">E</button>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Konu / Not (Opsiyonel)</label>
-            <input type="text" id="cropTopic" placeholder="Örn: Asitler ve Bazlar" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:border-emerald-500 focus:outline-none">
-          </div>
-
-          <button onclick="addCroppedToPool()" id="btnAddPool" disabled class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-extrabold rounded-xl transition text-xs shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
-            <i class="fa-solid fa-plus-circle"></i> Bu Soruyu Havuza Ekle
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ==================== SEKME 2: SORU HAVUZU ==================== -->
-    <div id="tab-pool" class="tab-content hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
-        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
-          <div class="flex items-center gap-3">
-            <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-              <i class="fa-solid fa-layer-group text-emerald-400"></i> Havuzdaki Kesilmiş Sorular
-            </h2>
-            <span class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full" id="pool-badge">0 Soru</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <button onclick="clearPool()" class="text-xs text-rose-400 hover:text-rose-300 px-2.5 py-1 rounded bg-rose-950/40 border border-rose-900/50">
-              <i class="fa-solid fa-trash-can mr-1"></i> Havuzu Boşalt
+          <div class="flex gap-1.5 text-xs">
+            <button onclick="selectAll()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px]">
+              Tümünü Seç
             </button>
-            <button onclick="switchTab('tab-layout')" class="text-xs bg-emerald-500 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg">
-              A4 Sınav Dizgisine Geç <i class="fa-solid fa-arrow-right ml-1"></i>
+            <button onclick="deselectAll()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 text-[11px]">
+              Kaldır
             </button>
           </div>
         </div>
 
-        <div id="poolContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Havuzdaki kartlar buraya dinamik dolacak -->
+        <!-- Arama & Filtre -->
+        <input type="text" id="searchInput" oninput="renderPool()" placeholder="Konu veya soru metni ara..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:border-emerald-500 focus:outline-none">
+      </div>
+
+      <!-- Soru Kartları Listesi (Kaydırılabilir) -->
+      <div id="poolListContainer" class="flex-1 overflow-y-auto pr-1 space-y-3 pt-3">
+        <!-- Dinamik Soru Seçim Kartları -->
+      </div>
+
+      <!-- Alt Bilgi / Yapıştırma İpucu -->
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+        <span>💡 Ekran alıntısını <b>CTRL+V</b> ile yapıştırabilirsiniz.</span>
+        <button onclick="loadSamplePool()" class="text-emerald-400 hover:underline">Örnekleri Yükle</button>
+      </div>
+
+    </section>
+
+    <!-- SAĞ KOLON: CANLI A4 DİZGİ MASASI (Seçilen Soruların Kağıdı) -->
+    <section class="lg:col-span-7 flex flex-col items-center">
+
+      <!-- Test Başlık Ayarları (No-Print) -->
+      <div class="no-print w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-4 text-xs space-y-2">
+        <div class="flex justify-between items-center mb-1">
+          <span class="font-bold text-slate-300"><i class="fa-solid fa-pen-to-square text-emerald-400"></i> Sınav Başlık Bilgileri</span>
+          <span class="text-[10px] text-slate-500">A4 Kağıdına otomatik yansır</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" id="examInstitution" value="STÜDYAMED EĞİTİM KURUMLARI" oninput="updateHeader()" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200">
+          <input type="text" id="examTitle" value="KİMYA KAZANIM DEĞERLENDİRME SINAVI" oninput="updateHeader()" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200">
         </div>
       </div>
-    </div>
 
-    <!-- ==================== SEKME 3: A4 SINAV DİZGİSİ ==================== -->
-    <div id="tab-layout" class="tab-content hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- A4 Sayfası -->
+      <div class="print-area a4-preview a4-sheet rounded-2xl shadow-2xl p-6 md:p-8 border border-slate-300 flex flex-col justify-between">
         
-        <!-- Sol: Sınav Başlık Ayarları (No-Print) -->
-        <div class="no-print lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 h-fit">
-          <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-            <i class="fa-solid fa-sliders text-emerald-400"></i> Sınav Başlığı & Düzen
-          </h2>
+        <div>
+          <!-- Sınav Anteti -->
+          <div class="border-b-2 border-slate-900 pb-3 mb-5">
+            <div class="flex justify-between items-center text-center mb-2">
+              <div class="w-14 h-9 border border-slate-300 rounded flex items-center justify-center text-[9px] font-bold text-slate-400">LOGO</div>
+              <div class="flex-1 px-2">
+                <h1 id="viewInst" class="text-[11px] font-bold tracking-wider text-slate-600 uppercase">STÜDYAMED EĞİTİM KURUMLARI</h1>
+                <h2 id="viewTit" class="text-sm font-black text-slate-950 tracking-tight uppercase">KİMYA KAZANIM DEĞERLENDİRME SINAVI</h2>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-800">Test No: 01</span>
+              </div>
+            </div>
 
-          <div class="space-y-3 text-xs">
-            <div>
-              <label class="block font-semibold text-slate-400 mb-1">Kurum / Yayın Adı</label>
-              <input type="text" id="examInstitution" value="KİMYAMED EĞİTİM YAYINLARI" oninput="updateExamHeader()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200">
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-400 mb-1">Sınav / Test Başlığı</label>
-              <input type="text" id="examTitle" value="KİMYA KAZANIM DEĞERLENDİRME SINAVI" oninput="updateExamHeader()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200">
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block font-semibold text-slate-400 mb-1">Dönem / Yıl</label>
-                <input type="text" id="examYear" value="2025 - 2026 Dönemi" oninput="updateExamHeader()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200">
-              </div>
-              <div>
-                <label class="block font-semibold text-slate-400 mb-1">Test No</label>
-                <input type="text" id="examCode" value="Test: 01" oninput="updateExamHeader()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200">
-              </div>
+            <div class="grid grid-cols-12 gap-2 text-[10px] font-semibold text-slate-700 bg-slate-50 p-1.5 rounded border border-slate-200">
+              <div class="col-span-6">Adı Soyadı: ................................................................</div>
+              <div class="col-span-3">Sınıf: ....................</div>
+              <div class="col-span-3 text-right">Puanı: ...............</div>
             </div>
           </div>
 
-          <div class="pt-2 border-t border-slate-800">
-            <button onclick="window.print()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
-              <i class="fa-solid fa-file-pdf"></i> A4 PDF / Yazdır
-            </button>
+          <!-- Seçilen Soruların Dizgisi (Çift Sütun) -->
+          <div id="examContainer" class="exam-columns space-y-4">
+            <!-- Seçilen sorular buraya 1, 2, 3.. diye gelir -->
           </div>
         </div>
 
-        <!-- Sağ: A4 Canlı Önizleme (Print-Area) -->
-        <div class="lg:col-span-8 flex justify-center">
-          <div class="print-area a4-sheet bg-white text-slate-900 rounded-xl shadow-2xl p-8 border border-slate-300 relative">
-            
-            <!-- Üst Başlık (Header) -->
-            <div class="border-b-2 border-slate-900 pb-3 mb-5">
-              <div class="flex justify-between items-start text-center mb-3">
-                <div class="w-12 h-10 border border-slate-300 rounded flex items-center justify-center text-[9px] font-bold text-slate-400">
-                  LOGO
-                </div>
-                <div class="flex-1 px-4">
-                  <h1 id="viewInstitution" class="text-xs font-bold tracking-wider text-slate-600 uppercase">KİMYAMED EĞİTİM YAYINLARI</h1>
-                  <h2 id="viewTitle" class="text-base font-black text-slate-950 mt-0.5 tracking-tight uppercase">KİMYA KAZANIM DEĞERLENDİRME SINAVI</h2>
-                  <p id="viewYear" class="text-[10px] font-semibold text-slate-500">2025 - 2026 Dönemi</p>
-                </div>
-                <div class="text-right">
-                  <span id="viewCode" class="text-[11px] font-bold px-2 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-800">Test: 01</span>
-                </div>
-              </div>
-
-              <!-- Öğrenci Bilgi Alanı -->
-              <div class="grid grid-cols-12 gap-2 text-[11px] font-semibold text-slate-700 bg-slate-50 p-2 rounded border border-slate-200">
-                <div class="col-span-6">Adı Soyadı: ................................................................</div>
-                <div class="col-span-3">Sınıf: ....................</div>
-                <div class="col-span-3 text-right">Puanı: ...............</div>
-              </div>
-            </div>
-
-            <!-- Çift Sütunlu Kesilmiş Soru Alanı -->
-            <div id="examQuestionsContainer" class="exam-columns space-y-4">
-              <!-- Sorular buraya A4 dizgisinde çift sütun olarak dökülecektir -->
-            </div>
-
-            <!-- Cevap Anahtarı Kutusu -->
-            <div id="examAnswerKeyBox" class="answer-key-box mt-6 pt-3 border-t-2 border-dashed border-slate-400 flex items-center justify-between text-xs">
-              <span class="font-bold text-slate-700 tracking-wider">CEVAP ANAHTARI:</span>
-              <div id="examAnswerKeyList" class="flex flex-wrap gap-1.5 font-mono font-bold text-[11px]">
-                <!-- Otomatik cevap anahtarı rozetleri -->
-              </div>
-            </div>
-
+        <!-- Cevap Anahtarı (Sayfa Sonu) -->
+        <div id="answerKeyBox" class="answer-key-print mt-6 pt-3 border-t-2 border-dashed border-slate-400 flex items-center justify-between text-xs">
+          <span class="font-bold text-slate-700 text-[11px]">CEVAP ANAHTARI:</span>
+          <div id="answerKeyList" class="flex flex-wrap gap-1 font-mono font-bold text-[10px]">
+            <!-- Otomatik cevap şıkları -->
           </div>
         </div>
 
       </div>
-    </div>
+    </section>
 
   </main>
 
+  <!-- ==================== YENİ SORU EKLEME MODAL'I ==================== -->
+  <div id="addModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-5 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-scissors text-emerald-400"></i> Yeni Soru Kırp & Ekle
+        </h3>
+        <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-200 text-lg">&times;</button>
+      </div>
+
+      <!-- Resim Yapıştır / Seç Alanı -->
+      <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-emerald-500/60 bg-slate-950/60 rounded-xl p-5 text-center cursor-pointer transition">
+        <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFile(this.files[0])">
+        <i class="fa-regular fa-image text-2xl text-slate-500 mb-1"></i>
+        <p class="text-xs font-semibold text-slate-300">Görsel seçin veya buradayken <b class="text-emerald-400">CTRL+V</b> ile yapıştırın</p>
+      </div>
+
+      <!-- Önizleme -->
+      <div id="imagePreviewContainer" class="hidden border border-slate-800 rounded-xl p-2 bg-slate-950 relative">
+        <img id="imagePreview" class="max-h-40 mx-auto object-contain rounded">
+        <button onclick="removeImage()" class="absolute top-1 right-1 bg-rose-600 text-white p-1 px-1.5 rounded text-[10px]">Sil</button>
+      </div>
+
+      <!-- Metin Alanı (Opsiyonel) -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1">Soru Metni & Formül (Opsiyonel)</label>
+        <textarea id="manualText" rows="3" placeholder="Soru metni veya formül ($H_2O$)..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:border-emerald-500 focus:outline-none"></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Konu / Etiket</label>
+          <input type="text" id="topicInput" placeholder="Örn: Asitler ve Bazlar" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Doğru Cevap</label>
+          <select id="correctSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200">
+            <option value="A">A Şıkkı</option>
+            <option value="B">B Şıkkı</option>
+            <option value="C">C Şıkkı</option>
+            <option value="D">D Şıkkı</option>
+            <option value="E">E Şıkkı</option>
+          </select>
+        </div>
+      </div>
+
+      <button onclick="saveNewQuestion()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs transition shadow-lg shadow-emerald-500/20">
+        Havuz'a Kaydet ve Teste Ekle
+      </button>
+    </div>
+  </div>
+
   <script>
-    // PDF.js Worker Tanımı
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    // Başlangıç Havuz Verileri
+    const initialSamples = [
+      {
+        id: 1,
+        selected: true,
+        topic: "Türler Arası Etkileşimler",
+        text: "Aşağıdaki maddelerden hangisinde yoğun fazda moleküller arasında **hidrojen bağı** bulunmaz?\n\nA) $H_2O$\nB) $NH_3$\nC) $CH_4$\nD) $HF$\nE) $C_2H_5OH$",
+        image: null,
+        correct: "C"
+      },
+      {
+        id: 2,
+        selected: true,
+        topic: "Kimyasal Denge",
+        text: "Sabit hacimli kapta;\n$$N_2(g) + 3H_2(g) \\rightleftharpoons 2NH_3(g) + \\text{ısı}$$\ntepkimesi dengededir. Sıcaklık artırılırsa denge sabitinin ($K_c$) sayısal değeri nasıl değişir?",
+        image: null,
+        correct: "B"
+      },
+      {
+        id: 3,
+        selected: false,
+        topic: "Mol Kavramı",
+        text: "Normal şartlar altında $11{,}2\\text{ L}$ hacim kaplayan $CO_2$ gazı kaç moldür?\n\nA) 0,25\nB) 0,5\nC) 1,0\nD) 2,0\nE) 22,4",
+        image: null,
+        correct: "B"
+      },
+      {
+        id: 4,
+        selected: false,
+        topic: "Asitler ve Bazlar",
+        text: "$25^\\circ C$'de $pH = 2$ olan sulu çözeltinin $pOH$ değeri kaçtır?\n\nA) 2\nB) 7\nC) 12\nD) 14\nE) 10",
+        image: null,
+        correct: "C"
+      }
+    ];
 
-    // Global Değişkenler
-    let pdfDoc = null;
-    let pageNum = 1;
-    let pageRendering = false;
-    let pageNumPending = null;
-    let scale = 1.5;
-    let canvas = document.getElementById('pdfCanvas');
-    let ctx = canvas.getContext('2d');
-
-    let pool = JSON.parse(localStorage.getItem('testamed_pdf_pool')) || [];
-    let currentCroppedBase64 = null;
-    let selectedAnswerOpt = 'A';
-
-    // Kırpma (Snipping) Değişkenleri
-    let isDrawing = false;
-    let startX = 0, startY = 0;
-    const cropBox = document.getElementById('cropBox');
-    const viewer = document.getElementById('pdfViewerContainer');
+    let pool = JSON.parse(localStorage.getItem('testamed_pool_v2')) || initialSamples;
+    let currentImageBase64 = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       renderPool();
-      renderExamSheet();
-      initCropperEvents();
+      renderExam();
+
+      // Global CTRL + V Paste
+      window.addEventListener('paste', (e) => {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let item of items) {
+          if (item.type.indexOf('image') !== -1) {
+            const blob = item.getAsFile();
+            handleFile(blob);
+            openAddModal();
+          }
+        }
+      });
+
+      // Dropzone
+      const dropZone = document.getElementById('dropZone');
+      dropZone.addEventListener('click', () => document.getElementById('fileInput').click());
     });
 
-    // Sekme Geçişleri
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(el => {
-        el.classList.remove('bg-emerald-500', 'text-slate-950', 'shadow');
-        el.classList.add('text-slate-400');
-      });
-
-      document.getElementById(tabId).classList.remove('hidden');
-      const activeBtn = document.getElementById('btn-' + tabId);
-      activeBtn.classList.add('bg-emerald-500', 'text-slate-950', 'shadow');
-      activeBtn.classList.remove('text-slate-400');
-
-      if (tabId === 'tab-layout') renderExamSheet();
-      if (tabId === 'tab-pool') renderPool();
-    }
-
-    // PDF Dosyası Yükleme
-    function loadPDFFile(file) {
-      if (!file || file.type !== 'application/pdf') {
-        alert("Lütfen geçerli bir PDF dosyası seçin.");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const typedarray = new Uint8Array(e.target.result);
-        pdfjsLib.getDocument(typedarray).promise.then(pdf => {
-          pdfDoc = pdf;
-          pageNum = 1;
-          document.getElementById('pageCount').innerText = pdf.numPages;
-          document.getElementById('pdfUploadBox').classList.add('hidden');
-          document.getElementById('pdfWorkArea').classList.remove('hidden');
-          renderPage(pageNum);
-        }).catch(err => {
-          alert("PDF yüklenirken hata oluştu: " + err.message);
-        });
-      };
-      reader.readAsArrayBuffer(file);
-    }
-
-    // PDF Sayfasını Çizme
-    function renderPage(num) {
-      pageRendering = true;
-      pdfDoc.getPage(num).then(page => {
-        const viewport = page.getViewport({ scale: scale });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        const renderContext = {
-          canvasContext: ctx,
-          viewport: viewport
-        };
-
-        const renderTask = page.render(renderContext);
-        renderTask.promise.then(() => {
-          pageRendering = false;
-          if (pageNumPending !== null) {
-            renderPage(pageNumPending);
-            pageNumPending = null;
-          }
-        });
-      });
-      document.getElementById('pageNum').innerText = num;
-    }
-
-    function queueRenderPage(num) {
-      if (pageRendering) pageNumPending = num;
-      else renderPage(num);
-    }
-
-    function changePage(delta) {
-      if (!pdfDoc) return;
-      if (pageNum + delta >= 1 && pageNum + delta <= pdfDoc.numPages) {
-        pageNum += delta;
-        queueRenderPage(pageNum);
+    // ==================== HAVUZ & SEÇİM FONKSİYONLARI ====================
+    function toggleSelect(id) {
+      const q = pool.find(item => item.id === id);
+      if (q) {
+        q.selected = !q.selected;
+        saveAndSync();
       }
     }
 
-    // Fare ile Kırpma / Soru Kesme Olayları
-    function initCropperEvents() {
-      viewer.addEventListener('mousedown', (e) => {
-        if (!pdfDoc) return;
-        const rect = canvas.getBoundingClientRect();
-        if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
-
-        isDrawing = true;
-        startX = e.clientX - rect.left;
-        startY = e.clientY - rect.top;
-
-        cropBox.style.left = startX + 'px';
-        cropBox.style.top = startY + 'px';
-        cropBox.style.width = '0px';
-        cropBox.style.height = '0px';
-        cropBox.style.display = 'block';
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        let currentX = e.clientX - rect.left;
-        let currentY = e.clientY - rect.top;
-
-        let width = currentX - startX;
-        let height = currentY - startY;
-
-        cropBox.style.left = (width < 0 ? currentX : startX) + 'px';
-        cropBox.style.top = (height < 0 ? currentY : startY) + 'px';
-        cropBox.style.width = Math.abs(width) + 'px';
-        cropBox.style.height = Math.abs(height) + 'px';
-      });
-
-      window.addEventListener('mouseup', (e) => {
-        if (!isDrawing) return;
-        isDrawing = false;
-        
-        const cropW = parseInt(cropBox.style.width);
-        const cropH = parseInt(cropBox.style.height);
-        const cropL = parseInt(cropBox.style.left);
-        const cropT = parseInt(cropBox.style.top);
-
-        cropBox.style.display = 'none';
-
-        if (cropW > 30 && cropH > 30) {
-          // Canvas üzerinden seçilen alanı kırpıp resme dönüştür
-          const tempCanvas = document.createElement('canvas');
-          tempCanvas.width = cropW;
-          tempCanvas.height = cropH;
-          const tempCtx = tempCanvas.getContext('2d');
-
-          tempCtx.drawImage(canvas, cropL, cropT, cropW, cropH, 0, 0, cropW, cropH);
-          currentCroppedBase64 = tempCanvas.toDataURL('image/png');
-
-          // Önizlemeye bas
-          const previewImg = document.getElementById('cropPreviewImg');
-          previewImg.src = currentCroppedBase64;
-          previewImg.classList.remove('hidden');
-          document.getElementById('cropPlaceholder').classList.add('hidden');
-          document.getElementById('btnAddPool').removeAttribute('disabled');
-        }
-      });
+    function selectAll() {
+      pool.forEach(q => q.selected = true);
+      saveAndSync();
     }
 
-    function selectAnswer(opt) {
-      selectedAnswerOpt = opt;
-      document.querySelectorAll('.opt-btn').forEach(btn => {
-        if (btn.innerText === opt) {
-          btn.className = 'opt-btn flex-1 py-1.5 bg-emerald-500 text-slate-950 text-xs font-bold rounded-lg border border-emerald-400 shadow';
-        } else {
-          btn.className = 'opt-btn flex-1 py-1.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-lg border border-slate-700';
-        }
-      });
+    function deselectAll() {
+      pool.forEach(q => q.selected = false);
+      saveAndSync();
     }
 
-    // Kırpılan Soruyu Soru Havuzuna Gönderme
-    function addCroppedToPool() {
-      if (!currentCroppedBase64) return;
+    function deleteQuestion(id) {
+      if (confirm("Bu soru havuzdan tamamen silinsin mi?")) {
+        pool = pool.filter(q => q.id !== id);
+        saveAndSync();
+      }
+    }
 
-      const newQ = {
-        id: Date.now(),
-        image: currentCroppedBase64,
-        topic: document.getElementById('cropTopic').value.trim() || 'Kimya',
-        correct: selectedAnswerOpt
-      };
+    function moveOrder(id, dir) {
+      const selectedOnly = pool.filter(q => q.selected);
+      const index = selectedOnly.findIndex(q => q.id === id);
+      const targetIndex = index + dir;
+      if (targetIndex < 0 || targetIndex >= selectedOnly.length) return;
 
-      pool.push(newQ);
-      savePool();
+      // Swap in general pool
+      const realIndex1 = pool.findIndex(q => q.id === selectedOnly[index].id);
+      const realIndex2 = pool.findIndex(q => q.id === selectedOnly[targetIndex].id);
+      const temp = pool[realIndex1];
+      pool[realIndex1] = pool[realIndex2];
+      pool[realIndex2] = temp;
 
-      // Temizle
-      currentCroppedBase64 = null;
-      document.getElementById('cropPreviewImg').src = '';
-      document.getElementById('cropPreviewImg').classList.add('hidden');
-      document.getElementById('cropPlaceholder').classList.remove('hidden');
-      document.getElementById('btnAddPool').setAttribute('disabled', 'true');
-      document.getElementById('cropTopic').value = '';
+      saveAndSync();
+    }
 
-      alert("Soru başarıyla havuza eklendi!");
+    function saveAndSync() {
+      localStorage.setItem('testamed_pool_v2', JSON.stringify(pool));
       renderPool();
+      renderExam();
     }
 
-    function savePool() {
-      localStorage.setItem('testamed_pdf_pool', JSON.stringify(pool));
-      document.getElementById('pool-count').innerText = pool.length;
-      document.getElementById('pool-badge').innerText = pool.length + " Soru";
-    }
-
-    // Havuz Kartlarını Çizme
+    // ==================== SOL PANEL (HAVUZU ÇİZME) ====================
     function renderPool() {
-      const container = document.getElementById('poolContainer');
-      savePool();
+      const container = document.getElementById('poolListContainer');
+      const search = document.getElementById('searchInput').value.toLowerCase();
       container.innerHTML = '';
 
-      if (pool.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full py-12 text-center text-slate-500 text-xs">
-            Havuzda henüz kesilmiş soru yok. <b>1. Sekmeden</b> PDF açıp soru kırpın.
-          </div>
-        `;
+      const filtered = pool.filter(q => 
+        (q.topic && q.topic.toLowerCase().includes(search)) || 
+        (q.text && q.text.toLowerCase().includes(search))
+      );
+
+      document.getElementById('totalPoolCount').innerText = pool.length;
+      const selectedCount = pool.filter(q => q.selected).length;
+      document.getElementById('selectedCountBadge').innerText = selectedCount + " Soru";
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="py-8 text-center text-slate-500 text-xs italic">Soru bulunamadı.</div>`;
         return;
       }
 
-      pool.forEach((q, idx) => {
+      filtered.forEach((q, idx) => {
         const card = document.createElement('div');
-        card.className = 'bg-slate-950 border border-slate-800 rounded-xl p-3 flex flex-col justify-between space-y-2';
-        
+        const isSelected = q.selected;
+
+        card.className = `p-3 rounded-xl border transition flex flex-col justify-between gap-2 ${
+          isSelected 
+            ? 'bg-emerald-950/20 border-emerald-500/50 shadow-md shadow-emerald-950/30' 
+            : 'bg-slate-950/60 border-slate-800/80 opacity-75 hover:opacity-100'
+        }`;
+
+        let previewContent = '';
+        if (q.image) {
+          previewContent += `<img src="${q.image}" class="max-h-24 object-contain rounded bg-white p-1 mb-1">`;
+        }
+        if (q.text) {
+          previewContent += `<p class="text-[11px] text-slate-300 line-clamp-2 whitespace-pre-line">${q.text}</p>`;
+        }
+
         card.innerHTML = `
           <div>
-            <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-slate-800">
-              <span class="font-bold text-xs text-emerald-400">Soru #${idx + 1}</span>
-              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${q.topic}</span>
+            <div class="flex justify-between items-center mb-1.5 pb-1 border-b border-slate-800">
+              <span class="text-[10px] font-bold ${isSelected ? 'text-emerald-400' : 'text-slate-400'}">Havuz Soru #${idx + 1}</span>
+              <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${q.topic || 'Genel'}</span>
             </div>
-            <img src="${q.image}" class="max-h-44 w-full object-contain bg-white rounded p-1">
+            ${previewContent}
           </div>
 
-          <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
-            <span class="font-bold text-slate-300">Cevap: <span class="text-emerald-400 font-mono">${q.correct}</span></span>
-            <div class="flex gap-1">
-              <button onclick="movePool(${idx}, -1)" class="p-1 px-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px]"><i class="fa-solid fa-arrow-up"></i></button>
-              <button onclick="movePool(${idx}, 1)" class="p-1 px-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px]"><i class="fa-solid fa-arrow-down"></i></button>
-              <button onclick="deletePoolItem(${q.id})" class="p-1 px-1.5 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button>
+          <div class="flex items-center justify-between pt-1.5 border-t border-slate-800 text-xs">
+            <span class="text-[10px] font-bold text-slate-400">Cevap: <b class="text-slate-200">${q.correct}</b></span>
+            
+            <div class="flex items-center gap-1.5">
+              <button onclick="toggleSelect(${q.id})" class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                isSelected 
+                  ? 'bg-emerald-500 text-slate-950 hover:bg-rose-600 hover:text-white' 
+                  : 'bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-300'
+              }">
+                ${isSelected ? '<i class="fa-solid fa-check"></i> Testte' : '<i class="fa-solid fa-plus"></i> Teste Ekle'}
+              </button>
+              <button onclick="deleteQuestion(${q.id})" class="p-1 px-1.5 text-rose-400 hover:text-rose-300 text-[10px]">
+                <i class="fa-solid fa-trash"></i>
+              </button>
             </div>
           </div>
         `;
+
         container.appendChild(card);
       });
     }
 
-    function movePool(idx, dir) {
-      const target = idx + dir;
-      if (target < 0 || target >= pool.length) return;
-      const temp = pool[idx];
-      pool[idx] = pool[target];
-      pool[target] = temp;
-      savePool();
-      renderPool();
-    }
-
-    function deletePoolItem(id) {
-      pool = pool.filter(q => q.id !== id);
-      savePool();
-      renderPool();
-    }
-
-    function clearPool() {
-      if (confirm("Havuzdaki tüm sorular silinsin mi?")) {
-        pool = [];
-        savePool();
-        renderPool();
-      }
-    }
-
-    // A4 Sınav Kağıdını Dizme
-    function renderExamSheet() {
-      const container = document.getElementById('examQuestionsContainer');
-      const ansGrid = document.getElementById('examAnswerKeyList');
+    // ==================== SAĞ PANEL (A4 DİZGİSİNİ ÇİZME) ====================
+    function renderExam() {
+      const container = document.getElementById('examContainer');
+      const ansGrid = document.getElementById('answerKeyList');
       container.innerHTML = '';
       ansGrid.innerHTML = '';
 
-      if (pool.length === 0) {
-        container.innerHTML = `<p class="col-span-2 text-center text-slate-400 text-xs py-12">Havuzda soru bulunmuyor. PDF'ten soru kırpıp ekleyin.</p>`;
+      const selectedQuestions = pool.filter(q => q.selected);
+
+      if (selectedQuestions.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-2 py-16 text-center text-slate-400 text-xs italic">
+            <i class="fa-solid fa-hand-pointer text-xl mb-2 text-slate-300 block"></i>
+            Soldaki havuzdan testinize dahil etmek istediğiniz soruların üzerindeki <b>"+ Teste Ekle"</b> butonuna basın.
+          </div>
+        `;
         return;
       }
 
-      pool.forEach((q, idx) => {
+      selectedQuestions.forEach((q, idx) => {
         const qCard = document.createElement('div');
-        qCard.className = 'exam-q-card mb-4';
+        qCard.className = 'exam-q-card relative mb-5 group';
+
+        let innerContent = '';
+        if (q.image) {
+          innerContent += `<img src="${q.image}" class="w-full object-contain rounded my-1">`;
+        }
+        if (q.text) {
+          innerContent += `<div class="text-[12px] font-medium text-slate-800 leading-relaxed whitespace-pre-line formula-render">${q.text}</div>`;
+        }
 
         qCard.innerHTML = `
-          <div class="flex items-start gap-2">
-            <span class="font-black text-xs text-slate-900 bg-slate-200 px-1.5 py-0.5 rounded leading-none mt-0.5">${idx + 1}.</span>
+          <div class="flex items-start gap-1.5">
+            <span class="font-extrabold text-xs text-slate-900 bg-slate-200 px-1.5 py-0.5 rounded leading-none mt-0.5">${idx + 1}.</span>
             <div class="flex-1">
-              <img src="${q.image}" class="w-full object-contain">
+              ${innerContent}
+            </div>
+            <div class="no-print opacity-0 group-hover:opacity-100 flex gap-1">
+              <button onclick="moveOrder(${q.id}, -1)" class="p-0.5 px-1 bg-slate-200 hover:bg-slate-300 rounded text-[9px]"><i class="fa-solid fa-chevron-up"></i></button>
+              <button onclick="moveOrder(${q.id}, 1)" class="p-0.5 px-1 bg-slate-200 hover:bg-slate-300 rounded text-[9px]"><i class="fa-solid fa-chevron-down"></i></button>
             </div>
           </div>
         `;
@@ -605,13 +457,75 @@
         ansBadge.innerText = `${idx + 1}:${q.correct}`;
         ansGrid.appendChild(ansBadge);
       });
+
+      // KaTeX Formülleri Render Et
+      renderMathInElement(container, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false }
+        ],
+        throwOnError: false
+      });
     }
 
-    function updateExamHeader() {
-      document.getElementById('viewInstitution').innerText = document.getElementById('examInstitution').value;
-      document.getElementById('viewTitle').innerText = document.getElementById('examTitle').value;
-      document.getElementById('viewYear').innerText = document.getElementById('examYear').value;
-      document.getElementById('viewCode').innerText = document.getElementById('examCode').value;
+    function updateHeader() {
+      document.getElementById('viewInst').innerText = document.getElementById('examInstitution').value;
+      document.getElementById('viewTit').innerText = document.getElementById('examTitle').value;
+    }
+
+    // ==================== MODAL & YÜKLEME ====================
+    function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
+    function closeAddModal() { 
+      document.getElementById('addModal').classList.add('hidden'); 
+      removeImage();
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentImageBase64 = e.target.result;
+        document.getElementById('imagePreview').src = currentImageBase64;
+        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage() {
+      currentImageBase64 = null;
+      document.getElementById('imagePreview').src = '';
+      document.getElementById('imagePreviewContainer').classList.add('hidden');
+    }
+
+    function saveNewQuestion() {
+      const text = document.getElementById('manualText').value.trim();
+      const topic = document.getElementById('topicInput').value.trim() || 'Genel';
+      const correct = document.getElementById('correctSelect').value;
+
+      if (!currentImageBase64 && !text) {
+        alert("Lütfen bir soru görseli veya metni ekleyin.");
+        return;
+      }
+
+      const newQ = {
+        id: Date.now(),
+        selected: true, // Otomatik teste ekle
+        topic: topic,
+        text: text,
+        image: currentImageBase64,
+        correct: correct
+      };
+
+      pool.unshift(newQ); // En başa ekle
+      saveAndSync();
+      closeAddModal();
+      document.getElementById('manualText').value = '';
+      document.getElementById('topicInput').value = '';
+    }
+
+    function loadSamplePool() {
+      pool = [...initialSamples];
+      saveAndSync();
     }
   </script>
 </body>
