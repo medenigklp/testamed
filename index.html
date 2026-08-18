@@ -86,6 +86,7 @@ input,select,textarea{font:inherit}
 #rail .node.now .lbl{color:var(--ink)}
 #rail .n1{color:var(--gr)} #rail .n2{color:var(--ye)}
 #rail .n3{color:var(--or)} #rail .n4{color:var(--cy)}
+#rail .n5{color:#8B5CF6}
 #rail.side{opacity:.35}
 
 #main{flex:1;position:relative;overflow:hidden}
@@ -399,7 +400,65 @@ input,select,textarea{font:inherit}
   animation:rise .26s cubic-bezier(.2,.9,.3,1)}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #toast.err{background:#C0392B}
+
+/* ════════ SORU HAVUZU ════════ */
+#s-pool{overflow-y:auto;padding:16px;padding-bottom:calc(20px + var(--safe))}
+.poolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.poolbar h2{font-family:var(--disp);font-size:18px;font-weight:800;flex:1}
+.poolbar .pbtn{background:var(--w);border:1.5px solid var(--line);border-radius:999px;
+  padding:8px 14px;font-size:12.5px;font-weight:700;color:var(--ink2)}
+.poolbar .pbtn.go{background:var(--or);border-color:var(--or);color:#fff}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pcard{position:relative;background:var(--w);border:1.5px solid var(--line);border-radius:14px;
+  padding:12px;box-shadow:0 2px 8px rgba(14,26,23,.06);transition:.15s;cursor:grab}
+.pcard:active{cursor:grabbing}
+.pcard.dragging{opacity:.35;outline:2.5px dashed var(--or);z-index:50}
+.pcard .phdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pcard .phdr b{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--soft);text-transform:uppercase;letter-spacing:.06em}
+.pcard .phdr .pdel{width:22px;height:22px;border-radius:50%;background:#FDECEA;color:#C0392B;
+  font-size:11px;font-weight:700;border:none;display:flex;align-items:center;justify-content:center}
+.pcard img{width:100%;height:auto;border-radius:8px;background:var(--bg);display:block;margin-bottom:10px}
+.pcard .pans{display:flex;gap:4px;margin-bottom:8px}
+.pcard .pans button{flex:1;height:32px;border-radius:8px;background:var(--bg);border:1.5px solid var(--line);
+  font-size:12px;font-weight:700;color:var(--ink2);transition:.12s}
+.pcard .pans button.on{background:var(--or);border-color:var(--or);color:#fff}
+.pcard .pcust{display:flex;gap:6px;align-items:center}
+.pcard .pcust input{flex:1;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;font-size:12px}
+.pcard .pcust span{font-size:11px;color:var(--soft);font-weight:600;white-space:nowrap}
+.pcard .plvl{position:absolute;top:8px;right:10px;font-size:9px;font-weight:700;padding:2px 7px;
+  border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.pl-kolay{background:#ECFDF5;color:#059669}
+.pl-orta{background:#FFFBEB;color:#D97706}
+.pl-zor{background:#FEF2F2;color:#DC2626}
+
+/* ════════ DİZGİ MASASI SAĞ PANEL ════════ */
+#layout-wrap{display:flex;height:100%}
+#layout-main{flex:1;overflow:auto;background:#2B3833;padding:12px;-webkit-overflow-scrolling:touch}
+#layout-side{width:260px;background:var(--w);border-left:1.5px solid var(--line);overflow-y:auto;
+  padding:14px 14px calc(14px + var(--safe));flex-shrink:0;display:none}
+@media(min-width:900px){#layout-side{display:block}}
+#layout-side .sh{font-family:var(--disp);font-size:13px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;margin:18px 0 8px;color:var(--ink)}
+#layout-side .sh:first-child{margin-top:0}
+#layout-side .thbtn{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+#layout-side .thbtn button{height:34px;padding:0 12px;border-radius:8px;background:var(--bg);
+  border:1.5px solid var(--line);font-size:12px;font-weight:700;color:var(--ink2);transition:.12s}
+#layout-side .thbtn button.on{background:var(--or);border-color:var(--or);color:#fff}
+#layout-side .clrrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+#layout-side .clr{position:relative;width:32px;height:32px;border-radius:50%;border:2.5px solid transparent;
+  cursor:pointer;transition:.12s;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.1)}
+#layout-side .clr.on{box-shadow:0 0 0 3px var(--or)}
+#layout-side .clr::after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:linear-gradient(135deg,var(--c1),var(--c2))}
+
+/* Sürükle-bırak */
+.q-live-box.dragging{opacity:.35;outline:2.5px dashed var(--or);z-index:50;transform:scale(1.02)}
+.q-live-box.drop-target{outline:2.5px solid var(--cy);background:rgba(6,182,212,.08);z-index:40}
+.ql-btn.break{color:var(--ye);background:rgba(245,158,11,.2)}
+.ql-btn.break:hover{background:var(--ye);color:#111}
+
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -415,8 +474,9 @@ input,select,textarea{font:inherit}
     <div id="rail">
       <div class="node n1" data-s="home"><span class="dot"></span><span class="lbl">Kaynak</span></div>
       <div class="node n2" data-s="view"><span class="dot"></span><span class="lbl">Sorular</span></div>
-      <div class="node n3" data-s="set"><span class="dot"></span><span class="lbl">Düzen</span></div>
-      <div class="node n4" data-s="prev"><span class="dot"></span><span class="lbl">Çıktı</span></div>
+      <div class="node n3" data-s="pool"><span class="dot"></span><span class="lbl">Havuz</span></div>
+      <div class="node n4" data-s="set"><span class="dot"></span><span class="lbl">Düzen</span></div>
+      <div class="node n5" data-s="prev"><span class="dot"></span><span class="lbl">Çıktı</span></div>
     </div>
   </div>
 
@@ -516,6 +576,16 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
+    <!-- 2.5 Ekran: Soru Havuzu -->
+    <div class="scr" id="s-pool">
+      <div class="poolbar">
+        <h2>🗂️ Soru Havuzu · <span id="pcnt">0</span> soru</h2>
+        <button class="pbtn" onclick="go('view')">+ PDF'den ekle</button>
+        <button class="pbtn" onclick="go('ai')">✦ Yapay zeka</button>
+        <button class="pbtn go" onclick="go('set')">İleri →</button>
+      </div>
+      <div class="pgrid" id="pgrid"></div>
+    </div>
     <!-- Yapay Zeka -->
     <div class="scr" id="s-ai">
       <div class="aibody">
@@ -624,6 +694,22 @@ input,select,textarea{font:inherit}
       <div id="editbar"></div>
 
       <div class="sec">Şablon Stili (teststud.io)</div>
+      <div class="r2">
+        <div class="f"><label>Sayfa yönü</label>
+          <select id="f-orient">
+            <option value="portrait" selected>Dikey A4</option>
+            <option value="landscape">Yatay A4</option>
+          </select>
+        </div>
+        <div class="f"><label>Font</label>
+          <select id="f-font">
+            <option value="default" selected>Varsayılan</option>
+            <option value="poppins">Poppins</option>
+            <option value="roboto">Roboto</option>
+            <option value="merri">Merriweather</option>
+          </select>
+        </div>
+      </div>
       <div class="r2">
         <div class="f">
           <label>Başlık Şablonu</label>
@@ -765,7 +851,39 @@ input,select,textarea{font:inherit}
         <div class="dh" id="dl-hint"></div>
         <iframe id="dl-view"></iframe>
       </div>
-      <div id="pv"><div id="pages"></div></div>
+      <div id="layout-wrap">
+        <div id="layout-main"><div id="pv"><div id="pages"></div></div></div>
+        <div id="layout-side">
+          <div class="sh">🎨 Şablon & Renk</div>
+          <div class="clrrow" id="tpl-clrs"></div>
+          <div class="sh">🔤 Font</div>
+          <div class="thbtn" id="font-btns">
+            <button data-f="default" class="on">Varsayılan</button>
+            <button data-f="poppins">Poppins</button>
+            <button data-f="roboto">Roboto</button>
+            <button data-f="merri">Merriweather</button>
+          </div>
+          <div class="sh">📐 Sayfa</div>
+          <div class="thbtn">
+            <button id="lo-port" class="on" onclick="setLO('portrait')">Dikey</button>
+            <button id="lo-land" onclick="setLO('landscape')">Yatay</button>
+          </div>
+          <div class="sh">📰 Sütun</div>
+          <div class="thbtn" id="col-btns">
+            <button data-c="1" onclick="setCols(1)">1</button>
+            <button data-c="2" class="on" onclick="setCols(2)">2</button>
+            <button data-c="3" onclick="setCols(3)">3</button>
+            <button data-c="4" onclick="setCols(4)">4</button>
+          </div>
+          <div class="sh">📏 Boşluk</div>
+          <div class="thbtn" id="sol-btns">
+            <button data-s="0" onclick="setSol(0)">Yok</button>
+            <button data-s="12" onclick="setSol(12)">Dar</button>
+            <button data-s="24" class="on" onclick="setSol(24)">Orta</button>
+            <button data-s="40" onclick="setSol(40)">Geniş</button>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -819,10 +937,10 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
 /* Ekran Yönetimi */
 function go(s){
   screen=s;
-  ['home','view','set','prev','lib','ai','panel'].forEach(k=>{
+  ['home','view','pool','set','prev','lib','ai','panel'].forEach(k=>{
     const el=$('s-'+k); if(el) el.classList.toggle('on',k===s);
   });
-  const order=['home','view','set','prev'];
+  const order=['home','view','pool','set','prev'];
   const at=order.indexOf(s);
   const side=at<0;
   $('rail').classList.toggle('side',side);
@@ -831,18 +949,23 @@ function go(s){
     n.classList.toggle('now',  !side && i===at);
   });
   $('t-back').style.display = (s==='home') ? 'none':'inline-block';
-  $('t-next').style.display = (s==='view') ? 'inline-block':'none';
+  $('t-next').style.display = (s==='pool') ? 'inline-block':'none';
   $('t-next').disabled = qs.length===0;
   $('t-next').textContent = (editingTest? 'Teste dön':'İleri')+' ('+qs.length+') →';
   $('t-lib').style.display = (s==='home') ? 'inline-block':'none';
+  if(s==='pool') renderPool();
   if(s==='set') fillSettings();
   if(s==='lib') enterLib();
   if(s==='ai') enterAI();
   if(s==='panel') renderPanel();
+  if(s==='prev') { setTimeout(initSidePanel,50); }
 }
 function back(){ 
-  if(screen==='lib'||screen==='ai'||screen==='panel') return go(qs.length?'set':'home'); 
-  go(screen==='prev'?'set':screen==='set'?'view':'home'); 
+  if(screen==='lib'||screen==='ai'||screen==='panel') return go(qs.length?'pool':'home'); 
+  if(screen==='prev') return go('set');
+  if(screen==='set') return go('pool');
+  if(screen==='pool') return go('view');
+  go('home'); 
 }
 function next(){ if(!qs.length) return toast('Önce en az bir soru seç'); go('set'); }
 
@@ -1307,7 +1430,7 @@ function fillSettings(){
   drawEditBar();
   if(!$('f-date').value) $('f-date').value=new Date().toLocaleDateString('tr-TR');
   spread();
-  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype'].forEach(id=>{
+  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-orient','f-font'].forEach(id=>{
     const e=$(id); if(e && !e._w){ e._w=1;
       e.addEventListener('change',()=>{ preview(); saveTmpl(); });
       e.addEventListener('input',saveTmpl);
@@ -1343,6 +1466,54 @@ async function preview(){
   el.innerHTML+='<span class="tip">'+alt+' sayfa</span>';
 }
 
+
+/* ════════ SORU HAVUZU ════════ */
+function renderPool(){
+  const g=$('pgrid'); g.innerHTML='';
+  $('pcnt').textContent=qs.length;
+  if(!qs.length){ g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px 12px;color:var(--soft);background:var(--w);border:1px dashed var(--line);border-radius:14px;font-size:13px">Henüz soru yok. PDF aç ve kırp.</div>'; return; }
+  qs.forEach((q,i)=>{
+    const d=document.createElement('div'); d.className='pcard'; d.draggable=true; d.dataset.idx=i;
+    d.innerHTML='<div class="phdr"><b>'+(i+1)+'. Soru</b><button class="pdel">✕</button></div>'+
+      '<img src="'+q.img+'" draggable="false"/>'+
+      '<div class="pans" data-idx="'+i+'">'+
+        ['A','B','C','D','E'].map(L=>'<button data-v="'+L+'" class="'+(q.ans===L?'on':'')+'">'+L+'</button>').join('')+
+      '</div>'+
+      '<div class="pcust"><span>Özel:</span><input data-idx="'+i+'" value="'+esc(q.custom||'')+'" placeholder="Cevap"/></div>';
+    if(q.lvl){ const l=document.createElement('span'); l.className='plvl pl-'+q.lvl; l.textContent=q.lvl; d.appendChild(l); }
+    d.querySelector('.pdel').onclick=()=>{ qs.splice(i,1); renderPool(); drawTray(); };
+    d.querySelector('.pans').addEventListener('click',e=>{
+      if(e.target.tagName==='BUTTON'){
+        const idx=parseInt(e.target.closest('.pans').dataset.idx);
+        qs[idx].ans = qs[idx].ans===e.target.dataset.v?'':e.target.dataset.v;
+        renderPool();
+      }
+    });
+    d.querySelector('.pcust input').addEventListener('change',e=>{
+      qs[parseInt(e.target.dataset.idx)].custom=e.target.value;
+      qs[parseInt(e.target.dataset.idx)].ans=e.target.value;
+    });
+    d.addEventListener('dragstart',poolDragStart);
+    d.addEventListener('dragover',poolDragOver);
+    d.addEventListener('dragleave',poolDragLeave);
+    d.addEventListener('drop',poolDrop);
+    g.appendChild(d);
+  });
+}
+let poolDragSrc=null;
+function poolDragStart(e){ poolDragSrc=this; this.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; }
+function poolDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; if(this!==poolDragSrc) this.classList.add('drop-target'); }
+function poolDragLeave(e){ this.classList.remove('drop-target'); }
+function poolDrop(e){
+  e.stopPropagation(); e.preventDefault(); this.classList.remove('drop-target');
+  if(this===poolDragSrc) return;
+  const src=parseInt(poolDragSrc.dataset.idx), tgt=parseInt(this.dataset.idx);
+  if(isNaN(src)||isNaN(tgt)) return;
+  const [moved]=qs.splice(src,1); qs.splice(tgt,0,moved);
+  poolDragSrc.classList.remove('dragging'); poolDragSrc=null;
+  renderPool(); drawTray();
+}
+
 function drawRows(){
   const w=$('qrows'); w.innerHTML='';
   $('setcnt').textContent=qs.length;
@@ -1368,12 +1539,16 @@ function drawRows(){
     }
     const mv=document.createElement('div'); mv.className='mv';
     const up=document.createElement('button'); up.textContent='↑';
-    up.onclick=()=>{ if(i>0){ [qs[i-1],qs[i]]=[qs[i],qs[i-1]]; drawRows(); } };
+    up.onclick=()=>{ if(i>0){ [qs[i-1],qs[i]]=[qs[i],qs[i-1]]; drawRows(); preview(); } };
     const dn=document.createElement('button'); dn.textContent='↓';
-    dn.onclick=()=>{ if(i<qs.length-1){ [qs[i+1],qs[i]]=[qs[i],qs[i+1]]; drawRows(); } };
+    dn.onclick=()=>{ if(i<qs.length-1){ [qs[i+1],qs[i]]=[qs[i],qs[i+1]]; drawRows(); preview(); } };
+    const brk=document.createElement('button'); brk.textContent='⤓';
+    brk.title='Sonraki sütuna atla'; brk.className='ql-btn break';
+    brk.onclick=()=>{ q.forceBreak=!q.forceBreak; drawRows(); preview(); };
+    if(q.forceBreak){ brk.style.background='var(--ye)'; brk.style.color:'#111'; }
     const rm=document.createElement('button'); rm.textContent='✕';
-    rm.onclick=()=>{ qs.splice(i,1); drawTray(); drawRows(); };
-    mv.append(up,dn,rm);
+    rm.onclick=()=>{ qs.splice(i,1); drawTray(); drawRows(); preview(); };
+    mv.append(up,dn,brk,rm);
     r.append(a,mv); w.appendChild(r);
   });
 }
@@ -2008,7 +2183,27 @@ function openTest(t,edit){
 }
 
 /* ════════ A4 Mizanpaj ve Dizgi Motoru ════════ */
-const PAGE={w:210,h:297,m:13};
+let PAGE={w:210,h:297,m:13};
+function setPage(orient){
+  if(orient==='landscape'){PAGE={w:297,h:210,m:13};}
+  else{PAGE={w:210,h:297,m:13};}
+}
+const TEMPLATES=[
+  {id:'default',name:'Yeşil',c1:'#10B981',c2:'#059669',c3:'#047857'},
+  {id:'blue',name:'Mavi',c1:'#3B82F6',c2:'#1D4ED8',c3:'#1E40AF'},
+  {id:'red',name:'Kırmızı',c1:'#EF4444',c2:'#DC2626',c3:'#B91C1C'},
+  {id:'purple',name:'Mor',c1:'#8B5CF6',c2:'#7C3AED',c3:'#6D28D9'},
+  {id:'orange',name:'Turuncu',c1:'#F59E0B',c2:'#D97706',c3:'#B45309'},
+  {id:'teal',name:'Turkuaz',c1:'#06B6D4',c2:'#0891B2',c3:'#0E7490'},
+  {id:'navy',name:'Lacivert',c1:'#1E3A5F',c2:'#1E40AF',c3:'#172554'},
+  {id:'rose',name:'Gül',c1:'#F43F5E',c2:'#E11D48',c3:'#BE123C'},
+];
+const FONTS={
+  default:{family:'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',pdf:'helvetica'},
+  poppins:{family:'"Poppins",-apple-system,sans-serif',pdf:'helvetica'},
+  roboto:{family:'"Roboto",-apple-system,sans-serif',pdf:'helvetica'},
+  merri:{family:'"Merriweather",Georgia,serif',pdf:'times'}
+};
 const GAP=8, TITLE_H=5, AFTER=4, SOFT_K=0.88;
 
 function headerH(cfg){ 
@@ -2063,6 +2258,10 @@ function packNatural(list,cfg,colW){
     let k=1, w=colW, h=colW*(q.h/q.w);
     if(h>capH){ k=capH/h; h=capH; w=colW*k; worst=Math.min(worst,k); }
     const bh=TITLE_H+h+cfg.sol+AFTER;
+    if(q.forceBreak && pg && pg.count>0){
+      if(ci < cfg.cols-1){ ci++; y=topOf(pages.length-1,cfg); }
+      else { start(); ci=0; y=topOf(pages.length-1,cfg); }
+    }
     let guard=0;
     while(guard++<6){
       const full=cfg.max>0 && pg.count>=cfg.max;
@@ -2246,6 +2445,23 @@ function drawBookPick(active){
 }
 
 /* A4 Üzerinden Soru Taşıma / Silme Fonksiyonları */
+
+let liveDragSrc=null;
+function liveDragStart(e){ liveDragSrc=this; this.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',this.dataset.qid); }
+function liveDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; if(this!==liveDragSrc) this.classList.add('drop-target'); }
+function liveDragLeave(e){ this.classList.remove('drop-target'); }
+function liveDrop(e){
+  e.stopPropagation(); e.preventDefault(); this.classList.remove('drop-target');
+  if(this===liveDragSrc) return;
+  const srcId=liveDragSrc.dataset.qid, tgtId=this.dataset.qid;
+  const srcIdx=qs.findIndex(q=>q.id===srcId);
+  const tgtIdx=qs.findIndex(q=>q.id===tgtId);
+  if(srcIdx<0||tgtIdx<0) return;
+  const [moved]=qs.splice(srcIdx,1); qs.splice(tgtIdx,0,moved);
+  if(BOOKS.length&&BOOKS[currentBookIdx]) BOOKS[currentBookIdx].list=qs.slice();
+  recalcAndRedrawPages(); drawRows(); drawTray(); renderPool();
+  toast('Soru taşındı');
+}
 function recalcAndRedrawPages(){
   if(BOOKS.length && BOOKS[currentBookIdx]){
     BOOKS[currentBookIdx].pages = layout(BOOKS[currentBookIdx].list, CFG);
@@ -2346,6 +2562,7 @@ function drawPages(){
       ctrls.innerHTML = `
         <button class="ql-btn" title="Yukarı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', -1)">↑</button>
         <button class="ql-btn" title="Aşağı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', 1)">↓</button>
+        <button class="ql-btn break" title="Sonraki sütun" onclick="event.stopPropagation(); breakQuestion('${it.q.id}')">⤓</button>
         <button class="ql-btn del" title="Testten çıkar" onclick="event.stopPropagation(); removeQuestionFromPreview('${it.q.id}')">✕</button>
       `;
       qBox.appendChild(ctrls);
@@ -2411,6 +2628,9 @@ function cfgNow(){
     fill:$('f-fill').value,
     template:$('f-template').value||'studio',
     soltype:$('f-soltype').value||'blank',
+    orient:$('f-orient').value||'portrait',
+    font:$('f-font').value||'default',
+    tpl:window._selTpl||'default',
     info:$('f-info').checked, pts:$('f-pts').checked, key:$('f-key').checked,
     book:parseInt($('f-book').value)||1, optic:$('f-optic').checked, qr:$('f-qr').checked
   };
@@ -2428,6 +2648,7 @@ async function build(){
     if(!qs.length) return toast('Hiç soru seçilmemiş',true);
     const cfg=cfgNow();
     CFG=cfg;
+    setPage(cfg.orient);
     await reflowText(cfg);
     HDR=headerImage(cfg);
 
@@ -2682,7 +2903,8 @@ function drawOptic(doc, book){
 function makePdf(){
   if(!pdfReady||!window.jspdf) throw new Error('PDF motoru yüklenemedi');
   const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({unit:'mm',format:'a4',compress:true});
+  const orient=(CFG&&CFG.orient==='landscape')?'landscape':'portrait';
+  const doc=new jsPDF({unit:'mm',format:'a4',compress:true,orientation:orient});
   const hasAns=qs.some(q=>q.ans);
 
   BOOKS.forEach((book,bi)=>{
