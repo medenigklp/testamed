@@ -151,11 +151,20 @@ input,select,textarea{font:inherit}
   align-items:flex-start;padding:10px;-webkit-overflow-scrolling:touch;position:relative}
 #wrap{position:relative;display:inline-block;line-height:0;box-shadow:0 4px 20px rgba(0,0,0,.3);background:#fff}
 #page{display:block}
-#veil{position:absolute;inset:0;touch-action:none}
-#box{position:absolute;border:2.5px solid var(--or);background:rgba(16,185,129,.14);
-  display:none;pointer-events:none;border-radius:3px;z-index:10}
 
-/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
+/* Kırpma Perdesi ve Kutusu (Hata Düzeltildi) */
+#veil{position:absolute;inset:0;touch-action:none;cursor:crosshair;z-index:25}
+#box{
+  position:absolute;
+  border:2.5px solid var(--or);
+  background:rgba(16,185,129,.18);
+  display:none;
+  pointer-events:none !important;
+  border-radius:4px;
+  z-index:15;
+}
+
+/* teststud.io Kırpma Üzerinde Yüzen Şık & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
@@ -941,7 +950,7 @@ async function render(){
     g.restore();
   }
   if(cleanLv>0){ try{ cleanDoc(cv,cleanLv); }catch(_){} }
-  ratio=cv.width/parseFloat(cv.style.width);
+  ratio=cv.width/(parseFloat(cv.style.width) || cv.width || 1);
   $('pginfo').textContent=pageNo+' / '+active.pages;
   $('zminfo').textContent='%'+Math.round(scale/fit*100);
   $('pg-').disabled=pageNo<=1; $('pg+').disabled=pageNo>=active.pages;
@@ -965,7 +974,7 @@ function mode(){
   hideBox();
 }
 
-/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma) */
+/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma — Hata Düzeltildi) */
 const veil=$('veil'), boxEl=$('box');
 let drag=null, pinch=null;
 function hideBox(){ boxEl.style.display='none'; }
@@ -973,32 +982,46 @@ function rel(e){
   const r=$('page').getBoundingClientRect();
   return {x:e.clientX-r.left, y:e.clientY-r.top};
 }
+
 veil.addEventListener('pointerdown',e=>{
   if(!selectMode) return;
-  if(e.pointerType==='touch'&&e.isPrimary===false) return;
-  veil.setPointerCapture(e.pointerId);
+  if(e.pointerType==='touch'&&!e.isPrimary) return;
+  try { veil.setPointerCapture(e.pointerId); } catch(_) {}
   drag=rel(e);
-  boxEl.style.cssText='display:block;left:'+drag.x+'px;top:'+drag.y+'px;width:0;height:0';
+  boxEl.style.display='block';
+  boxEl.style.left=drag.x+'px';
+  boxEl.style.top=drag.y+'px';
+  boxEl.style.width='0px';
+  boxEl.style.height='0px';
   hideFloatingCropBar();
 });
+
 veil.addEventListener('pointermove',e=>{
   if(!drag) return;
   const p=rel(e);
   const x=Math.min(drag.x,p.x), y=Math.min(drag.y,p.y);
   const w=Math.abs(p.x-drag.x), h=Math.abs(p.y-drag.y);
-  boxEl.style.left=x+'px'; boxEl.style.top=y+'px';
-  boxEl.style.width=w+'px'; boxEl.style.height=h+'px';
+  boxEl.style.left=x+'px';
+  boxEl.style.top=y+'px';
+  boxEl.style.width=w+'px';
+  boxEl.style.height=h+'px';
 });
+
 veil.addEventListener('pointerup',e=>{
   if(!drag) return;
+  try { veil.releasePointerCapture(e.pointerId); } catch(_) {}
   const p=rel(e);
   const x=Math.min(drag.x,p.x), y=Math.min(drag.y,p.y);
   const w=Math.abs(p.x-drag.x), h=Math.abs(p.y-drag.y);
   drag=null;
-  if(w<24||h<24){ hideBox(); return; }
+  if(w<15||h<15){ hideBox(); return; }
   grab(x,y,w,h);
 });
-veil.addEventListener('pointercancel',()=>{drag=null;hideBox();});
+
+veil.addEventListener('pointercancel',()=>{
+  drag=null;
+  hideBox();
+});
 
 /* İki parmakla zoom */
 $('stage').addEventListener('touchstart',e=>{
@@ -1154,10 +1177,15 @@ async function rotate(){
   toast('90° döndürüldü');
 }
 
-/* Soru Kırpma & teststud.io Yüzen Panel Tetikleyici */
+/* Soru Kırpma & Yüzen Şık Paneli */
 function grab(x,y,w,h){
   const cv=$('page');
-  const sx=x*ratio, sy=y*ratio, sw=w*ratio, sh=h*ratio;
+  const sx=Math.max(0, Math.round(x*ratio)),
+        sy=Math.max(0, Math.round(y*ratio)),
+        sw=Math.min(cv.width - sx, Math.round(w*ratio)),
+        sh=Math.min(cv.height - sy, Math.round(h*ratio));
+  if(sw<=0 || sh<=0){ hideBox(); return; }
+
   const k=sw>MAXW?MAXW/sw:1;
   const dw=Math.round(sw*k), dh=Math.round(sh*k);
   const t=document.createElement('canvas');
@@ -1168,12 +1196,11 @@ function grab(x,y,w,h){
   c.drawImage(cv,sx,sy,sw,sh,PAD,PAD,dw,dh);
 
   pendingCropData = {
-    img: t.toDataURL('image/jpeg',.88),
+    img: t.toDataURL('image/jpeg',.90),
     w: t.width,
     h: t.height
   };
 
-  // Yüzen Paneli Kırpma Alanının Altında Aç (Videodaki teststud.io formatı)
   showFloatingCropBar(x, y + h);
 }
 
@@ -1181,8 +1208,8 @@ function showFloatingCropBar(x, y){
   const bar = $('cropFloatingBar');
   const wrap = $('wrap').getBoundingClientRect();
   bar.style.display = 'flex';
-  bar.style.left = Math.max(10, Math.min(wrap.width - 270, x)) + 'px';
-  bar.style.top = (y + 10) + 'px';
+  bar.style.left = Math.max(10, Math.min(wrap.width - 280, x)) + 'px';
+  bar.style.top = (y + 8) + 'px';
   setFloatingOpt('A');
   $('floatingCustomText').value = '';
 }
@@ -2101,14 +2128,14 @@ function headerImage(cfg){
   g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
   g.textBaseline='top';
 
-  // teststud.io 3 Parçalı Renkli Başlık Anteti (Videodaki Birebir Şablon)
+  // teststud.io 3 Parçalı Renkli Başlık Anteti
   if(cfg.template==='studio'){
     const pad=1.5*K;
     const leftW=c.width*0.25, rightW=c.width*0.30;
     const centerW=c.width - leftW - rightW - pad*2;
     const bh=c.height-2*K;
 
-    // Sol Kutu (Ders & Sınıf)
+    // Sol Blok (Ders)
     g.fillStyle='#064E3B';
     if(g.roundRect) g.roundRect(0, 0, leftW, bh, 1.5*K); else g.fillRect(0, 0, leftW, bh);
     g.fill();
@@ -2116,14 +2143,14 @@ function headerImage(cfg){
     g.textAlign='center';
     g.fillText((cfg.lesson||'KİMYA').toUpperCase(), leftW/2, bh/2 - 1.8*K);
 
-    // Orta Kutu (Konu & Başlık)
+    // Orta Blok (Konu)
     g.fillStyle='#047857';
     if(g.roundRect) g.roundRect(leftW+pad, 0, centerW, bh, 1.5*K); else g.fillRect(leftW+pad, 0, centerW, bh);
     g.fill();
     g.fillStyle='#FFFFFF'; g.font='800 '+(3.8*K)+'px Arial, sans-serif';
     g.fillText((cfg.topic||cfg.title||'KAZANIM TESTİ').toUpperCase(), leftW+pad + centerW/2, bh/2 - 1.9*K);
 
-    // Sağ Kutu (Öğretmen / Yayın)
+    // Sağ Blok (Öğretmen)
     g.fillStyle='#064E3B';
     if(g.roundRect) g.roundRect(leftW+centerW+pad*2, 0, rightW, bh, 1.5*K); else g.fillRect(leftW+centerW+pad*2, 0, rightW, bh);
     g.fill();
@@ -2482,7 +2509,7 @@ const QR=(function(){
         const row=up?size-1-k:k;
         for(let c=0;c<2;c++){const cc=col-c;
           if(m[row][cc]===null){let v=bi<bytes.length*8?bit():0;
-            if((row+cc)%2===0)v^=1;
+            if((row+cc)%2===0)v^=1; // mask 0
             m[row][cc]=v;}}
       }
       up=!up;
