@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#10B981"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="testamed"/>
-<title>testamed — Soru & Test Dizgi Stüdyosu</title>
+<title>testamed</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&display=swap"/>
@@ -25,13 +25,13 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --or:#10B981; --gr:#059669; --ye:#F59E0B; --cy:#06B6D4;
-  --ink:#091E19;
-  --ink2:#1E3A34;
-  --soft:#64748B;
-  --line:#D1DCD6;
-  --bg:#F4F8F6;
+  --ink:#0E1A17;
+  --ink2:#2C3A36;
+  --soft:#6E7C77;
+  --line:#DDE3DC;
+  --bg:#F5F7F2;
   --w:#fff;
-  --grid:rgba(16,185,129,.04);
+  --grid:rgba(14,26,23,.045);
   --safe:env(safe-area-inset-bottom,0px);
   --disp:'Bricolage Grotesque',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
@@ -121,7 +121,7 @@ input,select,textarea{font:inherit}
 #engine.ok{color:var(--gr)} #engine.err{color:var(--or)}
 #engine::before{content:'● ';font-size:8px;vertical-align:middle}
 
-/* 2. Ekran: Görüntüleyici */
+/* 2. Ekran: Görüntüleyici (Orijinal Tam Ekran Kırpma) */
 #bar{background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0}
 .brow{display:flex;align-items:center;gap:6px;padding:7px 10px}
 .brow+.brow{border-top:1px solid var(--bg)}
@@ -130,7 +130,7 @@ input,select,textarea{font:inherit}
 .brow.fine{gap:8px;background:var(--bg)}
 .brow.fine input[type=range]{flex:1;min-width:0;accent-color:var(--or);height:26px}
 .brow.fine .bb{padding:8px 11px}
-#skew.on{background:var(--cy);color:#fff;box-shadow:0 2px 8px rgba(23,162,214,.28)}
+#skew.on{background:var(--cy);color:#fff;box-shadow:0 2px 8px rgba(6,182,212,.28)}
 .brow.tools .bb{flex:1 1 auto;min-width:0;text-align:center}
 #files{overflow-x:auto}
 .bb{background:var(--bg);border-radius:10px;padding:9px 12px;font-size:13px;font-weight:700;
@@ -139,7 +139,6 @@ input,select,textarea{font:inherit}
 .bb.on{background:var(--or);color:#fff;box-shadow:0 2px 8px rgba(16,185,129,.26)}
 #clean.on{background:var(--gr);color:#fff;box-shadow:0 2px 8px rgba(5,150,105,.28)}
 #clean.hard{background:var(--ink);color:#fff;box-shadow:0 2px 8px rgba(14,26,23,.3)}
-#magnet.on{background:var(--ye);color:#111;box-shadow:0 2px 8px rgba(245,158,11,.3)}
 @media(max-width:380px){.brow.tools .bb{font-size:12px;padding:9px 8px}}
 .bb:disabled{opacity:.35}
 .info{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink2);
@@ -148,7 +147,7 @@ input,select,textarea{font:inherit}
   font-weight:600;white-space:nowrap;flex-shrink:0;background:var(--w)}
 .ftab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
-#stage{flex:1;overflow:auto;background:#2B3833;display:flex;justify-content:center;
+#stage{flex:1;overflow:auto;background:#3A3F44;display:flex;justify-content:center;
   align-items:flex-start;padding:10px;-webkit-overflow-scrolling:touch}
 #wrap{position:relative;display:inline-block;line-height:0;box-shadow:0 4px 20px rgba(0,0,0,.3);background:#fff}
 #page{display:block}
@@ -171,7 +170,7 @@ input,select,textarea{font:inherit}
   border-radius:50%;width:17px;height:17px;font-size:10px;line-height:17px;text-align:center}
 .empty{font-size:12px;color:var(--soft);font-style:italic}
 
-/* 3. Ekran: Düzen & Ayarlar */
+/* 3. Ekran: Ayarlar & Düzen */
 #s-set{overflow-y:auto;padding:16px;padding-bottom:calc(20px + var(--safe))}
 .sec{font-family:var(--disp);font-size:11px;font-weight:700;color:var(--ink);
   text-transform:uppercase;letter-spacing:.09em;margin:22px 0 10px;
@@ -187,7 +186,6 @@ input,select,textarea{font:inherit}
 .f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(6,182,212,.13)}
 .f input::placeholder{color:#B5BEB9}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .chk{display:flex;align-items:center;gap:12px;background:var(--w);border:1px solid var(--line);
   border-radius:12px;padding:12px 13px;margin-bottom:7px;transition:.14s}
 .chk:active{background:var(--bg)}
@@ -214,117 +212,6 @@ input,select,textarea{font:inherit}
 .ghost{width:100%;background:var(--w);border:1.5px solid var(--line);border-radius:12px;
   padding:12px;font-size:14px;font-weight:600;color:var(--ink2);margin-bottom:12px;transition:.14s}
 .ghost:active{background:var(--bg)}
-
-/* Yapay Zeka */
-#s-ai{overflow-y:auto}
-.aibody{padding:16px;padding-bottom:calc(24px + var(--safe))}
-.keyinfo{font-size:11.5px;color:var(--soft);line-height:1.55;background:var(--w);
-  border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:4px}
-.keyinfo a{color:var(--cy)}
-.aiwarn{font-size:12px;color:#8A5A00;background:#FFF8E6;border:1px solid #FFE08A;
-  border-radius:11px;padding:11px 13px;margin-top:12px;line-height:1.55}
-.modetabs{display:flex;gap:7px;margin-bottom:16px}
-.mt{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:10px;font-size:12.5px;
-  font-weight:700;color:var(--ink2);background:var(--w);transition:.14s}
-.mt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.pasteinfo{background:#EEF7FF;border:1px solid #BBDFFB;border-radius:12px;padding:12px;
-  font-size:13px;line-height:1.55;color:#0D4F73;margin-bottom:4px}
-.applinks{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
-.applinks a{border:1.5px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12.5px;
-  font-weight:700;color:var(--ink);text-decoration:none;background:var(--w)}
-.applinks a:active{background:var(--bg)}
-.pastehint{font-size:12px;color:var(--soft);margin:9px 0 0;line-height:1.55}
-#p-in{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;
-  font-size:13px;font-family:ui-monospace,monospace;outline:none;background:var(--w);resize:vertical}
-#p-in:focus{border-color:var(--cy)}
-#a-out{margin-top:16px}
-.aiq{background:var(--w);border:1.5px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px}
-.aiq.off{opacity:.4}
-.aiq .qt{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:9px;white-space:pre-wrap}
-.aiq .op{font-size:13.5px;color:var(--soft);line-height:1.85}
-.aiq .op b{color:var(--ink);font-family:ui-monospace,monospace;margin-right:5px}
-.aiq .op .ok{color:var(--gr);font-weight:700}
-.aiq .why{font-size:12px;color:var(--soft);background:var(--bg);border-radius:9px;
-  padding:8px 10px;margin-top:9px;line-height:1.5}
-.aiq .acts{display:flex;gap:7px;margin-top:10px}
-.aiq .acts button{flex:1;border-radius:9px;padding:8px;font-size:12.5px;font-weight:700;
-  background:var(--bg);color:var(--soft)}
-.aiq .acts .drop.on{background:#FDECEA;color:#C0392B}
-.aispin{text-align:center;padding:26px;color:var(--soft);font-size:13.5px}
-.aispin .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--or);
-  margin:0 3px;animation:bl 1s infinite}
-.aispin .dot:nth-child(2){animation-delay:.15s}.aispin .dot:nth-child(3){animation-delay:.3s}
-@keyframes bl{0%,100%{opacity:.25}50%{opacity:1}}
-
-/* Kitaplık */
-#s-lib{background:var(--bg)}
-.ltabs{display:flex;gap:6px;padding:10px 12px;background:var(--w);
-  border-bottom:1px solid var(--line);flex-shrink:0}
-.lt{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:10px;
-  font-size:13px;font-weight:700;color:var(--ink2);background:var(--w);transition:.14s}
-.lt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.lfilter{display:flex;flex-wrap:wrap;gap:6px;padding:9px 12px;flex-shrink:0;background:var(--w);
-  border-bottom:1px solid var(--line)}
-.lfilter .lsearch{flex-basis:100%}
-.fc{border:1.5px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;
-  font-weight:600;white-space:nowrap;background:var(--w);color:var(--ink)}
-.fc.on{background:var(--or);border-color:var(--or);color:#fff}
-.lbody{flex:1;overflow-y:auto;padding:12px}
-.lfoot{flex-shrink:0;padding:10px 12px;padding-bottom:calc(10px + var(--safe));
-  background:var(--w);border-top:1px solid var(--line);display:none}
-.grp{margin-bottom:16px}
-.grp h4{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--soft);
-  text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
-.gq{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
-.bq{position:relative;background:var(--w);border:2px solid var(--line);border-radius:10px;
-  overflow:hidden;padding:0}
-.bq img{display:block;width:100%;height:78px;object-fit:contain;background:#fff}
-.bq.sel{border-color:var(--or);box-shadow:0 0 0 3px rgba(16,185,129,.18)}
-.bq .tick{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;
-  background:var(--or);color:#fff;font-size:11px;line-height:20px;text-align:center;display:none}
-.bq.sel .tick{display:block}
-.bq .del{position:absolute;bottom:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;
-  border-radius:6px;font-size:10px;padding:2px 5px}
-.bq .tg{position:absolute;top:3px;left:3px;background:rgba(6,182,212,.9);color:#fff;
-  border-radius:5px;font-size:9px;font-weight:700;padding:1px 5px;max-width:70%;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fc.tag{border-style:dashed}
-.trow{display:flex;align-items:center;gap:10px;background:var(--w);border:1px solid var(--line);
-  border-radius:13px;padding:12px;margin-bottom:8px}
-.trow .ti{flex:1;min-width:0}
-.trow .tn{font-family:var(--disp);font-weight:700;font-size:14.5px;letter-spacing:-.012em}
-.trow .tm{font-size:11.5px;color:var(--soft);margin-top:2px}
-.trow button{border-radius:9px;padding:8px 11px;font-size:12px;font-weight:700}
-.tb-edit{background:rgba(6,182,212,.14);color:#0E7FA8}
-.tb-open{background:rgba(16,185,129,.12);color:var(--or)}
-.tb-del{background:#FDECEA;color:#C0392B}
-.lempty{text-align:center;color:var(--soft);font-size:13.5px;padding:40px 20px}
-.bkinfo{background:var(--w);border:1px solid var(--line);border-radius:12px;padding:14px;
-  font-size:13.5px;line-height:1.6;margin-bottom:12px}
-.bkinfo b{color:var(--or)}
-.bkwarn{font-size:12px;color:var(--soft);margin-top:8px;line-height:1.5}
-#bkdl .da{display:block;text-align:center;background:var(--gr);color:#fff;border-radius:12px;
-  padding:13px;font-size:14.5px;font-weight:700;text-decoration:none;margin-bottom:6px}
-#bkdl{margin-bottom:12px}
-.lsearch{width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;
-  outline:none;font-size:14px;background:var(--w)}
-.lsearch:focus{border-color:var(--cy)}
-.selbar{display:flex;gap:8px;align-items:center}
-.selall{border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;font-size:12.5px;
-  font-weight:700;color:var(--soft);background:var(--w);white-space:nowrap}
-#modal{position:fixed;inset:0;background:rgba(17,20,24,.55);z-index:800;display:none;
-  align-items:flex-end}
-#modal.on{display:flex}
-#mbox{background:var(--w);width:100%;border-radius:22px 22px 0 0;padding:20px 16px;
-  padding-bottom:calc(20px + var(--safe))}
-#mbox h3{font-size:16px;font-weight:700;margin-bottom:14px}
-#mbox input{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:12px;
-  margin-bottom:9px;outline:none;font-size:15px}
-#mbox input:focus{border-color:var(--cy)}
-.mbtns{display:flex;gap:8px;margin-top:6px}
-.mbtns button{flex:1;border-radius:12px;padding:13px;font-size:14.5px;font-weight:700}
-#mok{background:var(--or);color:#fff}
-#mno{background:var(--bg);color:var(--soft)}
 
 /* 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı */
 #pbar{background:var(--w);border-bottom:1px solid var(--line);display:flex;gap:6px;
@@ -370,7 +257,7 @@ input,select,textarea{font:inherit}
   font-size:12px;font-weight:600;line-height:1.5;margin-bottom:10px}
 #dl-view{display:none;width:100%;height:320px;border:none;border-radius:10px;
   margin-top:10px;background:#fff}
-#pv{flex:1;overflow:auto;background:#2B3833;padding:12px;-webkit-overflow-scrolling:touch}
+#pv{flex:1;overflow:auto;background:#3A3F44;padding:12px;-webkit-overflow-scrolling:touch}
 #pages{display:flex;flex-direction:column;gap:14px;align-items:center}
 .pg{position:relative;width:100%;max-width:520px;aspect-ratio:210/297;background:#fff;
   box-shadow:0 6px 26px rgba(0,0,0,.3);border-radius:3px;overflow:hidden}
@@ -386,28 +273,18 @@ input,select,textarea{font:inherit}
   letter-spacing:.04em}
 .pg .pf{position:absolute;right:5%;bottom:2%;font-size:9px;color:#b0b0b0;font-family:var(--mono)}
 
-/* teststud.io Tarzı Canlı A4 Soru Taşıma & Aksiyon Kutusu */
-.q-interactive-box{
+/* A4 Üzerinde Doğrudan Soru Değiştirme / Taşıma Butonları */
+.q-live-wrap{
   position:absolute;
   border-radius:4px;
-  cursor:grab;
   user-select:none;
-  transition:box-shadow .14s, outline .14s;
+  transition:box-shadow .12s, outline .12s;
 }
-.q-interactive-box:hover{
+.q-live-wrap:hover{
   outline:2px dashed var(--or);
-  background:rgba(16,185,129,.04);
-  box-shadow:0 2px 10px rgba(16,185,129,.12);
+  background:rgba(16,185,129,.03);
 }
-.q-interactive-box.dragging{
-  opacity:0.25;
-  outline:2px solid var(--or);
-}
-.q-interactive-box.drag-over{
-  outline:2.5px solid var(--cy);
-  background:rgba(6,182,212,.14);
-}
-.q-ctrl-pill{
+.q-live-ctrls{
   position:absolute;
   top:-11px;
   right:0;
@@ -417,13 +294,13 @@ input,select,textarea{font:inherit}
   background:var(--ink);
   padding:2px 4px;
   border-radius:6px;
-  box-shadow:0 3px 10px rgba(0,0,0,.35);
-  z-index:30;
+  box-shadow:0 3px 10px rgba(0,0,0,.3);
+  z-index:20;
 }
-.q-interactive-box:hover .q-ctrl-pill{
+.q-live-wrap:hover .q-live-ctrls{
   display:flex;
 }
-.q-btn{
+.ql-btn{
   color:#fff;
   font-size:10px;
   font-weight:bold;
@@ -431,13 +308,13 @@ input,select,textarea{font:inherit}
   border-radius:4px;
   line-height:1;
   background:rgba(255,255,255,.15);
-  transition:.12s;
+  transition:.1s;
 }
-.q-btn:hover{
+.ql-btn:hover{
   background:var(--or);
   color:#042f2e;
 }
-.q-btn.del:hover{
+.ql-btn.del:hover{
   background:#EF4444;
   color:#fff;
 }
@@ -497,7 +374,7 @@ input,select,textarea{font:inherit}
       <div class="hint">
         <b>Nasıl çalışır?</b>
         <ol>
-          <li>Sayfayı büyüt, sorunun etrafına kutu çiz</li>
+          <li>Sayfayı büyüt, parmağınla veya fareyle sorunun etrafına kutu çiz</li>
           <li>Seçtiklerin alt şeritte birikir</li>
           <li>Sırala, puanla, cevabını işaretle</li>
           <li>A4 test olarak yazdır veya PDF kaydet</li>
@@ -506,7 +383,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
-    <!-- 2. Ekran: Görüntüleyici -->
+    <!-- 2. Ekran: Görüntüleyici (Orijinal Tam Ekran Kırpma Alanı) -->
     <div class="scr" id="s-view">
       <div id="bar">
         <div class="brow" id="files"></div>
@@ -524,7 +401,6 @@ input,select,textarea{font:inherit}
           <button class="bb" id="rot" onclick="rotate()">⟳ Döndür</button>
           <button class="bb" id="skew" onclick="toggleSkew()">⤢ Düzelt</button>
           <button class="bb" id="clean" onclick="toggleClean()">✨ Temizle</button>
-          <button class="bb on" id="magnet" onclick="toggleMagnet()">🧲 Mıknatıs</button>
           <button class="bb" id="undo" onclick="undo()" disabled>↩︎</button>
         </div>
       </div>
@@ -652,23 +528,6 @@ input,select,textarea{font:inherit}
     <!-- 3. Ekran: Düzen & Ayarlar -->
     <div class="scr" id="s-set">
       <div id="editbar"></div>
-
-      <div class="sec">Şablon Stili (teststud.io)</div>
-      <div class="r3">
-        <div class="f">
-          <select id="f-template" onchange="preview()">
-            <option value="classic" selected>Klasik MEB Anteti</option>
-            <option value="modern">Modern Renkli Başlık</option>
-            <option value="minimal">Minimal Çizgili</option>
-          </select>
-        </div>
-        <div class="f" style="grid-column: span 2;">
-          <button onclick="distribute100()" class="ghost" style="margin:0; height:100%; font-size:13px; font-weight:700; color:var(--or);">
-            ⚡ 100 Puana Eşit Dağıt
-          </button>
-        </div>
-      </div>
-
       <div class="sec">Sınav künyesi</div>
       <div class="f"><label>Okul</label><input id="f-school" placeholder="Okul adı"/></div>
       <div class="r2">
@@ -823,7 +682,6 @@ const $=id=>document.getElementById(id);
 let docs=[], active=null, pageNo=1, scale=1, fit=1;
 let qs=[], selectMode=true, ratio=1, engineReady=false;
 let screen='home', html='', editingTest=null, currentBookIdx=0;
-let autoMagnet=true;
 const FRAMED=(function(){try{return window.self!==window.top;}catch(_){return true;}})();
 
 function toast(msg,isErr){
@@ -1007,13 +865,7 @@ function mode(){
   hideBox();
 }
 
-function toggleMagnet(){
-  autoMagnet=!autoMagnet;
-  $('magnet').classList.toggle('on', autoMagnet);
-  toast(autoMagnet ? 'Mıknatıs Açık (Beyaz boşluklar budanır)' : 'Mıknatıs Kapalı');
-}
-
-/* Alan Seçimi */
+/* Alan Seçimi (Mobilde Dokunmatik & Masaüstünde Fareyle Elle Soru Kırpma) */
 const veil=$('veil'), boxEl=$('box');
 let drag=null, pinch=null;
 function hideBox(){ boxEl.style.display='none'; }
@@ -1201,61 +1053,20 @@ async function rotate(){
   toast('90° döndürüldü');
 }
 
-/* teststud.io Mıknatıs: Beyaz Boşluk Budama */
-function autoTrimWhiteSpaces(canvas) {
-  const ctx = canvas.getContext('2d');
-  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const d = imgData.data;
-  let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
-
-  for (let y = 0; y < canvas.height; y++) {
-    for (let x = 0; x < canvas.width; x++) {
-      const idx = (y * canvas.width + x) * 4;
-      const isWhite = d[idx] > 240 && d[idx + 1] > 240 && d[idx + 2] > 240;
-      if (!isWhite) {
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
-      }
-    }
-  }
-
-  if (maxX <= minX || maxY <= minY) return canvas;
-  const pad = 4;
-  minX = Math.max(0, minX - pad);
-  minY = Math.max(0, minY - pad);
-  maxX = Math.min(canvas.width, maxX + pad);
-  maxY = Math.min(canvas.height, maxY + pad);
-
-  const trimW = maxX - minX;
-  const trimH = maxY - minY;
-  const trimmed = document.createElement('canvas');
-  trimmed.width = trimW;
-  trimmed.height = trimH;
-  trimmed.getContext('2d').drawImage(canvas, minX, minY, trimW, trimH, 0, 0, trimW, trimH);
-  return trimmed;
-}
-
 /* Soru Kırpma */
 function grab(x,y,w,h){
   const cv=$('page');
   const sx=x*ratio, sy=y*ratio, sw=w*ratio, sh=h*ratio;
   const k=sw>MAXW?MAXW/sw:1;
   const dw=Math.round(sw*k), dh=Math.round(sh*k);
-  let t=document.createElement('canvas');
+  const t=document.createElement('canvas');
   t.width=dw+PAD*2; t.height=dh+PAD*2;
   const c=t.getContext('2d');
   c.imageSmoothingQuality='high';
   c.fillStyle='#fff'; c.fillRect(0,0,t.width,t.height);
   c.drawImage(cv,sx,sy,sw,sh,PAD,PAD,dw,dh);
-
-  if(autoMagnet){
-    t = autoTrimWhiteSpaces(t);
-  }
-
   qs.push({id:'q_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), 
-           img:t.toDataURL('image/jpeg',.90),
+           img:t.toDataURL('image/jpeg',.88),
            w:t.width, h:t.height, pt:0, ans:''});
   drawTray();
   toast('Soru kırpıldı');
@@ -1280,7 +1091,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-sol','f-max','f-book','f-template'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-sol','f-max','f-book'];
 function loadTmpl(){
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
@@ -1312,7 +1123,7 @@ function fillSettings(){
   drawEditBar();
   if(!$('f-date').value) $('f-date').value=new Date().toLocaleDateString('tr-TR');
   spread();
-  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template'].forEach(id=>{
+  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill'].forEach(id=>{
     const e=$(id); if(e && !e._w){ e._w=1;
       e.addEventListener('change',()=>{ preview(); saveTmpl(); });
       e.addEventListener('input',saveTmpl);
@@ -1329,18 +1140,6 @@ function spread(){
   preview();
   drawEditBar();
 }
-
-function distribute100(){
-  if(!qs.length) return;
-  const each=Math.round(100/qs.length);
-  qs.forEach(q=>q.pt=each);
-  $('f-each').value=each;
-  $('f-total').value=100;
-  drawRows();
-  preview();
-  toast('Puanlar 100 puana eşit dağıtıldı');
-}
-
 async function preview(){
   const el=$('live'); if(!el) return;
   if(!qs.length){ el.style.display='none'; return; }
@@ -2013,7 +1812,6 @@ function openTest(t,edit){
     set('f-topic',c.topic);set('f-teacher',c.teacher);set('f-kind',c.kind);
     set('f-cols',c.cols);set('f-sol',c.sol);set('f-max',c.max);
     set('f-book',c.book);set('f-sep',c.sep);set('f-vsep',c.vsep);set('f-gutter',c.gutter);set('f-fill',c.fill);
-    set('f-template',c.template||'classic');
     $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key;
     $('f-optic').checked=!!c.optic;$('f-qr').checked=!!c.qr;
   }
@@ -2027,11 +1825,7 @@ function openTest(t,edit){
 const PAGE={w:210,h:297,m:13};
 const GAP=8, TITLE_H=5, AFTER=4, SOFT_K=0.88;
 
-function headerH(cfg){ 
-  if(cfg.template==='minimal') return 14;
-  if(cfg.template==='modern') return 24;
-  return cfg.info?30:17; 
-}
+function headerH(cfg){ return cfg.info?30:17; }
 function slotFix(cfg){ return TITLE_H+cfg.sol+AFTER; }
 function availOf(i,cfg){ return (PAGE.h-PAGE.m) - (i===0 ? PAGE.m+headerH(cfg) : PAGE.m); }
 function topOf(i,cfg){ return i===0 ? PAGE.m+headerH(cfg) : PAGE.m; }
@@ -2149,42 +1943,6 @@ function headerImage(cfg){
   g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
   g.textBaseline='top';
 
-  if(cfg.template==='modern'){
-    g.fillStyle='#091E19';
-    if(g.roundRect) g.roundRect(0, 0, c.width, c.height-1.5*K, 2*K);
-    else g.fillRect(0, 0, c.width, c.height-1.5*K);
-    g.fill();
-
-    g.fillStyle='#10B981';
-    g.font='700 '+(3.2*K)+'px Arial, sans-serif';
-    g.fillText((cfg.school||'TESTAMED AKADEMİ').toUpperCase(), 2*K, 2*K);
-
-    g.fillStyle='#ffffff';
-    g.font='700 '+(4.2*K)+'px Arial, sans-serif';
-    g.fillText(cfg.title||'KAZANIM DEĞERLENDİRME TESTİ', 2*K, 6.5*K);
-
-    g.fillStyle='#94A3B8';
-    g.font=''+(3.0*K)+'px Arial, sans-serif';
-    g.fillText((cfg.lesson||'')+' · '+(cfg.date||''), 2*K, 12*K);
-    return c.toDataURL('image/jpeg',0.92);
-  }
-
-  if(cfg.template==='minimal'){
-    g.fillStyle='#111';
-    g.font='700 '+(3.8*K)+'px Arial, sans-serif';
-    g.fillText((cfg.title||'SINAV').toUpperCase(), 0, 1.5*K);
-
-    g.fillStyle='#666';
-    g.font=''+(3.0*K)+'px Arial, sans-serif';
-    const sub=(cfg.lesson||'')+' · '+(cfg.date||'');
-    g.fillText(sub, c.width - g.measureText(sub).width, 2*K);
-
-    g.fillStyle='#111';
-    g.fillRect(0, c.height-1*K, c.width, 1*K);
-    return c.toDataURL('image/jpeg',0.92);
-  }
-
-  // Klasik MEB Formatı
   let y=2*K;
   if(cfg.school){
     g.fillStyle='#111'; g.font='700 '+(4.2*K)+'px Arial, sans-serif';
@@ -2248,7 +2006,7 @@ function drawBookPick(active){
   });
 }
 
-/* ════════ A4 Önizleme & Soru Yerini Değiştirme (teststud.io Canlı Mizanpaj) ════════ */
+/* ════════ A4 Önizleme & Soru Yerini Değiştirme Fonksiyonları ════════ */
 function recalcAndRedrawPages(){
   if(BOOKS.length && BOOKS[currentBookIdx]){
     BOOKS[currentBookIdx].pages = layout(BOOKS[currentBookIdx].list, CFG);
@@ -2276,7 +2034,7 @@ function moveQuestionInPreview(qId, dir){
     drawTray();
   }
   recalcAndRedrawPages();
-  toast('Soru sırası değiştirildi');
+  toast('Sıralama güncellendi');
 }
 
 function removeQuestionFromPreview(qId){
@@ -2291,26 +2049,6 @@ function removeQuestionFromPreview(qId){
     toast('Soru çıkarıldı');
   }
 }
-
-function swapQuestionsInPreview(srcId, targetId){
-  if(srcId === targetId) return;
-  const list = (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs;
-  const srcIdx = list.findIndex(item => String(item.id) === String(srcId));
-  const tgtIdx = list.findIndex(item => String(item.id) === String(targetId));
-  if(srcIdx === -1 || tgtIdx === -1) return;
-  const temp = list[srcIdx];
-  list[srcIdx] = list[tgtIdx];
-  list[tgtIdx] = temp;
-  if(currentBookIdx === 0){
-    qs = list.slice();
-    drawRows();
-    drawTray();
-  }
-  recalcAndRedrawPages();
-  toast('Soruların yerleri değiştirildi');
-}
-
-let draggedQuestionId = null;
 
 function drawPages(){
   const host=$('pages'); host.innerHTML='';
@@ -2327,9 +2065,7 @@ function drawPages(){
 
     pg.items.forEach(it=>{
       const qBox = document.createElement('div');
-      qBox.className = 'q-interactive-box';
-      qBox.setAttribute('draggable', 'true');
-      qBox.dataset.qId = it.q.id;
+      qBox.className = 'q-live-wrap';
       
       const boxW = it.w;
       const boxH = TITLE_H + it.h + (it.sol || 0);
@@ -2349,40 +2085,15 @@ function drawPages(){
       im.style.cssText = `left:0; top:${pct(TITLE_H, boxH)}; width:100%;`;
       qBox.appendChild(im);
 
-      // Hızlı Kontrol Butonları (teststud.io tarzı)
+      // A4 Üzerinden Hızlı Taşıma / Silme Butonları
       const ctrls = document.createElement('div');
-      ctrls.className = 'q-ctrl-pill';
+      ctrls.className = 'q-live-ctrls';
       ctrls.innerHTML = `
-        <button class="q-btn" title="Yukarı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', -1)">↑</button>
-        <button class="q-btn" title="Aşağı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', 1)">↓</button>
-        <button class="q-btn del" title="Testten çıkar" onclick="event.stopPropagation(); removeQuestionFromPreview('${it.q.id}')">✕</button>
+        <button class="ql-btn" title="Yukarı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', -1)">↑</button>
+        <button class="ql-btn" title="Aşağı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', 1)">↓</button>
+        <button class="ql-btn del" title="Testten çıkar" onclick="event.stopPropagation(); removeQuestionFromPreview('${it.q.id}')">✕</button>
       `;
       qBox.appendChild(ctrls);
-
-      // Drag & Drop Olayları
-      qBox.addEventListener('dragstart', (e)=>{
-        draggedQuestionId = it.q.id;
-        e.dataTransfer.setData('text/plain', it.q.id);
-        qBox.classList.add('dragging');
-      });
-      qBox.addEventListener('dragend', ()=>{
-        qBox.classList.remove('dragging');
-        document.querySelectorAll('.q-interactive-box').forEach(b => b.classList.remove('drag-over'));
-      });
-      qBox.addEventListener('dragover', (e)=>{
-        e.preventDefault();
-        qBox.classList.add('drag-over');
-      });
-      qBox.addEventListener('dragleave', ()=>{
-        qBox.classList.remove('drag-over');
-      });
-      qBox.addEventListener('drop', (e)=>{
-        e.preventDefault();
-        qBox.classList.remove('drag-over');
-        const srcId = e.dataTransfer.getData('text/plain') || draggedQuestionId;
-        const targetId = it.q.id;
-        swapQuestionsInPreview(srcId, targetId);
-      });
 
       el.appendChild(qBox);
 
@@ -2443,7 +2154,6 @@ function cfgNow(){
     sol:parseInt($('f-sol').value)||0, max:parseInt($('f-max').value)||0,
     sep:$('f-sep').value, vsep:$('f-vsep').value, gutter:$('f-gutter').value.trim(),
     fill:$('f-fill').value,
-    template:$('f-template').value||'classic',
     info:$('f-info').checked, pts:$('f-pts').checked, key:$('f-key').checked,
     book:parseInt($('f-book').value)||1, optic:$('f-optic').checked, qr:$('f-qr').checked
   };
@@ -2476,7 +2186,7 @@ async function build(){
     drawBookPick(0);
     $('dl').style.display='none';
     go('prev');
-    toast('Test hazır · Soruların üzerine gelerek yerini değiştirebilirsiniz');
+    toast('Test hazır · Sayfa üzerinde soruların sırasını değiştirebilirsiniz');
   }catch(err){ toast('Test oluşturulamadı: '+err.message,true); }
 }
 
