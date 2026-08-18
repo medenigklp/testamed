@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>testamed — Soru & Test Oluşturucu</title>
+  <title>testamed — Kimya Soru & Test Stüdyosu</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- KaTeX (Kimyasal/Matematiksel Formül Desteği) -->
+  <!-- KaTeX Formül Desteği -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
@@ -17,32 +17,38 @@
     @media print {
       .no-print { display: none !important; }
       .print-only { display: block !important; }
-      body { background: white; color: black; }
-      .test-container { columns: 2; column-gap: 30px; }
-      .question-item { break-inside: avoid; page-break-inside: avoid; margin-bottom: 24px; }
+      body { background: white; color: black; padding: 0; }
+      .test-container { columns: 2; column-gap: 36px; }
+      .question-item { break-inside: avoid; page-break-inside: avoid; margin-bottom: 24px; border-color: #cbd5e1 !important; }
+      .answer-key-box { break-inside: avoid; page-break-inside: avoid; }
     }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
 
   <!-- Üst Menü / Navbar -->
-  <header class="no-print border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+  <header class="no-print border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-bold text-slate-950 text-xl shadow-lg shadow-emerald-500/20 lowercase">
           t
         </div>
         <div>
-          <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent lowercase">testamed</span>
-          <span class="text-xs ml-2 px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">stüdyo panel</span>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent lowercase">testamed</span>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800">kimya stüdyosu</span>
+          </div>
         </div>
       </div>
       
       <div class="flex items-center gap-2">
-        <button onclick="window.print()" class="px-4 py-2 text-sm font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-2">
-          <i class="fa-solid fa-print"></i> Baskı / PDF Al
+        <button onclick="loadSampleTest()" class="px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-flask text-emerald-400"></i> Örnek Test Yükle
         </button>
-        <button onclick="exportJSON()" class="px-4 py-2 text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+        <button onclick="window.print()" class="px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-print"></i> PDF / Yazdır
+        </button>
+        <button onclick="exportJSON()" class="px-3 py-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
           <i class="fa-solid fa-download"></i> JSON İndir
         </button>
       </div>
@@ -54,104 +60,193 @@
     
     <!-- Sol Panel: Soru Oluşturma Formu -->
     <section class="no-print lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl h-fit">
-      <h2 class="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-pen-nib text-emerald-400"></i> Yeni Soru Ekle
-      </h2>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-base font-bold text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-pen-nib text-emerald-400"></i> Yeni Soru Ekle
+        </h2>
+        <button onclick="clearAllQuestions()" class="text-xs text-rose-400 hover:text-rose-300 transition">
+          <i class="fa-solid fa-trash-can"></i> Tümünü Temizle
+        </button>
+      </div>
 
       <form id="questionForm" class="space-y-4">
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Sınıf / Düzey</label>
-            <select id="grade" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none text-slate-200">
-              <option value="9. Sınıf">9. Sınıf</option>
-              <option value="10. Sınıf">10. Sınıf</option>
-              <option value="11. Sınıf">11. Sınıf</option>
-              <option value="12. Sınıf">12. Sınıf / YKS</option>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Düzey / Sınıf</label>
+            <select id="grade" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none text-slate-200">
+              <option value="9. Sınıf">9. Sınıf Kimya</option>
+              <option value="10. Sınıf">10. Sınıf Kimya</option>
+              <option value="11. Sınıf">11. Sınıf Kimya</option>
+              <option value="12. Sınıf">12. Sınıf Kimya</option>
+              <option value="TYT Kimya">TYT Kimya</option>
+              <option value="AYT Kimya">AYT Kimya</option>
             </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Konu Başlığı</label>
-            <input type="text" id="topic" placeholder="Örn: Kimyasal Türler" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none text-slate-200" required>
+            <input type="text" id="topic" placeholder="Örn: Sıvı Çözeltiler" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:border-emerald-500 focus:outline-none text-slate-200" required>
           </div>
         </div>
 
         <div>
           <div class="flex justify-between items-center mb-1">
-            <label class="block text-xs font-semibold text-slate-400">Soru Metni & Öncüller</label>
-            <span class="text-[10px] text-slate-500 font-mono">Formül için: $H_2O$ veya $Na^+$</span>
+            <label class="block text-xs font-semibold text-slate-400">Soru Metni</label>
+            <span class="text-[10px] text-emerald-400 font-mono">Formül: $H_2SO_4$, $Ca^{2+}$</span>
           </div>
-          <textarea id="questionText" rows="4" placeholder="Soru kökünü yazın..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm focus:border-emerald-500 focus:outline-none text-slate-200 resize-y" required></textarea>
+          <textarea id="questionText" rows="4" placeholder="Soru kökünü ve öncülleri buraya yazın..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs focus:border-emerald-500 focus:outline-none text-slate-200 resize-y" required></textarea>
         </div>
 
         <!-- Şıklar -->
         <div class="space-y-2">
-          <label class="block text-xs font-semibold text-slate-400">Seçenekler ve Doğru Cevap</label>
+          <label class="block text-xs font-semibold text-slate-400">Şıklar ve Doğru Cevap</label>
           
-          <div class="space-y-2">
+          <div class="space-y-1.5">
             <div class="flex items-center gap-2">
               <input type="radio" name="correctOpt" value="A" checked class="accent-emerald-500 w-4 h-4 cursor-pointer">
               <span class="text-xs font-bold text-slate-400 w-4">A)</span>
-              <input type="text" id="optA" placeholder="A seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-sm focus:border-emerald-500 focus:outline-none" required>
+              <input type="text" id="optA" placeholder="A seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2.5 py-1 text-xs focus:border-emerald-500 focus:outline-none" required>
             </div>
             <div class="flex items-center gap-2">
               <input type="radio" name="correctOpt" value="B" class="accent-emerald-500 w-4 h-4 cursor-pointer">
               <span class="text-xs font-bold text-slate-400 w-4">B)</span>
-              <input type="text" id="optB" placeholder="B seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-sm focus:border-emerald-500 focus:outline-none" required>
+              <input type="text" id="optB" placeholder="B seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2.5 py-1 text-xs focus:border-emerald-500 focus:outline-none" required>
             </div>
             <div class="flex items-center gap-2">
               <input type="radio" name="correctOpt" value="C" class="accent-emerald-500 w-4 h-4 cursor-pointer">
               <span class="text-xs font-bold text-slate-400 w-4">C)</span>
-              <input type="text" id="optC" placeholder="C seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-sm focus:border-emerald-500 focus:outline-none" required>
+              <input type="text" id="optC" placeholder="C seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2.5 py-1 text-xs focus:border-emerald-500 focus:outline-none" required>
             </div>
             <div class="flex items-center gap-2">
               <input type="radio" name="correctOpt" value="D" class="accent-emerald-500 w-4 h-4 cursor-pointer">
               <span class="text-xs font-bold text-slate-400 w-4">D)</span>
-              <input type="text" id="optD" placeholder="D seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-sm focus:border-emerald-500 focus:outline-none" required>
+              <input type="text" id="optD" placeholder="D seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2.5 py-1 text-xs focus:border-emerald-500 focus:outline-none" required>
             </div>
             <div class="flex items-center gap-2">
               <input type="radio" name="correctOpt" value="E" class="accent-emerald-500 w-4 h-4 cursor-pointer">
               <span class="text-xs font-bold text-slate-400 w-4">E)</span>
-              <input type="text" id="optE" placeholder="E seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-sm focus:border-emerald-500 focus:outline-none" required>
+              <input type="text" id="optE" placeholder="E seçeneği" class="w-full bg-slate-950 border border-slate-800 rounded-md px-2.5 py-1 text-xs focus:border-emerald-500 focus:outline-none" required>
             </div>
           </div>
         </div>
 
-        <button type="submit" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg transition mt-2 shadow-lg shadow-emerald-500/10">
+        <button type="submit" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg transition text-xs shadow-lg shadow-emerald-500/10">
           + Teste Soru Ekle
         </button>
       </form>
     </section>
 
     <!-- Sağ Panel: Canlı Test Sayfası & Önizleme -->
-    <section class="lg:col-span-7 bg-white text-slate-900 rounded-2xl p-6 md:p-8 shadow-2xl min-h-[600px] border border-slate-200">
+    <section class="lg:col-span-7 bg-white text-slate-900 rounded-2xl p-6 md:p-8 shadow-2xl min-h-[650px] border border-slate-200 flex flex-col justify-between">
       
-      <!-- Test Başlığı (Yazdırmada görünür) -->
-      <div class="border-b-2 border-slate-900 pb-4 mb-6 flex justify-between items-end">
-        <div>
-          <h1 class="text-2xl font-black tracking-tight text-slate-950 lowercase">testamed soru bankası</h1>
-          <p class="text-xs font-semibold text-slate-600 mt-1" id="testSubHeader">Kazanım Değerlendirme Testi</p>
+      <div>
+        <!-- Test Başlığı -->
+        <div class="border-b-2 border-slate-900 pb-3 mb-6 flex justify-between items-end">
+          <div>
+            <h1 class="text-2xl font-black tracking-tight text-slate-950 lowercase">testamed soru bankası</h1>
+            <p class="text-xs font-bold text-slate-600 mt-0.5" id="testSubHeader">Kazanım Değerlendirme & Tarama Testi</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-extrabold text-slate-800 tracking-wider lowercase">stüdyamed</span>
+            <p class="text-[10px] text-slate-500">Kimya Yayın Kurulu</p>
+          </div>
         </div>
-        <div class="text-right text-xs font-bold text-slate-500">
-          <span class="lowercase">stüdyamed</span>
+
+        <!-- Sorular Listesi -->
+        <div id="questionsContainer" class="test-container space-y-6">
+          <p id="emptyState" class="text-center text-slate-400 py-12 text-sm italic no-print">
+            Henüz soru eklenmedi. Sol panelden soru ekleyebilir veya yukarıdaki <b>"Örnek Test Yükle"</b> butonuna basabilirsiniz.
+          </p>
         </div>
       </div>
 
-      <!-- Sorular Listesi -->
-      <div id="questionsContainer" class="test-container space-y-6">
-        <p id="emptyState" class="text-center text-slate-400 py-12 text-sm italic no-print">
-          Henüz soru eklenmedi. Sol panelden ilk sorunuzu ekleyin.
-        </p>
+      <!-- Cevap Anahtarı (Alt Kısım) -->
+      <div id="answerKeySection" class="answer-key-box mt-8 pt-4 border-t-2 border-dashed border-slate-300 hidden">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-700 tracking-wider">CEVAP ANAHTARI</span>
+          <span class="text-[10px] text-slate-400">testamed dijital stüdyo</span>
+        </div>
+        <div id="answerKeyGrid" class="flex flex-wrap gap-2 text-xs font-bold font-mono">
+          <!-- Dinamik cevap kutuları -->
+        </div>
       </div>
+
     </section>
 
   </main>
 
   <script>
-    let questions = [];
+    // Başlangıç Kimya Örnek Soruları
+    const sampleQuestions = [
+      {
+        id: 1,
+        grade: "9. Sınıf",
+        topic: "Kimyasal Türler Arası Etkileşimler",
+        text: "Aşağıda verilen kimyasal tür ve etkileşim türü eşleştirmelerinden hangisi **yanlıştır**?\n\n($_{1}H$, $_{6}C$, $_{8}O$, $_{11}Na$, $_{17}Cl$)",
+        options: {
+          A: "$NaCl$ — İyonik Bağ",
+          B: "$H_2O$ — Polar Kovalent Bağ",
+          C: "$CH_4$ — Apolar Kovalent Bağ",
+          D: "$O_2$ — Polar Kovalent Bağ",
+          E: "$HCl$ — Polar Kovalent Bağ"
+        },
+        correct: "D"
+      },
+      {
+        id: 2,
+        grade: "10. Sınıf",
+        topic: "Kimyanın Temel Kanunları ve Mol",
+        text: "Normal koşullar altında $5{,}6\\text{ litre}$ hacim kaplayan $CH_4$ gazı ile ilgili;\n\nI. $0{,}25\\text{ moldür}$.\nII. Toplam $1{,}25 \\cdot N_A$ tane atom içerir.\nIII. Kütlesi $4\\text{ gramdır}$.\n\nyargılarından hangileri doğrudur? ($C:12$, $H:1$, $N_A$: Avogadro sayısı)",
+        options: {
+          A: "Yalnız I",
+          B: "I ve II",
+          C: "I ve III",
+          D: "II ve III",
+          E: "I, II ve III"
+        },
+        correct: "E"
+      },
+      {
+        id: 3,
+        grade: "11. Sınıf",
+        topic: "Kimyasal Tepkimelerde Denge",
+        text: "Sabit hacimli kapalı bir kapta gerçekleşen;\n$$N_2(g) + 3H_2(g) \\rightleftharpoons 2NH_3(g) + \\text{ısı}$$\ntepkimesi dengededir. Sıcaklık artırıldığında aşağıdakilerden hangisi **gerçekleşmez**?",
+        options: {
+          A: "Denge girenler yönüne kayar.",
+          B: "$NH_3$ gazının derişimi azalır.",
+          C: "Denge sabiti ($K_c$) değeri artar.",
+          D: "Toplam molekül sayısı artar.",
+          E: "Geri tepkime hızı artar."
+        },
+        correct: "C"
+      },
+      {
+        id: 4,
+        grade: "12. Sınıf",
+        topic: "Kimya ve Elektrik (Piller)",
+        text: "Standart koşullarda hazırlanan bir $Zn - Cu$ galvanik hücresinde;\n$$Zn^{2+} + 2e^- \\rightarrow Zn(k) \\quad E^\\circ = -0{,}76\\text{ V}$$\n$$Cu^{2+} + 2e^- \\rightarrow Cu(k) \\quad E^\\circ = +0{,}34\\text{ V}$$\nolduğuna göre, standart pil potansiyeli ($E^\\circ_{pil}$) kaç volttur?",
+        options: {
+          A: "+0,42 V",
+          B: "+1,10 V",
+          C: "-0,42 V",
+          D: "-1,10 V",
+          E: "+1,52 V"
+        },
+        correct: "B"
+      }
+    ];
+
+    // LocalStorage veya varsayılan soruları yükleme
+    let questions = JSON.parse(localStorage.getItem('testamed_questions')) || sampleQuestions;
 
     const form = document.getElementById('questionForm');
     const container = document.getElementById('questionsContainer');
     const emptyState = document.getElementById('emptyState');
+    const answerKeySection = document.getElementById('answerKeySection');
+    const answerKeyGrid = document.getElementById('answerKeyGrid');
+
+    function saveToStorage() {
+      localStorage.setItem('testamed_questions', JSON.stringify(questions));
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -172,12 +267,28 @@
       };
 
       questions.push(newQuestion);
+      saveToStorage();
       form.reset();
       renderQuestions();
     });
 
     function deleteQuestion(id) {
       questions = questions.filter(q => q.id !== id);
+      saveToStorage();
+      renderQuestions();
+    }
+
+    function clearAllQuestions() {
+      if (confirm("Tüm soruları silmek istediğinize emin misiniz?")) {
+        questions = [];
+        saveToStorage();
+        renderQuestions();
+      }
+    }
+
+    function loadSampleTest() {
+      questions = [...sampleQuestions];
+      saveToStorage();
       renderQuestions();
     }
 
@@ -186,28 +297,32 @@
         emptyState.style.display = 'block';
         container.innerHTML = '';
         container.appendChild(emptyState);
+        answerKeySection.classList.add('hidden');
         return;
       }
 
       emptyState.style.display = 'none';
       container.innerHTML = '';
+      answerKeyGrid.innerHTML = '';
+      answerKeySection.classList.remove('hidden');
 
       questions.forEach((q, index) => {
+        // Soru Kartı
         const qEl = document.createElement('div');
-        qEl.className = 'question-item relative bg-slate-50/60 p-4 rounded-xl border border-slate-200/80 mb-4';
+        qEl.className = 'question-item relative bg-slate-50/70 p-4 rounded-xl border border-slate-200 mb-4';
         
         qEl.innerHTML = `
           <div class="flex justify-between items-start mb-2">
-            <span class="font-bold text-sm bg-slate-900 text-white px-2 py-0.5 rounded">${index + 1}. Soru</span>
+            <span class="font-bold text-xs bg-slate-900 text-white px-2 py-0.5 rounded">${index + 1}. Soru</span>
             <div class="no-print flex items-center gap-2">
-              <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Cevap: ${q.correct}</span>
+              <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">${q.grade} | ${q.topic}</span>
               <button onclick="deleteQuestion(${q.id})" class="text-rose-500 hover:text-rose-700 text-xs px-1.5 py-0.5 rounded">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
           </div>
           
-          <div class="text-sm font-medium text-slate-800 leading-relaxed mb-3 whitespace-pre-line formula-render">
+          <div class="text-[13px] font-medium text-slate-800 leading-relaxed mb-3 whitespace-pre-line formula-render">
             ${q.text}
           </div>
 
@@ -221,9 +336,15 @@
         `;
 
         container.appendChild(qEl);
+
+        // Cevap Anahtarı Rozeti
+        const ansBadge = document.createElement('div');
+        ansBadge.className = 'px-2.5 py-1 bg-slate-100 border border-slate-300 rounded text-slate-800';
+        ansBadge.innerHTML = `<span class="text-slate-500 font-normal">${index + 1}:</span> ${q.correct}`;
+        answerKeyGrid.appendChild(ansBadge);
       });
 
-      // KaTeX formül tetikleme ($...$ işaretleri arası)
+      // KaTeX Formülleri Render Et
       renderMathInElement(container, {
         delimiters: [
           { left: "$$", right: "$$", display: true },
@@ -241,11 +362,16 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questions, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", "testamed_sorular.json");
+      downloadAnchor.setAttribute("download", "testamed_kimya_sorulari.json");
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
     }
+
+    // Sayfa Açılışında Çalıştır
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuestions();
+    });
   </script>
 </body>
 </html>
