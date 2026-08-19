@@ -167,10 +167,11 @@ input,select,textarea{font:inherit}
   background:#fff;
   touch-action:none !important;
   user-select:none;
+  overflow:hidden;
 }
 #page{display:block; user-select:none;}
 
-/* Kırpma Perdesi & Seçim Kutusu */
+/* Kırpma Perdesi & Seçim Kutusu (Canlı Karartma Maskeli) */
 #veil{
   position:absolute;
   inset:0;
@@ -180,16 +181,17 @@ input,select,textarea{font:inherit}
 }
 #box{
   position:absolute;
-  border:2.5px dashed #10B981 !important;
-  background:rgba(16,185,129,0.20) !important;
+  border:2.5px solid #10B981 !important;
+  background:rgba(16,185,129,0.18) !important;
+  outline:2000px solid rgba(0,0,0,0.38) !important;
   display:none;
   pointer-events:none !important;
-  border-radius:4px;
-  z-index:30;
+  border-radius:2px;
+  z-index:35;
   box-sizing:border-box;
 }
 
-/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
+/* teststud.io Yüzen Şık & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
@@ -259,7 +261,6 @@ input,select,textarea{font:inherit}
 .f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(6,182,212,.13)}
 .f input::placeholder{color:#B5BEB9}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .chk{display:flex;align-items:center;gap:12px;background:var(--w);border:1px solid var(--line);
   border-radius:12px;padding:12px 13px;margin-bottom:7px;transition:.14s}
 .chk:active{background:var(--bg)}
@@ -288,12 +289,20 @@ input,select,textarea{font:inherit}
 .ghost:active{background:var(--bg)}
 
 /* 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı */
-#pbar{background:var(--w);border-bottom:1px solid var(--line);display:flex;gap:6px;
+#pbar{background:var(--w);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;
   padding:8px 10px;flex-shrink:0;overflow-x:auto}
 #pbar button{flex:1;min-width:78px;border-radius:11px;padding:11px 8px;font-size:13px;font-weight:700;white-space:nowrap}
 #b-back{background:var(--bg);color:var(--soft)}
 #b-print{background:var(--or);color:#fff}
 #b-share{background:var(--cy);color:#fff}
+
+.quick-per-page{
+  display:flex;align-items:center;gap:4px;background:var(--bg);padding:4px 8px;border-radius:10px;font-size:11px;font-weight:700;color:var(--ink2);white-space:nowrap;
+}
+.quick-per-page select{
+  background:var(--w);border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-weight:bold;outline:none;
+}
+
 .addbar{display:flex;gap:8px;margin-bottom:10px}
 .addbar .ab{flex:1;border-radius:12px;padding:12px;font-size:13.5px;font-weight:700}
 .addbar .pdf{background:var(--cy);color:#fff}
@@ -407,6 +416,10 @@ input,select,textarea{font:inherit}
   background:rgba(255,255,255,.15);
   transition:.1s;
 }
+.ql-btn.on{
+  background:var(--ye);
+  color:#111;
+}
 .ql-btn:hover{
   background:var(--or);
   color:#042f2e;
@@ -480,7 +493,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
-    <!-- 2. Ekran: Görüntüleyici & Tuval -->
+    <!-- 2. Ekran: Görüntüleyici & Tuval (Kırpma Alanı) -->
     <div class="scr" id="s-view">
       <div id="bar">
         <div class="brow" id="files"></div>
@@ -706,10 +719,13 @@ input,select,textarea{font:inherit}
         <div class="f"><label>Sayfa başına üst sınır</label>
           <select id="f-max">
             <option value="0" selected>Sığdığı kadar</option>
-            <option value="3">En fazla 3</option>
-            <option value="4">En fazla 4</option>
-            <option value="5">En fazla 5</option>
-            <option value="6">En fazla 6</option>
+            <option value="1">Sayfa başına 1 soru</option>
+            <option value="2">Sayfa başına 2 soru</option>
+            <option value="3">Sayfa başına 3 soru</option>
+            <option value="4">Sayfa başına 4 soru</option>
+            <option value="5">Sayfa başına 5 soru</option>
+            <option value="6">Sayfa başına 6 soru</option>
+            <option value="8">Sayfa başına 8 soru</option>
           </select>
         </div>
       </div>
@@ -776,6 +792,21 @@ input,select,textarea{font:inherit}
     <div class="scr" id="s-prev">
       <div id="pbar">
         <button id="b-back" onclick="go('set')">← Ayarlar</button>
+        
+        <!-- Canlı Sayfa Başına Soru Sayısı Ayarlayıcı -->
+        <div class="quick-per-page">
+          <span>Sayfa Başı:</span>
+          <select id="quickMaxPerPage" onchange="changePerPageQuick(this.value)">
+            <option value="0">Otomatik</option>
+            <option value="1">1 Soru</option>
+            <option value="2">2 Soru</option>
+            <option value="3">3 Soru</option>
+            <option value="4">4 Soru</option>
+            <option value="5">5 Soru</option>
+            <option value="6">6 Soru</option>
+          </select>
+        </div>
+
         <button id="b-print" onclick="makeFile()">📄 PDF oluştur</button>
         <button id="b-share" onclick="sharePdf()">📤 Paylaş</button>
         <button id="b-savetest" onclick="saveTestDialog()">💾 Kaydet</button>
@@ -828,7 +859,7 @@ function toast(msg,isErr){
   t._t=setTimeout(()=>t.style.display='none',3200);
 }
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
-  .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 /* PDF Motoru */
 (function(){
@@ -1013,8 +1044,8 @@ function hideBox(){ boxEl.style.display='none'; }
 
 function getStageCoords(e){
   const r = $('wrap').getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+  const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
   return {
     x: Math.max(0, Math.min(r.width, clientX - r.left)),
     y: Math.max(0, Math.min(r.height, clientY - r.top))
@@ -1037,7 +1068,7 @@ function startCropSelection(e){
 
   isDrawingCrop = true;
   startPos = getStageCoords(e);
-  currentPos = startPos;
+  currentPos = { ...startPos };
 
   boxEl.style.display = 'block';
   boxEl.style.left = startPos.x + 'px';
@@ -1059,6 +1090,7 @@ function moveCropSelection(e){
   const w = Math.abs(currentPos.x - startPos.x);
   const h = Math.abs(currentPos.y - startPos.y);
 
+  boxEl.style.display = 'block';
   boxEl.style.left = x + 'px';
   boxEl.style.top = y + 'px';
   boxEl.style.width = w + 'px';
@@ -1068,6 +1100,7 @@ function moveCropSelection(e){
 function endCropSelection(e){
   if(!isDrawingCrop) return;
   isDrawingCrop = false;
+  if(e.cancelable) e.preventDefault();
 
   const endP = getEndStageCoords(e);
   const x = Math.min(startPos.x, endP.x);
@@ -1081,24 +1114,25 @@ function endCropSelection(e){
     return;
   }
 
+  boxEl.style.display = 'block';
   boxEl.style.left = x + 'px';
   boxEl.style.top = y + 'px';
   boxEl.style.width = w + 'px';
   boxEl.style.height = h + 'px';
-  boxEl.style.display = 'block';
 
   grab(x, y, w, h);
 }
 
-// Mouse Event Dinleyicileri
+// Mouse Dinleyicileri
 veil.addEventListener('mousedown', startCropSelection);
 window.addEventListener('mousemove', moveCropSelection);
 window.addEventListener('mouseup', endCropSelection);
 
-// Touch Event Dinleyicileri (Mobilde kesin çalışma)
+// Touch Dinleyicileri (Mobilde kesin ve kesintisiz seçim)
 veil.addEventListener('touchstart', startCropSelection, {passive: false});
 window.addEventListener('touchmove', moveCropSelection, {passive: false});
 window.addEventListener('touchend', endCropSelection, {passive: false});
+window.addEventListener('touchcancel', () => { isDrawingCrop = false; hideBox(); }, {passive: false});
 
 /* İki parmakla zoom */
 $('stage').addEventListener('touchstart',e=>{
@@ -1315,7 +1349,8 @@ function confirmFloatingCrop(){
     h: pendingCropData.h,
     pt: 0,
     ans: finalAns,
-    sol: null
+    sol: null,
+    pageBreak: false
   });
 
   drawTray();
@@ -1664,7 +1699,7 @@ function useAI(){
     const im=renderQuestion(q,cw);
     qs.push({id:'ai_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:im.img,w:im.w,h:im.h,cw,
       src:{text:q.text,options:q.options,correct:q.correct},
-      pt:0,ans:LET[q.correct],sol:null,tags:['yapay zeka']});
+      pt:0,ans:LET[q.correct],sol:null,pageBreak:false,tags:['yapay zeka']});
   });
   aiDraft=[]; aiDrop.clear(); $('a-out').innerHTML='';
   drawTray();
@@ -1905,7 +1940,7 @@ async function saveBank(){
       let n=0;
       for(const q of qs){
         await DB.put('bank',{id:'q_'+Date.now()+'_'+(n++)+Math.random().toString(36).slice(2,6),
-          img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,ans:q.ans||'',sol:q.sol,lesson:ders,topic:konu,tags,ts:Date.now()});
+          img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,lesson:ders,topic:konu,tags,ts:Date.now()});
       }
       closeModal(); toast(qs.length+' soru "'+ders+' · '+konu+'" olarak kaydedildi');
     });
@@ -2036,7 +2071,7 @@ function selAllBank(){
 
 function useBank(){
   const chosen=bankItems.filter(q=>bankSel.has(q.id));
-  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',sol:null,tags:q.tags||[]}));
+  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',sol:null,pageBreak:false,tags:q.tags||[]}));
   bankSel.clear();
   drawTray();
   toast(chosen.length+' soru teste eklendi');
@@ -2053,7 +2088,7 @@ function saveTestDialog(){
     const name=v[0]||'Test';
     await DB.put('tests',{id:(editingTest?editingTest.id:'t_'+Date.now()),name,
       lesson:$('f-lesson').value.trim(),date:new Date().toLocaleDateString('tr-TR'),
-      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol})),
+      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false})),
       cfg:cfgNow()});
     if(editingTest) editingTest.name=name;
     closeModal(); toast('“'+name+'” kaydedildi');
@@ -2061,7 +2096,7 @@ function saveTestDialog(){
 }
 
 function openTest(t,edit){
-  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol}));
+  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false}));
   if(t.cfg){
     const c=t.cfg;
     const set=(id,v)=>{const e=$(id);if(e&&v!=null)e.value=v;};
@@ -2080,7 +2115,7 @@ function openTest(t,edit){
   else build();
 }
 
-/* ════════ A4 Mizanpaj ve Dizgi Motoru ════════ */
+/* ════════ A4 Mizanpaj ve Dizgi Motoru (Manuel Sayfa Kesmeli) ════════ */
 const PAGE={w:210,h:297,m:13};
 const GAP=8, TITLE_H=5, AFTER=4, SOFT_K=0.88;
 
@@ -2136,6 +2171,11 @@ function packNatural(list,cfg,colW){
   const start=()=>{ pg={items:[],count:0}; pages.push(pg); ci=0; y=topOf(pages.length-1,cfg); };
   start();
   list.forEach(q=>{
+    // Manuel Sayfa Kesmesi Tetikleyici
+    if(q.pageBreak && pg.count > 0){
+      start();
+    }
+
     const effectiveSol = q.sol != null ? q.sol : cfg.sol;
     let k=1, w=colW, h=colW*(q.h/q.w);
     const capH = availOf(1,cfg) - (TITLE_H + effectiveSol + AFTER);
@@ -2188,7 +2228,7 @@ function layout(list,cfg){
   const colW=colWidthMm(cfg);
   const nat=packNatural(list,cfg,colW);
 
-  if(cfg.fill==='siki') return nat;
+  if(cfg.fill==='siki' || cfg.max > 0 || list.some(q=>q.pageBreak)) return nat;
   const counts=nat.map(p=>p.count);
   const dengeli=counts.every(c=>c===counts[0]);
   if(!dengeli && nat.length>1){
@@ -2337,6 +2377,23 @@ function recalcAndRedrawPages(){
   $('dl').style.display='none';
 }
 
+function changePerPageQuick(val){
+  const max = parseInt(val) || 0;
+  $('f-max').value = max;
+  if(CFG) CFG.max = max;
+  recalcAndRedrawPages();
+  toast(max === 0 ? 'Sayfalama: Otomatik' : 'Sayfa Başına: ' + max + ' Soru');
+}
+
+function togglePageBreak(qId){
+  const list = (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs;
+  const q = list.find(item => item.id === qId);
+  if(!q) return;
+  q.pageBreak = !q.pageBreak;
+  recalcAndRedrawPages();
+  toast(q.pageBreak ? 'Yeni sayfaya bölündü' : 'Sayfa bölmesi kaldırıldı');
+}
+
 function moveQuestionInPreview(qId, dir){
   const list = (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs;
   const idx = list.findIndex(item => item.id === qId);
@@ -2435,6 +2492,7 @@ function drawPages(){
       ctrls.innerHTML = `
         <button class="ql-btn" title="Yukarı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', -1)">↑</button>
         <button class="ql-btn" title="Aşağı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', 1)">↓</button>
+        <button class="ql-btn ${it.q.pageBreak ? 'on' : ''}" title="Bu sorudan itibaren yeni sayfaya böl" onclick="event.stopPropagation(); togglePageBreak('${it.q.id}')">📄 ${it.q.pageBreak ? 'Birleştir' : 'Sayfa Böl'}</button>
         <button class="ql-btn" title="Boşluğu büyüt (+10mm)" onclick="event.stopPropagation(); adjustQuestionSpace('${it.q.id}', 10)">+ Boşluk</button>
         <button class="ql-btn" title="Boşluğu küçült (-10mm)" onclick="event.stopPropagation(); adjustQuestionSpace('${it.q.id}', -10)">- Boşluk</button>
         <button class="ql-btn del" title="Testten çıkar" onclick="event.stopPropagation(); removeQuestionFromPreview('${it.q.id}')">✕</button>
