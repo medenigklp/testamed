@@ -240,6 +240,7 @@ input,select,textarea{font:inherit}
 .f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(6,182,212,.13)}
 .f input::placeholder{color:#B5BEB9}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .chk{display:flex;align-items:center;gap:12px;background:var(--w);border:1px solid var(--line);
   border-radius:12px;padding:12px 13px;margin-bottom:7px;transition:.14s}
 .chk:active{background:var(--bg)}
@@ -983,7 +984,7 @@ function mode(){
   hideBox();
 }
 
-/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma) */
+/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma — Hatasızlaştırıldı) */
 const veil=$('veil'), boxEl=$('box');
 let drag=null, pinch=null;
 function hideBox(){ boxEl.style.display='none'; }
@@ -1968,7 +1969,7 @@ function selAllBank(){
 
 function useBank(){
   const chosen=bankItems.filter(q=>bankSel.has(q.id));
-  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',sol:q.sol,tags:q.tags||[]}));
+  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',sol:null,tags:q.tags||[]}));
   bankSel.clear();
   drawTray();
   toast(chosen.length+' soru teste eklendi');
@@ -2291,7 +2292,7 @@ function adjustQuestionSpace(qId, deltaMm){
   const list = (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs;
   const q = list.find(item => item.id === qId);
   if(!q) return;
-  const currentSol = q.sol != null ? q.sol : (CFG ? CFG.sol : 24);
+  const currentSol = q.sol != null ? q.sol : (CFG ? CFG.sol : 30);
   q.sol = Math.max(0, currentSol + deltaMm);
   recalcAndRedrawPages();
   toast('Çözüm alanı: ' + q.sol + ' mm');
