@@ -213,7 +213,118 @@ input,select,textarea{font:inherit}
   padding:12px;font-size:14px;font-weight:600;color:var(--ink2);margin-bottom:12px;transition:.14s}
 .ghost:active{background:var(--bg)}
 
-/* 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı */
+/* Yapay Zeka */
+#s-ai{overflow-y:auto}
+.aibody{padding:16px;padding-bottom:calc(24px + var(--safe))}
+.keyinfo{font-size:11.5px;color:var(--soft);line-height:1.55;background:var(--w);
+  border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:4px}
+.keyinfo a{color:var(--cy)}
+.aiwarn{font-size:12px;color:#8A5A00;background:#FFF8E6;border:1px solid #FFE08A;
+  border-radius:11px;padding:11px 13px;margin-top:12px;line-height:1.55}
+.modetabs{display:flex;gap:7px;margin-bottom:16px}
+.mt{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:10px;font-size:12.5px;
+  font-weight:700;color:var(--ink2);background:var(--w);transition:.14s}
+.mt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pasteinfo{background:#EEF7FF;border:1px solid #BBDFFB;border-radius:12px;padding:12px;
+  font-size:13px;line-height:1.55;color:#0D4F73;margin-bottom:4px}
+.applinks{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.applinks a{border:1.5px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12.5px;
+  font-weight:700;color:var(--ink);text-decoration:none;background:var(--w)}
+.applinks a:active{background:var(--bg)}
+.pastehint{font-size:12px;color:var(--soft);margin:9px 0 0;line-height:1.55}
+#p-in{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;
+  font-size:13px;font-family:ui-monospace,monospace;outline:none;background:var(--w);resize:vertical}
+#p-in:focus{border-color:var(--cy)}
+#a-out{margin-top:16px}
+.aiq{background:var(--w);border:1.5px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px}
+.aiq.off{opacity:.4}
+.aiq .qt{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:9px;white-space:pre-wrap}
+.aiq .op{font-size:13.5px;color:var(--soft);line-height:1.85}
+.aiq .op b{color:var(--ink);font-family:ui-monospace,monospace;margin-right:5px}
+.aiq .op .ok{color:var(--gr);font-weight:700}
+.aiq .why{font-size:12px;color:var(--soft);background:var(--bg);border-radius:9px;
+  padding:8px 10px;margin-top:9px;line-height:1.5}
+.aiq .acts{display:flex;gap:7px;margin-top:10px}
+.aiq .acts button{flex:1;border-radius:9px;padding:8px;font-size:12.5px;font-weight:700;
+  background:var(--bg);color:var(--soft)}
+.aiq .acts .drop.on{background:#FDECEA;color:#C0392B}
+.aispin{text-align:center;padding:26px;color:var(--soft);font-size:13.5px}
+.aispin .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--or);
+  margin:0 3px;animation:bl 1s infinite}
+.aispin .dot:nth-child(2){animation-delay:.15s}.aispin .dot:nth-child(3){animation-delay:.3s}
+@keyframes bl{0%,100%{opacity:.25}50%{opacity:1}}
+
+/* Kitaplık */
+#s-lib{background:var(--bg)}
+.ltabs{display:flex;gap:6px;padding:10px 12px;background:var(--w);
+  border-bottom:1px solid var(--line);flex-shrink:0}
+.lt{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:10px;
+  font-size:13px;font-weight:700;color:var(--ink2);background:var(--w);transition:.14s}
+.lt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.lfilter{display:flex;flex-wrap:wrap;gap:6px;padding:9px 12px;flex-shrink:0;background:var(--w);
+  border-bottom:1px solid var(--line)}
+.lfilter .lsearch{flex-basis:100%}
+.fc{border:1.5px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;
+  font-weight:600;white-space:nowrap;background:var(--w);color:var(--ink)}
+.fc.on{background:var(--or);border-color:var(--or);color:#fff}
+.lbody{flex:1;overflow-y:auto;padding:12px}
+.lfoot{flex-shrink:0;padding:10px 12px;padding-bottom:calc(10px + var(--safe));
+  background:var(--w);border-top:1px solid var(--line);display:none}
+.grp{margin-bottom:16px}
+.grp h4{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--soft);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
+.gq{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.bq{position:relative;background:var(--w);border:2px solid var(--line);border-radius:10px;
+  overflow:hidden;padding:0}
+.bq img{display:block;width:100%;height:78px;object-fit:contain;background:#fff}
+.bq.sel{border-color:var(--or);box-shadow:0 0 0 3px rgba(16,185,129,.18)}
+.bq .tick{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;
+  background:var(--or);color:#fff;font-size:11px;line-height:20px;text-align:center;display:none}
+.bq.sel .tick{display:block}
+.bq .del{position:absolute;bottom:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;
+  border-radius:6px;font-size:10px;padding:2px 5px}
+.bq .tg{position:absolute;top:3px;left:3px;background:rgba(6,182,212,.9);color:#fff;
+  border-radius:5px;font-size:9px;font-weight:700;padding:1px 5px;max-width:70%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fc.tag{border-style:dashed}
+.trow{display:flex;align-items:center;gap:10px;background:var(--w);border:1px solid var(--line);
+  border-radius:13px;padding:12px;margin-bottom:8px}
+.trow .ti{flex:1;min-width:0}
+.trow .tn{font-family:var(--disp);font-weight:700;font-size:14.5px;letter-spacing:-.012em}
+.trow .tm{font-size:11.5px;color:var(--soft);margin-top:2px}
+.trow button{border-radius:9px;padding:8px 11px;font-size:12px;font-weight:700}
+.tb-edit{background:rgba(6,182,212,.14);color:#0E7FA8}
+.tb-open{background:rgba(16,185,129,.12);color:var(--or)}
+.tb-del{background:#FDECEA;color:#C0392B}
+.lempty{text-align:center;color:var(--soft);font-size:13.5px;padding:40px 20px}
+.bkinfo{background:var(--w);border:1px solid var(--line);border-radius:12px;padding:14px;
+  font-size:13.5px;line-height:1.6;margin-bottom:12px}
+.bkinfo b{color:var(--or)}
+.bkwarn{font-size:12px;color:var(--soft);margin-top:8px;line-height:1.5}
+#bkdl .da{display:block;text-align:center;background:var(--gr);color:#fff;border-radius:12px;
+  padding:13px;font-size:14.5px;font-weight:700;text-decoration:none;margin-bottom:6px}
+#bkdl{margin-bottom:12px}
+.lsearch{width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;
+  outline:none;font-size:14px;background:var(--w)}
+.lsearch:focus{border-color:var(--cy)}
+.selbar{display:flex;gap:8px;align-items:center}
+.selall{border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;font-size:12.5px;
+  font-weight:700;color:var(--soft);background:var(--w);white-space:nowrap}
+#modal{position:fixed;inset:0;background:rgba(17,20,24,.55);z-index:800;display:none;
+  align-items:flex-end}
+#modal.on{display:flex}
+#mbox{background:var(--w);width:100%;border-radius:22px 22px 0 0;padding:20px 16px;
+  padding-bottom:calc(20px + var(--safe))}
+#mbox h3{font-size:16px;font-weight:700;margin-bottom:14px}
+#mbox input{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:12px;
+  margin-bottom:9px;outline:none;font-size:15px}
+#mbox input:focus{border-color:var(--cy)}
+.mbtns{display:flex;gap:8px;margin-top:6px}
+.mbtns button{flex:1;border-radius:12px;padding:13px;font-size:14.5px;font-weight:700}
+#mok{background:var(--or);color:#fff}
+#mno{background:var(--bg);color:var(--soft)}
+
+/* 4. Ekran: Önizleme */
 #pbar{background:var(--w);border-bottom:1px solid var(--line);display:flex;gap:6px;
   padding:8px 10px;flex-shrink:0;overflow-x:auto}
 #pbar button{flex:1;min-width:78px;border-radius:11px;padding:11px 8px;font-size:13px;font-weight:700;white-space:nowrap}
@@ -272,62 +383,6 @@ input,select,textarea{font:inherit}
   white-space:nowrap;transform:rotate(90deg) translate(-50%,-50%);transform-origin:left top;
   letter-spacing:.04em}
 .pg .pf{position:absolute;right:5%;bottom:2%;font-size:9px;color:#b0b0b0;font-family:var(--mono)}
-
-/* teststud.io Tarzı İnteraktif Soru Kutuları */
-.q-box{
-  position:absolute;
-  border-radius:4px;
-  cursor:grab;
-  user-select:none;
-  transition:box-shadow .14s, outline .14s;
-}
-.q-box:hover{
-  outline:2px dashed var(--or);
-  background:rgba(16,185,129,.04);
-  box-shadow:0 2px 10px rgba(16,185,129,.12);
-}
-.q-box.dragging{
-  opacity:0.3;
-  outline:2px solid var(--or);
-}
-.q-box.drag-over{
-  outline:2.5px solid var(--cy);
-  background:rgba(6,182,212,.12);
-}
-.q-ctrls{
-  position:absolute;
-  top:-11px;
-  right:0;
-  display:none;
-  align-items:center;
-  gap:2px;
-  background:var(--ink);
-  padding:2px 4px;
-  border-radius:6px;
-  box-shadow:0 3px 10px rgba(0,0,0,.35);
-  z-index:20;
-}
-.q-box:hover .q-ctrls{
-  display:flex;
-}
-.q-btn{
-  color:#fff;
-  font-size:10px;
-  font-weight:bold;
-  padding:2px 5px;
-  border-radius:4px;
-  line-height:1;
-  background:rgba(255,255,255,.15);
-  transition:.12s;
-}
-.q-btn:hover{
-  background:var(--or);
-  color:#042f2e;
-}
-.q-btn.del:hover{
-  background:#EF4444;
-  color:#fff;
-}
 
 /* Toast Uyarı */
 #toast{position:fixed;left:14px;right:14px;bottom:calc(16px + var(--safe));z-index:900;
@@ -645,7 +700,7 @@ input,select,textarea{font:inherit}
       <button class="ghost" style="margin-top:10px" onclick="saveBank()">💾 Soruları bankaya kaydet</button>
     </div>
 
-    <!-- 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı -->
+    <!-- 4. Ekran: Önizleme -->
     <div class="scr" id="s-prev">
       <div id="pbar">
         <button id="b-back" onclick="go('set')">← Ayarlar</button>
@@ -691,7 +746,7 @@ const $=id=>document.getElementById(id);
 
 let docs=[], active=null, pageNo=1, scale=1, fit=1;
 let qs=[], selectMode=true, ratio=1, engineReady=false;
-let screen='home', html='', editingTest=null, currentBookIdx=0;
+let screen='home', html='', editingTest=null;
 const FRAMED=(function(){try{return window.self!==window.top;}catch(_){return true;}})();
 
 function toast(msg,isErr){
@@ -928,8 +983,8 @@ $('stage').addEventListener('touchend',e=>{
   if(pinch&&e.touches.length<2){ pinch=null; render(); }
 });
 function dist(e){
-  return Math.hypot(e.touches[0].clientX-e.touches[0].clientY,
-                    e.touches[1].clientX-e.touches[1].clientY);
+  return Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
+                    e.touches[0].clientY-e.touches[1].clientY);
 }
 
 /* Belge Temizleme */
@@ -2006,77 +2061,10 @@ function drawBookPick(active){
   BOOKS.forEach((b,i)=>{
     const btn=document.createElement('button');
     btn.className=i===active?'on':''; btn.textContent=b.letter+' kitapçığı';
-    btn.onclick=()=>{ 
-      currentBookIdx=i;
-      PAGES=BOOKS[i].pages; drawPages(); drawBookPick(i); $('dl').style.display='none'; 
-    };
+    btn.onclick=()=>{ PAGES=BOOKS[i].pages; drawPages(); drawBookPick(i); $('dl').style.display='none'; };
     el.appendChild(btn);
   });
 }
-
-/* ════════ A4 Önizleme & Soru Yerini Değiştirme (teststud.io modu) ════════ */
-function recalcAndRedrawPages(){
-  if(BOOKS.length && BOOKS[currentBookIdx]){
-    BOOKS[currentBookIdx].pages = layout(BOOKS[currentBookIdx].list, CFG);
-    PAGES = BOOKS[currentBookIdx].pages;
-  } else {
-    PAGES = layout(qs, CFG);
-  }
-  drawPages();
-  drawBookPick(currentBookIdx);
-  $('dl').style.display='none';
-}
-
-function moveQuestionInPreview(qId, dir){
-  const list = (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs;
-  const idx = list.findIndex(item => item.id === qId);
-  if(idx === -1) return;
-  const targetIdx = idx + dir;
-  if(targetIdx < 0 || targetIdx >= list.length) return;
-  const temp = list[idx];
-  list[idx] = list[targetIdx];
-  list[targetIdx] = temp;
-  if(currentBookIdx === 0) {
-    qs = list.slice();
-    drawRows();
-    drawTray();
-  }
-  recalcAndRedrawPages();
-  toast('Soru sırası değiştirildi');
-}
-
-function removeQuestionFromPreview(qId){
-  if(confirm('Bu soru testten çıkarılsın mı?')){
-    qs = qs.filter(item => item.id !== qId);
-    if(BOOKS.length && BOOKS[currentBookIdx]){
-      BOOKS[currentBookIdx].list = BOOKS[currentBookIdx].list.filter(item => item.id !== qId);
-    }
-    drawTray();
-    drawRows();
-    recalcAndRedrawPages();
-    toast('Soru çıkarıldı');
-  }
-}
-
-function swapQuestionsInPreview(srcId, targetId){
-  if(srcId === targetId) return;
-  const list = (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs;
-  const srcIdx = list.findIndex(item => String(item.id) === String(srcId));
-  const tgtIdx = list.findIndex(item => String(item.id) === String(targetId));
-  if(srcIdx === -1 || tgtIdx === -1) return;
-  const temp = list[srcIdx];
-  list[srcIdx] = list[tgtIdx];
-  list[tgtIdx] = temp;
-  if(currentBookIdx === 0){
-    qs = list.slice();
-    drawRows();
-    drawTray();
-  }
-  recalcAndRedrawPages();
-  toast('Soruların yerleri değiştirildi');
-}
-
-let draggedQuestionId = null;
 
 function drawPages(){
   const host=$('pages'); host.innerHTML='';
@@ -2090,69 +2078,15 @@ function drawPages(){
         ';width:'+pct(PAGE.w-PAGE.m*2,PAGE.w)+'';
       el.appendChild(h);
     }
-
     pg.items.forEach(it=>{
-      const qBox = document.createElement('div');
-      qBox.className = 'q-box';
-      qBox.setAttribute('draggable', 'true');
-      qBox.dataset.qId = it.q.id;
-      
-      const boxW = it.w;
-      const boxH = TITLE_H + it.h + (it.sol || 0);
-      qBox.style.cssText = `left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(boxW, PAGE.w)}; height:${pct(boxH, PAGE.h)};`;
-
-      // Soru Numarası
-      const n = document.createElement('div');
-      n.className = 'pn';
-      n.textContent = it.num + '.';
-      n.style.cssText = `left:0; top:0;`;
-      qBox.appendChild(n);
-
-      // Soru Görseli
-      const im = document.createElement('img');
-      im.className = 'ab';
-      im.src = it.q.img;
-      im.style.cssText = `left:0; top:${pct(TITLE_H, boxH)}; width:100%;`;
-      qBox.appendChild(im);
-
-      // Hızlı Düzenleme Butonları (teststud.io tarzı)
-      const ctrls = document.createElement('div');
-      ctrls.className = 'q-ctrls';
-      ctrls.innerHTML = `
-        <button class="q-btn" title="Yukarı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', -1)">↑</button>
-        <button class="q-btn" title="Aşağı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', 1)">↓</button>
-        <button class="q-btn del" title="Testten çıkar" onclick="event.stopPropagation(); removeQuestionFromPreview('${it.q.id}')">✕</button>
-      `;
-      qBox.appendChild(ctrls);
-
-      // Drag & Drop Olayları
-      qBox.addEventListener('dragstart', (e)=>{
-        draggedQuestionId = it.q.id;
-        e.dataTransfer.setData('text/plain', it.q.id);
-        qBox.classList.add('dragging');
-      });
-      qBox.addEventListener('dragend', ()=>{
-        qBox.classList.remove('dragging');
-        document.querySelectorAll('.q-box').forEach(b => b.classList.remove('drag-over'));
-      });
-      qBox.addEventListener('dragover', (e)=>{
-        e.preventDefault();
-        qBox.classList.add('drag-over');
-      });
-      qBox.addEventListener('dragleave', ()=>{
-        qBox.classList.remove('drag-over');
-      });
-      qBox.addEventListener('drop', (e)=>{
-        e.preventDefault();
-        qBox.classList.remove('drag-over');
-        const srcId = e.dataTransfer.getData('text/plain') || draggedQuestionId;
-        const targetId = it.q.id;
-        swapQuestionsInPreview(srcId, targetId);
-      });
-
-      el.appendChild(qBox);
-
-      // Soru Alt Çizgisi
+      const n=document.createElement('div'); n.className='pn';
+      n.textContent=it.num+'.';
+      n.style.cssText='left:'+pct(it.x,PAGE.w)+';top:'+pct(it.y,PAGE.h)+'';
+      el.appendChild(n);
+      const im=document.createElement('img'); im.className='ab'; im.src=it.q.img;
+      im.style.cssText='left:'+pct(it.x,PAGE.w)+';top:'+pct(it.y+TITLE_H,PAGE.h)+
+        ';width:'+pct(it.w,PAGE.w)+'';
+      el.appendChild(im);
       if(it.sol>0 && CFG && CFG.sep!=='yok'){
         const s=document.createElement('div'); s.className='sl'+(CFG.sep==='duz'?' solid':'');
         s.style.cssText='left:'+pct(it.x,PAGE.w)+';top:'+pct(it.y+TITLE_H+it.h+it.sol-1,PAGE.h)+
@@ -2230,7 +2164,6 @@ async function build(){
     HDR=headerImage(cfg);
 
     BOOKS=[];
-    currentBookIdx=0;
     const n=Math.max(1,cfg.book);
     for(let b=0;b<n;b++){
       const list = b===0 ? qs.slice() : shuffleSeeded(qs, 97*(b+1)+qs.length);
@@ -2241,7 +2174,7 @@ async function build(){
     drawBookPick(0);
     $('dl').style.display='none';
     go('prev');
-    toast('Test hazır · Soruların üzerine gelerek yerini değiştirebilirsiniz');
+    toast('Test hazır');
   }catch(err){ toast('Test oluşturulamadı: '+err.message,true); }
 }
 
