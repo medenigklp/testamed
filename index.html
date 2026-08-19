@@ -171,7 +171,7 @@ input,select,textarea{font:inherit}
 }
 #page{display:block; user-select:none;}
 
-/* Kırpma Perdesi & Canlı Seçim Kutusu (Canlı Çizim ve Boyut Rozeti) */
+/* Kırpma Perdesi & Canlı Seçim Kutusu */
 #veil{
   position:absolute;
   inset:0;
@@ -207,7 +207,7 @@ input,select,textarea{font:inherit}
   pointer-events: none;
 }
 
-/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
+/* Yüzen Şık & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
@@ -277,6 +277,8 @@ input,select,textarea{font:inherit}
 .f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(6,182,212,.13)}
 .f input::placeholder{color:#B5BEB9}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.r4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .chk{display:flex;align-items:center;gap:12px;background:var(--w);border:1px solid var(--line);
   border-radius:12px;padding:12px 13px;margin-bottom:7px;transition:.14s}
 .chk:active{background:var(--bg)}
@@ -676,49 +678,94 @@ input,select,textarea{font:inherit}
     <div class="scr" id="s-set">
       <div id="editbar"></div>
 
-      <div class="sec">Şablon Stili (teststud.io)</div>
-      <div class="r2">
+      <div class="sec">1. Şablon & Renk Stili</div>
+      <div class="r3">
         <div class="f">
           <label>Başlık Şablonu</label>
           <select id="f-template" onchange="preview()">
+            <option value="studio" selected>teststud.io 3'lü Renkli</option>
+            <option value="osym">ÖSYM Sınav Şablonu (TYT/AYT)</option>
             <option value="classic">Klasik MEB Anteti</option>
-            <option value="studio" selected>teststud.io 3'lü Renkli Başlık</option>
             <option value="minimal">Minimal Çizgili</option>
           </select>
         </div>
         <div class="f">
-          <label>Çözüm Alanı Deseni</label>
-          <select id="f-soltype" onchange="preview()">
-            <option value="grid" selected>Kareli Defter Izgarası (5x5 mm)</option>
-            <option value="lined">Çizgili Defter Alanı</option>
-            <option value="blank">Düz Çerçeveli Boşluk</option>
+          <label>Antet Rengi (5 Renk)</label>
+          <select id="f-hdrtheme" onchange="preview()">
+            <option value="emerald" selected>Zümrüt Yeşil</option>
+            <option value="navy">Gece Mavisi / Lacivert</option>
+            <option value="crimson">Bordo / Kırmızı</option>
+            <option value="amber">Amber / Turuncu</option>
+            <option value="dark">Grafit / Antrasit</option>
+          </select>
+        </div>
+        <div class="f">
+          <label>Soru Numaralandırma</label>
+          <select id="f-qnumformat" onchange="preview()">
+            <option value="std" selected>1. 2. 3. (Standart)</option>
+            <option value="soru">Soru 1, Soru 2</option>
+            <option value="soru_dot">Soru 1., Soru 2.</option>
+            <option value="ornek">Örnek 1, Örnek 2</option>
+            <option value="ornek_dot">Örnek 1., Örnek 2.</option>
+            <option value="none">Numarasız</option>
           </select>
         </div>
       </div>
 
-      <div class="sec">Sınav künyesi</div>
-      <div class="f"><label>Okul / Kurum Adı</label><input id="f-school" placeholder="Okul veya Yayın Adı"/></div>
-      <div class="r2">
-        <div class="f"><label>Ders (Sol Kutu)</label><input id="f-lesson" value="Kimya"/></div>
-        <div class="f"><label>Sınıf</label><input id="f-class" placeholder="11-A"/></div>
-      </div>
-      <div class="r2">
-        <div class="f"><label>Konu (Orta Kutu)</label><input id="f-topic" placeholder="Kimyasal Türler Arası Etkileşimler"/></div>
-        <div class="f"><label>Öğretmen (Sağ Kutu)</label><input id="f-teacher" placeholder="Ad Soyad / Branş"/></div>
-      </div>
-      <div class="r2">
-        <div class="f"><label>Başlık / Tür</label>
-          <select id="f-kind">
-            <option>YAZILI SINAV</option><option selected>TEST</option><option>QUIZ</option>
-            <option>ÖDEV</option><option>A KİTAPÇIĞI</option><option>B KİTAPÇIĞI</option>
-          </select>
+      <div class="sec">2. Sayfa Kenar Boşlukları (Margin mm)</div>
+      <div class="r4">
+        <div class="f">
+          <label>Sol Boşluk</label>
+          <input type="number" id="f-mleft" value="12" min="4" max="40" oninput="preview()"/>
         </div>
+        <div class="f">
+          <label>Sağ Boşluk</label>
+          <input type="number" id="f-mright" value="12" min="4" max="40" oninput="preview()"/>
+        </div>
+        <div class="f">
+          <label>Üst Boşluk</label>
+          <input type="number" id="f-mtop" value="12" min="4" max="40" oninput="preview()"/>
+        </div>
+        <div class="f">
+          <label>Alt Boşluk</label>
+          <input type="number" id="f-mbot" value="12" min="4" max="40" oninput="preview()"/>
+        </div>
+      </div>
+
+      <div class="sec">3. Sınav Künyesi & Serbest Başlık</div>
+      <div class="f"><label>Kurum / Yayın Adı</label><input id="f-school" placeholder="Örn: STÜDYAMED EĞİTİM KURUMLARI"/></div>
+      <div class="r2">
+        <div class="f"><label>Ders & Sınıf (Sol Kutu)</label><input id="f-lesson" value="KİMYA 11. Sınıf"/></div>
+        <div class="f">
+          <label>Başlık / Tür (Serbest Yazabilirsiniz)</label>
+          <input list="kind-presets" id="f-kind" value="TEST 1" placeholder="Örn: Deneme 2, Tarama 3..."/>
+          <datalist id="kind-presets">
+            <option value="TEST 1"></option>
+            <option value="TEST 2"></option>
+            <option value="DENEME 1"></option>
+            <option value="DENEME 2"></option>
+            <option value="TARAMA 1"></option>
+            <option value="TARAMA 2"></option>
+            <option value="YAZILI SINAV"></option>
+            <option value="TYT DENEME"></option>
+            <option value="AYT DENEME"></option>
+            <option value="A KİTAPÇIĞI"></option>
+            <option value="B KİTAPÇIĞI"></option>
+          </datalist>
+        </div>
+      </div>
+      <div class="r2">
+        <div class="f"><label>Konu (Orta Kutu)</label><input id="f-topic" placeholder="KİMYASAL TÜRLER ARASI ETKİLEŞİMLER"/></div>
+        <div class="f"><label>Öğretmen (Sağ Kutu)</label><input id="f-teacher" placeholder="Medeni Gökalp / Kimya Öğretmeni"/></div>
+      </div>
+      <div class="r2">
+        <div class="f"><label>Sınıf / Şube</label><input id="f-class" placeholder="11-A"/></div>
         <div class="f"><label>Tarih</label><input id="f-date"/></div>
       </div>
 
-      <div class="sec">Sayfa düzeni</div>
+      <div class="sec">4. Sayfa Düzeni & Çözüm Izgarası</div>
       <div class="r2">
-        <div class="f"><label>Sütun</label>
+        <div class="f"><label>Sütun Sayısı</label>
           <select id="f-cols">
             <option value="1">Tek sütun</option>
             <option value="2" selected>İki sütun</option>
@@ -732,19 +779,25 @@ input,select,textarea{font:inherit}
             <option value="siki">Sıkı — sayfayı sonuna kadar doldur</option>
           </select>
         </div>
-        <div class="f"><label>Sayfa başına üst sınır</label>
-          <select id="f-max">
-            <option value="0" selected>Sığdığı kadar</option>
-            <option value="1">Sayfa başına 1 soru</option>
-            <option value="2">Sayfa başına 2 soru</option>
-            <option value="3">Sayfa başına 3 soru</option>
-            <option value="4">Sayfa başına 4 soru</option>
-            <option value="5">Sayfa başına 5 soru</option>
-            <option value="6">Sayfa başına 6 soru</option>
-            <option value="8">Sayfa başına 8 soru</option>
+      </div>
+      <div class="r2">
+        <div class="f"><label>Çözüm Alanı Deseni</label>
+          <select id="f-soltype" onchange="preview()">
+            <option value="grid" selected>Kareli Defter Izgarası (5x5 mm)</option>
+            <option value="lined">Çizgili Defter Alanı</option>
+            <option value="blank">Düz Çerçeveli Boşluk</option>
+          </select>
+        </div>
+        <div class="f"><label>Varsayılan Çözüm Boşluğu</label>
+          <select id="f-sol">
+            <option value="0">Yok — en çok soru sığar</option>
+            <option value="15">Dar — 15 mm</option>
+            <option value="30" selected>Orta (teststud.io) — 30 mm</option>
+            <option value="50">Geniş — 50 mm</option>
           </select>
         </div>
       </div>
+
       <div class="r2">
         <div class="f"><label>Sorular arası çizgi</label>
           <select id="f-sep">
@@ -764,19 +817,12 @@ input,select,textarea{font:inherit}
       <div class="f"><label>Sütun arasına yazı (isteğe bağlı)</label>
         <input id="f-gutter" placeholder="Örn. testamed yayınları"/>
       </div>
-      <div class="f"><label>Varsayılan çözüm boşluğu (Önizlemede soru bazında değiştirilebilir)</label>
-        <select id="f-sol">
-          <option value="0">Yok — en çok soru sığar</option>
-          <option value="15">Dar — 15 mm</option>
-          <option value="30" selected>Orta (teststud.io) — 30 mm</option>
-          <option value="50">Geniş — 50 mm</option>
-        </select>
-      </div>
+      
       <div class="chk"><input type="checkbox" id="f-info" checked/><label for="f-info">Ad Soyad / Sınıf / Puan tablosu</label></div>
       <div class="chk"><input type="checkbox" id="f-pts"/><label for="f-pts">Her soruda puan yazsın</label></div>
       <div class="chk"><input type="checkbox" id="f-key"/><label for="f-key">Sona cevap anahtarı sayfası</label></div>
 
-      <div class="sec">Kitapçık & Ekler</div>
+      <div class="sec">5. Kitapçık & Optik Form</div>
       <div class="f"><label>Kaç kitapçık</label>
         <select id="f-book">
           <option value="1" selected>Tek kitapçık</option>
@@ -804,7 +850,7 @@ input,select,textarea{font:inherit}
       <button class="ghost" style="margin-top:10px" onclick="saveBank()">💾 Soruları bankaya kaydet</button>
     </div>
 
-    <!-- 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı (teststud.io Canlı Düzenleme) -->
+    <!-- 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı -->
     <div class="scr" id="s-prev">
       <div id="pbar">
         <button id="b-back" onclick="go('set')">← Ayarlar</button>
@@ -871,7 +917,7 @@ let docs=[], active=null, pageNo=1, scale=1, fit=1;
 let qs=[], selectMode=true, ratio=1, engineReady=false;
 let screen='home', html='', editingTest=null, currentBookIdx=0;
 let pendingCropData=null, pendingCropOpt='A';
-let customPageDistribution = null; // Sayfa bazında manuel soru adetleri listesi [4, 3, 2, ...]
+let customPageDistribution = null;
 const FRAMED=(function(){try{return window.self!==window.top;}catch(_){return true;}})();
 
 function toast(msg,isErr){
@@ -1151,7 +1197,7 @@ veil.addEventListener('mousedown', startCropSelection);
 window.addEventListener('mousemove', moveCropSelection);
 window.addEventListener('mouseup', endCropSelection);
 
-// Touch Dinleyicileri (Mobilde kesin ve kesintisiz seçim)
+// Touch Dinleyicileri
 veil.addEventListener('touchstart', startCropSelection, {passive: false});
 window.addEventListener('touchmove', moveCropSelection, {passive: false});
 window.addEventListener('touchend', endCropSelection, {passive: false});
@@ -1406,7 +1452,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-sol','f-max','f-book','f-template','f-soltype'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-sol','f-max','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot'];
 function loadTmpl(){
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
@@ -1438,7 +1484,7 @@ function fillSettings(){
   drawEditBar();
   if(!$('f-date').value) $('f-date').value=new Date().toLocaleDateString('tr-TR');
   spread();
-  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype'].forEach(id=>{
+  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind'].forEach(id=>{
     const e=$(id); if(e && !e._w){ e._w=1;
       e.addEventListener('change',()=>{ preview(); saveTmpl(); });
       e.addEventListener('input',saveTmpl);
@@ -1820,7 +1866,7 @@ function renderQuestion(q,colWmm,pic){
 }
 
 function colWidthMm(cfg){
-  const W=PAGE.w-PAGE.m*2;
+  const W=PAGE.w - (cfg.mLeft || 12) - (cfg.mRight || 12);
   const n=Math.max(1,cfg.cols||1);
   return (W-GAP*(n-1))/n;
 }
@@ -2124,11 +2170,14 @@ function openTest(t,edit){
     const c=t.cfg;
     const set=(id,v)=>{const e=$(id);if(e&&v!=null)e.value=v;};
     set('f-school',c.school);set('f-lesson',c.lesson);set('f-class',c.cls);
-    set('f-topic',c.topic);set('f-teacher',c.teacher);set('f-kind',c.kind);
+    set('f-topic',c.topic);set('f-teacher',c.teacher);set('f-kind',c.kind||'TEST 1');
     set('f-cols',c.cols);set('f-sol',c.sol);set('f-max',c.max);
     set('f-book',c.book);set('f-sep',c.sep);set('f-vsep',c.vsep);set('f-gutter',c.gutter);set('f-fill',c.fill);
     set('f-template',c.template||'studio');
     set('f-soltype',c.soltype||'grid');
+    set('f-hdrtheme',c.hdrtheme||'emerald');
+    set('f-qnumformat',c.qnumformat||'std');
+    set('f-mleft',c.mLeft||12);set('f-mright',c.mRight||12);set('f-mtop',c.mTop||12);set('f-mbot',c.mBottom||12);
     $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key;
     $('f-optic').checked=!!c.optic;$('f-qr').checked=!!c.qr;
     if(c.customPagePlan) customPageDistribution = c.customPagePlan.slice();
@@ -2139,21 +2188,29 @@ function openTest(t,edit){
   else build();
 }
 
-/* ════════ A4 Mizanpaj ve Dizgi Motoru (Sayfa Bazında Özel Soru Adedi Desteği) ════════ */
-const PAGE={w:210,h:297,m:13};
+/* ════════ A4 Mizanpaj ve Dizgi Motoru ════════ */
+const PAGE={w:210,h:297,m:12};
 const GAP=8, TITLE_H=5, AFTER=4, SOFT_K=0.88;
 
 function headerH(cfg){ 
   if(cfg.template==='minimal') return 14;
-  if(cfg.template==='studio') return 20;
+  if(cfg.template==='studio') return 22;
+  if(cfg.template==='osym') return 26;
   return cfg.info?30:17; 
 }
 function slotFix(q, cfg){ 
   const sol = (q && q.sol != null) ? q.sol : cfg.sol;
   return TITLE_H + sol + AFTER; 
 }
-function availOf(i,cfg){ return (PAGE.h-PAGE.m) - (i===0 ? PAGE.m+headerH(cfg) : PAGE.m); }
-function topOf(i,cfg){ return i===0 ? PAGE.m+headerH(cfg) : PAGE.m; }
+function availOf(i,cfg){ 
+  const mTop = cfg.mTop || 12;
+  const mBot = cfg.mBottom || 12;
+  return (PAGE.h - mBot) - (i===0 ? mTop + headerH(cfg) : mTop); 
+}
+function topOf(i,cfg){ 
+  const mTop = cfg.mTop || 12;
+  return i===0 ? mTop + headerH(cfg) : mTop; 
+}
 
 function split(list,p){
   const out=[]; let i=0;
@@ -2190,7 +2247,9 @@ function pageK(group,avail,colW,cfg){
 }
 
 function packNatural(list,cfg,colW){
-  const bottom=PAGE.h-PAGE.m;
+  const mLeft = cfg.mLeft || 12;
+  const mBot = cfg.mBottom || 12;
+  const bottom = PAGE.h - mBot;
   const pages=[]; let pg=null, ci=0, y=0, num=1, worst=1;
   const start=()=>{ pg={items:[],count:0}; pages.push(pg); ci=0; y=topOf(pages.length-1,cfg); };
   start();
@@ -2208,14 +2267,14 @@ function packNatural(list,cfg,colW){
     while(guard++<6){
       const full=cfg.max>0 && pg.count>=cfg.max;
       if(!full && y+bh<=bottom){
-        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
+        pg.items.push({q,num:num++,x:mLeft+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
         y+=bh; pg.count++; break;
       }
       if(!full && ci<cfg.cols-1){ ci++; y=topOf(pages.length-1,cfg); continue; }
       if(pg.count===0){
         const room=bottom-y-(TITLE_H + effectiveSol + AFTER);
         const kk=room>10 ? room/h : 1; h=Math.max(10, room); w=colW*k*kk; k*=kk; worst=Math.min(worst,k);
-        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
+        pg.items.push({q,num:num++,x:mLeft+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
         y+=TITLE_H+h+effectiveSol+AFTER; pg.count++; break;
       }
       start();
@@ -2226,6 +2285,7 @@ function packNatural(list,cfg,colW){
 }
 
 function place(groups,K,cfg,colW){
+  const mLeft = cfg.mLeft || 12;
   const pages=[]; let num=1;
   groups.forEach((grp,pi)=>{
     const top=topOf(pi,cfg);
@@ -2236,7 +2296,7 @@ function place(groups,K,cfg,colW){
       c.forEach(q=>{
         const effectiveSol = q.sol != null ? q.sol : cfg.sol;
         const w=colW*K, h=colW*K*(q.h/q.w);
-        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
+        pg.items.push({q,num:num++,x:mLeft+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
         y+=TITLE_H+h+effectiveSol+AFTER; pg.count++;
       });
     });
@@ -2247,10 +2307,8 @@ function place(groups,K,cfg,colW){
 }
 
 function layout(list,cfg){
-  const W=PAGE.w-PAGE.m*2;
   const colW=colWidthMm(cfg);
 
-  // 1) Kullanıcının Önizlemede Elle Ayarladığı Sayfa Başına Soru Dağılımı
   if (cfg.customPagePlan && Array.isArray(cfg.customPagePlan) && cfg.customPagePlan.length > 0) {
     const groups = [];
     let offset = 0;
@@ -2269,7 +2327,6 @@ function layout(list,cfg){
     return place(groups, K, cfg, colW);
   }
 
-  // 2) Normal Dağılım
   const nat=packNatural(list,cfg,colW);
 
   if(cfg.fill==='siki' || cfg.max > 0 || list.some(q=>q.pageBreak)) return nat;
@@ -2287,107 +2344,178 @@ function layout(list,cfg){
   return nat;
 }
 
+/* Başlık Çizim Motoru (5 Renk, ÖSYM Şablonu & Yazı Görünürlük Düzeltmesi) */
 function headerImage(cfg){
   const K=8;
-  const wmm=PAGE.w-PAGE.m*2, hmm=headerH(cfg);
-  const c=document.createElement('canvas');
-  c.width=wmm*K; c.height=hmm*K;
-  const g=c.getContext('2d');
-  g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
-  g.textBaseline='top';
+  const mLeft = cfg.mLeft || 12;
+  const mRight = cfg.mRight || 12;
+  const wmm = PAGE.w - mLeft - mRight;
+  const hmm = headerH(cfg);
+  const c = document.createElement('canvas');
+  c.width = Math.round(wmm*K);
+  c.height = Math.round(hmm*K);
+  const g = c.getContext('2d');
+  g.fillStyle = '#fff';
+  g.fillRect(0,0,c.width,c.height);
 
-  // Videodaki teststud.io 3 Parçalı Renkli Başlık Anteti
-  if(cfg.template==='studio'){
-    const pad=1.5*K;
-    const leftW=c.width*0.25, rightW=c.width*0.30;
-    const centerW=c.width - leftW - rightW - pad*2;
-    const bh=c.height-2*K;
+  // 5 Renk Paleti
+  const palettes = {
+    emerald: { bg: '#064E3B', mid: '#047857', text: '#FFFFFF', accent: '#34D399', border: '#059669' },
+    navy:    { bg: '#0F172A', mid: '#1E293B', text: '#FFFFFF', accent: '#38BDF8', border: '#334155' },
+    crimson: { bg: '#881337', mid: '#9F1239', text: '#FFFFFF', accent: '#FDA4AF', border: '#BE123C' },
+    amber:   { bg: '#78350F', mid: '#92400E', text: '#FFFFFF', accent: '#FDE68A', border: '#D97706' },
+    dark:    { bg: '#18181B', mid: '#27272A', text: '#FFFFFF', accent: '#E4E4E7', border: '#3F3F46' }
+  };
+  const pal = palettes[cfg.hdrtheme] || palettes.emerald;
+
+  // 1) teststud.io 3 Parçalı Renkli Başlık Şablonu (Yazı Taşma & Görünmeme Düzeltmesi)
+  if(cfg.template === 'studio'){
+    const pad = 1.5*K;
+    const leftW = Math.round(c.width * 0.26);
+    const rightW = Math.round(c.width * 0.30);
+    const centerW = c.width - leftW - rightW - pad*2;
+    const bh = c.height - 2*K;
+
+    // Helper: Otomatik Küçülen Metin Çizici
+    function drawFitText(text, x, y, maxW, defaultFont, color, isBold){
+      g.fillStyle = color;
+      let fontSize = defaultFont;
+      g.font = (isBold ? '800 ' : '600 ') + (fontSize * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+      while (g.measureText(text).width > maxW && fontSize > 1.8) {
+        fontSize -= 0.2;
+        g.font = (isBold ? '800 ' : '600 ') + (fontSize * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+      }
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText(text, x, y);
+    }
 
     // Sol Blok (Ders & Sınıf)
-    g.fillStyle='#064E3B';
-    if(g.roundRect) g.roundRect(0, 0, leftW, bh, 1.5*K); else g.fillRect(0, 0, leftW, bh);
-    g.fill();
-    g.fillStyle='#34D399'; g.font='800 '+(3.6*K)+'px Arial, sans-serif';
-    g.textAlign='center';
-    g.fillText((cfg.lesson||'KİMYA').toUpperCase(), leftW/2, bh/2 - 1.8*K);
+    g.fillStyle = pal.bg;
+    if(g.roundRect) { g.beginPath(); g.roundRect(0, 0, leftW, bh, 1.5*K); g.fill(); } else { g.fillRect(0, 0, leftW, bh); }
+    drawFitText((cfg.lesson || 'KİMYA').toUpperCase(), leftW/2, bh/2, leftW - 2*K, 3.4, pal.accent, true);
 
-    // Orta Blok (Konu & Başlık)
-    g.fillStyle='#047857';
-    if(g.roundRect) g.roundRect(leftW+pad, 0, centerW, bh, 1.5*K); else g.fillRect(leftW+pad, 0, centerW, bh);
-    g.fill();
-    g.fillStyle='#FFFFFF'; g.font='800 '+(3.8*K)+'px Arial, sans-serif';
-    g.fillText((cfg.topic||cfg.title||'KAZANIM TESTİ').toUpperCase(), leftW+pad + centerW/2, bh/2 - 1.9*K);
+    // Orta Blok (Konu / Başlık)
+    g.fillStyle = pal.mid;
+    if(g.roundRect) { g.beginPath(); g.roundRect(leftW + pad, 0, centerW, bh, 1.5*K); g.fill(); } else { g.fillRect(leftW + pad, 0, centerW, bh); }
+    drawFitText((cfg.topic || cfg.title || 'KAZANIM TESTİ').toUpperCase(), leftW + pad + centerW/2, bh/2, centerW - 3*K, 3.6, pal.text, true);
 
     // Sağ Blok (Öğretmen / Yayın)
-    g.fillStyle='#064E3B';
-    if(g.roundRect) g.roundRect(leftW+centerW+pad*2, 0, rightW, bh, 1.5*K); else g.fillRect(leftW+centerW+pad*2, 0, rightW, bh);
-    g.fill();
-    g.fillStyle='#ECFDF5'; g.font='700 '+(3.2*K)+'px Arial, sans-serif';
-    g.fillText(cfg.teacher||cfg.school||'testamed', leftW+centerW+pad*2 + rightW/2, bh/2 - 1.6*K);
+    g.fillStyle = pal.bg;
+    if(g.roundRect) { g.beginPath(); g.roundRect(leftW + centerW + pad*2, 0, rightW, bh, 1.5*K); g.fill(); } else { g.fillRect(leftW + centerW + pad*2, 0, rightW, bh); }
+    const teacherText = cfg.teacher || cfg.school || 'testamed';
+    drawFitText(teacherText, leftW + centerW + pad*2 + rightW/2, bh/2, rightW - 2*K, 3.1, pal.text, false);
 
-    g.textAlign='left';
-    return c.toDataURL('image/jpeg',0.92);
+    g.textAlign = 'left';
+    return c.toDataURL('image/jpeg', 0.94);
   }
 
-  if(cfg.template==='minimal'){
-    g.fillStyle='#111';
-    g.font='700 '+(3.8*K)+'px Arial, sans-serif';
-    g.fillText((cfg.title||'SINAV').toUpperCase(), 0, 1.5*K);
+  // 2) ÖSYM TYT / AYT Sınav Şablonu
+  if(cfg.template === 'osym'){
+    g.lineWidth = 1.2 * K;
+    g.strokeStyle = '#0F172A';
+    g.strokeRect(0, 0, c.width, c.height - 2*K);
 
-    g.fillStyle='#666';
-    g.font=''+(3.0*K)+'px Arial, sans-serif';
-    const sub=(cfg.lesson||'')+' · '+(cfg.date||'');
-    g.fillText(sub, c.width - g.measureText(sub).width, 2*K);
+    // Üst Logo & Sınav Adı
+    g.fillStyle = '#0F172A';
+    g.font = '900 ' + (3.8 * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.fillText((cfg.school || 'ÖSYM').toUpperCase(), 2*K, 4.5*K);
 
-    g.fillStyle='#111';
-    g.fillRect(0, c.height-1*K, c.width, 1*K);
-    return c.toDataURL('image/jpeg',0.92);
+    g.font = '800 ' + (4.0 * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.textAlign = 'center';
+    g.fillText((cfg.title || 'TYT / AYT DENEME SINAVI').toUpperCase(), c.width/2, 4.5*K);
+
+    g.font = '700 ' + (3.0 * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.fillText((cfg.lesson || 'KİMYA TESTİ') + ' · ' + (cfg.kind || 'A KİTAPÇIĞI'), c.width/2, 8.5*K);
+
+    // Öğrenci Kimlik Kutuları (Resmi ÖSYM Formatı)
+    g.lineWidth = 0.5 * K;
+    g.strokeStyle = '#334155';
+    const boxY = 12 * K;
+    const boxH = 10 * K;
+    
+    // T.C. Kimlik No Kutusu
+    g.strokeRect(2*K, boxY, 45*K, boxH);
+    g.fillStyle = '#475569';
+    g.font = '600 ' + (2.1 * K) + 'px Arial, sans-serif';
+    g.textAlign = 'left';
+    g.fillText('T.C. KİMLİK NUMARASI:', 3*K, boxY + 2.5*K);
+
+    // Adı Soyadı Kutusu
+    g.strokeRect(49*K, boxY, 70*K, boxH);
+    g.fillText('ADI SOYADI:', 50*K, boxY + 2.5*K);
+
+    // Salon & Sıra No
+    g.strokeRect(121*K, boxY, 32*K, boxH);
+    g.fillText('SALON NO:', 122*K, boxY + 2.5*K);
+
+    g.strokeRect(155*K, boxY, c.width - 157*K, boxH);
+    g.fillText('SIRA NO:', 156*K, boxY + 2.5*K);
+
+    g.textAlign = 'left';
+    return c.toDataURL('image/jpeg', 0.94);
   }
 
-  // Klasik MEB Formatı
-  let y=2*K;
+  // 3) Minimalist Çizgili Şablon
+  if(cfg.template === 'minimal'){
+    g.fillStyle = '#111';
+    g.font = '800 ' + (3.8 * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.fillText((cfg.title || cfg.kind || 'SINAV').toUpperCase(), 0, 3*K);
+
+    g.fillStyle = '#666';
+    g.font = '600 ' + (3.0 * K) + 'px Arial, sans-serif';
+    const sub = (cfg.lesson || '') + ' · ' + (cfg.topic || '') + ' · ' + (cfg.date || '');
+    g.fillText(sub, c.width - g.measureText(sub).width, 3*K);
+
+    g.fillStyle = '#111';
+    g.fillRect(0, c.height - 1*K, c.width, 1*K);
+    return c.toDataURL('image/jpeg', 0.94);
+  }
+
+  // 4) Klasik MEB Şablonu
+  let y = 2*K;
   if(cfg.school){
-    g.fillStyle='#111'; g.font='700 '+(4.2*K)+'px Arial, sans-serif';
-    g.fillText(cfg.school.toUpperCase(), 0, y); y+=5.4*K;
+    g.fillStyle = '#111'; g.font = '800 ' + (4.2*K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.fillText(cfg.school.toUpperCase(), 0, y); y += 5.4*K;
   }
-  const meta=[cfg.lesson&&'Ders: '+cfg.lesson, cfg.topic&&'Konu: '+cfg.topic, cfg.date]
+  const meta = [cfg.lesson && 'Ders: '+cfg.lesson, cfg.topic && 'Konu: '+cfg.topic, cfg.date]
     .filter(Boolean).join('   |   ');
   if(meta){
-    g.fillStyle='#333'; g.font=''+(3.2*K)+'px Arial, sans-serif';
-    g.fillText(meta,0,y); y+=4.4*K;
+    g.fillStyle = '#333'; g.font = '' + (3.2*K) + 'px Arial, sans-serif';
+    g.fillText(meta, 0, y); y += 4.4*K;
   }
   if(cfg.kind){
-    g.font='700 '+(3.4*K)+'px Arial, sans-serif';
-    const tw=g.measureText(cfg.kind).width+3.4*K;
-    const tx=c.width-tw, ty=2*K, th=5.4*K;
-    g.fillStyle='#10B981';
-    if(g.roundRect){ g.beginPath(); g.roundRect(tx,ty,tw,th,1.2*K); g.fill(); }
-    else g.fillRect(tx,ty,tw,th);
-    g.fillStyle='#fff';
-    g.fillText(cfg.kind, tx+1.7*K, ty+1.05*K);
+    g.font = '700 ' + (3.4*K) + 'px Arial, sans-serif';
+    const tw = g.measureText(cfg.kind).width + 3.4*K;
+    const tx = c.width - tw, ty = 2*K, th = 5.4*K;
+    g.fillStyle = '#10B981';
+    if(g.roundRect){ g.beginPath(); g.roundRect(tx, ty, tw, th, 1.2*K); g.fill(); }
+    else g.fillRect(tx, ty, tw, th);
+    g.fillStyle = '#fff';
+    g.fillText(cfg.kind, tx + 1.7*K, ty + 1.05*K);
   }
   if(cfg.info){
-    const ty=hmm*K-12*K, rh=7*K;
-    const cells=[['ADI SOYADI',.19],['',.31],['SINIF / NO',.15],[cfg.cls||'',.16],['PUAN',.09],['',.10]];
-    let x=0;
-    g.lineWidth=Math.max(1,0.28*K);
-    cells.forEach(([txt,fr],i)=>{
-      const cw=c.width*fr;
-      const label=(i%2===0);
-      g.fillStyle=label?'#F2F2F2':'#fff';
-      g.fillRect(x,ty,cw,rh);
-      g.strokeStyle='#111'; g.strokeRect(x,ty,cw,rh);
+    const ty = hmm*K - 12*K, rh = 7*K;
+    const cells = [['ADI SOYADI',.19],['',.31],['SINIF / NO',.15],[cfg.cls||'',.16],['PUAN',.09],['',.10]];
+    let x = 0;
+    g.lineWidth = Math.max(1, 0.28*K);
+    cells.forEach(([txt, fr], i)=>{
+      const cw = c.width * fr;
+      const label = (i % 2 === 0);
+      g.fillStyle = label ? '#F2F2F2' : '#fff';
+      g.fillRect(x, ty, cw, rh);
+      g.strokeStyle = '#111'; g.strokeRect(x, ty, cw, rh);
       if(txt){
-        g.fillStyle='#111';
-        g.font=(label?'700 ':'')+(2.9*K)+'px Arial, sans-serif';
-        g.fillText(txt, x+1.2*K, ty+2*K);
+        g.fillStyle = '#111';
+        g.font = (label ? '700 ' : '') + (2.9*K) + 'px Arial, sans-serif';
+        g.fillText(txt, x + 1.2*K, ty + 2*K);
       }
-      x+=cw;
+      x += cw;
     });
   }
-  g.fillStyle='#111';
-  g.fillRect(0,c.height-0.7*K,c.width,0.7*K);
-  return c.toDataURL('image/jpeg',0.92);
+  g.fillStyle = '#111';
+  g.fillRect(0, c.height - 0.7*K, c.width, 0.7*K);
+  return c.toDataURL('image/jpeg', 0.94);
 }
 
 let PAGES=[], HDR='', CFG=null, BOOKS=[];
@@ -2406,6 +2534,17 @@ function drawBookPick(active){
     };
     el.appendChild(btn);
   });
+}
+
+/* Soru Numarası Formatlayıcı */
+function formatQuestionNumber(idx, format){
+  const num = idx + 1;
+  if(format === 'soru') return `Soru ${num}`;
+  if(format === 'soru_dot') return `Soru ${num}.`;
+  if(format === 'ornek') return `Örnek ${num}`;
+  if(format === 'ornek_dot') return `Örnek ${num}.`;
+  if(format === 'none') return '';
+  return `${num}.`;
 }
 
 /* ════════ A4 Önizleme: Soruların Yerini, Boşluklarını ve Sayfa Dağılımını Canlı Değiştirme ════════ */
@@ -2438,7 +2577,6 @@ function setIndividualPageCount(pageIdx, countVal){
   const currentCounts = PAGES.map(p => p.count);
   currentCounts[pageIdx] = count;
   
-  // Dağılımı sabitle
   customPageDistribution = currentCounts;
   if(CFG) CFG.customPagePlan = customPageDistribution;
   
@@ -2515,8 +2653,14 @@ function removeQuestionFromPreview(qId){
 function drawPages(){
   const host=$('pages'); host.innerHTML='';
   const pct=(v,t)=>(v/t*100)+'%';
+  const mLeft = (CFG && CFG.mLeft) || 12;
+  const mRight = (CFG && CFG.mRight) || 12;
+  const mTop = (CFG && CFG.mTop) || 12;
+  const mBot = (CFG && CFG.mBottom) || 12;
+  const qNumFormat = (CFG && CFG.qnumformat) || 'std';
+
   PAGES.forEach((pg,i)=>{
-    // 1) teststud.io Her Sayfanın Üzerindeki Bağımsız Soru Sayısı & Aktarma Çubuğu
+    // Her Sayfanın Üstündeki Bağımsız Soru Sayısı & Aktarma Çubuğu
     const pageControlBar = document.createElement('div');
     pageControlBar.className = 'no-print flex items-center justify-between bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-300 w-full max-w-[520px] mb-2 shadow-lg';
     pageControlBar.innerHTML = `
@@ -2536,13 +2680,13 @@ function drawPages(){
     `;
     host.appendChild(pageControlBar);
 
-    // 2) A4 Sayfası
+    // A4 Sayfası
     const el=document.createElement('div'); el.className='pg';
     if(i===0&&HDR){
       const h=document.createElement('img'); h.className='ab';
       h.src=HDR;
-      h.style.cssText='left:'+pct(PAGE.m,PAGE.w)+';top:'+pct(PAGE.m,PAGE.h)+
-        ';width:'+pct(PAGE.w-PAGE.m*2,PAGE.w)+'';
+      h.style.cssText='left:'+pct(mLeft,PAGE.w)+';top:'+pct(mTop,PAGE.h)+
+        ';width:'+pct(PAGE.w - mLeft - mRight, PAGE.w)+'';
       el.appendChild(h);
     }
 
@@ -2555,11 +2699,14 @@ function drawPages(){
       qBox.style.cssText = `left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(boxW, PAGE.w)}; height:${pct(boxH, PAGE.h)};`;
 
       // Soru Numarası
-      const n = document.createElement('div');
-      n.className = 'pn';
-      n.textContent = it.num + '.';
-      n.style.cssText = `left:0; top:0;`;
-      qBox.appendChild(n);
+      const labelText = formatQuestionNumber(it.num - 1, qNumFormat);
+      if(labelText){
+        const n = document.createElement('div');
+        n.className = 'pn';
+        n.textContent = labelText;
+        n.style.cssText = `left:0; top:0; font-size:12px;`;
+        qBox.appendChild(n);
+      }
 
       // Soru Görseli
       const im = document.createElement('img');
@@ -2610,10 +2757,10 @@ function drawPages(){
     const nc=Math.max(1,(CFG&&CFG.cols)||1);
     if(nc>1 && CFG && (CFG.vsep!=='yok'||CFG.gutter)){
       const cw=colWidthMm(CFG);
-      const top=(i===0)?PAGE.m+headerH(CFG):PAGE.m;
-      const bot=PAGE.h-PAGE.m-4;
+      const top=(i===0)?mTop+headerH(CFG):mTop;
+      const bot=PAGE.h-mBot-4;
       for(let c=1;c<nc;c++){
-        const gx=PAGE.m+c*(cw+GAP)-GAP/2;
+        const gx=mLeft+c*(cw+GAP)-GAP/2;
         if(CFG.vsep!=='yok'){
           const v=document.createElement('div');
           v.className='vs'+(CFG.vsep==='duz'?' solid':'');
@@ -2650,13 +2797,23 @@ function cfgNow(){
   return {
     school:$('f-school').value.trim(), lesson:$('f-lesson').value.trim(),
     cls:$('f-class').value.trim(), topic:$('f-topic').value.trim(),
-    teacher:$('f-teacher').value.trim(), kind:$('f-kind').value,
+    teacher:$('f-teacher').value.trim(), kind:$('f-kind').value.trim(),
     date:$('f-date').value.trim(), cols:parseInt($('f-cols').value)||1,
     sol:parseInt($('f-sol').value)||0, max:parseInt($('f-max').value)||0,
     sep:$('f-sep').value, vsep:$('f-vsep').value, gutter:$('f-gutter').value.trim(),
     fill:$('f-fill').value,
     template:$('f-template').value||'studio',
     soltype:$('f-soltype').value||'grid',
+    hdrtheme:$('f-hdrtheme').value||'emerald',
+    qnumformat:$('f-qnumformat').value||'std',
+    mleft:parseInt($('f-mleft').value)||12,
+    mright:parseInt($('f-mright').value)||12,
+    mtop:parseInt($('f-mtop').value)||12,
+    mbot:parseInt($('f-mbot').value)||12,
+    mLeft:parseInt($('f-mleft').value)||12,
+    mRight:parseInt($('f-mright').value)||12,
+    mTop:parseInt($('f-mtop').value)||12,
+    mBottom:parseInt($('f-mbot').value)||12,
     customPagePlan: customPageDistribution,
     info:$('f-info').checked, pts:$('f-pts').checked, key:$('f-key').checked,
     book:parseInt($('f-book').value)||1, optic:$('f-optic').checked, qr:$('f-qr').checked
@@ -2761,7 +2918,7 @@ const QR=(function(){
         const row=up?size-1-k:k;
         for(let c=0;c<2;c++){const cc=col-c;
           if(m[row][cc]===null){let v=bi<bytes.length*8?bit():0;
-            if((row+cc)%2===0)v^=1; // mask 0
+            if((row+cc)%2===0)v^=1;
             m[row][cc]=v;}}
       }
       up=!up;
@@ -2791,24 +2948,33 @@ function drawQR(doc,text,x,y,size){
 
 function drawBook(doc, book, first){
   const pages=book.pages;
+  const mLeft = (CFG && CFG.mLeft) || 12;
+  const mRight = (CFG && CFG.mRight) || 12;
+  const mTop = (CFG && CFG.mTop) || 12;
+  const mBot = (CFG && CFG.mBottom) || 12;
+  const qNumFormat = (CFG && CFG.qnumformat) || 'std';
+
   pages.forEach((pg,i)=>{
     if(!(first&&i===0)) doc.addPage();
     if(i===0){
-      if(HDR) doc.addImage(HDR,'JPEG',PAGE.m,PAGE.m,PAGE.w-PAGE.m*2,headerH(CFG));
-      if(book.letter){
+      if(HDR) doc.addImage(HDR,'JPEG',mLeft,mTop,PAGE.w - mLeft - mRight,headerH(CFG));
+      if(book.letter && CFG.template !== 'studio' && CFG.template !== 'osym'){
         doc.setFillColor(16,185,129);
-        doc.roundedRect(PAGE.w-PAGE.m-16, PAGE.m-1, 16, 8, 1.5,1.5,'F');
+        doc.roundedRect(PAGE.w-mRight-16, mTop-1, 16, 8, 1.5,1.5,'F');
         doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(255);
-        doc.text(book.letter, PAGE.w-PAGE.m-8, PAGE.m+4.6, {align:'center'});
+        doc.text(book.letter, PAGE.w-mRight-8, mTop+4.6, {align:'center'});
       }
       if(CFG.qr){
         const tag=[(CFG.lesson||'test'),(book.letter||'-'),book.list.length+'s',(CFG.date||'')].join('|');
-        drawQR(doc,tag,PAGE.w-PAGE.m-13,PAGE.m+(book.letter?9:0),13);
+        drawQR(doc,tag,PAGE.w-mRight-13,mTop+(book.letter?9:0),13);
       }
     }
     pg.items.forEach(it=>{
-      doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(17);
-      doc.text(it.num+'.', it.x, it.y+4);
+      const labelText = formatQuestionNumber(it.num - 1, qNumFormat);
+      if(labelText){
+        doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(17);
+        doc.text(labelText, it.x, it.y+4);
+      }
       if(CFG.pts){
         doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(110);
         doc.text('('+(it.q.pt||0)+' puan)', it.x+it.colW, it.y+4, {align:'right'});
@@ -2846,10 +3012,10 @@ function drawBook(doc, book, first){
     const nc=Math.max(1,(CFG&&CFG.cols)||1);
     if(nc>1 && (CFG.vsep!=='yok'||CFG.gutter)){
       const cw=colWidthMm(CFG);
-      const top=(i===0)?PAGE.m+headerH(CFG):PAGE.m;
-      const bot=PAGE.h-PAGE.m-4;
+      const top=(i===0)?mTop+headerH(CFG):mTop;
+      const bot=PAGE.h-mBot-4;
       for(let c=1;c<nc;c++){
-        const gx=PAGE.m+c*(cw+GAP)-GAP/2;
+        const gx=mLeft+c*(cw+GAP)-GAP/2;
         if(CFG.vsep!=='yok'){
           doc.setDrawColor(190); doc.setLineWidth(CFG.vsep==='duz'?0.25:0.2);
           if(doc.setLineDashPattern && CFG.vsep==='kesik') doc.setLineDashPattern([1,1.4],0);
@@ -2865,24 +3031,27 @@ function drawBook(doc, book, first){
 
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(150);
     const foot=(book.letter?book.letter+' · ':'')+(i+1)+' / '+pages.length;
-    doc.text(foot, PAGE.w-PAGE.m, PAGE.h-6, {align:'right'});
+    doc.text(foot, PAGE.w-mRight, PAGE.h-6, {align:'right'});
   });
   if(CFG.teacher){
     doc.setFontSize(9); doc.setTextColor(60);
-    doc.text(CFG.teacher, PAGE.w-PAGE.m, PAGE.h-11, {align:'right'});
+    doc.text(CFG.teacher, PAGE.w-mRight, PAGE.h-11, {align:'right'});
   }
 }
 
 function drawKey(doc, book){
+  const mLeft = (CFG && CFG.mLeft) || 12;
+  const mRight = (CFG && CFG.mRight) || 12;
+  const mTop = (CFG && CFG.mTop) || 12;
   doc.addPage();
   const ttl='CEVAP ANAHTARI'+(book.letter?' — '+book.letter+' KİTAPÇIĞI':'');
   doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(17);
-  doc.text(ttl, PAGE.w/2, PAGE.m+8, {align:'center'});
+  doc.text(ttl, PAGE.w/2, mTop+8, {align:'center'});
   doc.setLineWidth(0.6); doc.setDrawColor(17);
-  doc.line(PAGE.m,PAGE.m+11,PAGE.w-PAGE.m,PAGE.m+11);
-  const cw=(PAGE.w-PAGE.m*2)/5, ch=12;
+  doc.line(mLeft,mTop+11,PAGE.w-mRight,mTop+11);
+  const cw=(PAGE.w-mLeft-mRight)/5, ch=12;
   book.list.forEach((q,i)=>{
-    const cx=PAGE.m+(i%5)*cw, cy=PAGE.m+18+Math.floor(i/5)*ch;
+    const cx=mLeft+(i%5)*cw, cy=mTop+18+Math.floor(i/5)*ch;
     doc.setDrawColor(140); doc.setLineWidth(0.2);
     doc.roundedRect(cx+1,cy,cw-2,ch-3,1,1);
     doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(17);
@@ -2891,29 +3060,32 @@ function drawKey(doc, book){
 }
 
 function drawOptic(doc, book){
+  const mLeft = (CFG && CFG.mLeft) || 12;
+  const mRight = (CFG && CFG.mRight) || 12;
+  const mTop = (CFG && CFG.mTop) || 12;
   doc.addPage();
   const ttl='OPTİK CEVAP KÂĞIDI'+(book.letter?' — '+book.letter:'');
   doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(17);
-  doc.text(ttl, PAGE.w/2, PAGE.m+7, {align:'center'});
+  doc.text(ttl, PAGE.w/2, mTop+7, {align:'center'});
   doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(80);
   doc.text('Ad Soyad: ..............................................    No: ............    Sınıf: ..........',
-    PAGE.m, PAGE.m+15);
+    mLeft, mTop+15);
   const tag=[(CFG.lesson||'test'),(book.letter||'-'),book.list.length+'s',
     (CFG.date||'')].join('|');
   const qs=18;
-  if(drawQR(doc,tag,PAGE.w-PAGE.m-qs,PAGE.m-2,qs)){
+  if(drawQR(doc,tag,PAGE.w-mRight-qs,mTop+2,qs)){
     doc.setFontSize(6); doc.setTextColor(140);
-    doc.text(book.letter?book.letter+' kitapçığı':'testamed', PAGE.w-PAGE.m-qs/2, PAGE.m+qs, {align:'center'});
+    doc.text(book.letter?book.letter+' kitapçığı':'testamed', PAGE.w-mRight-qs/2, mTop+qs+4, {align:'center'});
   }
 
   const opts=5, r=1.9, gap=6.2, rowH=8.4;
   const n=book.list.length;
   const perCol=Math.ceil(n/ (n>25?2:1));
-  const colW=(PAGE.w-PAGE.m*2)/(n>25?2:1);
-  const top=PAGE.m+24;
+  const colW=(PAGE.w-mLeft-mRight)/(n>25?2:1);
+  const top=mTop+24;
   for(let i=0;i<n;i++){
     const col=Math.floor(i/perCol), row=i%perCol;
-    const bx=PAGE.m+col*colW, by=top+row*rowH;
+    const bx=mLeft+col*colW, by=top+row*rowH;
     doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(17);
     doc.text((i+1)+'.', bx, by+2, {align:'left'});
     for(let o=0;o<opts;o++){
