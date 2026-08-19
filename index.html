@@ -799,8 +799,8 @@ input,select,textarea{font:inherit}
     <input type="range" id="f-wm-x" min="0" max="100" value="50" oninput="$('wmx-val').textContent=this.value"/>
   </div>
   <div class="f">
-    <label>Dikey Konum <span id="wmy-val">50</span>%</label>
-    <input type="range" id="f-wm-y" min="0" max="100" value="50" oninput="$('wmy-val').textContent=this.value"/>
+    <label>Dikey Konum <span id="wmy-val">95</span>%</label>
+    <input type="range" id="f-wm-y" min="0" max="100" value="95" oninput="$('wmy-val').textContent=this.value"/>
   </div>
 </div>
 <div class="r2">
@@ -815,6 +815,21 @@ input,select,textarea{font:inherit}
       <option value="bold">Kalın</option>
       <option value="italic">İtalik</option>
     </select>
+  </div>
+</div>
+<div class="r2">
+  <div class="f">
+    <label>Hazır Konum</label>
+    <select id="f-wm-preset" onchange="applyWmPreset(this.value)">
+      <option value="">Serbest (X/Y ile ayarla)</option>
+      <option value="bottom-center" selected>Sayfa altı orta</option>
+      <option value="bottom-right">Sayfa altı sağ</option>
+      <option value="top-right">Sayfa üstü sağ</option>
+      <option value="center">Sayfa tam ortası</option>
+    </select>
+  </div>
+  <div class="f" style="display:flex;align-items:center">
+    <span style="font-size:12px;color:var(--soft)">X/Y kaydırıcılarıyla ince ayar yapın</span>
   </div>
 </div>
 
@@ -1610,6 +1625,24 @@ function toggleLogoAsWatermark(){
   }
   preview();
 }
+
+function applyWmPreset(val){
+  if(!val) return;
+  const presets = {
+    'bottom-center': {x:50, y:95},
+    'bottom-right': {x:92, y:95},
+    'top-right': {x:92, y:8},
+    'center': {x:50, y:50}
+  };
+  const p = presets[val];
+  if(!p) return;
+  if($('f-wm-x')) $('f-wm-x').value = p.x;
+  if($('f-wm-y')) $('f-wm-y').value = p.y;
+  if($('wmx-val')) $('wmx-val').textContent = p.x;
+  if($('wmy-val')) $('wmy-val').textContent = p.y;
+  preview(); saveTmpl();
+}
+
 
 function fillSettings(){
   loadTmpl();
@@ -3264,38 +3297,14 @@ function drawWatermark(doc, cfg){
   const op = Math.max(0, Math.min(100, cfg.wmOp || 30));
   const sz = Math.max(8, Math.min(72, cfg.wmSz || 14));
   const px = Math.max(0, Math.min(100, cfg.wmX || 50));
-  const py = Math.max(0, Math.min(100, cfg.wmY || 50));
+  const py = Math.max(0, Math.min(100, cfg.wmY || 95));
   const ang = cfg.wmAng || 0;
   const style = cfg.wmStyle || 'normal';
-  const area = cfg.wmArea || 'page';
 
-  let x, y, maxW, maxH;
-
-  if(area === 'content'){
-    const usableW = PAGE.w - mL - mR;
-    const usableH = PAGE.h - mT - mB;
-    x = mL + (usableW * px / 100);
-    y = mT + (usableH * py / 100);
-    maxW = usableW * 0.4;
-    maxH = usableH * 0.3;
-  } else {
-    x = PAGE.w * px / 100;
-    y = PAGE.h * py / 100;
-    maxW = PAGE.w * 0.35;
-    maxH = PAGE.h * 0.25;
-    const safe = 5;
-    const cLeft = mL + safe, cRight = PAGE.w - mR - safe;
-    const cTop = mT + safe, cBottom = PAGE.h - mB - safe;
-    if(x > cLeft && x < cRight && y > cTop && y < cBottom){
-      const dl = x - cLeft, dr = cRight - x;
-      const dt = y - cTop, db = cBottom - y;
-      const minD = Math.min(dl, dr, dt, db);
-      if(minD === dl) x = mL;
-      else if(minD === dr) x = PAGE.w - mR;
-      else if(minD === dt) y = mT;
-      else y = PAGE.h - mB;
-    }
-  }
+  // X/Y değerlerini doğrudan sayfa koordinatlarına çevir
+  // px=0 → sol, px=100 → sağ, py=0 → üst, py=100 → alt
+  const x = PAGE.w * px / 100;
+  const y = PAGE.h * py / 100;
 
   const wmImgData = cfg.logoAsWm && cfg.logo ? cfg.logo : (cfg.wmImg || null);
 
@@ -3309,8 +3318,10 @@ function drawWatermark(doc, cfg){
     if(wmImgData && wmImgData.url){
       const ratio = wmImgData.w / wmImgData.h;
       const scaleFactor = 0.3 + (op / 100) * 0.7;
-      let iw = maxW * scaleFactor, ih = iw / ratio;
-      if(ih > maxH * scaleFactor){ ih = maxH * scaleFactor; iw = ih * ratio; }
+      const maxW = PAGE.w * 0.35 * scaleFactor;
+      const maxH = PAGE.h * 0.25 * scaleFactor;
+      let iw = maxW, ih = iw / ratio;
+      if(ih > maxH){ ih = maxH; iw = ih * ratio; }
       const ix = x - iw/2, iy = y - ih/2;
       try { doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST'); }
       catch(e) {}
