@@ -171,7 +171,7 @@ input,select,textarea{font:inherit}
 }
 #page{display:block; user-select:none;}
 
-/* Kırpma Perdesi & Seçim Kutusu (Canlı Karartma Maskeli) */
+/* Kırpma Perdesi & Canlı Seçim Kutusu (Canlı Çizim ve Boyut Rozeti) */
 #veil{
   position:absolute;
   inset:0;
@@ -182,16 +182,32 @@ input,select,textarea{font:inherit}
 #box{
   position:absolute;
   border:2.5px solid #10B981 !important;
-  background:rgba(16,185,129,0.18) !important;
-  outline:2000px solid rgba(0,0,0,0.38) !important;
+  background:rgba(16,185,129,0.22) !important;
+  box-shadow:0 0 0 1px #ffffff, 0 4px 18px rgba(0,0,0,0.45);
   display:none;
   pointer-events:none !important;
-  border-radius:2px;
-  z-index:35;
+  border-radius:3px;
+  z-index:40;
   box-sizing:border-box;
 }
+#box::after {
+  content: attr(data-size);
+  position: absolute;
+  bottom: -22px;
+  right: 0;
+  background: #091E19;
+  color: #10B981;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #2C3A36;
+  white-space: nowrap;
+  pointer-events: none;
+}
 
-/* teststud.io Yüzen Şık & Onay Paneli */
+/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
@@ -493,7 +509,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
-    <!-- 2. Ekran: Görüntüleyici & Tuval (Kırpma Alanı) -->
+    <!-- 2. Ekran: Görüntüleyici & Tuval -->
     <div class="scr" id="s-view">
       <div id="bar">
         <div class="brow" id="files"></div>
@@ -807,6 +823,10 @@ input,select,textarea{font:inherit}
           </select>
         </div>
 
+        <button onclick="resetCustomPageDistribution()" class="quick-per-page" style="cursor:pointer; background:#064E3B; color:#34D399; border:1px solid #059669;" title="Tüm sayfaları otomatik dengeli dağılıma sıfırlar">
+          ⚡ Otomatik Dağıt
+        </button>
+
         <button id="b-print" onclick="makeFile()">📄 PDF oluştur</button>
         <button id="b-share" onclick="sharePdf()">📤 Paylaş</button>
         <button id="b-savetest" onclick="saveTestDialog()">💾 Kaydet</button>
@@ -851,6 +871,7 @@ let docs=[], active=null, pageNo=1, scale=1, fit=1;
 let qs=[], selectMode=true, ratio=1, engineReady=false;
 let screen='home', html='', editingTest=null, currentBookIdx=0;
 let pendingCropData=null, pendingCropOpt='A';
+let customPageDistribution = null; // Sayfa bazında manuel soru adetleri listesi [4, 3, 2, ...]
 const FRAMED=(function(){try{return window.self!==window.top;}catch(_){return true;}})();
 
 function toast(msg,isErr){
@@ -1075,6 +1096,7 @@ function startCropSelection(e){
   boxEl.style.top = startPos.y + 'px';
   boxEl.style.width = '0px';
   boxEl.style.height = '0px';
+  boxEl.setAttribute('data-size', '0 × 0');
 
   hideFloatingCropBar();
 }
@@ -1095,6 +1117,7 @@ function moveCropSelection(e){
   boxEl.style.top = y + 'px';
   boxEl.style.width = w + 'px';
   boxEl.style.height = h + 'px';
+  boxEl.setAttribute('data-size', Math.round(w) + ' × ' + Math.round(h));
 }
 
 function endCropSelection(e){
@@ -2108,6 +2131,7 @@ function openTest(t,edit){
     set('f-soltype',c.soltype||'grid');
     $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key;
     $('f-optic').checked=!!c.optic;$('f-qr').checked=!!c.qr;
+    if(c.customPagePlan) customPageDistribution = c.customPagePlan.slice();
   }
   editingTest = t;
   drawTray();
@@ -2115,7 +2139,7 @@ function openTest(t,edit){
   else build();
 }
 
-/* ════════ A4 Mizanpaj ve Dizgi Motoru (Manuel Sayfa Kesmeli) ════════ */
+/* ════════ A4 Mizanpaj ve Dizgi Motoru (Sayfa Bazında Özel Soru Adedi Desteği) ════════ */
 const PAGE={w:210,h:297,m:13};
 const GAP=8, TITLE_H=5, AFTER=4, SOFT_K=0.88;
 
@@ -2171,7 +2195,6 @@ function packNatural(list,cfg,colW){
   const start=()=>{ pg={items:[],count:0}; pages.push(pg); ci=0; y=topOf(pages.length-1,cfg); };
   start();
   list.forEach(q=>{
-    // Manuel Sayfa Kesmesi Tetikleyici
     if(q.pageBreak && pg.count > 0){
       start();
     }
@@ -2226,6 +2249,27 @@ function place(groups,K,cfg,colW){
 function layout(list,cfg){
   const W=PAGE.w-PAGE.m*2;
   const colW=colWidthMm(cfg);
+
+  // 1) Kullanıcının Önizlemede Elle Ayarladığı Sayfa Başına Soru Dağılımı
+  if (cfg.customPagePlan && Array.isArray(cfg.customPagePlan) && cfg.customPagePlan.length > 0) {
+    const groups = [];
+    let offset = 0;
+    for (let i = 0; i < cfg.customPagePlan.length; i++) {
+      const count = cfg.customPagePlan[i];
+      if (offset >= list.length) break;
+      groups.push(list.slice(offset, offset + count));
+      offset += count;
+    }
+    if (offset < list.length) {
+      groups.push(list.slice(offset));
+    }
+    const ks = groups.map((g, i) => pageK(g, availOf(i, cfg), colW, cfg));
+    const validKs = ks.filter(k => k !== null && !isNaN(k) && k > 0);
+    const K = validKs.length ? Math.min(1, Math.min(...validKs)) : 1;
+    return place(groups, K, cfg, colW);
+  }
+
+  // 2) Normal Dağılım
   const nat=packNatural(list,cfg,colW);
 
   if(cfg.fill==='siki' || cfg.max > 0 || list.some(q=>q.pageBreak)) return nat;
@@ -2364,7 +2408,7 @@ function drawBookPick(active){
   });
 }
 
-/* ════════ A4 Önizleme: Soruların Yerini ve Çözüm Boşluklarını Canlı Değiştirme ════════ */
+/* ════════ A4 Önizleme: Soruların Yerini, Boşluklarını ve Sayfa Dağılımını Canlı Değiştirme ════════ */
 function recalcAndRedrawPages(){
   if(BOOKS.length && BOOKS[currentBookIdx]){
     BOOKS[currentBookIdx].pages = layout(BOOKS[currentBookIdx].list, CFG);
@@ -2380,18 +2424,51 @@ function recalcAndRedrawPages(){
 function changePerPageQuick(val){
   const max = parseInt(val) || 0;
   $('f-max').value = max;
-  if(CFG) CFG.max = max;
+  if(CFG) {
+    CFG.max = max;
+    CFG.customPagePlan = null;
+  }
+  customPageDistribution = null;
   recalcAndRedrawPages();
   toast(max === 0 ? 'Sayfalama: Otomatik' : 'Sayfa Başına: ' + max + ' Soru');
 }
 
-function togglePageBreak(qId){
-  const list = (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs;
-  const q = list.find(item => item.id === qId);
-  if(!q) return;
-  q.pageBreak = !q.pageBreak;
+function setIndividualPageCount(pageIdx, countVal){
+  const count = parseInt(countVal) || 1;
+  const currentCounts = PAGES.map(p => p.count);
+  currentCounts[pageIdx] = count;
+  
+  // Dağılımı sabitle
+  customPageDistribution = currentCounts;
+  if(CFG) CFG.customPagePlan = customPageDistribution;
+  
   recalcAndRedrawPages();
-  toast(q.pageBreak ? 'Yeni sayfaya bölündü' : 'Sayfa bölmesi kaldırıldı');
+  toast((pageIdx + 1) + '. Sayfa: ' + count + ' Soru olarak ayarlandı');
+}
+
+function pushQuestionToNextPage(pageIdx){
+  const currentCounts = PAGES.map(p => p.count);
+  if (currentCounts[pageIdx] <= 1) {
+    toast('Bu sayfada zaten 1 soru var, daha fazla azaltılamaz', true);
+    return;
+  }
+  currentCounts[pageIdx] -= 1;
+  if (currentCounts[pageIdx + 1] != null) {
+    currentCounts[pageIdx + 1] += 1;
+  } else {
+    currentCounts.push(1);
+  }
+  customPageDistribution = currentCounts;
+  if(CFG) CFG.customPagePlan = customPageDistribution;
+  recalcAndRedrawPages();
+  toast('Soru sonraki sayfaya aktarıldı');
+}
+
+function resetCustomPageDistribution(){
+  customPageDistribution = null;
+  if(CFG) CFG.customPagePlan = null;
+  recalcAndRedrawPages();
+  toast('Sayfa dağılımı otomatik dengelendi');
 }
 
 function moveQuestionInPreview(qId, dir){
@@ -2439,6 +2516,27 @@ function drawPages(){
   const host=$('pages'); host.innerHTML='';
   const pct=(v,t)=>(v/t*100)+'%';
   PAGES.forEach((pg,i)=>{
+    // 1) teststud.io Her Sayfanın Üzerindeki Bağımsız Soru Sayısı & Aktarma Çubuğu
+    const pageControlBar = document.createElement('div');
+    pageControlBar.className = 'no-print flex items-center justify-between bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-300 w-full max-w-[520px] mb-2 shadow-lg';
+    pageControlBar.innerHTML = `
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-emerald-400">📄 ${i+1}. Sayfa</span>
+        <span class="text-slate-400 font-mono font-bold">(${pg.count} Soru)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[11px] text-slate-400">Soru Sayısı:</span>
+        <select onchange="setIndividualPageCount(${i}, this.value)" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 font-bold text-emerald-400 font-mono outline-none cursor-pointer">
+          ${[1,2,3,4,5,6,7,8,10].map(n => `<option value="${n}" ${n === pg.count ? 'selected' : ''}>${n} Soru</option>`).join('')}
+        </select>
+        <button onclick="pushQuestionToNextPage(${i})" title="Bu sayfanın son sorusunu bir sonraki sayfaya aktarır" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-200 font-bold border border-slate-700 ml-1 flex items-center gap-1">
+          Aktar ➡
+        </button>
+      </div>
+    `;
+    host.appendChild(pageControlBar);
+
+    // 2) A4 Sayfası
     const el=document.createElement('div'); el.className='pg';
     if(i===0&&HDR){
       const h=document.createElement('img'); h.className='ab';
@@ -2492,9 +2590,8 @@ function drawPages(){
       ctrls.innerHTML = `
         <button class="ql-btn" title="Yukarı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', -1)">↑</button>
         <button class="ql-btn" title="Aşağı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', 1)">↓</button>
-        <button class="ql-btn ${it.q.pageBreak ? 'on' : ''}" title="Bu sorudan itibaren yeni sayfaya böl" onclick="event.stopPropagation(); togglePageBreak('${it.q.id}')">📄 ${it.q.pageBreak ? 'Birleştir' : 'Sayfa Böl'}</button>
-        <button class="ql-btn" title="Boşluğu büyüt (+10mm)" onclick="event.stopPropagation(); adjustQuestionSpace('${it.q.id}', 10)">+ Boşluk</button>
-        <button class="ql-btn" title="Boşluğu küçült (-10mm)" onclick="event.stopPropagation(); adjustQuestionSpace('${it.q.id}', -10)">- Boşluk</button>
+        <button class="ql-btn" title="Çözüm alanını büyüt (+10mm)" onclick="event.stopPropagation(); adjustQuestionSpace('${it.q.id}', 10)">+ Boşluk</button>
+        <button class="ql-btn" title="Çözüm alanını küçült (-10mm)" onclick="event.stopPropagation(); adjustQuestionSpace('${it.q.id}', -10)">- Boşluk</button>
         <button class="ql-btn del" title="Testten çıkar" onclick="event.stopPropagation(); removeQuestionFromPreview('${it.q.id}')">✕</button>
       `;
       qBox.appendChild(ctrls);
@@ -2560,6 +2657,7 @@ function cfgNow(){
     fill:$('f-fill').value,
     template:$('f-template').value||'studio',
     soltype:$('f-soltype').value||'grid',
+    customPagePlan: customPageDistribution,
     info:$('f-info').checked, pts:$('f-pts').checked, key:$('f-key').checked,
     book:parseInt($('f-book').value)||1, optic:$('f-optic').checked, qr:$('f-qr').checked
   };
@@ -2592,7 +2690,7 @@ async function build(){
     drawBookPick(0);
     $('dl').style.display='none';
     go('prev');
-    toast('Test hazır · Sayfa üzerinde soruların sırasını ve boşluklarını değiştirebilirsiniz');
+    toast('Test hazır · Sayfa soru sayılarını ve boşluklarını düzenleyebilirsiniz');
   }catch(err){ toast('Test oluşturulamadı: '+err.message,true); }
 }
 
