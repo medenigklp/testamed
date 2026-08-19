@@ -3267,56 +3267,66 @@ function drawWatermark(doc, cfg){
   const py = Math.max(0, Math.min(100, cfg.wmY || 50));
   const ang = cfg.wmAng || 0;
   const style = cfg.wmStyle || 'normal';
+  const area = cfg.wmArea || 'page';
 
-  const usableW = PAGE.w - mL - mR;
-  const usableH = PAGE.h - mT - mB;
-  const x = mL + (usableW * px / 100);
-  const y = mT + (usableH * py / 100);
+  let x, y, maxW, maxH;
 
-  // Önce resim filigran var mı kontrol et (logo veya ayrı resim)
+  if(area === 'content'){
+    const usableW = PAGE.w - mL - mR;
+    const usableH = PAGE.h - mT - mB;
+    x = mL + (usableW * px / 100);
+    y = mT + (usableH * py / 100);
+    maxW = usableW * 0.4;
+    maxH = usableH * 0.3;
+  } else {
+    x = PAGE.w * px / 100;
+    y = PAGE.h * py / 100;
+    maxW = PAGE.w * 0.35;
+    maxH = PAGE.h * 0.25;
+    const safe = 5;
+    const cLeft = mL + safe, cRight = PAGE.w - mR - safe;
+    const cTop = mT + safe, cBottom = PAGE.h - mB - safe;
+    if(x > cLeft && x < cRight && y > cTop && y < cBottom){
+      const dl = x - cLeft, dr = cRight - x;
+      const dt = y - cTop, db = cBottom - y;
+      const minD = Math.min(dl, dr, dt, db);
+      if(minD === dl) x = mL;
+      else if(minD === dr) x = PAGE.w - mR;
+      else if(minD === dt) y = mT;
+      else y = PAGE.h - mB;
+    }
+  }
+
   const wmImgData = cfg.logoAsWm && cfg.logo ? cfg.logo : (cfg.wmImg || null);
+
+  // Opaklık: %0 = çok soluk (gri 240), %100 = koyu (gri 75)
+  const gray = Math.round(240 - (op / 100) * 165);
 
   const pages = doc.internal.getNumberOfPages();
   for(let i=1; i<=pages; i++){
     doc.setPage(i);
-    doc.saveGraphicsState();
 
     if(wmImgData && wmImgData.url){
-      // Resim filigran
-      const maxW = usableW * 0.4;  // Sayfanın %40'ı kadar max genişlik
-      const maxH = usableH * 0.3;  // Sayfanın %30'u kadar max yükseklik
       const ratio = wmImgData.w / wmImgData.h;
-      let iw = maxW, ih = iw / ratio;
-      if(ih > maxH){ ih = maxH; iw = ih * ratio; }
-
-      // Opaklık için globalAlpha benzeri bir yaklaşım
-      // jsPDF'de doğrudan opaklık yok, ama resmi küçük ve soluk gösterebiliriz
-      const ix = x - iw/2;
-      const iy = y - ih/2;
-
-      try {
-        doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST');
-      } catch(e) {
-        // Resim eklenemezse metin filigrana düş
-      }
+      const scaleFactor = 0.3 + (op / 100) * 0.7;
+      let iw = maxW * scaleFactor, ih = iw / ratio;
+      if(ih > maxH * scaleFactor){ ih = maxH * scaleFactor; iw = ih * ratio; }
+      const ix = x - iw/2, iy = y - ih/2;
+      try { doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST'); }
+      catch(e) {}
     }
 
-    // Metin filigran (resim yoksa veya ikisi birlikte)
     if(cfg.watermark){
-      const gray = Math.round(255 * (1 - op/100) + 180 * (op/100));
       const fontStyle = style === 'bold' ? 'bold' : (style === 'italic' ? 'italic' : 'normal');
       doc.setFont('helvetica', fontStyle);
       doc.setFontSize(sz);
       doc.setTextColor(gray, gray, gray);
-
       if(ang !== 0){
         doc.text(cfg.watermark, x, y, {align:'center', angle: ang});
       } else {
         doc.text(cfg.watermark, x, y, {align:'center'});
       }
     }
-
-    doc.restoreGraphicsState();
   }
 }
 
