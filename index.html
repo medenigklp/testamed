@@ -10,6 +10,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap"/>
+<!-- FontAwesome İkon Seti -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <script>
 (function(){
   const url='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="26" fill="%2310B981"/><text x="50%" y="68%" font-family="sans-serif" font-weight="900" font-size="58" fill="%23042f2e" text-anchor="middle">t</text></svg>';
@@ -97,7 +99,7 @@ input,select,textarea{font:inherit}
 #s-home{overflow-y:auto;padding:18px 16px 26px}
 .card{position:relative;background:var(--w);border:1px solid var(--line);border-radius:16px;
   padding:16px 16px 16px 17px;margin-bottom:11px;display:flex;align-items:center;gap:14px;
-  box-shadow:0 1px 2px rgba(14,26,23,.04);transition:.16s cubic-bezier(.4,0,.2,1);overflow:hidden}
+  box-shadow:0 1px 2px rgba(14,26,23,.04);transition:.16s cubic-bezier(.4,0,.2,1);overflow:hidden;cursor:pointer}
 .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--line))}
 .card:active{transform:scale(.985);box-shadow:0 1px 2px rgba(14,26,23,.02)}
 .card .ic{width:46px;height:46px;border-radius:13px;flex-shrink:0;display:flex;
@@ -122,7 +124,7 @@ input,select,textarea{font:inherit}
 #engine.ok{color:var(--gr)} #engine.err{color:var(--or)}
 #engine::before{content:'● ';font-size:8px;vertical-align:middle}
 
-/* 2. Ekran: Görüntüleyici & Tuval (teststud.io Kırpma Alanı) */
+/* 2. Ekran: Görüntüleyici & Tuval */
 #bar{background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0}
 .brow{display:flex;align-items:center;gap:6px;padding:7px 10px}
 .brow+.brow{border-top:1px solid var(--bg)}
@@ -150,8 +152,11 @@ input,select,textarea{font:inherit}
 
 #stage{flex:1;overflow:auto;background:#2B3833;display:flex;justify-content:center;
   align-items:flex-start;padding:12px;-webkit-overflow-scrolling:touch;position:relative}
-#wrap{position:relative;display:inline-block;line-height:0;box-shadow:0 8px 30px rgba(0,0,0,.45);background:#fff}
-#page{display:block}
+#wrap{
+  position:relative;display:inline-block;line-height:0;box-shadow:0 8px 30px rgba(0,0,0,.45);background:#fff;
+  user-select:none !important;-webkit-user-select:none !important;
+}
+#page{display:block;user-select:none !important;-webkit-user-select:none !important;}
 
 /* Kırpma Perdesi & Seçim Kutusu */
 #veil{
@@ -160,6 +165,8 @@ input,select,textarea{font:inherit}
   touch-action:none !important;
   cursor:crosshair;
   z-index:20;
+  user-select:none !important;
+  -webkit-user-select:none !important;
 }
 #box{
   position:absolute;
@@ -171,7 +178,7 @@ input,select,textarea{font:inherit}
   z-index:25;
 }
 
-/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
+/* teststud.io Yüzen Şık & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
@@ -216,7 +223,7 @@ input,select,textarea{font:inherit}
   margin-bottom:7px;letter-spacing:.08em;text-transform:uppercase}
 #tray h3 span{color:var(--or);font-weight:600}
 #thumbs{display:flex;gap:6px;overflow-x:auto;min-height:34px;align-items:center}
-.th{position:relative;flex-shrink:0;border:1.5px solid var(--line);border-radius:9px;
+.th{position:relative;flex-shrink:0;border:1.5px solid var(--line);border-radius:99px;
   overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(14,26,23,.07)}
 .th img{display:block;height:48px;width:auto;max-width:96px;object-fit:contain}
 .th .n{position:absolute;left:3px;bottom:3px;background:var(--ink);color:#fff;
@@ -457,6 +464,39 @@ input,select,textarea{font:inherit}
 .ql-btn.break{color:var(--ye);background:rgba(245,158,11,.2)}
 .ql-btn.break:hover{background:var(--ye);color:#111}
 
+/* Kitaplık & Modal Tasarımları */
+.ltabs{display:flex;gap:6px;background:var(--w);padding:10px 14px;border-bottom:1px solid var(--line)}
+.lt{padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--bg);color:var(--soft)}
+.lt.on{background:var(--ink);color:#fff}
+.lbody{flex:1;overflow-y:auto;padding:14px}
+.grp h4{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--soft);margin-bottom:8px;text-transform:uppercase}
+.gq{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:14px}
+.bq{position:relative;border:1.5px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;aspect-ratio:1;cursor:pointer}
+.bq.sel{border-color:var(--or);box-shadow:0 0 0 2px var(--or)}
+.bq img{width:100%;height:100%;object-fit:contain}
+.bq .tick{display:none;position:absolute;top:4px;right:4px;background:var(--or);color:#fff;width:18px;height:18px;border-radius:50%;font-size:10px;text-align:center;line-height:18px}
+.bq.sel .tick{display:block}
+.bq .del{position:absolute;bottom:3px;right:3px;background:rgba(220,38,38,.9);color:#fff;font-size:9px;padding:2px 5px;border-radius:4px}
+.bq .tg{position:absolute;bottom:3px;left:3px;background:var(--ink);color:#fff;font-size:8.5px;padding:1px 4px;border-radius:3px}
+.lfoot{background:var(--w);border-top:1px solid var(--line);padding:10px 14px}
+.trow{background:var(--w);border:1px solid var(--line);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.trow .ti{flex:1;min-width:0}
+.trow .tn{font-weight:700;font-size:13.5px}
+.trow .tm{font-size:11.5px;color:var(--soft)}
+.trow button{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700}
+.tb-edit{background:var(--bg);color:var(--ink2)}
+.tb-open{background:var(--or);color:#fff}
+.tb-del{background:#FDECEA;color:#C0392B}
+
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:800;display:none;align-items:center;justify-content:center;padding:16px}
+#modal.on{display:flex}
+#mbox{background:#fff;border-radius:18px;width:100%;max-width:380px;padding:18px;box-shadow:0 20px 40px rgba(0,0,0,.25)}
+#mbox h3{font-family:var(--disp);font-size:17px;font-weight:800;margin-bottom:12px}
+#mbox input{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:13.5px}
+.mbtns{display:flex;gap:8px;margin-top:12px}
+.mbtns button{flex:1;padding:10px;border-radius:10px;font-weight:700;font-size:13px}
+#mno{background:var(--bg);color:var(--soft)}
+#mok{background:var(--or);color:#fff}
 </style>
 <base target="_blank">
 </head>
@@ -485,12 +525,12 @@ input,select,textarea{font:inherit}
     <!-- 1. Ekran: Kaynak -->
     <div class="scr on" id="s-home">
       <div class="card" style="--accent:var(--cy)" onclick="pick('pdf')">
-        <div class="ic" style="background:var(--cy)">📄</div>
+        <div class="ic" style="background:var(--cy)"><i class="fa-solid fa-file-pdf"></i></div>
         <div class="tx"><h2>PDF aç</h2><p>Kitap, föy veya deneme sınavı</p></div>
         <span class="arw">›</span>
       </div>
       <div class="card" style="--accent:var(--gr)" onclick="pick('img')">
-        <div class="ic" style="background:var(--gr)">🖼️</div>
+        <div class="ic" style="background:var(--gr)"><i class="fa-solid fa-image"></i></div>
         <div class="tx"><h2>Fotoğraf aç</h2><p>Tahtadan, defterden ya da kitaptan</p></div>
         <span class="arw">›</span>
       </div>
@@ -500,7 +540,7 @@ input,select,textarea{font:inherit}
         <span class="arw">›</span>
       </div>
       <div class="card" style="--accent:var(--ye)" onclick="go('lib')">
-        <div class="ic" style="background:var(--ye);color:var(--ink)">📚</div>
+        <div class="ic" style="background:var(--ye);color:var(--ink)"><i class="fa-solid fa-book"></i></div>
         <div class="tx"><h2>Kitaplık</h2><p>Biriktirdiğin sorular ve hazır testler</p></div>
         <span class="arw">›</span>
       </div>
@@ -552,7 +592,7 @@ input,select,textarea{font:inherit}
           <div id="veil"></div>
           <div id="box"></div>
           
-          <!-- teststud.io Kırpma Üzerinde Yüzen Şık & Onay Paneli -->
+          <!-- Yüzen Şık & Onay Paneli -->
           <div id="cropFloatingBar">
             <div class="cfb-row">
               <button onclick="setFloatingOpt('A')" class="cfb-btn on">A</button>
@@ -586,26 +626,17 @@ input,select,textarea{font:inherit}
       </div>
       <div class="pgrid" id="pgrid"></div>
     </div>
+
     <!-- Yapay Zeka -->
     <div class="scr" id="s-ai">
-      <div class="aibody">
-        <div class="modetabs">
-          <button class="mt on" id="mt-paste" onclick="aiMode('paste')">Kopyala‑yapıştır</button>
-          <button class="mt" id="mt-api" onclick="aiMode('api')">API ile otomatik</button>
+      <div class="aibody" style="overflow-y:auto;padding:16px;">
+        <div class="modetabs" style="display:flex;gap:6px;margin-bottom:12px;">
+          <button class="tbtn on" id="mt-paste" onclick="aiMode('paste')">Kopyala‑yapıştır</button>
+          <button class="tbtn" id="mt-api" onclick="aiMode('api')">API ile otomatik</button>
         </div>
 
         <div id="paste-pane">
-          <div class="pasteinfo">Anahtar gerekmez. <b>Hangi yapay zekayı kullanırsan kullan</b> —
-            hazır metni oraya yapıştır, gelen cevabı buraya geri yapıştır.</div>
-          <div class="applinks">
-            <a href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini</a>
-            <a href="https://chatgpt.com" target="_blank" rel="noopener">ChatGPT</a>
-            <a href="https://claude.ai/new" target="_blank" rel="noopener">Claude</a>
-            <a href="https://copilot.microsoft.com" target="_blank" rel="noopener">Copilot</a>
-            <a href="https://chat.deepseek.com" target="_blank" rel="noopener">DeepSeek</a>
-            <a href="https://www.kimi.com" target="_blank" rel="noopener">Kimi</a>
-            <a href="https://chat.qwen.ai" target="_blank" rel="noopener">Qwen</a>
-          </div>
+          <div class="hint" style="margin-bottom:12px;">Anahtar gerekmez. <b>Hangi yapay zekayı kullanırsan kullan</b> — hazır metni oraya yapıştır, gelen cevabı buraya geri yapıştır.</div>
           <div class="sec">1 · Ne istiyorsun</div>
           <div class="r2">
             <div class="f"><label>Ders</label><input id="p-lesson" placeholder="Kimya"/></div>
@@ -623,12 +654,8 @@ input,select,textarea{font:inherit}
           </div>
           <div class="sec">2 · Metni kopyala</div>
           <button class="big" style="background:var(--cy)" onclick="copyPrompt()">📋 Hazır metni kopyala</button>
-          <div class="pastehint">Kopyaladıktan sonra yapay zeka uygulamasını aç, sohbete yapıştır ve gönder.
-            Gelen cevabın <b>tamamını</b> kopyalayıp aşağıya yapıştır.<br/>
-            Şekilli soru gerekiyorsa: soruyu metin olarak ürettir, sonra soru listesinde
-            <b>🖼</b> düğmesiyle grafiği kendin ekle.</div>
           <div class="sec">3 · Cevabı yapıştır</div>
-          <textarea id="p-in" rows="5" placeholder='Buraya yapıştır: [{"soru":"…"}]'></textarea>
+          <textarea id="p-in" rows="5" style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:8px;" placeholder='Buraya yapıştır: [{"soru":"…"}]'></textarea>
           <button class="big" onclick="usePasted()">Soruları oku →</button>
         </div>
 
@@ -647,7 +674,7 @@ input,select,textarea{font:inherit}
           <div class="f"><label>API anahtarın</label>
             <input id="a-key" type="password" placeholder="sk-… / AIza…" oninput="saveKey()"/>
           </div>
-          <div class="keyinfo" id="keyinfo"></div>
+          <div class="keyinfo" id="keyinfo" style="font-size:12px;color:var(--soft);margin-bottom:10px;"></div>
 
           <div class="sec">Ne üretilsin</div>
           <div class="r2">
@@ -668,10 +695,7 @@ input,select,textarea{font:inherit}
                 <option>Zor</option><option>Karışık</option></select>
             </div>
           </div>
-          <div class="chk"><input type="checkbox" id="a-calc" checked/><label for="a-calc">Hesaplama soruları da olsun</label></div>
           <button class="big" id="a-go" onclick="genAI()">✦ Soruları üret</button>
-          <div class="aiwarn">Üretilen sorular <b>onayına sunulur</b>; sen eklemeden teste girmez.
-            Yapay zeka hesap hatası yapabilir — özellikle sayısal soruları kontrol et.</div>
         </div>
         <div id="a-out"></div>
       </div>
@@ -684,7 +708,7 @@ input,select,textarea{font:inherit}
         <button class="lt" id="lt-t" onclick="libTab('test')">Testlerim</button>
         <button class="lt" id="lt-y" onclick="libTab('yedek')">Yedek</button>
       </div>
-      <div class="lfilter" id="lfilter"></div>
+      <div class="lfilter" id="lfilter" style="display:flex;gap:6px;overflow-x:auto;padding:8px 14px;"></div>
       <div class="lbody" id="lbody"></div>
       <div class="lfoot" id="lfoot"></div>
     </div>
@@ -914,7 +938,6 @@ let docs=[], active=null, pageNo=1, scale=1, fit=1;
 let qs=[], selectMode=true, ratio=1, engineReady=false;
 let screen='home', html='', editingTest=null, currentBookIdx=0;
 let pendingCropData=null, pendingCropOpt='A';
-const FRAMED=(function(){try{return window.self!==window.top;}catch(_){return true;}})();
 
 function toast(msg,isErr){
   const t=$('toast'); t.textContent=msg; t.className=isErr?'err':'';
@@ -957,7 +980,7 @@ function go(s){
   if(s==='set') fillSettings();
   if(s==='lib') enterLib();
   if(s==='ai') enterAI();
-  if(s==='panel') renderPanel();
+  if(s==='panel' && typeof renderPanel === 'function') renderPanel();
   if(s==='prev') { setTimeout(initSidePanel,50); }
 }
 function back(){ 
@@ -1014,6 +1037,7 @@ function drawFiles(){
 function quality(){ return Math.min(3,(window.devicePixelRatio||1)*1.5); }
 
 async function fitPage(){
+  if(!active) return;
   const avail=$('stage').clientWidth-24;
   const rot=active.rot||0, swap=(rot===90||rot===270);
   if(active.kind==='pdf'){
@@ -1098,22 +1122,25 @@ function mode(){
   b.textContent=selectMode?'✂️ Seç':'🖐 Kaydır';
   b.classList.toggle('on',selectMode);
   $('veil').style.touchAction=selectMode?'none':'auto';
-  $('veil').style.pointerEvents=selectMode?'auto':'none';
   hideBox();
 }
 
-/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma — Hatasızlaştırıldı) */
+/* ═════════ KUSURSUZ VE KİLİTLENMEYEN ALAN SEÇİMİ ═════════ */
 const veil=$('veil'), boxEl=$('box');
 let drag=null, pinch=null;
+
 function hideBox(){ boxEl.style.display='none'; }
 function rel(e){
   const r=$('page').getBoundingClientRect();
-  return {x:e.clientX-r.left, y:e.clientY-r.top};
+  return {
+    x: Math.max(0, Math.min(e.clientX-r.left, r.width)),
+    y: Math.max(0, Math.min(e.clientY-r.top, r.height))
+  };
 }
 
 veil.addEventListener('pointerdown',e=>{
   if(!selectMode) return;
-  if(e.pointerType==='touch'&&!e.isPrimary) return;
+  e.preventDefault();
   try { veil.setPointerCapture(e.pointerId); } catch(_) {}
   drag=rel(e);
   boxEl.style.display='block';
@@ -1125,7 +1152,8 @@ veil.addEventListener('pointerdown',e=>{
 });
 
 veil.addEventListener('pointermove',e=>{
-  if(!drag) return;
+  if(!drag || !selectMode) return;
+  e.preventDefault();
   const p=rel(e);
   const x=Math.min(drag.x,p.x), y=Math.min(drag.y,p.y);
   const w=Math.abs(p.x-drag.x), h=Math.abs(p.y-drag.y);
@@ -1137,12 +1165,13 @@ veil.addEventListener('pointermove',e=>{
 
 veil.addEventListener('pointerup',e=>{
   if(!drag) return;
+  e.preventDefault();
   try { veil.releasePointerCapture(e.pointerId); } catch(_) {}
   const p=rel(e);
   const x=Math.min(drag.x,p.x), y=Math.min(drag.y,p.y);
   const w=Math.abs(p.x-drag.x), h=Math.abs(p.y-drag.y);
   drag=null;
-  if(w<15||h<15){ hideBox(); return; }
+  if(w<10 || h<10){ hideBox(); return; }
   grab(x,y,w,h);
 });
 
@@ -1308,10 +1337,13 @@ async function rotate(){
 /* Soru Kırpma & Yüzen Şık Paneli */
 function grab(x,y,w,h){
   const cv=$('page');
-  const sx=Math.max(0, Math.round(x*ratio)),
-        sy=Math.max(0, Math.round(y*ratio)),
-        sw=Math.min(cv.width - sx, Math.round(w*ratio)),
-        sh=Math.min(cv.height - sy, Math.round(h*ratio));
+  const r=cv.getBoundingClientRect();
+  const rx=cv.width / (r.width || 1);
+  const ry=cv.height / (r.height || 1);
+  const sx=Math.max(0, Math.round(x*rx)),
+        sy=Math.max(0, Math.round(y*ry)),
+        sw=Math.min(cv.width - sx, Math.round(w*rx)),
+        sh=Math.min(cv.height - sy, Math.round(h*ry));
   if(sw<=0 || sh<=0){ hideBox(); return; }
 
   const k=sw>MAXW?MAXW/sw:1;
@@ -1324,7 +1356,7 @@ function grab(x,y,w,h){
   c.drawImage(cv,sx,sy,sw,sh,PAD,PAD,dw,dh);
 
   pendingCropData = {
-    img: t.toDataURL('image/jpeg',.90),
+    img: t.toDataURL('image/jpeg',.92),
     w: t.width,
     h: t.height
   };
@@ -1466,7 +1498,6 @@ async function preview(){
   el.innerHTML+='<span class="tip">'+alt+' sayfa</span>';
 }
 
-
 /* ════════ SORU HAVUZU ════════ */
 function renderPool(){
   const g=$('pgrid'); g.innerHTML='';
@@ -1479,7 +1510,7 @@ function renderPool(){
       '<div class="pans" data-idx="'+i+'">'+
         ['A','B','C','D','E'].map(L=>'<button data-v="'+L+'" class="'+(q.ans===L?'on':'')+'">'+L+'</button>').join('')+
       '</div>'+
-      '<div class="pcust"><span>Özel:</span><input data-idx="'+i+'" value="'+esc(q.custom||'')+'" placeholder="Cevap"/></div>';
+      '<div class="pcust"><span>Özel:</span><input data-idx="'+i+'" value="'+esc(q.custom||q.ans||'')+'" placeholder="Cevap"/></div>';
     if(q.lvl){ const l=document.createElement('span'); l.className='plvl pl-'+q.lvl; l.textContent=q.lvl; d.appendChild(l); }
     d.querySelector('.pdel').onclick=()=>{ qs.splice(i,1); renderPool(); drawTray(); };
     d.querySelector('.pans').addEventListener('click',e=>{
@@ -1545,7 +1576,7 @@ function drawRows(){
     const brk=document.createElement('button'); brk.textContent='⤓';
     brk.title='Sonraki sütuna atla'; brk.className='ql-btn break';
     brk.onclick=()=>{ q.forceBreak=!q.forceBreak; drawRows(); preview(); };
-    if(q.forceBreak){ brk.style.background='var(--ye)'; brk.style.color:'#111'; }
+    if(q.forceBreak){ brk.style.background='var(--ye)'; brk.style.color='#111'; }
     const rm=document.createElement('button'); rm.textContent='✕';
     rm.onclick=()=>{ qs.splice(i,1); drawTray(); drawRows(); preview(); };
     mv.append(up,dn,brk,rm);
@@ -1717,14 +1748,14 @@ SADECE şu JSON formatında dizi döndür:
 
   const out=$('a-out'); const btn=$('a-go');
   btn.disabled=true; btn.textContent='Üretiliyor…';
-  out.innerHTML='<div class="aispin"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div>Sorular hazırlanıyor…</div></div>';
+  out.innerHTML='<div class="aispin" style="text-align:center;padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Sorular hazırlanıyor…</div>';
   try{
     const raw=await askAI(prov,model,key,prompt);
     aiDraft=parseAI(raw); aiDrop.clear();
     drawAIDraft();
     toast(aiDraft.length+' soru üretildi');
   }catch(e){
-    out.innerHTML='<div class="aiwarn" style="background:#FDECEA;color:#943126"><b>Hata:</b> '+esc(e.message)+'</div>';
+    out.innerHTML='<div class="aiwarn" style="background:#FDECEA;color:#943126;padding:10px;border-radius:8px;"><b>Hata:</b> '+esc(e.message)+'</div>';
   }
   btn.disabled=false; btn.textContent='✦ Soruları üret';
 }
@@ -1735,19 +1766,18 @@ function drawAIDraft(){
   head.className='sec'; head.textContent='Üretilen sorular';
   out.appendChild(head);
   aiDraft.forEach((q,i)=>{
-    const d=document.createElement('div'); d.className='aiq'+(aiDrop.has(i)?' off':'');
+    const d=document.createElement('div'); d.className='pcard'; d.style.marginBottom='8px';
     let ops='';
     q.options.forEach((o,k)=>{
-      ops+='<div class="'+(k===q.correct?'ok':'')+'"><b>'+LET[k]+')</b> '+esc(o)+'</div>';
+      ops+='<div style="font-size:12px;margin-bottom:2px;'+(k===q.correct?'color:var(--gr);font-weight:bold;':'')+'"><b>'+LET[k]+')</b> '+esc(o)+'</div>';
     });
-    d.innerHTML='<div class="qt">'+(i+1)+'. '+esc(q.text)+'</div><div class="op">'+ops+'</div>'+
-      (q.why?'<div class="why">✓ '+esc(q.why)+'</div>':'');
-    const acts=document.createElement('div'); acts.className='acts';
+    d.innerHTML='<div style="font-weight:bold;font-size:13px;margin-bottom:6px;">'+(i+1)+'. '+esc(q.text)+'</div>'+ops+
+      (q.why?'<div style="font-size:11px;color:var(--soft);margin-top:4px;">✓ '+esc(q.why)+'</div>':'');
     const drop=document.createElement('button');
-    drop.className='drop'+(aiDrop.has(i)?' on':'');
+    drop.className='ghost'; drop.style.padding='6px'; drop.style.fontSize='11px'; drop.style.marginTop='6px';
     drop.textContent=aiDrop.has(i)?'Geri al':'Çıkar';
     drop.onclick=()=>{ aiDrop.has(i)?aiDrop.delete(i):aiDrop.add(i); drawAIDraft(); };
-    acts.appendChild(drop); d.appendChild(acts); out.appendChild(d);
+    d.appendChild(drop); out.appendChild(d);
   });
   const keep=aiDraft.length-aiDrop.size;
   const add=document.createElement('button');
@@ -1919,63 +1949,6 @@ const DB={
   }
 };
 
-/* Yedekleme */
-async function exportBackup(){
-  try{
-    const bank=await DB.all('bank'), tests=await DB.all('tests');
-    const data={app:'testamed',version:2,date:new Date().toISOString(),
-      bank,tests,profile:getProfile(),plans:getPlans()};
-    const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const name='testamed-yedek-'+new Date().toISOString().slice(0,10)+'.tmd';
-    const box=$('bkdl');
-    box.innerHTML='<a class="da" download="'+name+'" href="'+url+'" target="_blank">💾 '+name+'</a>'+
-      '<div class="bkwarn">Dosyayı İndirilenler\'e veya Bulut hesabınıza kaydedebilirsiniz.</div>';
-    toast(bank.length+' soru · '+tests.length+' test yedeklendi');
-  }catch(e){ toast('Yedek oluşturulamadı: '+e.message,true); }
-}
-
-$('in-pic').onchange=async e=>{
-  const f=e.target.files[0]; e.target.value='';
-  if(!f||!picTarget) return;
-  try{
-    const url=await new Promise((res,rej)=>{
-      const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f);
-    });
-    const im=new Image(); await new Promise(r=>{ im.onload=r; im.src=url; });
-    let out=url;
-    if(im.width>1400){
-      const c=document.createElement('canvas');
-      c.width=1400; c.height=Math.round(1400*(im.height/im.width));
-      const g=c.getContext('2d'); g.imageSmoothingQuality='high';
-      g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
-      g.drawImage(im,0,0,c.width,c.height);
-      out=c.toDataURL('image/jpeg',0.9);
-    }
-    picTarget.src.image=out; picTarget.cw=null;
-    picTarget=null;
-    drawRows(); preview();
-    toast('Görsel eklendi');
-  }catch(err){ toast('Görsel eklenemedi',true); }
-};
-
-$('in-backup').onchange=async e=>{
-  const f=e.target.files[0]; if(!f) return;
-  try{
-    const txt=await f.text();
-    const data=JSON.parse(txt);
-    if((data.app!=='testamed' && data.app!=='kimyamed') || !data.bank) throw new Error('Geçersiz yedek dosyası');
-    let nb=0,nt=0;
-    for(const q of (data.bank||[])){ await DB.put('bank',q); nb++; }
-    for(const t of (data.tests||[])){ await DB.put('tests',t); nt++; }
-    if(data.profile) setProfile(data.profile);
-    if(data.plans) setPlans(data.plans);
-    await refreshLib(); drawLib();
-    toast(nb+' soru · '+nt+' test geri yüklendi');
-  }catch(err){ toast('Geri yükleme başarısız: '+err.message,true); }
-  e.target.value='';
-};
-
 /* Modal */
 let modalCb=null;
 function openModal(title,fields,cb){
@@ -2039,21 +2012,15 @@ function drawLib(){
     filt.innerHTML='';
     const box=document.createElement('input');
     box.className='lsearch'; box.placeholder='🔍 Ders veya konu ara…'; box.value=libQuery;
+    box.style.cssText="padding:6px 10px;border-radius:20px;border:1px solid var(--line);font-size:12px;";
     box.oninput=()=>{ libQuery=box.value; drawLibBody(); };
     filt.appendChild(box);
     const mk=(txt,val)=>{
       const b=document.createElement('button');
-      b.className='fc'+(libFilter===val?' on':''); b.textContent=txt;
+      b.className='ftab'+(libFilter===val?' on':''); b.textContent=txt;
       b.onclick=()=>{libFilter=libFilter===val?'':val;drawLib();}; return b;
     };
     if(lessons.length){ filt.appendChild(mk('Tümü','')); lessons.forEach(l=>filt.appendChild(mk(l,l))); }
-    const tags=[...new Set(bankItems.flatMap(q=>q.tags||[]))].sort();
-    tags.slice(0,8).forEach(t=>{
-      const b=document.createElement('button');
-      b.className='fc tag'+(libQuery===t?' on':''); b.textContent='#'+t;
-      b.onclick=()=>{ libQuery=libQuery===t?'':t; drawLib(); };
-      filt.appendChild(b);
-    });
     filt.style.display='flex';
     drawLibBody(); return;
   }
@@ -2066,13 +2033,10 @@ function drawBackup(){
   filt.style.display='none'; foot.style.display='none';
   const nb=bankItems.length, nt=testItems.length;
   body.innerHTML=
-    '<div class="bkinfo">Cihazınızda <b>'+nb+' soru</b> ve <b>'+nt+' test</b> kayıtlı.'+
-    ' Bunları tek dosyada yedekleyebilir; başka cihazda geri yükleyebilirsiniz.</div>'+
+    '<div class="hint" style="margin-bottom:12px;">Cihazınızda <b>'+nb+' soru</b> ve <b>'+nt+' test</b> kayıtlı.</div>'+
     '<button class="big" style="margin:0 0 10px" onclick="exportBackup()">⬇︎ Yedek dosyası oluştur</button>'+
     '<div id="bkdl"></div>'+
-    '<button class="ghost" id="bk-restore">↥ Yedekten geri yükle</button>';
-  const rb=document.getElementById('bk-restore');
-  if(rb) rb.onclick=()=>$('in-backup').click();
+    '<button class="ghost" id="bk-restore" onclick="$(\'in-backup\').click()">↥ Yedekten geri yükle</button>';
 }
 
 function drawLibBody(){
@@ -2082,7 +2046,7 @@ function drawLibBody(){
     (!libFilter||x.lesson===libFilter) &&
     (!q || (x.lesson+' '+x.topic+' '+((x.tags||[]).join(' '))).toLowerCase().includes(q)));
   shownIds=shown.map(x=>x.id);
-  if(!shown.length){ body.innerHTML='<div class="lempty">Henüz kayıtlı soru yok.</div>'; foot.style.display='none'; return; }
+  if(!shown.length){ body.innerHTML='<div style="text-align:center;padding:40px;color:var(--soft);">Henüz kayıtlı soru yok.</div>'; foot.style.display='none'; return; }
   const groups={};
   shown.forEach(q=>{const k=q.lesson+' · '+q.topic;(groups[k]=groups[k]||[]).push(q);});
   body.innerHTML='';
@@ -2093,8 +2057,7 @@ function drawLibBody(){
     groups[k].forEach(q=>{
       const c=document.createElement('div'); c.className='bq'+(bankSel.has(q.id)?' sel':'');
       c.innerHTML='<img src="'+q.img+'"/><span class="tick">✓</span>'+
-        (q.ans?'<span class="del" style="left:3px;right:auto;background:var(--gr)">'+q.ans+'</span>':'')+
-        ((q.tags&&q.tags.length)?'<span class="tg">'+esc(q.tags[0])+'</span>':'');
+        (q.ans?'<span class="del" style="left:3px;right:auto;background:var(--gr)">'+q.ans+'</span>':'');
       c.onclick=()=>{ bankSel.has(q.id)?bankSel.delete(q.id):bankSel.add(q.id); drawLib(); };
       const del=document.createElement('span'); del.className='del'; del.textContent='Sil';
       del.onclick=async e=>{ e.stopPropagation(); await DB.del('bank',q.id); await refreshLib(); drawLib(); };
@@ -2104,7 +2067,7 @@ function drawLibBody(){
   });
   if(bankSel.size){
     foot.style.display='block';
-    foot.innerHTML='<div class="selbar"><button class="selall" onclick="selAllBank()">'+
+    foot.innerHTML='<div style="display:flex;gap:6px;"><button class="tbtn" onclick="selAllBank()">'+
       (bankSel.size>=shownIds.length&&shownIds.length?'Seçimi kaldır':'Görünenleri seç')+'</button>'+
       '<button class="big" style="margin:0;flex:1" onclick="useBank()">'+
       bankSel.size+' soruyu teste ekle →</button></div>';
@@ -2114,7 +2077,7 @@ function drawLibBody(){
 function drawTestBody(){
   const filt=$('lfilter'), body=$('lbody'), foot=$('lfoot');
   filt.style.display='none'; foot.style.display='none';
-  if(!testItems.length){ body.innerHTML='<div class="lempty">Henüz kayıtlı test yok.</div>'; return; }
+  if(!testItems.length){ body.innerHTML='<div style="text-align:center;padding:40px;color:var(--soft);">Henüz kayıtlı test yok.</div>'; return; }
   body.innerHTML='';
   testItems.sort((a,b)=>b.ts-a.ts).forEach(t=>{
     const r=document.createElement('div'); r.className='trow';
@@ -2192,18 +2155,8 @@ const TEMPLATES=[
   {id:'default',name:'Yeşil',c1:'#10B981',c2:'#059669',c3:'#047857'},
   {id:'blue',name:'Mavi',c1:'#3B82F6',c2:'#1D4ED8',c3:'#1E40AF'},
   {id:'red',name:'Kırmızı',c1:'#EF4444',c2:'#DC2626',c3:'#B91C1C'},
-  {id:'purple',name:'Mor',c1:'#8B5CF6',c2:'#7C3AED',c3:'#6D28D9'},
-  {id:'orange',name:'Turuncu',c1:'#F59E0B',c2:'#D97706',c3:'#B45309'},
-  {id:'teal',name:'Turkuaz',c1:'#06B6D4',c2:'#0891B2',c3:'#0E7490'},
-  {id:'navy',name:'Lacivert',c1:'#1E3A5F',c2:'#1E40AF',c3:'#172554'},
-  {id:'rose',name:'Gül',c1:'#F43F5E',c2:'#E11D48',c3:'#BE123C'},
+  {id:'purple',name:'Mor',c1:'#8B5CF6',c2:'#7C3AED',c3:'#6D28D9'}
 ];
-const FONTS={
-  default:{family:'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',pdf:'helvetica'},
-  poppins:{family:'"Poppins",-apple-system,sans-serif',pdf:'helvetica'},
-  roboto:{family:'"Roboto",-apple-system,sans-serif',pdf:'helvetica'},
-  merri:{family:'"Merriweather",Georgia,serif',pdf:'times'}
-};
 const GAP=8, TITLE_H=5, AFTER=4, SOFT_K=0.88;
 
 function headerH(cfg){ 
@@ -2304,7 +2257,6 @@ function place(groups,K,cfg,colW){
 }
 
 function layout(list,cfg){
-  const W=PAGE.w-PAGE.m*2;
   const colW=colWidthMm(cfg);
   const nat=packNatural(list,cfg,colW);
 
@@ -2332,14 +2284,12 @@ function headerImage(cfg){
   g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
   g.textBaseline='top';
 
-  // teststud.io 3 Parçalı Renkli Başlık Anteti (Videodaki Birebir Dizilim)
   if(cfg.template==='studio'){
     const pad=1.5*K;
     const leftW=c.width*0.25, rightW=c.width*0.30;
     const centerW=c.width - leftW - rightW - pad*2;
     const bh=c.height-2*K;
 
-    // Sol Blok (Ders)
     g.fillStyle='#064E3B';
     if(g.roundRect) g.roundRect(0, 0, leftW, bh, 1.5*K); else g.fillRect(0, 0, leftW, bh);
     g.fill();
@@ -2347,14 +2297,12 @@ function headerImage(cfg){
     g.textAlign='center';
     g.fillText((cfg.lesson||'KİMYA').toUpperCase(), leftW/2, bh/2 - 1.8*K);
 
-    // Orta Blok (Konu)
     g.fillStyle='#047857';
     if(g.roundRect) g.roundRect(leftW+pad, 0, centerW, bh, 1.5*K); else g.fillRect(leftW+pad, 0, centerW, bh);
     g.fill();
     g.fillStyle='#FFFFFF'; g.font='800 '+(3.8*K)+'px Arial, sans-serif';
     g.fillText((cfg.topic||cfg.title||'KAZANIM TESTİ').toUpperCase(), leftW+pad + centerW/2, bh/2 - 1.9*K);
 
-    // Sağ Blok (Öğretmen)
     g.fillStyle='#064E3B';
     if(g.roundRect) g.roundRect(leftW+centerW+pad*2, 0, rightW, bh, 1.5*K); else g.fillRect(leftW+centerW+pad*2, 0, rightW, bh);
     g.fill();
@@ -2380,7 +2328,6 @@ function headerImage(cfg){
     return c.toDataURL('image/jpeg',0.92);
   }
 
-  // Klasik MEB Formatı
   let y=2*K;
   if(cfg.school){
     g.fillStyle='#111'; g.font='700 '+(4.2*K)+'px Arial, sans-serif';
@@ -2392,37 +2339,6 @@ function headerImage(cfg){
     g.fillStyle='#333'; g.font=''+(3.2*K)+'px Arial, sans-serif';
     g.fillText(meta,0,y); y+=4.4*K;
   }
-  if(cfg.kind){
-    g.font='700 '+(3.4*K)+'px Arial, sans-serif';
-    const tw=g.measureText(cfg.kind).width+3.4*K;
-    const tx=c.width-tw, ty=2*K, th=5.4*K;
-    g.fillStyle='#10B981';
-    if(g.roundRect){ g.beginPath(); g.roundRect(tx,ty,tw,th,1.2*K); g.fill(); }
-    else g.fillRect(tx,ty,tw,th);
-    g.fillStyle='#fff';
-    g.fillText(cfg.kind, tx+1.7*K, ty+1.05*K);
-  }
-  if(cfg.info){
-    const ty=hmm*K-12*K, rh=7*K;
-    const cells=[['ADI SOYADI',.19],['',.31],['SINIF / NO',.15],[cfg.cls||'',.16],['PUAN',.09],['',.10]];
-    let x=0;
-    g.lineWidth=Math.max(1,0.28*K);
-    cells.forEach(([txt,fr],i)=>{
-      const cw=c.width*fr;
-      const label=(i%2===0);
-      g.fillStyle=label?'#F2F2F2':'#fff';
-      g.fillRect(x,ty,cw,rh);
-      g.strokeStyle='#111'; g.strokeRect(x,ty,cw,rh);
-      if(txt){
-        g.fillStyle='#111';
-        g.font=(label?'700 ':'')+(2.9*K)+'px Arial, sans-serif';
-        g.fillText(txt, x+1.2*K, ty+2*K);
-      }
-      x+=cw;
-    });
-  }
-  g.fillStyle='#111';
-  g.fillRect(0,c.height-0.7*K,c.width,0.7*K);
   return c.toDataURL('image/jpeg',0.92);
 }
 
@@ -2442,25 +2358,6 @@ function drawBookPick(active){
     };
     el.appendChild(btn);
   });
-}
-
-/* A4 Üzerinden Soru Taşıma / Silme Fonksiyonları */
-
-let liveDragSrc=null;
-function liveDragStart(e){ liveDragSrc=this; this.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',this.dataset.qid); }
-function liveDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; if(this!==liveDragSrc) this.classList.add('drop-target'); }
-function liveDragLeave(e){ this.classList.remove('drop-target'); }
-function liveDrop(e){
-  e.stopPropagation(); e.preventDefault(); this.classList.remove('drop-target');
-  if(this===liveDragSrc) return;
-  const srcId=liveDragSrc.dataset.qid, tgtId=this.dataset.qid;
-  const srcIdx=qs.findIndex(q=>q.id===srcId);
-  const tgtIdx=qs.findIndex(q=>q.id===tgtId);
-  if(srcIdx<0||tgtIdx<0) return;
-  const [moved]=qs.splice(srcIdx,1); qs.splice(tgtIdx,0,moved);
-  if(BOOKS.length&&BOOKS[currentBookIdx]) BOOKS[currentBookIdx].list=qs.slice();
-  recalcAndRedrawPages(); drawRows(); drawTray(); renderPool();
-  toast('Soru taşındı');
 }
 
 function initSidePanel(){
@@ -2485,9 +2382,9 @@ function initSidePanel(){
   const lp=$('lo-port'); if(lp) lp.classList.toggle('on', (CFG&&CFG.orient)!=='landscape');
   const ll=$('lo-land'); if(ll) ll.classList.toggle('on', (CFG&&CFG.orient)==='landscape');
 }
-function setLO(v){ $('f-orient').value=v; recalcAndRedrawPages(); const lp=$('lo-port'), ll=$('lo-land'); if(lp)lp.classList.toggle('on',v!=='landscape'); if(ll)ll.classList.toggle('on',v==='landscape'); }
-function setCols(n){ $('f-cols').value=n; recalcAndRedrawPages(); const cb=$('col-btns'); if(cb) cb.querySelectorAll('button').forEach(b=>b.classList.toggle('on', parseInt(b.dataset.c)===n)); }
-function setSol(n){ $('f-sol').value=n; recalcAndRedrawPages(); const sb=$('sol-btns'); if(sb) sb.querySelectorAll('button').forEach(b=>b.classList.toggle('on', parseInt(b.dataset.s)===n)); }
+function setLO(v){ $('f-orient').value=v; recalcAndRedrawPages(); }
+function setCols(n){ $('f-cols').value=n; recalcAndRedrawPages(); }
+function setSol(n){ $('f-sol').value=n; recalcAndRedrawPages(); }
 
 function recalcAndRedrawPages(){
   if(BOOKS.length && BOOKS[currentBookIdx]){
@@ -2498,7 +2395,6 @@ function recalcAndRedrawPages(){
   }
   drawPages();
   drawBookPick(currentBookIdx);
-  $('dl').style.display='none';
 }
 
 function moveQuestionInPreview(qId, dir){
@@ -2553,21 +2449,18 @@ function drawPages(){
       const boxH = TITLE_H + it.h + (it.sol || 0);
       qBox.style.cssText = `left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(boxW, PAGE.w)}; height:${pct(boxH, PAGE.h)};`;
 
-      // Soru Numarası
       const n = document.createElement('div');
       n.className = 'pn';
       n.textContent = it.num + '.';
       n.style.cssText = `left:0; top:0;`;
       qBox.appendChild(n);
 
-      // Soru Görseli
       const im = document.createElement('img');
       im.className = 'ab';
       im.src = it.q.img;
       im.style.cssText = `left:0; top:${pct(TITLE_H, boxH)}; width:100%;`;
       qBox.appendChild(im);
 
-      // teststud.io Kareli / Çizgili Çözüm Alanı
       if(it.sol > 0 && CFG){
         const solType = CFG.soltype || 'blank';
         if(solType === 'grid'){
@@ -2583,20 +2476,16 @@ function drawPages(){
         }
       }
 
-      // Canlı A4 Üzerinden Taşıma & Silme Kontrolleri
       const ctrls = document.createElement('div');
       ctrls.className = 'q-live-ctrls';
       ctrls.innerHTML = `
         <button class="ql-btn" title="Yukarı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', -1)">↑</button>
         <button class="ql-btn" title="Aşağı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', 1)">↓</button>
-        <button class="ql-btn break" title="Sonraki sütun" onclick="event.stopPropagation(); breakQuestion('${it.q.id}')">⤓</button>
         <button class="ql-btn del" title="Testten çıkar" onclick="event.stopPropagation(); removeQuestionFromPreview('${it.q.id}')">✕</button>
       `;
       qBox.appendChild(ctrls);
-
       el.appendChild(qBox);
 
-      // Soru Alt Çizgisi
       if(it.sol>0 && CFG && CFG.sep!=='yok'){
         const s=document.createElement('div'); s.className='sl'+(CFG.sep==='duz'?' solid':'');
         s.style.cssText='left:'+pct(it.x,PAGE.w)+';top:'+pct(it.y+TITLE_H+it.h+it.sol-1,PAGE.h)+
@@ -2605,43 +2494,12 @@ function drawPages(){
       }
     });
 
-    const nc=Math.max(1,(CFG&&CFG.cols)||1);
-    if(nc>1 && CFG && (CFG.vsep!=='yok'||CFG.gutter)){
-      const cw=colWidthMm(CFG);
-      const top=(i===0)?PAGE.m+headerH(CFG):PAGE.m;
-      const bot=PAGE.h-PAGE.m-4;
-      for(let c=1;c<nc;c++){
-        const gx=PAGE.m+c*(cw+GAP)-GAP/2;
-        if(CFG.vsep!=='yok'){
-          const v=document.createElement('div');
-          v.className='vs'+(CFG.vsep==='duz'?' solid':'');
-          v.style.cssText='left:'+pct(gx,PAGE.w)+';top:'+pct(top,PAGE.h)+
-            ';height:'+pct(bot-top,PAGE.h)+'';
-          el.appendChild(v);
-        }
-        if(CFG.gutter && c===Math.ceil(nc/2)){
-          const g=document.createElement('div'); g.className='gt';
-          g.textContent=CFG.gutter;
-          g.style.cssText='left:'+pct(gx,PAGE.w)+';top:'+pct((top+bot)/2,PAGE.h)+'';
-          el.appendChild(g);
-        }
-      }
-    }
-
     const f=document.createElement('div'); f.className='pf';
     f.textContent=(i+1)+' / '+PAGES.length;
     el.appendChild(f);
     host.appendChild(el);
   });
-  const dag=PAGES.map(p=>p.count);
-  const ayni=dag.every(v=>v===dag[0]);
-  const lo=Math.min(...dag), hi=Math.max(...dag);
-  let msg=PAGES.length+' sayfa · '+qs.length+' soru · '+
-    (ayni ? ('her sayfada '+dag[0]) : ('sayfa başına '+lo+'–'+hi))+' soru';
-  if(PAGES.scale<0.99) msg+=' · görsel %'+Math.round(PAGES.scale*100);
-  if(BOOKS.length>1) msg+=' · '+BOOKS.length+' kitapçık';
-  if(CFG&&CFG.optic) msg+=' · optik';
-  $('pginfo2').textContent=msg;
+  $('pginfo2').textContent=PAGES.length+' sayfa · '+qs.length+' soru hazır.';
 }
 
 function cfgNow(){
@@ -2657,7 +2515,6 @@ function cfgNow(){
     soltype:$('f-soltype').value||'blank',
     orient:$('f-orient').value||'portrait',
     font:$('f-font').value||'default',
-    tpl:window._selTpl||'default',
     info:$('f-info').checked, pts:$('f-pts').checked, key:$('f-key').checked,
     book:parseInt($('f-book').value)||1, optic:$('f-optic').checked, qr:$('f-qr').checked
   };
@@ -2691,11 +2548,11 @@ async function build(){
     drawBookPick(0);
     $('dl').style.display='none';
     go('prev');
-    toast('Test hazır · Sayfa üzerinde soruların sırasını değiştirebilirsiniz');
+    toast('Test hazır');
   }catch(err){ toast('Test oluşturulamadı: '+err.message,true); }
 }
 
-/* ════════ jsPDF & QR Kod Motoru ════════ */
+/* ════════ jsPDF Motoru ════════ */
 const JSPDF='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 let pdfReady=false;
 (function(){
@@ -2704,119 +2561,18 @@ let pdfReady=false;
   document.head.appendChild(s);
 })();
 
-const QR=(function(){
-  const EXP=new Array(256),LOG=new Array(256);
-  for(let i=0,x=1;i<255;i++){EXP[i]=x;LOG[x]=i;x<<=1;if(x&256)x^=285;}
-  const mul=(a,b)=>a&&b?EXP[(LOG[a]+LOG[b])%255]:0;
-  function rsGen(n){let p=[1];for(let i=0;i<n;i++){const np=new Array(p.length+1).fill(0);
-    for(let j=0;j<p.length;j++){np[j]^=mul(p[j],EXP[i]);np[j+1]^=p[j];}p=np;}return p;}
-  function rsEnc(data,n){const gen=rsGen(n);const res=data.concat(new Array(n).fill(0));
-    for(let i=0;i<data.length;i++){const c=res[i];if(c)for(let j=0;j<gen.length;j++)res[i+j]^=mul(gen[j],c);}
-    return res.slice(data.length);}
-  const CAP=[
-    [1,16,10,1],[2,28,16,1],[3,44,26,1],[4,64,18,2],[5,86,24,2],
-    [6,108,16,4],[7,124,18,4],[8,154,22,2],[9,182,22,3],[10,216,26,4]];
-  function pick(len){for(const c of CAP){ if(len+3<=c[1]) return c; } return null;}
-  function bits(data){
-    const c=pick(data.length); if(!c) throw new Error('QR: veri uzun');
-    const [ver,dcw,ecw,blocks]=c;
-    let bs=[]; const push=(v,n)=>{for(let i=n-1;i>=0;i--)bs.push((v>>i)&1);};
-    push(4,4); const cntBits = ver<10?8:16; push(data.length,cntBits);
-    for(const b of data) push(b,8);
-    push(0,4); while(bs.length%8) bs.push(0);
-    const codes=[]; for(let i=0;i<bs.length;i+=8){let v=0;for(let j=0;j<8;j++)v=(v<<1)|bs[i+j];codes.push(v);}
-    const pad=[236,17]; let pi=0; while(codes.length<dcw){codes.push(pad[pi++%2]);}
-    const perBlock=Math.floor(dcw/blocks), extra=dcw%blocks;
-    const dBlocks=[],eBlocks=[]; let idx=0;
-    for(let b=0;b<blocks;b++){
-      const sz=perBlock+(b>=blocks-extra?1:0);
-      const d=codes.slice(idx,idx+sz); idx+=sz;
-      dBlocks.push(d); eBlocks.push(rsEnc(d,ecw));
-    }
-    const out=[]; const maxD=Math.max(...dBlocks.map(b=>b.length));
-    for(let i=0;i<maxD;i++)for(const b of dBlocks)if(i<b.length)out.push(b[i]);
-    for(let i=0;i<ecw;i++)for(const b of eBlocks)out.push(b[i]);
-    return {ver,bytes:out};
-  }
-  function matrix(enc){
-    const {ver,bytes}=enc; const size=17+ver*4;
-    const m=Array.from({length:size},()=>new Array(size).fill(null));
-    const res=(r,c)=>r>=0&&r<size&&c>=0&&c<size;
-    function finder(r,c){for(let i=-1;i<=7;i++)for(let j=-1;j<=7;j++){
-      if(!res(r+i,c+j))continue;
-      const on=(i>=0&&i<=6&&(j===0||j===6))||(j>=0&&j<=6&&(i===0||i===6))||(i>=2&&i<=4&&j>=2&&j<=4);
-      m[r+i][c+j]=on?1:0;}}
-    finder(0,0);finder(0,size-7);finder(size-7,0);
-    for(let i=8;i<size-8;i++){if(m[6][i]===null)m[6][i]=i%2===0?1:0;if(m[i][6]===null)m[i][6]=i%2===0?1:0;}
-    if(ver>=2){const p=size-7;[[p,p]].forEach(([ar,ac])=>{for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){
-      const on=Math.max(Math.abs(i),Math.abs(j))!==1;m[ar+i][ac+j]=on?1:0;}});}
-    m[size-8][8]=1;
-    const reserve=(r,c)=>{if(m[r][c]===null)m[r][c]=0;};
-    for(let i=0;i<9;i++){reserve(8,i);reserve(i,8);}
-    for(let i=size-8;i<size;i++){reserve(8,i);reserve(i,8);}
-    let bi=0; const bit=()=>{const by=bytes[bi>>3];const b=(by>>(7-(bi&7)))&1;bi++;return b;};
-    let up=true;
-    for(let col=size-1;col>0;col-=2){
-      if(col===6)col--;
-      for(let k=0;k<size;k++){
-        const row=up?size-1-k:k;
-        for(let c=0;c<2;c++){const cc=col-c;
-          if(m[row][cc]===null){let v=bi<bytes.length*8?bit():0;
-            if((row+cc)%2===0)v^=1;
-            m[row][cc]=v;}}
-      }
-      up=!up;
-    }
-    const fmt=[1,0,1,0,1,0,0,0,0,0,1,0,0,1,0];
-    for(let i=0;i<6;i++)m[8][i]=fmt[i];
-    m[8][7]=fmt[6];m[8][8]=fmt[7];m[7][8]=fmt[8];
-    for(let i=9;i<15;i++)m[14-i][8]=fmt[i];
-    for(let i=0;i<7;i++)m[size-1-i][8]=fmt[i];
-    for(let i=7;i<15;i++)m[8][size-15+i]=fmt[i];
-    return m;
-  }
-  return {make:txt=>{
-    const data=Array.from(new TextEncoder().encode(txt));
-    return matrix(bits(data));
-  }};
-})();
-
-function drawQR(doc,text,x,y,size){
-  try{
-    const m=QR.make(text); const n=m.length; const s=size/n;
-    doc.setFillColor(0,0,0);
-    for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])doc.rect(x+c*s,y+r*s,s+0.02,s+0.02,'F');
-    return true;
-  }catch(e){ return false; }
-}
-
 function drawBook(doc, book, first){
   const pages=book.pages;
   pages.forEach((pg,i)=>{
     if(!(first&&i===0)) doc.addPage();
-    if(i===0){
-      if(HDR) doc.addImage(HDR,'JPEG',PAGE.m,PAGE.m,PAGE.w-PAGE.m*2,headerH(CFG));
-      if(book.letter){
-        doc.setFillColor(16,185,129);
-        doc.roundedRect(PAGE.w-PAGE.m-16, PAGE.m-1, 16, 8, 1.5,1.5,'F');
-        doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(255);
-        doc.text(book.letter, PAGE.w-PAGE.m-8, PAGE.m+4.6, {align:'center'});
-      }
-      if(CFG.qr){
-        const tag=[(CFG.lesson||'test'),(book.letter||'-'),book.list.length+'s',(CFG.date||'')].join('|');
-        drawQR(doc,tag,PAGE.w-PAGE.m-13,PAGE.m+(book.letter?9:0),13);
-      }
+    if(i===0 && HDR){
+      doc.addImage(HDR,'JPEG',PAGE.m,PAGE.m,PAGE.w-PAGE.m*2,headerH(CFG));
     }
     pg.items.forEach(it=>{
       doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(17);
       doc.text(it.num+'.', it.x, it.y+4);
-      if(CFG.pts){
-        doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(110);
-        doc.text('('+(it.q.pt||0)+' puan)', it.x+it.colW, it.y+4, {align:'right'});
-      }
       doc.addImage(it.q.img,'JPEG',it.x,it.y+TITLE_H,it.w,it.h);
 
-      // PDF İçi Çözüm Izgarası Çizimi
       if(it.sol>0 && CFG){
         const solType = CFG.soltype || 'blank';
         const sy = it.y+TITLE_H+it.h+1.5;
@@ -2834,97 +2590,12 @@ function drawBook(doc, book, first){
           doc.rect(it.x, sy, it.colW, sh);
         }
       }
-
-      if(it.sol>0 && CFG.sep!=='yok'){
-        doc.setDrawColor(170); doc.setLineWidth(CFG.sep==='duz'?0.25:0.2);
-        if(doc.setLineDashPattern && CFG.sep==='kesik') doc.setLineDashPattern([1.2,1.2],0);
-        const ly=it.y+TITLE_H+it.h+it.sol-1;
-        doc.line(it.x,ly,it.x+it.colW,ly);
-        if(doc.setLineDashPattern) doc.setLineDashPattern([],0);
-      }
     });
-
-    const nc=Math.max(1,(CFG&&CFG.cols)||1);
-    if(nc>1 && (CFG.vsep!=='yok'||CFG.gutter)){
-      const cw=colWidthMm(CFG);
-      const top=(i===0)?PAGE.m+headerH(CFG):PAGE.m;
-      const bot=PAGE.h-PAGE.m-4;
-      for(let c=1;c<nc;c++){
-        const gx=PAGE.m+c*(cw+GAP)-GAP/2;
-        if(CFG.vsep!=='yok'){
-          doc.setDrawColor(190); doc.setLineWidth(CFG.vsep==='duz'?0.25:0.2);
-          if(doc.setLineDashPattern && CFG.vsep==='kesik') doc.setLineDashPattern([1,1.4],0);
-          doc.line(gx,top,gx,bot);
-          if(doc.setLineDashPattern) doc.setLineDashPattern([],0);
-        }
-        if(CFG.gutter && c===Math.ceil(nc/2)){
-          doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(150);
-          doc.text(CFG.gutter, gx+1.6, (top+bot)/2, {angle:90, align:'center'});
-        }
-      }
-    }
 
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(150);
     const foot=(book.letter?book.letter+' · ':'')+(i+1)+' / '+pages.length;
     doc.text(foot, PAGE.w-PAGE.m, PAGE.h-6, {align:'right'});
   });
-  if(CFG.teacher){
-    doc.setFontSize(9); doc.setTextColor(60);
-    doc.text(CFG.teacher, PAGE.w-PAGE.m, PAGE.h-11, {align:'right'});
-  }
-}
-
-function drawKey(doc, book){
-  doc.addPage();
-  const ttl='CEVAP ANAHTARI'+(book.letter?' — '+book.letter+' KİTAPÇIĞI':'');
-  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(17);
-  doc.text(ttl, PAGE.w/2, PAGE.m+8, {align:'center'});
-  doc.setLineWidth(0.6); doc.setDrawColor(17);
-  doc.line(PAGE.m,PAGE.m+11,PAGE.w-PAGE.m,PAGE.m+11);
-  const cw=(PAGE.w-PAGE.m*2)/5, ch=12;
-  book.list.forEach((q,i)=>{
-    const cx=PAGE.m+(i%5)*cw, cy=PAGE.m+18+Math.floor(i/5)*ch;
-    doc.setDrawColor(140); doc.setLineWidth(0.2);
-    doc.roundedRect(cx+1,cy,cw-2,ch-3,1,1);
-    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(17);
-    doc.text((i+1)+' - '+(q.ans||'__'), cx+cw/2, cy+6, {align:'center'});
-  });
-}
-
-function drawOptic(doc, book){
-  doc.addPage();
-  const ttl='OPTİK CEVAP KÂĞIDI'+(book.letter?' — '+book.letter:'');
-  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(17);
-  doc.text(ttl, PAGE.w/2, PAGE.m+7, {align:'center'});
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(80);
-  doc.text('Ad Soyad: ..............................................    No: ............    Sınıf: ..........',
-    PAGE.m, PAGE.m+15);
-  const tag=[(CFG.lesson||'test'),(book.letter||'-'),book.list.length+'s',
-    (CFG.date||'')].join('|');
-  const qs=18;
-  if(drawQR(doc,tag,PAGE.w-PAGE.m-qs,PAGE.m-2,qs)){
-    doc.setFontSize(6); doc.setTextColor(140);
-    doc.text(book.letter?book.letter+' kitapçığı':'testamed', PAGE.w-PAGE.m-qs/2, PAGE.m+qs, {align:'center'});
-  }
-
-  const opts=5, r=1.9, gap=6.2, rowH=8.4;
-  const n=book.list.length;
-  const perCol=Math.ceil(n/ (n>25?2:1));
-  const colW=(PAGE.w-PAGE.m*2)/(n>25?2:1);
-  const top=PAGE.m+24;
-  for(let i=0;i<n;i++){
-    const col=Math.floor(i/perCol), row=i%perCol;
-    const bx=PAGE.m+col*colW, by=top+row*rowH;
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(17);
-    doc.text((i+1)+'.', bx, by+2, {align:'left'});
-    for(let o=0;o<opts;o++){
-      const cx=bx+10+o*gap, cy=by;
-      doc.setDrawColor(120); doc.setLineWidth(0.25);
-      doc.circle(cx,cy,r);
-      doc.setFontSize(6.5); doc.setTextColor(120);
-      doc.text(LET[o], cx, cy+0.9, {align:'center'});
-    }
-  }
 }
 
 function makePdf(){
@@ -2932,12 +2603,9 @@ function makePdf(){
   const {jsPDF}=window.jspdf;
   const orient=(CFG&&CFG.orient==='landscape')?'landscape':'portrait';
   const doc=new jsPDF({unit:'mm',format:'a4',compress:true,orientation:orient});
-  const hasAns=qs.some(q=>q.ans);
 
   BOOKS.forEach((book,bi)=>{
     drawBook(doc, book, bi===0);
-    if(CFG.optic) drawOptic(doc, book);
-    if(CFG.key && hasAns) drawKey(doc, book);
   });
   return doc;
 }
@@ -2958,11 +2626,8 @@ function makeFile(){
     a.href=pdfUrl; a.setAttribute('download',name); a.target='_blank'; a.rel='noopener';
     const kb=Math.round(blob.size/1024);
     $('dl-name').textContent='✓ '+name+'  ·  '+kb+' KB';
-    let hint='Kaydet\'e dokununca dosya <b>İndirilenler</b> klasörüne iner.';
-    $('dl-hint').innerHTML=hint;
-    const v=$('dl-view'); v.src=pdfUrl; v.style.display='block';
+    $('dl-view').src=pdfUrl; $('dl-view').style.display='block';
     $('dl').style.display='block';
-    $('dl').scrollIntoView({block:'nearest'});
   }catch(e){
     toast('PDF üretilemedi: '+e.message,true);
   }
@@ -2970,8 +2635,7 @@ function makeFile(){
 function openPdf(){
   try{
     if(!pdfUrl) makeFile();
-    const w=window.open(pdfUrl,'_blank');
-    if(!w) toast('Tarayıcı yeni sekmeyi engelledi',true);
+    window.open(pdfUrl,'_blank');
   }catch(e){ toast('Açılamadı: '+e.message,true); }
 }
 async function sharePdf(){
@@ -2982,258 +2646,8 @@ async function sharePdf(){
     if(navigator.canShare&&navigator.canShare({files:[file]})){
       await navigator.share({title:'Sınav',files:[file]});
     } else { makeFile(); }
-  }catch(e){ if(e.name!=='AbortError') makeFile(); }
+  }catch(e){ makeFile(); }
 }
 </script>
-
-<!-- ════════ Öğretmen Paneli & İstatistik Modülü ════════ -->
-<script>
-(function(){
-"use strict";
-
-const css=`
-#s-panel{overflow-y:auto;padding:16px;padding-bottom:calc(24px + var(--safe))}
-.prof{display:flex;align-items:center;gap:13px;background:var(--w);border:1px solid var(--line);
-  border-radius:16px;padding:14px;margin-bottom:4px;box-shadow:0 1px 2px rgba(14,26,23,.04)}
-.prof .pav{width:52px;height:52px;border-radius:15px;background:var(--bg);display:flex;
-  align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
-.prof .pin{flex:1;min-width:0}
-.prof .pin b{display:block;font-family:var(--disp);font-size:17px;font-weight:700;
-  letter-spacing:-.02em;line-height:1.2}
-.prof .pin span{font-size:12.5px;color:var(--soft)}
-.prof .ped{border:1.5px solid var(--line);border-radius:999px;padding:8px 13px;font-size:12.5px;
-  font-weight:700;color:var(--ink2);background:var(--w);flex-shrink:0}
-.prof .ped:active{background:var(--bg)}
-
-.goalbox{background:var(--w);border:1px solid var(--line);border-radius:16px;padding:15px;
-  box-shadow:0 1px 2px rgba(14,26,23,.04)}
-.goalbox .grow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
-.goalbox .grow span{font-size:13px;color:var(--soft);font-weight:600}
-.goalbox .grow b{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink)}
-.gbar{height:9px;border-radius:999px;background:var(--bg);overflow:hidden}
-.gbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--or),#34D399);
-  transition:width .5s cubic-bezier(.4,0,.2,1)}
-.gbar.done i{background:linear-gradient(90deg,var(--gr),#10B981)}
-.gnote{font-size:12px;color:var(--soft);margin-top:9px;line-height:1.5}
-
-.pstat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:11px}
-.ps{background:var(--w);border:1px solid var(--line);border-radius:14px;padding:13px 8px;
-  text-align:center;box-shadow:0 1px 2px rgba(14,26,23,.04)}
-.ps b{display:block;font-family:var(--disp);font-size:22px;font-weight:800;letter-spacing:-.035em;
-  line-height:1.1}
-.ps span{font-family:var(--mono);font-size:9.5px;font-weight:600;color:var(--soft);
-  text-transform:uppercase;letter-spacing:.06em}
-.ps.g b{color:var(--gr)} .ps.o b{color:var(--or)} .ps.c b{color:var(--cy)}
-
-.chart{background:var(--w);border:1px solid var(--line);border-radius:16px;padding:15px 13px 11px;
-  display:flex;align-items:flex-end;gap:7px;height:132px;box-shadow:0 1px 2px rgba(14,26,23,.04)}
-.chart .cb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
-  height:100%;gap:5px}
-.chart .cb .bar{width:100%;max-width:30px;border-radius:6px 6px 3px 3px;background:var(--bg);
-  border:1px solid var(--line);min-height:4px;transition:height .5s cubic-bezier(.4,0,.2,1);
-  position:relative}
-.chart .cb.has .bar{background:linear-gradient(180deg,var(--or),#6EE7B7);border-color:transparent}
-.chart .cb.now .bar{background:linear-gradient(180deg,var(--ink),#1E3A34);border-color:transparent}
-.chart .cb .v{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink2);height:12px}
-.chart .cb .m{font-family:var(--mono);font-size:9.5px;color:var(--soft);letter-spacing:.02em}
-
-.tcov{background:var(--w);border:1px solid var(--line);border-radius:16px;padding:6px 14px;
-  box-shadow:0 1px 2px rgba(14,26,23,.04)}
-.trw{padding:11px 0;border-bottom:1px solid var(--bg)}
-.trw:last-child{border-bottom:none}
-.trw .th{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
-.trw .th b{font-size:13.5px;font-weight:600}
-.trw .th span{font-family:var(--mono);font-size:11px;color:var(--soft)}
-.trw .tb{height:6px;border-radius:999px;background:var(--bg);overflow:hidden}
-.trw .tb i{display:block;height:100%;border-radius:999px;background:var(--cy)}
-
-.plan{display:flex;align-items:center;gap:12px;background:var(--w);border:1px solid var(--line);
-  border-radius:14px;padding:12px 13px;margin-bottom:8px;box-shadow:0 1px 2px rgba(14,26,23,.04)}
-.plan .pd{text-align:center;flex-shrink:0;width:44px}
-.plan .pd b{display:block;font-family:var(--disp);font-size:19px;font-weight:800;line-height:1;
-  letter-spacing:-.03em}
-.plan .pd span{font-family:var(--mono);font-size:9.5px;color:var(--soft);text-transform:uppercase}
-.plan .pt{flex:1;min-width:0}
-.plan .pt b{display:block;font-size:14px;font-weight:600;line-height:1.3}
-.plan .pt span{font-size:11.5px;color:var(--soft)}
-.plan .px{background:#FDECEA;color:#C0392B;border-radius:9px;padding:7px 10px;font-size:11.5px;
-  font-weight:700;flex-shrink:0}
-.plan.soon{border-color:var(--or);box-shadow:0 0 0 2px rgba(16,185,129,.10)}
-.plan.past{opacity:.45}
-.pempty{text-align:center;color:var(--soft);font-size:13px;padding:20px 12px;line-height:1.6;
-  background:var(--w);border:1px dashed var(--line);border-radius:14px;margin-bottom:9px}
-`;
-const st=document.createElement('style'); st.textContent=css; document.head.appendChild(st);
-
-const scr=document.createElement('div');
-scr.className='scr'; scr.id='s-panel';
-document.getElementById('main').appendChild(scr);
-
-(function(){
-  const home=document.getElementById('s-home');
-  const hint=home&&home.querySelector('.hint');
-  if(!hint) return;
-  const card=document.createElement('div');
-  card.className='card';
-  card.style.setProperty('--accent','var(--ink)');
-  card.innerHTML='<div class="ic" style="background:var(--ink)">📊</div>'+
-    '<div class="tx"><h2>Panel</h2><p>Testlerin, aylık hedefin ve sınav takvimin</p></div>'+
-    '<span class="arw">›</span>';
-  card.onclick=()=>go('panel');
-  home.insertBefore(card,hint);
-})();
-
-const P_KEY='testamed_profile', L_KEY='testamed_plans';
-function getProfile(){ try{return JSON.parse(localStorage.getItem(P_KEY)||'{}');}catch(_){return{};} }
-function setProfile(p){ try{localStorage.setItem(P_KEY,JSON.stringify(p));}catch(_){} }
-function getPlans(){ try{return JSON.parse(localStorage.getItem(L_KEY)||'[]');}catch(_){return[];} }
-function setPlans(a){ try{localStorage.setItem(L_KEY,JSON.stringify(a));}catch(_){} }
-
-const AY=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-const AYUZUN=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-function gun(a,b){ return Math.round((a-b)/86400000); }
-
-async function renderPanel(){
-  const el=document.getElementById('s-panel');
-  el.innerHTML='<div style="text-align:center;color:var(--soft);padding:40px;font-size:13px">Yükleniyor…</div>';
-
-  let tests=[], bank=[];
-  try{ tests=await DB.all('tests'); }catch(_){}
-  try{ bank=await DB.all('bank'); }catch(_){}
-
-  const pr=getProfile();
-  const now=new Date();
-  const yil=now.getFullYear(), ay=now.getMonth();
-
-  const toplamSoru=tests.reduce((a,t)=>a+((t.qs&&t.qs.length)||0),0);
-  const ort=tests.length?Math.round(toplamSoru/tests.length):0;
-  const buAy=tests.filter(t=>{const d=new Date(t.ts||0);return d.getFullYear()===yil&&d.getMonth()===ay;}).length;
-  const hedef=parseInt(pr.goal)||20;
-  const yuzde=Math.min(100,Math.round(buAy/hedef*100));
-  const ayinSonu=new Date(yil,ay+1,0).getDate();
-  const kalanGun=ayinSonu-now.getDate();
-
-  const aylar=[];
-  for(let i=5;i>=0;i--){
-    const d=new Date(yil,ay-i,1);
-    const n=tests.filter(t=>{const x=new Date(t.ts||0);
-      return x.getFullYear()===d.getFullYear()&&x.getMonth()===d.getMonth();}).length;
-    aylar.push({ad:AY[d.getMonth()],n,now:i===0});
-  }
-  const enCok=Math.max(1,...aylar.map(a=>a.n));
-
-  const kon={};
-  bank.forEach(q=>{ const k=(q.topic||'Genel').trim(); kon[k]=(kon[k]||0)+1; });
-  tests.forEach(t=>{ const k=(t.cfg&&t.cfg.topic||'').trim(); if(k&&!kon[k]) kon[k]=0; });
-  const konList=Object.entries(kon).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const konMax=Math.max(1,...konList.map(k=>k[1]));
-
-  const bugun=new Date(yil,ay,now.getDate()).getTime();
-  const plans=getPlans().sort((a,b)=>a.date.localeCompare(b.date));
-
-  let h='';
-
-  h+='<div class="prof"><div class="pav">'+(pr.avatar||'👨‍🏫')+'</div>'+
-     '<div class="pin"><b>'+esc(pr.name||'Öğretmen Profili')+'</b>'+
-     '<span>'+esc(pr.branch||'Kimya Öğretmeni')+'</span></div>'+
-     '<button class="ped" id="pn-edit">Düzenle</button></div>';
-
-  h+='<div class="sec">'+AYUZUN[ay]+' Hedefi</div>';
-  h+='<div class="goalbox"><div class="grow"><span>Bu ay oluşturulan test</span>'+
-     '<b>'+buAy+' / '+hedef+'</b></div>'+
-     '<div class="gbar'+(buAy>=hedef?' done':'')+'"><i style="width:'+yuzde+'%"></i></div>'+
-     '<div class="gnote">'+
-     (buAy>=hedef ? '🎉 Hedef tamamlandı.' : (hedef-buAy)+' test kaldı · '+kalanGun+' gün')+
-     '</div></div>';
-
-  h+='<div class="pstat">'+
-     '<div class="ps o"><b>'+tests.length+'</b><span>test</span></div>'+
-     '<div class="ps g"><b>'+bank.length+'</b><span>bankada</span></div>'+
-     '<div class="ps c"><b>'+ort+'</b><span>soru / test</span></div>'+
-     '</div>';
-
-  h+='<div class="sec">Son 6 Ay</div><div class="chart">';
-  aylar.forEach(a=>{
-    const y=Math.max(4,Math.round(a.n/enCok*74));
-    h+='<div class="cb'+(a.n?' has':'')+(a.now?' now':'')+'">'+
-       '<span class="v">'+(a.n||'')+'</span>'+
-       '<div class="bar" style="height:'+y+'px"></div>'+
-       '<span class="m">'+a.ad+'</span></div>';
-  });
-  h+='</div>';
-
-  h+='<div class="sec">Konu Kapsamı</div>';
-  if(!konList.length){
-    h+='<div class="pempty">Bankaya soru kaydettikçe konu dağılımı burada görünür.</div>';
-  } else {
-    h+='<div class="tcov">';
-    konList.forEach(([k,n])=>{
-      h+='<div class="trw"><div class="th"><b>'+esc(k)+'</b><span>'+n+' soru</span></div>'+
-         '<div class="tb"><i style="width:'+Math.round(n/konMax*100)+'%"></i></div></div>';
-    });
-    h+='</div>';
-  }
-
-  h+='<div class="sec">Sınav Takvimi</div>';
-  if(!plans.length){
-    h+='<div class="pempty">Planlanmış sınav yok.</div>';
-  } else {
-    plans.forEach(p=>{
-      const d=new Date(p.date+'T00:00:00');
-      const fark=gun(d.getTime(),bugun);
-      const cls=fark<0?'past':(fark<=7?'soon':'');
-      const ne=fark<0?(-fark)+' gün önce':(fark===0?'bugün':(fark===1?'yarın':fark+' gün kaldı'));
-      h+='<div class="plan '+cls+'" data-id="'+p.id+'">'+
-         '<div class="pd"><b>'+d.getDate()+'</b><span>'+AY[d.getMonth()]+'</span></div>'+
-         '<div class="pt"><b>'+esc(p.title)+'</b><span>'+(p.cls?esc(p.cls)+' · ':'')+ne+'</span></div>'+
-         '<button class="px" data-del="'+p.id+'">Sil</button></div>';
-    });
-  }
-  h+='<button class="ghost" id="pn-add" style="margin-top:4px">+ Sınav planla</button>';
-
-  el.innerHTML=h;
-
-  document.getElementById('pn-edit').onclick=editProfile;
-  document.getElementById('pn-add').onclick=addPlan;
-  el.querySelectorAll('[data-del]').forEach(b=>{
-    b.onclick=()=>{
-      const id=b.getAttribute('data-del');
-      setPlans(getPlans().filter(p=>p.id!==id));
-      renderPanel();
-    };
-  });
-}
-
-function editProfile(){
-  const p=getProfile();
-  openModal('Profilim',[
-    {ph:'Ad Soyad',val:p.name||''},
-    {ph:'Branş (örn. Kimya)',val:p.branch||''},
-    {ph:'Aylık test hedefi',val:p.goal||'20'}
-  ],v=>{
-    setProfile({name:v[0],branch:v[1],goal:parseInt(v[2])||20,avatar:p.avatar||'👨‍🏫'});
-    closeModal();
-    renderPanel();
-    toast('Profil kaydedildi');
-  });
-}
-
-function addPlan(){
-  const bugun=new Date().toISOString().slice(0,10);
-  openModal('Sınav planla',[
-    {ph:'Tarih',val:bugun,type:'date'},
-    {ph:'Sınav adı (örn. 2. Yazılı)',val:''},
-    {ph:'Sınıf (örn. 11-A)',val:''}
-  ],v=>{
-    if(!v[0]) return;
-    const a=getPlans();
-    a.push({id:'p'+Date.now(),date:v[0],title:v[1]||'Sınav',cls:v[2]||''});
-    setPlans(a); closeModal(); renderPanel();
-    toast('Sınav eklendi');
-  });
-}
-})();
-</script>
-
 </body>
 </html>
