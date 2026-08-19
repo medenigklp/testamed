@@ -2383,7 +2383,7 @@ function headerImage(cfg){
       g.fillStyle = color;
       let fontSize = defaultFont;
       g.font = (isBold ? '800 ' : '600 ') + (fontSize * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
-      while (g.measureText(text).width > maxW && fontSize > 1.8) {
+      while (g.measureText(text).width > maxW && fontSize > 1.2) {
         fontSize -= 0.2;
         g.font = (isBold ? '800 ' : '600 ') + (fontSize * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
       }
@@ -2397,10 +2397,22 @@ function headerImage(cfg){
     if(g.roundRect) { g.beginPath(); g.roundRect(0, 0, leftW, bh, 1.5*K); g.fill(); } else { g.fillRect(0, 0, leftW, bh); }
     drawFitText((cfg.lesson || 'KİMYA').toUpperCase(), leftW/2, bh/2, leftW - 2*K, 3.4, pal.accent, true);
 
-    // Orta Blok (Konu / Başlık)
+    // Orta Blok — Üst: Başlık/Tür, Alt: Konu (küçük)
     g.fillStyle = pal.mid;
     if(g.roundRect) { g.beginPath(); g.roundRect(leftW + pad, 0, centerW, bh, 1.5*K); g.fill(); } else { g.fillRect(leftW + pad, 0, centerW, bh); }
-    drawFitText((cfg.topic || cfg.title || 'KAZANIM TESTİ').toUpperCase(), leftW + pad + centerW/2, bh/2, centerW - 3*K, 3.6, pal.text, true);
+
+    const kindText = (cfg.kind || 'TEST').toUpperCase();
+    const topicText = (cfg.topic || '').toUpperCase();
+
+    if(topicText && topicText !== kindText){
+      // İki satır: büyük başlık + küçük konu
+      drawFitText(kindText, leftW + pad + centerW/2, bh*0.38, centerW - 3*K, 3.6, pal.text, true);
+      g.fillStyle = pal.accent;
+      drawFitText(topicText, leftW + pad + centerW/2, bh*0.72, centerW - 3*K, 2.4, pal.accent, false);
+    } else {
+      // Tek satır
+      drawFitText(kindText, leftW + pad + centerW/2, bh/2, centerW - 3*K, 3.6, pal.text, true);
+    }
 
     // Sağ Blok (Öğretmen / Yayın)
     g.fillStyle = pal.bg;
@@ -2425,7 +2437,7 @@ function headerImage(cfg){
 
     g.font = '800 ' + (4.0 * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
     g.textAlign = 'center';
-    g.fillText((cfg.title || 'TYT / AYT DENEME SINAVI').toUpperCase(), c.width/2, 4.5*K);
+    g.fillText((cfg.kind || 'TYT / AYT DENEME SINAVI').toUpperCase(), c.width/2, 4.5*K);
 
     g.font = '700 ' + (3.0 * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
     g.fillText((cfg.lesson || 'KİMYA TESTİ') + ' · ' + (cfg.kind || 'A KİTAPÇIĞI'), c.width/2, 8.5*K);
@@ -2462,7 +2474,7 @@ function headerImage(cfg){
   if(cfg.template === 'minimal'){
     g.fillStyle = '#111';
     g.font = '800 ' + (3.8 * K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
-    g.fillText((cfg.title || cfg.kind || 'SINAV').toUpperCase(), 0, 3*K);
+    g.fillText((cfg.kind || 'SINAV').toUpperCase(), 0, 3*K);
 
     g.fillStyle = '#666';
     g.font = '600 ' + (3.0 * K) + 'px Arial, sans-serif';
