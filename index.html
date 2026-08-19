@@ -34,7 +34,7 @@
   --grid:rgba(14,26,23,.045);
   --safe:env(safe-area-inset-bottom,0px);
   --disp:'Bricolage Grotesque',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+  --body:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 html,body{height:100%}
@@ -166,11 +166,11 @@ input,select,textarea{font:inherit}
   background:rgba(16,185,129,.18);
   display:none;
   pointer-events:none !important;
-  border-radius:3px;
+  border-radius:4px;
   z-index:25;
 }
 
-/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
+/* Videodaki teststud.io Yüzen Şık, Etiket & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
@@ -179,7 +179,7 @@ input,select,textarea{font:inherit}
   border:1.5px solid #2C3A36;
   border-radius:14px;
   padding:8px 10px;
-  box-shadow:0 12px 32px rgba(0,0,0,0.6);
+  box-shadow:0 12px 32px rgba(0,0,0,0.65);
   z-index:60;
   flex-direction:column;
   gap:6px;
@@ -240,6 +240,7 @@ input,select,textarea{font:inherit}
 .f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(6,182,212,.13)}
 .f input::placeholder{color:#B5BEB9}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .chk{display:flex;align-items:center;gap:12px;background:var(--w);border:1px solid var(--line);
   border-radius:12px;padding:12px 13px;margin-bottom:7px;transition:.14s}
 .chk:active{background:var(--bg)}
@@ -456,7 +457,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
-    <!-- 2. Ekran: Görüntüleyici & Tuval -->
+    <!-- 2. Ekran: Görüntüleyici & Tuval (teststud.io Kırpma Alanı) -->
     <div class="scr" id="s-view">
       <div id="bar">
         <div class="brow" id="files"></div>
@@ -636,8 +637,8 @@ input,select,textarea{font:inherit}
         <div class="f">
           <label>Çözüm Alanı Deseni</label>
           <select id="f-soltype" onchange="preview()">
-            <option value="blank" selected>Düz Çerçeveli Boşluk</option>
-            <option value="grid">Kareli Defter Izgarası (5x5 mm)</option>
+            <option value="blank">Düz Çerçeveli Boşluk</option>
+            <option value="grid" selected>Kareli Defter Izgarası (5x5 mm)</option>
             <option value="lined">Çizgili Defter Alanı</option>
           </select>
         </div>
@@ -1997,7 +1998,7 @@ function openTest(t,edit){
     set('f-cols',c.cols);set('f-sol',c.sol);set('f-max',c.max);
     set('f-book',c.book);set('f-sep',c.sep);set('f-vsep',c.vsep);set('f-gutter',c.gutter);set('f-fill',c.fill);
     set('f-template',c.template||'studio');
-    set('f-soltype',c.soltype||'blank');
+    set('f-soltype',c.soltype||'grid');
     $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key;
     $('f-optic').checked=!!c.optic;$('f-qr').checked=!!c.qr;
   }
@@ -2133,14 +2134,14 @@ function headerImage(cfg){
   g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
   g.textBaseline='top';
 
-  // teststud.io 3 Parçalı Renkli Başlık Anteti (Videodaki Birebir Dizilim)
+  // Videodaki teststud.io 3 Parçalı Renkli Başlık Anteti
   if(cfg.template==='studio'){
     const pad=1.5*K;
     const leftW=c.width*0.25, rightW=c.width*0.30;
     const centerW=c.width - leftW - rightW - pad*2;
     const bh=c.height-2*K;
 
-    // Sol Blok (Ders)
+    // Sol Blok (Ders & Sınıf)
     g.fillStyle='#064E3B';
     if(g.roundRect) g.roundRect(0, 0, leftW, bh, 1.5*K); else g.fillRect(0, 0, leftW, bh);
     g.fill();
@@ -2148,14 +2149,14 @@ function headerImage(cfg){
     g.textAlign='center';
     g.fillText((cfg.lesson||'KİMYA').toUpperCase(), leftW/2, bh/2 - 1.8*K);
 
-    // Orta Blok (Konu)
+    // Orta Blok (Konu & Başlık)
     g.fillStyle='#047857';
     if(g.roundRect) g.roundRect(leftW+pad, 0, centerW, bh, 1.5*K); else g.fillRect(leftW+pad, 0, centerW, bh);
     g.fill();
     g.fillStyle='#FFFFFF'; g.font='800 '+(3.8*K)+'px Arial, sans-serif';
     g.fillText((cfg.topic||cfg.title||'KAZANIM TESTİ').toUpperCase(), leftW+pad + centerW/2, bh/2 - 1.9*K);
 
-    // Sağ Blok (Öğretmen)
+    // Sağ Blok (Öğretmen / Yayın)
     g.fillStyle='#064E3B';
     if(g.roundRect) g.roundRect(leftW+centerW+pad*2, 0, rightW, bh, 1.5*K); else g.fillRect(leftW+centerW+pad*2, 0, rightW, bh);
     g.fill();
@@ -2324,9 +2325,9 @@ function drawPages(){
       im.style.cssText = `left:0; top:${pct(TITLE_H, boxH)}; width:100%;`;
       qBox.appendChild(im);
 
-      // teststud.io Kareli / Çizgili Çözüm Alanı
+      // Videodaki Kareli / Çizgili Çözüm Alanı Izgarası
       if(it.sol > 0 && CFG){
-        const solType = CFG.soltype || 'blank';
+        const solType = CFG.soltype || 'grid';
         if(solType === 'grid'){
           const sg = document.createElement('div');
           sg.className = 'sol-grid-box';
@@ -2410,7 +2411,7 @@ function cfgNow(){
     sep:$('f-sep').value, vsep:$('f-vsep').value, gutter:$('f-gutter').value.trim(),
     fill:$('f-fill').value,
     template:$('f-template').value||'studio',
-    soltype:$('f-soltype').value||'blank',
+    soltype:$('f-soltype').value||'grid',
     info:$('f-info').checked, pts:$('f-pts').checked, key:$('f-key').checked,
     book:parseInt($('f-book').value)||1, optic:$('f-optic').checked, qr:$('f-qr').checked
   };
@@ -2514,7 +2515,7 @@ const QR=(function(){
         const row=up?size-1-k:k;
         for(let c=0;c<2;c++){const cc=col-c;
           if(m[row][cc]===null){let v=bi<bytes.length*8?bit():0;
-            if((row+cc)%2===0)v^=1;
+            if((row+cc)%2===0)v^=1; // mask 0
             m[row][cc]=v;}}
       }
       up=!up;
@@ -2568,16 +2569,16 @@ function drawBook(doc, book, first){
       }
       doc.addImage(it.q.img,'JPEG',it.x,it.y+TITLE_H,it.w,it.h);
 
-      // PDF İçi Çözüm Izgarası Çizimi
+      // PDF İçi Çözüm Izgarası Çizimi (Kareli Defter)
       if(it.sol>0 && CFG){
-        const solType = CFG.soltype || 'blank';
+        const solType = CFG.soltype || 'grid';
         const sy = it.y+TITLE_H+it.h+1.5;
         const sh = it.sol - 3;
         if(solType === 'grid'){
           doc.setDrawColor(203, 213, 225);
           doc.setLineWidth(0.18);
-          for(let gx = it.x; gx <= it.x + it.colW; gx += 4){ doc.line(gx, sy, gx, sy + sh); }
-          for(let gy = sy; gy <= sy + sh; gy += 4){ doc.line(it.x, gy, it.x + it.colW, gy); }
+          for(let gx = it.x; gx <= it.x + it.colW; gx += 5){ doc.line(gx, sy, gx, sy + sh); }
+          for(let gy = sy; gy <= sy + sh; gy += 5){ doc.line(it.x, gy, it.x + it.colW, gy); }
           doc.rect(it.x, sy, it.colW, sh);
         } else if(solType === 'lined'){
           doc.setDrawColor(203, 213, 225);
