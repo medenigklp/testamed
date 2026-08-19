@@ -455,6 +455,7 @@ input,select,textarea{font:inherit}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #toast.err{background:#C0392B}
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -780,6 +781,7 @@ input,select,textarea{font:inherit}
           </select>
         </div>
       </div>
+      <input type="hidden" id="f-max" value="0"/>
       <div class="r2">
         <div class="f"><label>Çözüm Alanı Deseni</label>
           <select id="f-soltype" onchange="preview()">
@@ -1452,7 +1454,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-sol','f-max','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-max','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot'];
 function loadTmpl(){
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
@@ -1493,8 +1495,8 @@ function fillSettings(){
   preview();
 }
 function spread(){
-  const total=parseInt($('f-total').value)||100;
-  const each=parseInt($('f-each').value);
+  const total=parseInt($('f-total') && $('f-total').value)||100;
+  const each=parseInt($('f-each') && $('f-each').value);
   const n=Math.max(qs.length,1);
   qs.forEach(q=>{ q.pt = each>0 ? each : Math.round(total/n); });
   drawRows();
@@ -2562,7 +2564,8 @@ function recalcAndRedrawPages(){
 
 function changePerPageQuick(val){
   const max = parseInt(val) || 0;
-  $('f-max').value = max;
+  const fmax = $('f-max');
+  if(fmax) fmax.value = max;
   if(CFG) {
     CFG.max = max;
     CFG.customPagePlan = null;
@@ -2794,29 +2797,46 @@ function drawPages(){
 }
 
 function cfgNow(){
+  const elMax = $('f-max');
+  const elCols = $('f-cols');
+  const elSol = $('f-sol');
+  const elMleft = $('f-mleft');
+  const elMright = $('f-mright');
+  const elMtop = $('f-mtop');
+  const elMbot = $('f-mbot');
+
+  const mLeft = elMleft ? (parseInt(elMleft.value)||12) : 12;
+  const mRight = elMright ? (parseInt(elMright.value)||12) : 12;
+  const mTop = elMtop ? (parseInt(elMtop.value)||12) : 12;
+  const mBottom = elMbot ? (parseInt(elMbot.value)||12) : 12;
+
   return {
-    school:$('f-school').value.trim(), lesson:$('f-lesson').value.trim(),
-    cls:$('f-class').value.trim(), topic:$('f-topic').value.trim(),
-    teacher:$('f-teacher').value.trim(), kind:$('f-kind').value.trim(),
-    date:$('f-date').value.trim(), cols:parseInt($('f-cols').value)||1,
-    sol:parseInt($('f-sol').value)||0, max:parseInt($('f-max').value)||0,
-    sep:$('f-sep').value, vsep:$('f-vsep').value, gutter:$('f-gutter').value.trim(),
-    fill:$('f-fill').value,
-    template:$('f-template').value||'studio',
-    soltype:$('f-soltype').value||'grid',
-    hdrtheme:$('f-hdrtheme').value||'emerald',
-    qnumformat:$('f-qnumformat').value||'std',
-    mleft:parseInt($('f-mleft').value)||12,
-    mright:parseInt($('f-mright').value)||12,
-    mtop:parseInt($('f-mtop').value)||12,
-    mbot:parseInt($('f-mbot').value)||12,
-    mLeft:parseInt($('f-mleft').value)||12,
-    mRight:parseInt($('f-mright').value)||12,
-    mTop:parseInt($('f-mtop').value)||12,
-    mBottom:parseInt($('f-mbot').value)||12,
+    school: ($('f-school') && $('f-school').value.trim()) || '',
+    lesson: ($('f-lesson') && $('f-lesson').value.trim()) || '',
+    cls: ($('f-class') && $('f-class').value.trim()) || '',
+    topic: ($('f-topic') && $('f-topic').value.trim()) || '',
+    teacher: ($('f-teacher') && $('f-teacher').value.trim()) || '',
+    kind: ($('f-kind') && $('f-kind').value.trim()) || '',
+    date: ($('f-date') && $('f-date').value.trim()) || '',
+    cols: elCols ? (parseInt(elCols.value)||1) : 1,
+    sol: elSol ? (parseInt(elSol.value)||0) : 0,
+    max: elMax ? (parseInt(elMax.value)||0) : 0,
+    sep: ($('f-sep') && $('f-sep').value) || 'kesik',
+    vsep: ($('f-vsep') && $('f-vsep').value) || 'duz',
+    gutter: ($('f-gutter') && $('f-gutter').value.trim()) || '',
+    fill: ($('f-fill') && $('f-fill').value) || 'denge',
+    template: ($('f-template') && $('f-template').value) || 'studio',
+    soltype: ($('f-soltype') && $('f-soltype').value) || 'grid',
+    hdrtheme: ($('f-hdrtheme') && $('f-hdrtheme').value) || 'emerald',
+    qnumformat: ($('f-qnumformat') && $('f-qnumformat').value) || 'std',
+    mLeft: mLeft, mRight: mRight, mTop: mTop, mBottom: mBottom,
     customPagePlan: customPageDistribution,
-    info:$('f-info').checked, pts:$('f-pts').checked, key:$('f-key').checked,
-    book:parseInt($('f-book').value)||1, optic:$('f-optic').checked, qr:$('f-qr').checked
+    info: $('f-info') ? $('f-info').checked : true,
+    pts: $('f-pts') ? $('f-pts').checked : false,
+    key: $('f-key') ? $('f-key').checked : false,
+    book: parseInt($('f-book') && $('f-book').value)||1,
+    optic: $('f-optic') ? $('f-optic').checked : false,
+    qr: $('f-qr') ? $('f-qr').checked : false
   };
 }
 
