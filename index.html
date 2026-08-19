@@ -1145,8 +1145,7 @@ function mode(){
   const b=$('mode');
   b.textContent=selectMode?'✂️ Seç':'🖐 Kaydır';
   b.classList.toggle('on',selectMode);
-  $('veil').style.touchAction=selectMode?'none':'auto';
-  $('veil').style.pointerEvents=selectMode?'auto':'none';
+  $('veil').style.display=selectMode?'block':'none';
   hideBox();
 }
 
@@ -1267,6 +1266,13 @@ $('stage').addEventListener('touchmove',e=>{
     e.preventDefault();
   }
 },{passive:false});
+
+// Tek parmakla stage kaydırma (pinch değilse)
+$('stage').addEventListener('touchmove',e=>{
+  if(!selectMode && e.touches.length===1 && !isDrawingCrop){
+    // Stage'in normal scroll davranışına izin ver
+  }
+},{passive:true});
 $('stage').addEventListener('touchend',e=>{
   if(pinch&&e.touches.length<2){ pinch=null; render(); }
 });
