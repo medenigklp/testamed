@@ -121,7 +121,7 @@ input,select,textarea{font:inherit}
 #engine.ok{color:var(--gr)} #engine.err{color:var(--or)}
 #engine::before{content:'● ';font-size:8px;vertical-align:middle}
 
-/* 2. Ekran: Görüntüleyici & Tuval (Kırpma Alanı) */
+/* 2. Ekran: Görüntüleyici & Tuval */
 #bar{background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0}
 .brow{display:flex;align-items:center;gap:6px;padding:7px 10px}
 .brow+.brow{border-top:1px solid var(--bg)}
@@ -147,10 +147,28 @@ input,select,textarea{font:inherit}
   font-weight:600;white-space:nowrap;flex-shrink:0;background:var(--w)}
 .ftab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
-#stage{flex:1;overflow:auto;background:#2B3833;display:flex;justify-content:center;
-  align-items:flex-start;padding:12px;-webkit-overflow-scrolling:touch;position:relative}
-#wrap{position:relative;display:inline-block;line-height:0;box-shadow:0 8px 30px rgba(0,0,0,.45);background:#fff}
-#page{display:block}
+#stage{
+  flex:1;
+  overflow:auto;
+  background:#2B3833;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:12px;
+  -webkit-overflow-scrolling:touch;
+  position:relative;
+  touch-action:none !important;
+}
+#wrap{
+  position:relative;
+  display:inline-block;
+  line-height:0;
+  box-shadow:0 8px 30px rgba(0,0,0,.45);
+  background:#fff;
+  touch-action:none !important;
+  user-select:none;
+}
+#page{display:block; user-select:none;}
 
 /* Kırpma Perdesi & Seçim Kutusu */
 #veil{
@@ -162,12 +180,13 @@ input,select,textarea{font:inherit}
 }
 #box{
   position:absolute;
-  border:2.5px dashed var(--or);
-  background:rgba(16,185,129,.18);
+  border:2.5px dashed #10B981 !important;
+  background:rgba(16,185,129,0.20) !important;
   display:none;
   pointer-events:none !important;
   border-radius:4px;
-  z-index:25;
+  z-index:30;
+  box-sizing:border-box;
 }
 
 /* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
@@ -984,59 +1003,107 @@ function mode(){
   hideBox();
 }
 
-/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma — Hatasızlaştırıldı) */
+/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Doğrudan Kare İçine Alma) */
 const veil=$('veil'), boxEl=$('box');
-let drag=null, pinch=null;
+let isDrawingCrop = false;
+let startPos = {x: 0, y: 0};
+let currentPos = {x: 0, y: 0};
+
 function hideBox(){ boxEl.style.display='none'; }
-function rel(e){
-  const r=$('page').getBoundingClientRect();
-  return {x:e.clientX-r.left, y:e.clientY-r.top};
+
+function getStageCoords(e){
+  const r = $('wrap').getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: Math.max(0, Math.min(r.width, clientX - r.left)),
+    y: Math.max(0, Math.min(r.height, clientY - r.top))
+  };
 }
 
-veil.addEventListener('pointerdown',e=>{
-  if(!selectMode) return;
-  if(e.pointerType==='touch'&&!e.isPrimary) return;
-  try { veil.setPointerCapture(e.pointerId); } catch(_) {}
-  drag=rel(e);
-  boxEl.style.display='block';
-  boxEl.style.left=drag.x+'px';
-  boxEl.style.top=drag.y+'px';
-  boxEl.style.width='0px';
-  boxEl.style.height='0px';
+function getEndStageCoords(e){
+  const r = $('wrap').getBoundingClientRect();
+  const t = (e.changedTouches && e.changedTouches.length) ? e.changedTouches[0] : e;
+  return {
+    x: Math.max(0, Math.min(r.width, t.clientX - r.left)),
+    y: Math.max(0, Math.min(r.height, t.clientY - r.top))
+  };
+}
+
+function startCropSelection(e){
+  if(!selectMode || !active) return;
+  if(e.touches && e.touches.length > 1) return;
+  if(e.cancelable) e.preventDefault();
+
+  isDrawingCrop = true;
+  startPos = getStageCoords(e);
+  currentPos = startPos;
+
+  boxEl.style.display = 'block';
+  boxEl.style.left = startPos.x + 'px';
+  boxEl.style.top = startPos.y + 'px';
+  boxEl.style.width = '0px';
+  boxEl.style.height = '0px';
+
   hideFloatingCropBar();
-});
+}
 
-veil.addEventListener('pointermove',e=>{
-  if(!drag) return;
-  const p=rel(e);
-  const x=Math.min(drag.x,p.x), y=Math.min(drag.y,p.y);
-  const w=Math.abs(p.x-drag.x), h=Math.abs(p.y-drag.y);
-  boxEl.style.left=x+'px';
-  boxEl.style.top=y+'px';
-  boxEl.style.width=w+'px';
-  boxEl.style.height=h+'px';
-});
+function moveCropSelection(e){
+  if(!isDrawingCrop) return;
+  if(e.touches && e.touches.length > 1) return;
+  if(e.cancelable) e.preventDefault();
 
-veil.addEventListener('pointerup',e=>{
-  if(!drag) return;
-  try { veil.releasePointerCapture(e.pointerId); } catch(_) {}
-  const p=rel(e);
-  const x=Math.min(drag.x,p.x), y=Math.min(drag.y,p.y);
-  const w=Math.abs(p.x-drag.x), h=Math.abs(p.y-drag.y);
-  drag=null;
-  if(w<15||h<15){ hideBox(); return; }
-  grab(x,y,w,h);
-});
+  currentPos = getStageCoords(e);
+  const x = Math.min(startPos.x, currentPos.x);
+  const y = Math.min(startPos.y, currentPos.y);
+  const w = Math.abs(currentPos.x - startPos.x);
+  const h = Math.abs(currentPos.y - startPos.y);
 
-veil.addEventListener('pointercancel',()=>{
-  drag=null;
-  hideBox();
-});
+  boxEl.style.left = x + 'px';
+  boxEl.style.top = y + 'px';
+  boxEl.style.width = w + 'px';
+  boxEl.style.height = h + 'px';
+}
+
+function endCropSelection(e){
+  if(!isDrawingCrop) return;
+  isDrawingCrop = false;
+
+  const endP = getEndStageCoords(e);
+  const x = Math.min(startPos.x, endP.x);
+  const y = Math.min(startPos.y, endP.y);
+  const w = Math.abs(endP.x - startPos.x);
+  const h = Math.abs(endP.y - startPos.y);
+
+  if(w < 15 || h < 15){
+    hideBox();
+    hideFloatingCropBar();
+    return;
+  }
+
+  boxEl.style.left = x + 'px';
+  boxEl.style.top = y + 'px';
+  boxEl.style.width = w + 'px';
+  boxEl.style.height = h + 'px';
+  boxEl.style.display = 'block';
+
+  grab(x, y, w, h);
+}
+
+// Mouse Event Dinleyicileri
+veil.addEventListener('mousedown', startCropSelection);
+window.addEventListener('mousemove', moveCropSelection);
+window.addEventListener('mouseup', endCropSelection);
+
+// Touch Event Dinleyicileri (Mobilde kesin çalışma)
+veil.addEventListener('touchstart', startCropSelection, {passive: false});
+window.addEventListener('touchmove', moveCropSelection, {passive: false});
+window.addEventListener('touchend', endCropSelection, {passive: false});
 
 /* İki parmakla zoom */
 $('stage').addEventListener('touchstart',e=>{
   if(e.touches.length===2){
-    drag=null; hideBox();
+    isDrawingCrop=false; hideBox();
     pinch={d:dist(e),s:scale}; e.preventDefault();
   }
 },{passive:false});
