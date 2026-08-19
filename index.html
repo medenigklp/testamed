@@ -770,10 +770,17 @@ input,select,textarea{font:inherit}
     <label>Logo (PNG/JPG — başlığa yerleşir)</label>
     <input type="file" id="f-logo" accept="image/*" onchange="loadLogo(this)" style="padding:10px"/>
     <div id="logo-preview" style="margin-top:6px;font-size:12px;color:var(--soft)"></div>
+    <div class="chk" style="margin-top:8px;margin-bottom:0;padding:6px 0">
+      <input type="checkbox" id="f-logo-wm" onchange="toggleLogoAsWatermark()"/>
+      <label for="f-logo-wm" style="font-size:12.5px">Bu logoyu aynı zamanda filigran olarak kullan</label>
+    </div>
   </div>
   <div class="f">
-    <label>Filigran Metni</label>
+    <label>Filigran Metni veya Resim</label>
     <input id="f-watermark" placeholder="Örn: testamed © 2026" maxlength="40"/>
+    <div style="margin-top:6px;font-size:11px;color:var(--soft)">— veya —</div>
+    <input type="file" id="f-wm-img" accept="image/*" onchange="loadWatermarkImage(this)" style="padding:8px 0;font-size:12px"/>
+    <div id="wm-img-preview" style="margin-top:4px;font-size:12px;color:var(--soft)"></div>
   </div>
 </div>
 <div class="r2">
@@ -1507,7 +1514,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm'];
 function loadTmpl(){
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
@@ -1560,6 +1567,11 @@ function loadLogo(input){
       window._logoData={url:fr.result,w:img.width,h:img.height};
       window._logoImg=img;
       $('logo-preview').textContent='✓ '+file.name;
+      // Eğer "filigran olarak da kullan" işaretliyse, logoyu filigran yap
+      if($('f-logo-wm') && $('f-logo-wm').checked){
+        window._wmImgData={url:fr.result,w:img.width,h:img.height};
+        $('wm-img-preview').textContent='✓ Logo filigran olarak ayarlandı';
+      }
       preview();
     };
     img.src=fr.result;
@@ -1567,12 +1579,44 @@ function loadLogo(input){
   fr.readAsDataURL(file);
 }
 
+function loadWatermarkImage(input){
+  const file=input.files[0]; if(!file) return;
+  const fr=new FileReader();
+  fr.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      window._wmImgData={url:fr.result,w:img.width,h:img.height};
+      window._wmImg=img;
+      $('wm-img-preview').textContent='✓ '+file.name;
+      // Logo checkbox'ını kapat
+      if($('f-logo-wm')) $('f-logo-wm').checked=false;
+      preview();
+    };
+    img.src=fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+
+function toggleLogoAsWatermark(){
+  if($('f-logo-wm') && $('f-logo-wm').checked && window._logoData){
+    window._wmImgData={...window._logoData};
+    $('wm-img-preview').textContent='✓ Logo filigran olarak ayarlandı';
+  } else if($('f-logo-wm') && !$('f-logo-wm').checked){
+    // Sadece logo filigran ise temizle
+    if(window._wmImgData && window._logoData && window._wmImgData.url===window._logoData.url){
+      window._wmImgData=null;
+      $('wm-img-preview').textContent='';
+    }
+  }
+  preview();
+}
+
 function fillSettings(){
   loadTmpl();
   drawEditBar();
   if(!$('f-date').value) $('f-date').value=new Date().toLocaleDateString('tr-TR');
   spread();
-  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style'].forEach(id=>{
+  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm'].forEach(id=>{
     const e=$(id); if(e && !e._w){ e._w=1;
       e.addEventListener('change',()=>{ preview(); saveTmpl(); });
       e.addEventListener('input',saveTmpl);
@@ -2262,11 +2306,22 @@ function openTest(t,edit){
     window._logoData=null; window._logoImg=null;
     $('logo-preview').textContent='';
   }
+  if(t.cfg && t.cfg.wmImg){
+    window._wmImgData=t.cfg.wmImg;
+    const img=new Image(); img.onload=()=>{window._wmImg=img;}; img.src=t.cfg.wmImg.url;
+    $('wm-img-preview').textContent='✓ Filigran resmi yüklü';
+  } else {
+    window._wmImgData=null; window._wmImg=null;
+    $('wm-img-preview').textContent='';
+  }
   if(t.cfg){
     const set=(id,v)=>{const e=$(id);if(e&&v!=null)e.value=v;};
+    const setChk=(id,v)=>{const e=$(id);if(e&&v!=null)e.checked=v;};
     set('f-wm-op',t.cfg.wmOp); set('f-wm-sz',t.cfg.wmSz);
     set('f-wm-x',t.cfg.wmX); set('f-wm-y',t.cfg.wmY);
     set('f-wm-ang',t.cfg.wmAng); set('f-wm-style',t.cfg.wmStyle);
+    setChk('f-logo-wm',t.cfg.logoAsWm);
+    set('f-wm-area',t.cfg.wmArea); set('f-wm-preset',t.cfg.wmPreset||'');
     if($('wmop-val')) $('wmop-val').textContent = t.cfg.wmOp || 30;
     if($('wmsz-val')) $('wmsz-val').textContent = t.cfg.wmSz || 14;
     if($('wmx-val')) $('wmx-val').textContent = t.cfg.wmX || 50;
@@ -2969,12 +3024,16 @@ function cfgNow(){
     qr: $('f-qr') ? $('f-qr').checked : false,
     logo: window._logoData || null,
     watermark: ($('f-watermark') && $('f-watermark').value.trim()) || '',
+    wmImg: window._wmImgData || null,
+    logoAsWm: $('f-logo-wm') ? $('f-logo-wm').checked : false,
     wmOp: parseInt($('f-wm-op') && $('f-wm-op').value) || 30,
     wmSz: parseInt($('f-wm-sz') && $('f-wm-sz').value) || 14,
     wmX: parseInt($('f-wm-x') && $('f-wm-x').value) || 50,
     wmY: parseInt($('f-wm-y') && $('f-wm-y').value) || 50,
     wmAng: parseInt($('f-wm-ang') && $('f-wm-ang').value) || 0,
-    wmStyle: ($('f-wm-style') && $('f-wm-style').value) || 'normal'
+    wmStyle: ($('f-wm-style') && $('f-wm-style').value) || 'normal',
+    wmArea: ($('f-wm-area') && $('f-wm-area').value) || 'page',
+    wmPreset: ($('f-wm-preset') && $('f-wm-preset').value) || ''
   };
 }
 
@@ -3198,8 +3257,6 @@ function drawBook(doc, book, first){
 }
 
 function drawWatermark(doc, cfg){
-  if(!cfg.watermark) return;
-  const txt = cfg.watermark;
   const mL = cfg.mLeft || 12;
   const mR = cfg.mRight || 12;
   const mT = cfg.mTop || 12;
@@ -3215,22 +3272,48 @@ function drawWatermark(doc, cfg){
   const usableH = PAGE.h - mT - mB;
   const x = mL + (usableW * px / 100);
   const y = mT + (usableH * py / 100);
-  const gray = Math.round(255 * (1 - op/100) + 180 * (op/100));
+
+  // Önce resim filigran var mı kontrol et (logo veya ayrı resim)
+  const wmImgData = cfg.logoAsWm && cfg.logo ? cfg.logo : (cfg.wmImg || null);
 
   const pages = doc.internal.getNumberOfPages();
   for(let i=1; i<=pages; i++){
     doc.setPage(i);
     doc.saveGraphicsState();
 
-    const fontStyle = style === 'bold' ? 'bold' : (style === 'italic' ? 'italic' : 'normal');
-    doc.setFont('helvetica', fontStyle);
-    doc.setFontSize(sz);
-    doc.setTextColor(gray, gray, gray);
+    if(wmImgData && wmImgData.url){
+      // Resim filigran
+      const maxW = usableW * 0.4;  // Sayfanın %40'ı kadar max genişlik
+      const maxH = usableH * 0.3;  // Sayfanın %30'u kadar max yükseklik
+      const ratio = wmImgData.w / wmImgData.h;
+      let iw = maxW, ih = iw / ratio;
+      if(ih > maxH){ ih = maxH; iw = ih * ratio; }
 
-    if(ang !== 0){
-      doc.text(txt, x, y, {align:'center', angle: ang});
-    } else {
-      doc.text(txt, x, y, {align:'center'});
+      // Opaklık için globalAlpha benzeri bir yaklaşım
+      // jsPDF'de doğrudan opaklık yok, ama resmi küçük ve soluk gösterebiliriz
+      const ix = x - iw/2;
+      const iy = y - ih/2;
+
+      try {
+        doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST');
+      } catch(e) {
+        // Resim eklenemezse metin filigrana düş
+      }
+    }
+
+    // Metin filigran (resim yoksa veya ikisi birlikte)
+    if(cfg.watermark){
+      const gray = Math.round(255 * (1 - op/100) + 180 * (op/100));
+      const fontStyle = style === 'bold' ? 'bold' : (style === 'italic' ? 'italic' : 'normal');
+      doc.setFont('helvetica', fontStyle);
+      doc.setFontSize(sz);
+      doc.setTextColor(gray, gray, gray);
+
+      if(ang !== 0){
+        doc.text(cfg.watermark, x, y, {align:'center', angle: ang});
+      } else {
+        doc.text(cfg.watermark, x, y, {align:'center'});
+      }
     }
 
     doc.restoreGraphicsState();
