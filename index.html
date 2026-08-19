@@ -121,7 +121,7 @@ input,select,textarea{font:inherit}
 #engine.ok{color:var(--gr)} #engine.err{color:var(--or)}
 #engine::before{content:'● ';font-size:8px;vertical-align:middle}
 
-/* 2. Ekran: Görüntüleyici & Tuval (teststud.io Kırpma Alanı) */
+/* 2. Ekran: Görüntüleyici & Tuval (Kırpma Alanı) */
 #bar{background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0}
 .brow{display:flex;align-items:center;gap:6px;padding:7px 10px}
 .brow+.brow{border-top:1px solid var(--bg)}
@@ -170,7 +170,7 @@ input,select,textarea{font:inherit}
   z-index:25;
 }
 
-/* Videodaki teststud.io Yüzen Şık, Etiket & Onay Paneli */
+/* teststud.io Videolarındaki Yüzen Şık & Onay Paneli */
 #cropFloatingBar{
   position:absolute;
   display:none;
@@ -330,24 +330,28 @@ input,select,textarea{font:inherit}
 
 /* teststud.io Kareli & Çizgili Çözüm Alanı Izgaraları */
 .sol-grid-box{
-  position:absolute;
+  position:relative;
   background-color:#ffffff;
   background-image:linear-gradient(rgba(148,163,184,0.28) 1px, transparent 1px),
                    linear-gradient(90deg, rgba(148,163,184,0.28) 1px, transparent 1px);
-  background-size:5mm 5mm;
+  background-size:4.5mm 4.5mm;
   border:1px solid #cbd5e1;
   border-radius:4px;
+  width:100%;
+  margin-top:4px;
 }
 .sol-lined-box{
-  position:absolute;
+  position:relative;
   background-color:#ffffff;
   background-image:linear-gradient(rgba(148,163,184,0.3) 1px, transparent 1px);
-  background-size:100% 7mm;
+  background-size:100% 6.5mm;
   border:1px solid #cbd5e1;
   border-radius:4px;
+  width:100%;
+  margin-top:4px;
 }
 
-/* Canlı A4 Üzerinden Soru Taşıma & Çıkarma */
+/* Canlı A4 Üzerinden Soru Taşıma & Boşluk Ayarlama Butonları */
 .q-live-box{
   position:absolute;
   border-radius:4px;
@@ -457,7 +461,7 @@ input,select,textarea{font:inherit}
       </div>
     </div>
 
-    <!-- 2. Ekran: Görüntüleyici & Tuval (teststud.io Kırpma Alanı) -->
+    <!-- 2. Ekran: Görüntüleyici & Tuval -->
     <div class="scr" id="s-view">
       <div id="bar">
         <div class="brow" id="files"></div>
@@ -637,9 +641,9 @@ input,select,textarea{font:inherit}
         <div class="f">
           <label>Çözüm Alanı Deseni</label>
           <select id="f-soltype" onchange="preview()">
-            <option value="blank">Düz Çerçeveli Boşluk</option>
             <option value="grid" selected>Kareli Defter Izgarası (5x5 mm)</option>
             <option value="lined">Çizgili Defter Alanı</option>
+            <option value="blank">Düz Çerçeveli Boşluk</option>
           </select>
         </div>
       </div>
@@ -709,12 +713,12 @@ input,select,textarea{font:inherit}
       <div class="f"><label>Sütun arasına yazı (isteğe bağlı)</label>
         <input id="f-gutter" placeholder="Örn. testamed yayınları"/>
       </div>
-      <div class="f"><label>Her sorudan sonra çözüm boşluğu</label>
+      <div class="f"><label>Varsayılan çözüm boşluğu (Önizlemede soru bazında değiştirilebilir)</label>
         <select id="f-sol">
           <option value="0">Yok — en çok soru sığar</option>
-          <option value="12">Dar — 12 mm</option>
-          <option value="24" selected>Orta (teststud.io) — 24 mm</option>
-          <option value="40">Geniş — 40 mm</option>
+          <option value="15">Dar — 15 mm</option>
+          <option value="30" selected>Orta (teststud.io) — 30 mm</option>
+          <option value="50">Geniş — 50 mm</option>
         </select>
       </div>
       <div class="chk"><input type="checkbox" id="f-info" checked/><label for="f-info">Ad Soyad / Sınıf / Puan tablosu</label></div>
@@ -749,7 +753,7 @@ input,select,textarea{font:inherit}
       <button class="ghost" style="margin-top:10px" onclick="saveBank()">💾 Soruları bankaya kaydet</button>
     </div>
 
-    <!-- 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı -->
+    <!-- 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı (teststud.io Canlı Düzenleme) -->
     <div class="scr" id="s-prev">
       <div id="pbar">
         <button id="b-back" onclick="go('set')">← Ayarlar</button>
@@ -980,7 +984,7 @@ function mode(){
   hideBox();
 }
 
-/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma — Hatasızlaştırıldı) */
+/* Alan Seçimi (Mobilde Dokunmatik & Fareyle Elle Soru Kırpma) */
 const veil=$('veil'), boxEl=$('box');
 let drag=null, pinch=null;
 function hideBox(){ boxEl.style.display='none'; }
@@ -1243,7 +1247,8 @@ function confirmFloatingCrop(){
     w: pendingCropData.w,
     h: pendingCropData.h,
     pt: 0,
-    ans: finalAns
+    ans: finalAns,
+    sol: null
   });
 
   drawTray();
@@ -1592,7 +1597,7 @@ function useAI(){
     const im=renderQuestion(q,cw);
     qs.push({id:'ai_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:im.img,w:im.w,h:im.h,cw,
       src:{text:q.text,options:q.options,correct:q.correct},
-      pt:0,ans:LET[q.correct],tags:['yapay zeka']});
+      pt:0,ans:LET[q.correct],sol:null,tags:['yapay zeka']});
   });
   aiDraft=[]; aiDrop.clear(); $('a-out').innerHTML='';
   drawTray();
@@ -1964,7 +1969,7 @@ function selAllBank(){
 
 function useBank(){
   const chosen=bankItems.filter(q=>bankSel.has(q.id));
-  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',tags:q.tags||[]}));
+  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',sol:null,tags:q.tags||[]}));
   bankSel.clear();
   drawTray();
   toast(chosen.length+' soru teste eklendi');
@@ -1981,7 +1986,7 @@ function saveTestDialog(){
     const name=v[0]||'Test';
     await DB.put('tests',{id:(editingTest?editingTest.id:'t_'+Date.now()),name,
       lesson:$('f-lesson').value.trim(),date:new Date().toLocaleDateString('tr-TR'),
-      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||''})),
+      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol})),
       cfg:cfgNow()});
     if(editingTest) editingTest.name=name;
     closeModal(); toast('“'+name+'” kaydedildi');
@@ -1989,7 +1994,7 @@ function saveTestDialog(){
 }
 
 function openTest(t,edit){
-  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||''}));
+  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol}));
   if(t.cfg){
     const c=t.cfg;
     const set=(id,v)=>{const e=$(id);if(e&&v!=null)e.value=v;};
@@ -2017,7 +2022,10 @@ function headerH(cfg){
   if(cfg.template==='studio') return 20;
   return cfg.info?30:17; 
 }
-function slotFix(cfg){ return TITLE_H+cfg.sol+AFTER; }
+function slotFix(q, cfg){ 
+  const sol = (q && q.sol != null) ? q.sol : cfg.sol;
+  return TITLE_H + sol + AFTER; 
+}
 function availOf(i,cfg){ return (PAGE.h-PAGE.m) - (i===0 ? PAGE.m+headerH(cfg) : PAGE.m); }
 function topOf(i,cfg){ return i===0 ? PAGE.m+headerH(cfg) : PAGE.m; }
 
@@ -2031,7 +2039,8 @@ function split(list,p){
 }
 function colK(slice,avail,colW,cfg){
   if(!slice.length) return 1;
-  const room=avail-slice.length*slotFix(cfg);
+  const fixSum = slice.reduce((a,q)=> a + slotFix(q, cfg), 0);
+  const room = avail - fixSum;
   if(room<=8) return null;
   const nat=slice.reduce((a,q)=>a+colW*(q.h/q.w),0);
   return Math.min(1,room/nat);
@@ -2056,27 +2065,28 @@ function pageK(group,avail,colW,cfg){
 
 function packNatural(list,cfg,colW){
   const bottom=PAGE.h-PAGE.m;
-  const capH=availOf(1,cfg)-slotFix(cfg);
   const pages=[]; let pg=null, ci=0, y=0, num=1, worst=1;
   const start=()=>{ pg={items:[],count:0}; pages.push(pg); ci=0; y=topOf(pages.length-1,cfg); };
   start();
   list.forEach(q=>{
+    const effectiveSol = q.sol != null ? q.sol : cfg.sol;
     let k=1, w=colW, h=colW*(q.h/q.w);
-    if(h>capH){ k=capH/h; h=capH; w=colW*k; worst=Math.min(worst,k); }
-    const bh=TITLE_H+h+cfg.sol+AFTER;
+    const capH = availOf(1,cfg) - (TITLE_H + effectiveSol + AFTER);
+    if(h>capH && capH > 10){ k=capH/h; h=capH; w=colW*k; worst=Math.min(worst,k); }
+    const bh=TITLE_H+h+effectiveSol+AFTER;
     let guard=0;
     while(guard++<6){
       const full=cfg.max>0 && pg.count>=cfg.max;
       if(!full && y+bh<=bottom){
-        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:cfg.sol});
+        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
         y+=bh; pg.count++; break;
       }
       if(!full && ci<cfg.cols-1){ ci++; y=topOf(pages.length-1,cfg); continue; }
       if(pg.count===0){
-        const room=bottom-y-slotFix(cfg);
-        const kk=room/h; h=room; w=colW*k*kk; k*=kk; worst=Math.min(worst,k);
-        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:cfg.sol});
-        y+=TITLE_H+h+cfg.sol+AFTER; pg.count++; break;
+        const room=bottom-y-(TITLE_H + effectiveSol + AFTER);
+        const kk=room>10 ? room/h : 1; h=Math.max(10, room); w=colW*k*kk; k*=kk; worst=Math.min(worst,k);
+        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
+        y+=TITLE_H+h+effectiveSol+AFTER; pg.count++; break;
       }
       start();
     }
@@ -2094,9 +2104,10 @@ function place(groups,K,cfg,colW){
     cols.forEach((c,ci)=>{
       let y=top;
       c.forEach(q=>{
+        const effectiveSol = q.sol != null ? q.sol : cfg.sol;
         const w=colW*K, h=colW*K*(q.h/q.w);
-        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:cfg.sol});
-        y+=TITLE_H+h+cfg.sol+AFTER; pg.count++;
+        pg.items.push({q,num:num++,x:PAGE.m+ci*(colW+GAP),y,w,h,colW,sol:effectiveSol});
+        y+=TITLE_H+h+effectiveSol+AFTER; pg.count++;
       });
     });
     pages.push(pg);
@@ -2246,7 +2257,7 @@ function drawBookPick(active){
   });
 }
 
-/* A4 Üzerinden Soru Taşıma / Silme Fonksiyonları */
+/* ════════ A4 Önizleme: Soruların Yerini ve Çözüm Boşluklarını Canlı Değiştirme ════════ */
 function recalcAndRedrawPages(){
   if(BOOKS.length && BOOKS[currentBookIdx]){
     BOOKS[currentBookIdx].pages = layout(BOOKS[currentBookIdx].list, CFG);
@@ -2275,6 +2286,16 @@ function moveQuestionInPreview(qId, dir){
   }
   recalcAndRedrawPages();
   toast('Soru sırası güncellendi');
+}
+
+function adjustQuestionSpace(qId, deltaMm){
+  const list = (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs;
+  const q = list.find(item => item.id === qId);
+  if(!q) return;
+  const currentSol = q.sol != null ? q.sol : (CFG ? CFG.sol : 24);
+  q.sol = Math.max(0, currentSol + deltaMm);
+  recalcAndRedrawPages();
+  toast('Çözüm alanı: ' + q.sol + ' mm');
 }
 
 function removeQuestionFromPreview(qId){
@@ -2325,28 +2346,30 @@ function drawPages(){
       im.style.cssText = `left:0; top:${pct(TITLE_H, boxH)}; width:100%;`;
       qBox.appendChild(im);
 
-      // Videodaki Kareli / Çizgili Çözüm Alanı Izgarası
+      // teststud.io Kareli / Çizgili Çözüm Alanı
       if(it.sol > 0 && CFG){
         const solType = CFG.soltype || 'grid';
         if(solType === 'grid'){
           const sg = document.createElement('div');
           sg.className = 'sol-grid-box';
-          sg.style.cssText = `left:0; top:${pct(TITLE_H + it.h + 2, boxH)}; width:100%; height:${pct(it.sol - 4, boxH)};`;
+          sg.style.cssText = `top:${pct(TITLE_H + it.h, boxH)}; height:${pct(it.sol - 2, boxH)};`;
           qBox.appendChild(sg);
         } else if(solType === 'lined'){
           const sl = document.createElement('div');
           sl.className = 'sol-lined-box';
-          sl.style.cssText = `left:0; top:${pct(TITLE_H + it.h + 2, boxH)}; width:100%; height:${pct(it.sol - 4, boxH)};`;
+          sl.style.cssText = `top:${pct(TITLE_H + it.h, boxH)}; height:${pct(it.sol - 2, boxH)};`;
           qBox.appendChild(sl);
         }
       }
 
-      // Canlı A4 Üzerinden Taşıma & Silme Kontrolleri
+      // Canlı A4 Üzerinden Taşıma & Boşluk Ayar Butonları
       const ctrls = document.createElement('div');
       ctrls.className = 'q-live-ctrls';
       ctrls.innerHTML = `
         <button class="ql-btn" title="Yukarı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', -1)">↑</button>
         <button class="ql-btn" title="Aşağı taşı" onclick="event.stopPropagation(); moveQuestionInPreview('${it.q.id}', 1)">↓</button>
+        <button class="ql-btn" title="Boşluğu büyüt (+10mm)" onclick="event.stopPropagation(); adjustQuestionSpace('${it.q.id}', 10)">+ Boşluk</button>
+        <button class="ql-btn" title="Boşluğu küçült (-10mm)" onclick="event.stopPropagation(); adjustQuestionSpace('${it.q.id}', -10)">- Boşluk</button>
         <button class="ql-btn del" title="Testten çıkar" onclick="event.stopPropagation(); removeQuestionFromPreview('${it.q.id}')">✕</button>
       `;
       qBox.appendChild(ctrls);
@@ -2444,7 +2467,7 @@ async function build(){
     drawBookPick(0);
     $('dl').style.display='none';
     go('prev');
-    toast('Test hazır · Sayfa üzerinde soruların sırasını değiştirebilirsiniz');
+    toast('Test hazır · Sayfa üzerinde soruların sırasını ve boşluklarını değiştirebilirsiniz');
   }catch(err){ toast('Test oluşturulamadı: '+err.message,true); }
 }
 
