@@ -764,7 +764,54 @@ input,select,textarea{font:inherit}
         <div class="f"><label>Tarih</label><input id="f-date"/></div>
       </div>
 
-      <div class="sec">4. Sayfa Düzeni & Çözüm Izgarası</div>
+      <div class="sec">3.5 Logo & Filigran</div>
+<div class="r2">
+  <div class="f">
+    <label>Logo (PNG/JPG — başlığa yerleşir)</label>
+    <input type="file" id="f-logo" accept="image/*" onchange="loadLogo(this)" style="padding:10px"/>
+    <div id="logo-preview" style="margin-top:6px;font-size:12px;color:var(--soft)"></div>
+  </div>
+  <div class="f">
+    <label>Filigran Metni</label>
+    <input id="f-watermark" placeholder="Örn: testamed © 2026" maxlength="40"/>
+  </div>
+</div>
+<div class="r2">
+  <div class="f">
+    <label>Opaklık <span id="wmop-val">30</span>%</label>
+    <input type="range" id="f-wm-op" min="5" max="100" value="30" oninput="$('wmop-val').textContent=this.value"/>
+  </div>
+  <div class="f">
+    <label>Boyut <span id="wmsz-val">14</span>pt</label>
+    <input type="range" id="f-wm-sz" min="8" max="72" value="14" oninput="$('wmsz-val').textContent=this.value"/>
+  </div>
+</div>
+<div class="r2">
+  <div class="f">
+    <label>Yatay Konum <span id="wmx-val">50</span>%</label>
+    <input type="range" id="f-wm-x" min="0" max="100" value="50" oninput="$('wmx-val').textContent=this.value"/>
+  </div>
+  <div class="f">
+    <label>Dikey Konum <span id="wmy-val">50</span>%</label>
+    <input type="range" id="f-wm-y" min="0" max="100" value="50" oninput="$('wmy-val').textContent=this.value"/>
+  </div>
+</div>
+<div class="r2">
+  <div class="f">
+    <label>Döndürme Açısı <span id="wmang-val">0</span>°</label>
+    <input type="range" id="f-wm-ang" min="-90" max="90" value="0" oninput="$('wmang-val').textContent=this.value"/>
+  </div>
+  <div class="f">
+    <label>Stil</label>
+    <select id="f-wm-style">
+      <option value="normal">Normal</option>
+      <option value="bold">Kalın</option>
+      <option value="italic">İtalik</option>
+    </select>
+  </div>
+</div>
+
+<div class="sec">4. Sayfa Düzeni & Çözüm Izgarası</div>
       <div class="r2">
         <div class="f"><label>Sütun Sayısı</label>
           <select id="f-cols">
@@ -1454,16 +1501,33 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style'];
 function loadTmpl(){
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
-    TMPL_FIELDS.forEach(id=>{ if(t[id]!=null && !$(id).value) $(id).value=t[id]; });
-    if(t.info!=null && !$('f-school').value) $('f-info').checked=t.info;
+    TMPL_FIELDS.forEach(id=>{ 
+      const e=$(id); 
+      if(t[id]!=null && e){
+        if(e.type==='checkbox') e.checked=t[id];
+        else if(!e.value) e.value=t[id];
+      }
+    });
+    if(t.info!=null && $('f-info')) $('f-info').checked=t.info;
+    // Watermark değer etiketlerini senkronize et
+    if($('wmop-val') && $('f-wm-op')) $('wmop-val').textContent=$('f-wm-op').value;
+    if($('wmsz-val') && $('f-wm-sz')) $('wmsz-val').textContent=$('f-wm-sz').value;
+    if($('wmx-val') && $('f-wm-x')) $('wmx-val').textContent=$('f-wm-x').value;
+    if($('wmy-val') && $('f-wm-y')) $('wmy-val').textContent=$('f-wm-y').value;
+    if($('wmang-val') && $('f-wm-ang')) $('wmang-val').textContent=$('f-wm-ang').value;
   }catch(_){}
 }
 function saveTmpl(){
-  const t={}; TMPL_FIELDS.forEach(id=>t[id]=$(id).value); t.info=$('f-info').checked;
+  const t={}; 
+  TMPL_FIELDS.forEach(id=>{
+    const e=$(id); 
+    if(e) t[id] = e.type==='checkbox' ? e.checked : e.value;
+  }); 
+  t.info=$('f-info') ? $('f-info').checked : true;
   try{ localStorage.setItem(TMPL_KEY,JSON.stringify(t)); }catch(_){}
 }
 function addMore(kind){
@@ -1481,12 +1545,28 @@ function drawEditBar(){
   $('eb-new').onclick=()=>{ editingTest=null; qs=[]; drawTray(); drawEditBar(); drawRows(); preview(); toast('Yeni teste geçildi'); };
 }
 
+function loadLogo(input){
+  const file=input.files[0]; if(!file) return;
+  const fr=new FileReader();
+  fr.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      window._logoData={url:fr.result,w:img.width,h:img.height};
+      window._logoImg=img;
+      $('logo-preview').textContent='✓ '+file.name;
+      preview();
+    };
+    img.src=fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+
 function fillSettings(){
   loadTmpl();
   drawEditBar();
   if(!$('f-date').value) $('f-date').value=new Date().toLocaleDateString('tr-TR');
   spread();
-  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind'].forEach(id=>{
+  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style'].forEach(id=>{
     const e=$(id); if(e && !e._w){ e._w=1;
       e.addEventListener('change',()=>{ preview(); saveTmpl(); });
       e.addEventListener('input',saveTmpl);
@@ -2168,6 +2248,25 @@ function saveTestDialog(){
 
 function openTest(t,edit){
   qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false}));
+  if(t.cfg && t.cfg.logo){
+    window._logoData=t.cfg.logo;
+    const img=new Image(); img.onload=()=>{window._logoImg=img;}; img.src=t.cfg.logo.url;
+    $('logo-preview').textContent='✓ Logo yüklü';
+  } else {
+    window._logoData=null; window._logoImg=null;
+    $('logo-preview').textContent='';
+  }
+  if(t.cfg){
+    const set=(id,v)=>{const e=$(id);if(e&&v!=null)e.value=v;};
+    set('f-wm-op',t.cfg.wmOp); set('f-wm-sz',t.cfg.wmSz);
+    set('f-wm-x',t.cfg.wmX); set('f-wm-y',t.cfg.wmY);
+    set('f-wm-ang',t.cfg.wmAng); set('f-wm-style',t.cfg.wmStyle);
+    if($('wmop-val')) $('wmop-val').textContent = t.cfg.wmOp || 30;
+    if($('wmsz-val')) $('wmsz-val').textContent = t.cfg.wmSz || 14;
+    if($('wmx-val')) $('wmx-val').textContent = t.cfg.wmX || 50;
+    if($('wmy-val')) $('wmy-val').textContent = t.cfg.wmY || 50;
+    if($('wmang-val')) $('wmang-val').textContent = t.cfg.wmAng || 0;
+  }
   if(t.cfg){
     const c=t.cfg;
     const set=(id,v)=>{const e=$(id);if(e&&v!=null)e.value=v;};
@@ -2392,10 +2491,23 @@ function headerImage(cfg){
       g.fillText(text, x, y);
     }
 
-    // Sol Blok (Ders & Sınıf)
+    // Sol Blok (Ders & Sınıf + Logo)
     g.fillStyle = pal.bg;
     if(g.roundRect) { g.beginPath(); g.roundRect(0, 0, leftW, bh, 1.5*K); g.fill(); } else { g.fillRect(0, 0, leftW, bh); }
-    drawFitText((cfg.lesson || 'KİMYA').toUpperCase(), leftW/2, bh/2, leftW - 2*K, 3.4, pal.accent, true);
+
+    let logoH = 0;
+    if(cfg.logo && cfg.logo.url){
+      const logoMaxW = leftW - 3*K;
+      const logoMaxH = bh * 0.42;
+      const logoRatio = cfg.logo.w / cfg.logo.h;
+      let lw = logoMaxW, lh = lw / logoRatio;
+      if(lh > logoMaxH){ lh = logoMaxH; lw = lh * logoRatio; }
+      const lx = (leftW - lw) / 2;
+      const ly = (bh * 0.35) - (lh / 2);
+      try { g.drawImage(window._logoImg || cfg.logo.url, lx, ly, lw, lh); logoH = lh + K; } catch(e){}
+    }
+
+    drawFitText((cfg.lesson || 'KİMYA').toUpperCase(), leftW/2, bh/2 + logoH*0.5, leftW - 2*K, 3.4, pal.accent, true);
 
     // Orta Blok — Üst: Başlık/Tür, Alt: Konu (küçük)
     g.fillStyle = pal.mid;
@@ -2848,7 +2960,15 @@ function cfgNow(){
     key: $('f-key') ? $('f-key').checked : false,
     book: parseInt($('f-book') && $('f-book').value)||1,
     optic: $('f-optic') ? $('f-optic').checked : false,
-    qr: $('f-qr') ? $('f-qr').checked : false
+    qr: $('f-qr') ? $('f-qr').checked : false,
+    logo: window._logoData || null,
+    watermark: ($('f-watermark') && $('f-watermark').value.trim()) || '',
+    wmOp: parseInt($('f-wm-op') && $('f-wm-op').value) || 30,
+    wmSz: parseInt($('f-wm-sz') && $('f-wm-sz').value) || 14,
+    wmX: parseInt($('f-wm-x') && $('f-wm-x').value) || 50,
+    wmY: parseInt($('f-wm-y') && $('f-wm-y').value) || 50,
+    wmAng: parseInt($('f-wm-ang') && $('f-wm-ang').value) || 0,
+    wmStyle: ($('f-wm-style') && $('f-wm-style').value) || 'normal'
   };
 }
 
@@ -3071,6 +3191,46 @@ function drawBook(doc, book, first){
   }
 }
 
+function drawWatermark(doc, cfg){
+  if(!cfg.watermark) return;
+  const txt = cfg.watermark;
+  const mL = cfg.mLeft || 12;
+  const mR = cfg.mRight || 12;
+  const mT = cfg.mTop || 12;
+  const mB = cfg.mBottom || 12;
+  const op = Math.max(0, Math.min(100, cfg.wmOp || 30));
+  const sz = Math.max(8, Math.min(72, cfg.wmSz || 14));
+  const px = Math.max(0, Math.min(100, cfg.wmX || 50));
+  const py = Math.max(0, Math.min(100, cfg.wmY || 50));
+  const ang = cfg.wmAng || 0;
+  const style = cfg.wmStyle || 'normal';
+
+  const usableW = PAGE.w - mL - mR;
+  const usableH = PAGE.h - mT - mB;
+  const x = mL + (usableW * px / 100);
+  const y = mT + (usableH * py / 100);
+  const gray = Math.round(255 * (1 - op/100) + 180 * (op/100));
+
+  const pages = doc.internal.getNumberOfPages();
+  for(let i=1; i<=pages; i++){
+    doc.setPage(i);
+    doc.saveGraphicsState();
+
+    const fontStyle = style === 'bold' ? 'bold' : (style === 'italic' ? 'italic' : 'normal');
+    doc.setFont('helvetica', fontStyle);
+    doc.setFontSize(sz);
+    doc.setTextColor(gray, gray, gray);
+
+    if(ang !== 0){
+      doc.text(txt, x, y, {align:'center', angle: ang});
+    } else {
+      doc.text(txt, x, y, {align:'center'});
+    }
+
+    doc.restoreGraphicsState();
+  }
+}
+
 function drawKey(doc, book){
   const mLeft = (CFG && CFG.mLeft) || 12;
   const mRight = (CFG && CFG.mRight) || 12;
@@ -3141,6 +3301,7 @@ function makePdf(){
     if(CFG.optic) drawOptic(doc, book);
     if(CFG.key && hasAns) drawKey(doc, book);
   });
+  drawWatermark(doc, CFG);
   return doc;
 }
 
