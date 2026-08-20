@@ -774,6 +774,10 @@ input,select,textarea{font:inherit}
       <label>Logo Boyutu <span id="logosz-val">100</span>%</label>
       <input type="range" id="f-logo-sz" min="30" max="400" value="100" oninput="$('logosz-val').textContent=this.value"/>
     </div>
+    <div class="f" style="margin-top:6px;margin-bottom:0">
+      <label>Logo Opaklığı <span id="logoop-val">100</span>%</label>
+      <input type="range" id="f-logo-op" min="10" max="100" value="100" oninput="$('logoop-val').textContent=this.value"/>
+    </div>
     <div class="chk" style="margin-top:6px;margin-bottom:0;padding:6px 0">
       <input type="checkbox" id="f-logo-wm" onchange="toggleLogoAsWatermark()"/>
       <label for="f-logo-wm" style="font-size:12.5px">Bu logoyu aynı zamanda filigran olarak kullan</label>
@@ -1533,7 +1537,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm','f-logo-sz'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm','f-logo-sz','f-logo-op'];
 function loadTmpl(){
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
@@ -2360,6 +2364,8 @@ function openTest(t,edit){
     setChk('f-logo-wm',t.cfg.logoAsWm);
     set('f-logo-sz',t.cfg.logoSize);
     if($('logosz-val')) $('logosz-val').textContent = t.cfg.logoSize || 100;
+    set('f-logo-op',t.cfg.logoOp);
+    if($('logoop-val')) $('logoop-val').textContent = t.cfg.logoOp || 100;
     set('f-wm-area',t.cfg.wmArea); set('f-wm-preset',t.cfg.wmPreset||'');
     if($('wmop-val')) $('wmop-val').textContent = t.cfg.wmOp || 30;
     if($('wmsz-val')) $('wmsz-val').textContent = t.cfg.wmSz || 14;
@@ -2607,7 +2613,13 @@ function headerImage(cfg){
       if(lh > bh - K) { lh = bh - K; lw = lh * logoRatio; }
       const lx = (leftW - lw) / 2;
       const ly = (bh - lh) / 2;
-      try { g.drawImage(window._logoImg || cfg.logo.url, lx, ly, lw, lh); logoH = lh + K; } catch(e){}
+      try {
+        g.save();
+        g.globalAlpha = (cfg.logoOp || 100) / 100;
+        g.drawImage(window._logoImg || cfg.logo.url, lx, ly, lw, lh);
+        g.restore();
+        logoH = lh + K;
+      } catch(e){}
     }
 
     drawFitText((cfg.lesson || 'KİMYA').toUpperCase(), leftW/2, bh/2 + logoH*0.5, leftW - 2*K, 3.4, pal.accent, true);
@@ -3066,6 +3078,7 @@ function cfgNow(){
     qr: $('f-qr') ? $('f-qr').checked : false,
     logo: window._logoData || null,
     logoSize: parseInt($('f-logo-sz') && $('f-logo-sz').value) || 100,
+    logoOp: parseInt($('f-logo-op') && $('f-logo-op').value) || 100,
     watermark: ($('f-watermark') && $('f-watermark').value.trim()) || '',
     wmImg: window._wmImgData || null,
     logoAsWm: $('f-logo-wm') ? $('f-logo-wm').checked : false,
@@ -3305,21 +3318,18 @@ function drawWatermark(doc, cfg){
   const mT = cfg.mTop || 12;
   const mB = cfg.mBottom || 12;
   const op = Math.max(0, Math.min(100, cfg.wmOp || 30));
-  const sz = Math.max(8, Math.min(72, cfg.wmSz || 14));
+  const sz = Math.max(8, Math.min(150, cfg.wmSz || 14));
   const px = Math.max(0, Math.min(100, cfg.wmX || 50));
   const py = Math.max(0, Math.min(100, cfg.wmY || 95));
   const ang = cfg.wmAng || 0;
   const style = cfg.wmStyle || 'normal';
 
-  // X/Y değerlerini doğrudan sayfa koordinatlarına çevir
-  // px=0 → sol, px=100 → sağ, py=0 → üst, py=100 → alt
   const x = PAGE.w * px / 100;
   const y = PAGE.h * py / 100;
 
   const wmImgData = cfg.logoAsWm && cfg.logo ? cfg.logo : (cfg.wmImg || null);
 
-  // Opaklık: %0 = çok soluk (gri 240), %100 = koyu (gri 75)
-  const gray = Math.round(240 - (op / 100) * 165);
+  const opacity = op / 100;
 
   const pages = doc.internal.getNumberOfPages();
   for(let i=1; i<=pages; i++){
@@ -3333,15 +3343,22 @@ function drawWatermark(doc, cfg){
       let iw = maxW, ih = iw / ratio;
       if(ih > maxH){ ih = maxH; iw = ih * ratio; }
       const ix = x - iw/2, iy = y - ih/2;
-      try { doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST'); }
-      catch(e) {}
+      try {
+        const gstate = new doc.GState({opacity: opacity});
+        doc.setGState(gstate);
+        doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST');
+        doc.setGState(new doc.GState({opacity: 1}));
+      } catch(e) {
+        doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST');
+      }
     }
 
     if(cfg.watermark){
       const fontStyle = style === 'bold' ? 'bold' : (style === 'italic' ? 'italic' : 'normal');
       doc.setFont('helvetica', fontStyle);
       doc.setFontSize(sz);
-      doc.setTextColor(gray, gray, gray);
+      const grayVal = Math.round(255 - opacity * 255);
+      doc.setTextColor(grayVal, grayVal, grayVal);
       if(ang !== 0){
         doc.text(cfg.watermark, x, y, {align:'center', angle: ang});
       } else {
