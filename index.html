@@ -151,13 +151,11 @@ input,select,textarea{font:inherit}
   flex:1;
   overflow:auto;
   background:#2B3833;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
+  display:block;
+  text-align:center;
   padding:12px;
   -webkit-overflow-scrolling:touch;
   position:relative;
-  touch-action:none !important;
 }
 #wrap{
   position:relative;
@@ -165,9 +163,9 @@ input,select,textarea{font:inherit}
   line-height:0;
   box-shadow:0 8px 30px rgba(0,0,0,.45);
   background:#fff;
-  touch-action:none !important;
   user-select:none;
   overflow:hidden;
+  margin:0 auto;
 }
 #page{display:block; user-select:none;}
 
@@ -175,9 +173,10 @@ input,select,textarea{font:inherit}
 #veil{
   position:absolute;
   inset:0;
-  touch-action:none !important;
+  touch-action:none;
   cursor:crosshair;
   z-index:20;
+  display:none;
 }
 #box{
   position:absolute;
@@ -1228,7 +1227,6 @@ function startCropSelection(e){
 function moveCropSelection(e){
   if(!isDrawingCrop) return;
   if(e.touches && e.touches.length > 1) return;
-  if(e.cancelable) e.preventDefault();
 
   currentPos = getStageCoords(e);
   const x = Math.min(startPos.x, currentPos.x);
@@ -1247,7 +1245,6 @@ function moveCropSelection(e){
 function endCropSelection(e){
   if(!isDrawingCrop) return;
   isDrawingCrop = false;
-  if(e.cancelable) e.preventDefault();
 
   const endP = getEndStageCoords(e);
   const x = Math.min(startPos.x, endP.x);
@@ -1277,9 +1274,9 @@ window.addEventListener('mouseup', endCropSelection);
 
 // Touch Dinleyicileri
 veil.addEventListener('touchstart', startCropSelection, {passive: false});
-window.addEventListener('touchmove', moveCropSelection, {passive: false});
-window.addEventListener('touchend', endCropSelection, {passive: false});
-window.addEventListener('touchcancel', () => { isDrawingCrop = false; hideBox(); }, {passive: false});
+window.addEventListener('touchmove', moveCropSelection, {passive: true});
+window.addEventListener('touchend', endCropSelection, {passive: true});
+window.addEventListener('touchcancel', () => { isDrawingCrop = false; hideBox(); }, {passive: true});
 
 /* İki parmakla zoom */
 $('stage').addEventListener('touchstart',e=>{
