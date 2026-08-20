@@ -770,7 +770,11 @@ input,select,textarea{font:inherit}
     <label>Logo (PNG/JPG — başlığa yerleşir)</label>
     <input type="file" id="f-logo" accept="image/*" onchange="loadLogo(this)" style="padding:10px"/>
     <div id="logo-preview" style="margin-top:6px;font-size:12px;color:var(--soft)"></div>
-    <div class="chk" style="margin-top:8px;margin-bottom:0;padding:6px 0">
+    <div class="f" style="margin-top:8px;margin-bottom:0">
+      <label>Logo Boyutu <span id="logosz-val">100</span>%</label>
+      <input type="range" id="f-logo-sz" min="30" max="400" value="100" oninput="$('logosz-val').textContent=this.value"/>
+    </div>
+    <div class="chk" style="margin-top:6px;margin-bottom:0;padding:6px 0">
       <input type="checkbox" id="f-logo-wm" onchange="toggleLogoAsWatermark()"/>
       <label for="f-logo-wm" style="font-size:12.5px">Bu logoyu aynı zamanda filigran olarak kullan</label>
     </div>
@@ -790,7 +794,7 @@ input,select,textarea{font:inherit}
   </div>
   <div class="f">
     <label>Boyut <span id="wmsz-val">14</span>pt</label>
-    <input type="range" id="f-wm-sz" min="8" max="72" value="14" oninput="$('wmsz-val').textContent=this.value"/>
+    <input type="range" id="f-wm-sz" min="8" max="150" value="14" oninput="$('wmsz-val').textContent=this.value"/>
   </div>
 </div>
 <div class="r2">
@@ -1529,7 +1533,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm','f-logo-sz'];
 function loadTmpl(){
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
@@ -2354,6 +2358,8 @@ function openTest(t,edit){
     set('f-wm-x',t.cfg.wmX); set('f-wm-y',t.cfg.wmY);
     set('f-wm-ang',t.cfg.wmAng); set('f-wm-style',t.cfg.wmStyle);
     setChk('f-logo-wm',t.cfg.logoAsWm);
+    set('f-logo-sz',t.cfg.logoSize);
+    if($('logosz-val')) $('logosz-val').textContent = t.cfg.logoSize || 100;
     set('f-wm-area',t.cfg.wmArea); set('f-wm-preset',t.cfg.wmPreset||'');
     if($('wmop-val')) $('wmop-val').textContent = t.cfg.wmOp || 30;
     if($('wmsz-val')) $('wmsz-val').textContent = t.cfg.wmSz || 14;
@@ -2591,13 +2597,16 @@ function headerImage(cfg){
 
     let logoH = 0;
     if(cfg.logo && cfg.logo.url){
-      const logoMaxW = leftW - 3*K;
-      const logoMaxH = bh * 0.42;
+      const logoScale = (cfg.logoSize || 100) / 100;
+      const logoMaxW = (leftW - 3*K) * logoScale;
+      const logoMaxH = bh * 0.95 * logoScale;
       const logoRatio = cfg.logo.w / cfg.logo.h;
       let lw = logoMaxW, lh = lw / logoRatio;
       if(lh > logoMaxH){ lh = logoMaxH; lw = lh * logoRatio; }
+      if(lw > leftW - K) { lw = leftW - K; lh = lw / logoRatio; }
+      if(lh > bh - K) { lh = bh - K; lw = lh * logoRatio; }
       const lx = (leftW - lw) / 2;
-      const ly = (bh * 0.35) - (lh / 2);
+      const ly = (bh - lh) / 2;
       try { g.drawImage(window._logoImg || cfg.logo.url, lx, ly, lw, lh); logoH = lh + K; } catch(e){}
     }
 
@@ -3056,6 +3065,7 @@ function cfgNow(){
     optic: $('f-optic') ? $('f-optic').checked : false,
     qr: $('f-qr') ? $('f-qr').checked : false,
     logo: window._logoData || null,
+    logoSize: parseInt($('f-logo-sz') && $('f-logo-sz').value) || 100,
     watermark: ($('f-watermark') && $('f-watermark').value.trim()) || '',
     wmImg: window._wmImgData || null,
     logoAsWm: $('f-logo-wm') ? $('f-logo-wm').checked : false,
@@ -3317,9 +3327,9 @@ function drawWatermark(doc, cfg){
 
     if(wmImgData && wmImgData.url){
       const ratio = wmImgData.w / wmImgData.h;
-      const scaleFactor = 0.3 + (op / 100) * 0.7;
-      const maxW = PAGE.w * 0.35 * scaleFactor;
-      const maxH = PAGE.h * 0.25 * scaleFactor;
+      const scaleFactor = 0.5 + (op / 100) * 0.8;
+      const maxW = PAGE.w * 0.90 * scaleFactor;
+      const maxH = PAGE.h * 0.85 * scaleFactor;
       let iw = maxW, ih = iw / ratio;
       if(ih > maxH){ ih = maxH; iw = ih * ratio; }
       const ix = x - iw/2, iy = y - ih/2;
