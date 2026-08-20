@@ -687,8 +687,11 @@ input,select,textarea{font:inherit}
             <option value="osym">ÖSYM Sınav Şablonu (TYT/AYT)</option>
             <option value="classic">Klasik MEB Anteti</option>
             <option value="minimal">Minimal Çizgili</option>
-          </select>
-        </div>
+                      <option value="modern">Modern Gradyan</option>
+            <option value="frame">Sade Çerçeveli</option>
+            <option value="double">Çift Çizgili</option>
+            <option value="academic">Akademik Üniversite</option>
+                 </div>
         <div class="f">
           <label>Antet Rengi (5 Renk)</label>
           <select id="f-hdrtheme" onchange="preview()">
@@ -708,8 +711,13 @@ input,select,textarea{font:inherit}
             <option value="ornek">Örnek 1, Örnek 2</option>
             <option value="ornek_dot">Örnek 1., Örnek 2.</option>
             <option value="none">Numarasız</option>
-          </select>
-        </div>
+                      <option value="purple">Mor / Lavanta</option>
+            <option value="teal">Turkuaz / Deniz Mavisi</option>
+            <option value="rose">Gül / Pembe</option>
+            <option value="slate">Arduvaz / Gri-Mavi</option>
+            <option value="gold">Altın / Sarı</option>
+            <option value="indigo">İndigo / Derin Lacivert</option>
+                 </div>
       </div>
 
       <div class="sec">2. Sayfa Kenar Boşlukları (Margin mm)</div>
@@ -2572,7 +2580,13 @@ function headerImage(cfg){
     navy:    { bg: '#0F172A', mid: '#1E293B', text: '#FFFFFF', accent: '#38BDF8', border: '#334155' },
     crimson: { bg: '#881337', mid: '#9F1239', text: '#FFFFFF', accent: '#FDA4AF', border: '#BE123C' },
     amber:   { bg: '#78350F', mid: '#92400E', text: '#FFFFFF', accent: '#FDE68A', border: '#D97706' },
-    dark:    { bg: '#18181B', mid: '#27272A', text: '#FFFFFF', accent: '#E4E4E7', border: '#3F3F46' }
+    dark:    { bg: '#18181B', mid: '#27272A', text: '#FFFFFF', accent: '#E4E4E7', border: '#3F3F46' },
+    purple:  { bg: '#581C87', mid: '#7C3AED', text: '#FFFFFF', accent: '#E9D5FF', border: '#8B5CF6' },
+    teal:    { bg: '#134E4A', mid: '#0D9488', text: '#FFFFFF', accent: '#5EEAD4', border: '#14B8A6' },
+    rose:    { bg: '#881337', mid: '#E11D48', text: '#FFFFFF', accent: '#FECDD3', border: '#F43F5E' },
+    slate:   { bg: '#334155', mid: '#475569', text: '#FFFFFF', accent: '#CBD5E1', border: '#64748B' },
+    gold:    { bg: '#713F12', mid: '#A16207', text: '#FFFFFF', accent: '#FEF08A', border: '#CA8A04' },
+    indigo:  { bg: '#312E81', mid: '#4338CA', text: '#FFFFFF', accent: '#A5B4FC', border: '#6366F1' }
   };
   const pal = palettes[cfg.hdrtheme] || palettes.emerald;
 
@@ -2755,6 +2769,145 @@ function headerImage(cfg){
       x += cw;
     });
   }
+
+  // 5) Modern Gradyan Şablonu
+  if(cfg.template === 'modern'){
+    const pad = 2*K;
+    const bh = c.height - 2*K;
+
+    const grad = g.createLinearGradient(0, 0, c.width, 0);
+    grad.addColorStop(0, pal.bg);
+    grad.addColorStop(0.5, pal.mid);
+    grad.addColorStop(1, pal.bg);
+    g.fillStyle = grad;
+    if(g.roundRect) { g.beginPath(); g.roundRect(0, 0, c.width, bh, 2*K); g.fill(); }
+    else g.fillRect(0, 0, c.width, bh);
+
+    g.fillStyle = '#fff';
+    g.font = '800 ' + (3.6*K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.textAlign = 'left';
+    g.textBaseline = 'middle';
+    g.fillText((cfg.lesson || 'KİMYA').toUpperCase(), pad, bh/2);
+
+    g.font = '700 ' + (3.4*K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.textAlign = 'center';
+    g.fillText((cfg.kind || 'TEST 1').toUpperCase(), c.width/2, bh/2);
+
+    g.font = '600 ' + (2.8*K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.textAlign = 'right';
+    const rightText = (cfg.teacher || cfg.school || 'testamed').toUpperCase();
+    g.fillText(rightText, c.width - pad, bh/2);
+
+    g.textAlign = 'left';
+    return c.toDataURL('image/jpeg', 0.94);
+  }
+
+  // 6) Sade Çerçeveli Şablon
+  if(cfg.template === 'frame'){
+    const pad = 2.5*K;
+    const bh = c.height - 2*K;
+
+    g.strokeStyle = pal.border;
+    g.lineWidth = 1.5*K;
+    if(g.roundRect) {
+      g.beginPath(); g.roundRect(pad/2, pad/2, c.width - pad, bh - pad, 2*K);
+      g.stroke();
+    } else {
+      g.strokeRect(pad/2, pad/2, c.width - pad, bh - pad);
+    }
+
+    g.fillStyle = pal.bg;
+    g.font = '800 ' + (3.4*K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.textAlign = 'left';
+    g.textBaseline = 'middle';
+    g.fillText((cfg.lesson || 'KİMYA').toUpperCase(), pad*2, bh/2);
+
+    g.font = '700 ' + (3.2*K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.textAlign = 'center';
+    g.fillText((cfg.kind || 'TEST 1').toUpperCase(), c.width/2, bh/2);
+
+    g.font = '600 ' + (2.6*K) + 'px Arial, sans-serif';
+    g.textAlign = 'right';
+    g.fillStyle = pal.mid;
+    g.fillText((cfg.topic || '').toUpperCase(), c.width - pad*2, bh/2);
+
+    g.textAlign = 'left';
+    return c.toDataURL('image/jpeg', 0.94);
+  }
+
+  // 7) Çift Çizgili Şablon
+  if(cfg.template === 'double'){
+    const pad = 2*K;
+
+    g.strokeStyle = pal.bg;
+    g.lineWidth = 1.2*K;
+    g.beginPath(); g.moveTo(0, 2*K); g.lineTo(c.width, 2*K); g.stroke();
+
+    g.beginPath(); g.moveTo(0, c.height - 3*K); g.lineTo(c.width, c.height - 3*K); g.stroke();
+    g.strokeStyle = pal.mid;
+    g.lineWidth = 0.6*K;
+    g.beginPath(); g.moveTo(0, c.height - 1.8*K); g.lineTo(c.width, c.height - 1.8*K); g.stroke();
+
+    g.fillStyle = pal.bg;
+    g.font = '800 ' + (3.8*K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.textAlign = 'left';
+    g.textBaseline = 'top';
+    g.fillText((cfg.lesson || 'KİMYA').toUpperCase(), 0, 5*K);
+
+    g.font = '600 ' + (2.6*K) + 'px Arial, sans-serif';
+    g.fillStyle = pal.mid;
+    g.fillText((cfg.kind || 'TEST 1').toUpperCase(), 0, 10*K);
+
+    g.textAlign = 'right';
+    g.fillStyle = pal.bg;
+    g.font = '700 ' + (2.8*K) + 'px Arial, sans-serif';
+    g.fillText((cfg.topic || '').toUpperCase(), c.width, 5*K);
+
+    g.fillStyle = pal.border;
+    g.font = '600 ' + (2.2*K) + 'px Arial, sans-serif';
+    g.fillText((cfg.teacher || cfg.school || 'testamed').toUpperCase(), c.width, 9*K);
+
+    g.textAlign = 'left';
+    return c.toDataURL('image/jpeg', 0.94);
+  }
+
+  // 8) Akademik Üniversite Şablonu
+  if(cfg.template === 'academic'){
+    const pad = 2.5*K;
+    const bh = c.height - 2*K;
+
+    g.fillStyle = pal.bg;
+    if(g.roundRect) { g.beginPath(); g.roundRect(0, 0, c.width*0.35, bh, 1.5*K); g.fill(); }
+    else g.fillRect(0, 0, c.width*0.35, bh);
+
+    g.fillStyle = '#fff';
+    g.font = '900 ' + (4.2*K) + 'px "Plus Jakarta Sans", Arial, sans-serif';
+    g.textAlign = 'left';
+    g.textBaseline = 'middle';
+    g.fillText((cfg.kind || 'TEST').toUpperCase(), pad, bh*0.35);
+
+    g.font = '600 ' + (2.8*K) + 'px Arial, sans-serif';
+    g.fillStyle = pal.accent;
+    g.fillText((cfg.lesson || 'KİMYA').toUpperCase(), pad, bh*0.65);
+
+    const rightX = c.width*0.38;
+    g.fillStyle = pal.mid;
+    g.font = '700 ' + (2.6*K) + 'px Arial, sans-serif';
+    g.textBaseline = 'top';
+    g.fillText((cfg.topic || 'KONU BAŞLIĞI').toUpperCase(), rightX, 2*K);
+
+    g.fillStyle = '#555';
+    g.font = '500 ' + (2.2*K) + 'px Arial, sans-serif';
+    g.fillText((cfg.school || 'KURUM ADI').toUpperCase(), rightX, 6*K);
+
+    g.fillStyle = pal.border;
+    g.font = '500 ' + (2.0*K) + 'px Arial, sans-serif';
+    g.fillText((cfg.teacher || 'Öğretmen') + (cfg.date ? '  ·  ' + cfg.date : ''), rightX, 10*K);
+
+    g.textAlign = 'left';
+    return c.toDataURL('image/jpeg', 0.94);
+  }
+
   g.fillStyle = '#111';
   g.fillRect(0, c.height - 0.7*K, c.width, 0.7*K);
   return c.toDataURL('image/jpeg', 0.94);
