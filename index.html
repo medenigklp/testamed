@@ -1639,23 +1639,43 @@ function drawEditBar(){
   $('eb-new').onclick=()=>{ editingTest=null; qs=[]; drawTray(); drawEditBar(); drawRows(); preview(); toast('Yeni teste geçildi'); };
 }
 
+function shrinkImage(dataUrl, maxPx, cb){
+  const img=new Image();
+  img.onload=()=>{
+    let w=img.width, h=img.height;
+    if(Math.max(w,h)<=maxPx){ cb(dataUrl, w, h); return; }
+    const s=maxPx/Math.max(w,h);
+    const nw=Math.round(w*s), nh=Math.round(h*s);
+    const cv=document.createElement('canvas'); cv.width=nw; cv.height=nh;
+    const g=cv.getContext('2d'); g.imageSmoothingQuality='high';
+    g.drawImage(img,0,0,nw,nh);
+    // saydamlık gerekiyorsa PNG, değilse JPEG
+    const out=cv.toDataURL('image/png');
+    cb(out, nw, nh);
+  };
+  img.onerror=()=>cb(dataUrl, 0, 0);
+  img.src=dataUrl;
+}
+
 function loadLogo(input){
   const file=input.files[0]; if(!file) return;
   const fr=new FileReader();
   fr.onload=e=>{
-    const img=new Image();
-    img.onload=()=>{
-      window._logoData={url:fr.result,w:img.width,h:img.height};
-      window._logoImg=img;
-      $('logo-preview').textContent='✓ '+file.name;
-      // Eğer "filigran olarak da kullan" işaretliyse, logoyu filigran yap
-      if($('f-logo-wm') && $('f-logo-wm').checked){
-        window._wmImgData={url:fr.result,w:img.width,h:img.height};
-        $('wm-img-preview').textContent='✓ Logo filigran olarak ayarlandı';
-      }
-      preview();
-    };
-    img.src=fr.result;
+    shrinkImage(fr.result, 360, (url,w,h)=>{
+      const img=new Image();
+      img.onload=()=>{
+        window._logoData={url,w:img.width,h:img.height};
+        window._logoImg=img;
+        $('logo-preview').textContent='✓ '+file.name;
+        if($('f-logo-wm') && $('f-logo-wm').checked){
+          window._wmImgData={url,w:img.width,h:img.height};
+          window._wmImg=img;
+          $('wm-img-preview').textContent='✓ Logo filigran olarak ayarlandı';
+        }
+        preview();
+      };
+      img.src=url;
+    });
   };
   fr.readAsDataURL(file);
 }
@@ -1664,16 +1684,17 @@ function loadWatermarkImage(input){
   const file=input.files[0]; if(!file) return;
   const fr=new FileReader();
   fr.onload=e=>{
-    const img=new Image();
-    img.onload=()=>{
-      window._wmImgData={url:fr.result,w:img.width,h:img.height};
-      window._wmImg=img;
-      $('wm-img-preview').textContent='✓ '+file.name;
-      // Logo checkbox'ını kapat
-      if($('f-logo-wm')) $('f-logo-wm').checked=false;
-      preview();
-    };
-    img.src=fr.result;
+    shrinkImage(fr.result, 600, (url,w,h)=>{
+      const img=new Image();
+      img.onload=()=>{
+        window._wmImgData={url,w:img.width,h:img.height};
+        window._wmImg=img;
+        $('wm-img-preview').textContent='✓ '+file.name;
+        if($('f-logo-wm')) $('f-logo-wm').checked=false;
+        preview();
+      };
+      img.src=url;
+    });
   };
   fr.readAsDataURL(file);
 }
@@ -1732,7 +1753,12 @@ function spread(){
   preview();
   drawEditBar();
 }
-async function preview(){
+let _pvT=null;
+function preview(){
+  clearTimeout(_pvT);
+  _pvT=setTimeout(previewNow, 180);
+}
+async function previewNow(){
   const el=$('live'); if(!el) return;
   if(!qs.length){ el.style.display='none'; return; }
   el.style.display='block';
