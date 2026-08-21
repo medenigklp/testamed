@@ -453,7 +453,20 @@ input,select,textarea{font:inherit}
   animation:rise .26s cubic-bezier(.2,.9,.3,1)}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #toast.err{background:#C0392B}
+
+/* Sekmeli Düzen Ekranı */
+.set-tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.set-tabs::-webkit-scrollbar{display:none}
+.set-tab{flex-shrink:0;padding:8px 15px;border-radius:999px;border:1.5px solid var(--line);background:var(--w);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--soft);white-space:nowrap;transition:.14s cubic-bezier(.4,0,.2,1);cursor:pointer}
+.set-tab:active{transform:scale(.94)}
+.set-tab.on{background:var(--or);border-color:var(--or);color:#fff;box-shadow:0 2px 10px rgba(16,185,129,.28)}
+.set-panes{padding:0 16px 26px}
+.set-pane{display:none;animation:fadeIn .22s cubic-bezier(.4,0,.2,1)}
+.set-pane.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
 </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -676,9 +689,24 @@ input,select,textarea{font:inherit}
 
     <!-- 3. Ekran: Düzen & Ayarlar -->
     <div class="scr" id="s-set">
-      <div id="editbar"></div>
+  <div id="editbar"></div>
 
-      <div class="sec">1. Şablon & Renk Stili</div>
+  <!-- Sekme Çubuğu -->
+  <div class="set-tabs">
+    <button class="set-tab on" data-pane="p1" onclick="switchSetTab('p1')">Şablon & Renk</button>
+    <button class="set-tab" data-pane="p2" onclick="switchSetTab('p2')">Kenar Boşluk</button>
+    <button class="set-tab" data-pane="p3" onclick="switchSetTab('p3')">Künye</button>
+    <button class="set-tab" data-pane="p4" onclick="switchSetTab('p4')">Logo & Filigran</button>
+    <button class="set-tab" data-pane="p5" onclick="switchSetTab('p5')">Sayfa Düzeni</button>
+    <button class="set-tab" data-pane="p6" onclick="switchSetTab('p6')">Kitapçık & Optik</button>
+    <button class="set-tab" data-pane="p7" onclick="switchSetTab('p7')">Sorular</button>
+  </div>
+
+  <div class="set-panes">
+
+    <!-- P1: Şablon & Renk -->
+    <div class="set-pane on" id="p1">
+      <div class="sec">Şablon & Renk Stili</div>
       <div class="r3">
         <div class="f">
           <label>Başlık Şablonu</label>
@@ -721,18 +749,11 @@ input,select,textarea{font:inherit}
           </select>
         </div>
       </div>
-      <div class="r3">
-        
-                      <option value="purple">Mor / Lavanta</option>
-            <option value="teal">Turkuaz / Deniz Mavisi</option>
-            <option value="rose">Gül / Pembe</option>
-            <option value="slate">Arduvaz / Gri-Mavi</option>
-            <option value="gold">Altın / Sarı</option>
-            <option value="indigo">İndigo / Derin Lacivert</option>
-                 </div>
-      </div>
+    </div>
 
-      <div class="sec">2. Sayfa Kenar Boşlukları (Margin mm)</div>
+    <!-- P2: Kenar Boşluk -->
+    <div class="set-pane" id="p2">
+      <div class="sec">Sayfa Kenar Boşlukları (Margin mm)</div>
       <div class="r4">
         <div class="f">
           <label>Sol Boşluk</label>
@@ -751,8 +772,11 @@ input,select,textarea{font:inherit}
           <input type="number" id="f-mbot" value="12" min="4" max="40" oninput="preview()"/>
         </div>
       </div>
+    </div>
 
-      <div class="sec">3. Sınav Künyesi & Serbest Başlık</div>
+    <!-- P3: Künye -->
+    <div class="set-pane" id="p3">
+      <div class="sec">Sınav Künyesi & Serbest Başlık</div>
       <div class="f"><label>Kurum / Yayın Adı</label><input id="f-school" placeholder="Örn: STÜDYAMED EĞİTİM KURUMLARI"/></div>
       <div class="r2">
         <div class="f"><label>Ders & Sınıf (Sol Kutu)</label><input id="f-lesson" value="KİMYA 11. Sınıf"/></div>
@@ -782,85 +806,98 @@ input,select,textarea{font:inherit}
         <div class="f"><label>Sınıf / Şube</label><input id="f-class" placeholder="11-A"/></div>
         <div class="f"><label>Tarih</label><input id="f-date"/></div>
       </div>
+    </div>
 
-      <div class="sec">3.5 Logo & Filigran</div>
-<div class="r2">
-  <div class="f">
-    <label>Logo (PNG/JPG — başlığa yerleşir)</label>
-    <input type="file" id="f-logo" accept="image/*" onchange="loadLogo(this)" style="padding:10px"/>
-    <div id="logo-preview" style="margin-top:6px;font-size:12px;color:var(--soft)"></div>
-    <div class="f" style="margin-top:8px;margin-bottom:0">
-      <label>Logo Boyutu <span id="logosz-val">100</span>%</label>
-      <input type="range" id="f-logo-sz" min="30" max="400" value="100" oninput="$('logosz-val').textContent=this.value"/>
+    <!-- P4: Logo & Filigran -->
+    <div class="set-pane" id="p4">
+      <div class="sec">Logo & Filigran</div>
+      <div class="r2">
+        <div class="f">
+          <label>Logo (PNG/JPG — başlığa yerleşir)</label>
+          <input type="file" id="f-logo" accept="image/*" onchange="loadLogo(this)" style="padding:10px"/>
+          <div id="logo-preview" style="margin-top:6px;font-size:12px;color:var(--soft)"></div>
+          <div class="f" style="margin-top:8px;margin-bottom:0">
+            <label>Logo Boyutu <span id="logosz-val">100</span>%</label>
+            <input type="range" id="f-logo-sz" min="30" max="400" value="100" oninput="document.getElementById('logosz-val').textContent=this.value"/>
+          </div>
+          <div class="f" style="margin-top:6px;margin-bottom:0">
+            <label>Logo Opaklığı <span id="logoop-val">100</span>%</label>
+            <input type="range" id="f-logo-op" min="10" max="100" value="100" oninput="document.getElementById('logoop-val').textContent=this.value"/>
+          </div>
+          <div class="chk" style="margin-top:6px;margin-bottom:0;padding:6px 0">
+            <input type="checkbox" id="f-logo-wm" onchange="toggleLogoAsWatermark()"/>
+            <label for="f-logo-wm" style="font-size:12.5px">Bu logoyu aynı zamanda filigran olarak kullan</label>
+          </div>
+        </div>
+        <div class="f">
+          <label>Filigran Metni veya Resim</label>
+          <input id="f-watermark" placeholder="Örn: testamed © 2026" maxlength="40"/>
+          <div style="margin-top:6px;font-size:11px;color:var(--soft)">— veya —</div>
+          <input type="file" id="f-wm-img" accept="image/*" onchange="loadWatermarkImage(this)" style="padding:8px 0;font-size:12px"/>
+          <div id="wm-img-preview" style="margin-top:4px;font-size:12px;color:var(--soft)"></div>
+        </div>
+      </div>
+      <div class="r2">
+        <div class="f">
+          <label>Filigran Opaklık <span id="wmop-val">30</span>%</label>
+          <input type="range" id="f-wm-op" min="5" max="100" value="30" oninput="document.getElementById('wmop-val').textContent=this.value"/>
+        </div>
+        <div class="f">
+          <label>Filigran Boyut <span id="wmsz-val">14</span>pt</label>
+          <input type="range" id="f-wm-sz" min="8" max="150" value="14" oninput="document.getElementById('wmsz-val').textContent=this.value"/>
+        </div>
+      </div>
+      <div class="r2">
+        <div class="f">
+          <label>Yatay Konum <span id="wmx-val">50</span>%</label>
+          <input type="range" id="f-wm-x" min="0" max="100" value="50" oninput="document.getElementById('wmx-val').textContent=this.value"/>
+        </div>
+        <div class="f">
+          <label>Dikey Konum <span id="wmy-val">95</span>%</label>
+          <input type="range" id="f-wm-y" min="0" max="100" value="95" oninput="document.getElementById('wmy-val').textContent=this.value"/>
+        </div>
+      </div>
+      <div class="r2">
+        <div class="f">
+          <label>Döndürme Açısı <span id="wmang-val">0</span>°</label>
+          <input type="range" id="f-wm-ang" min="-90" max="90" value="0" oninput="document.getElementById('wmang-val').textContent=this.value"/>
+        </div>
+        <div class="f">
+          <label>Stil</label>
+          <select id="f-wm-style">
+            <option value="normal">Normal</option>
+            <option value="bold">Kalın</option>
+            <option value="italic">İtalik</option>
+          </select>
+        </div>
+      </div>
+      <div class="r2">
+        <div class="f">
+          <label>Hazır Konum</label>
+          <select id="f-wm-preset" onchange="applyWmPreset(this.value)">
+            <option value="">Serbest (X/Y ile ayarla)</option>
+            <option value="bottom-center" selected>Sayfa altı orta</option>
+            <option value="bottom-right">Sayfa altı sağ</option>
+            <option value="top-right">Sayfa üstü sağ</option>
+            <option value="center">Sayfa tam ortası</option>
+          </select>
+        </div>
+        <div class="f" style="display:flex;align-items:center">
+          <span style="font-size:12px;color:var(--soft)">X/Y kaydırıcılarıyla ince ayar yapın</span>
+        </div>
+      </div>
+      <div class="f" style="margin-top:6px">
+        <label>Filigran Alanı</label>
+        <select id="f-wm-area">
+          <option value="page" selected>Tüm sayfa</option>
+          <option value="content">Sadece içerik alanı</option>
+        </select>
+      </div>
     </div>
-    <div class="f" style="margin-top:6px;margin-bottom:0">
-      <label>Logo Opaklığı <span id="logoop-val">100</span>%</label>
-      <input type="range" id="f-logo-op" min="10" max="100" value="100" oninput="$('logoop-val').textContent=this.value"/>
-    </div>
-    <div class="chk" style="margin-top:6px;margin-bottom:0;padding:6px 0">
-      <input type="checkbox" id="f-logo-wm" onchange="toggleLogoAsWatermark()"/>
-      <label for="f-logo-wm" style="font-size:12.5px">Bu logoyu aynı zamanda filigran olarak kullan</label>
-    </div>
-  </div>
-  <div class="f">
-    <label>Filigran Metni veya Resim</label>
-    <input id="f-watermark" placeholder="Örn: testamed © 2026" maxlength="40"/>
-    <div style="margin-top:6px;font-size:11px;color:var(--soft)">— veya —</div>
-    <input type="file" id="f-wm-img" accept="image/*" onchange="loadWatermarkImage(this)" style="padding:8px 0;font-size:12px"/>
-    <div id="wm-img-preview" style="margin-top:4px;font-size:12px;color:var(--soft)"></div>
-  </div>
-</div>
-<div class="r2">
-  <div class="f">
-    <label>Opaklık <span id="wmop-val">30</span>%</label>
-    <input type="range" id="f-wm-op" min="5" max="100" value="30" oninput="$('wmop-val').textContent=this.value"/>
-  </div>
-  <div class="f">
-    <label>Boyut <span id="wmsz-val">14</span>pt</label>
-    <input type="range" id="f-wm-sz" min="8" max="150" value="14" oninput="$('wmsz-val').textContent=this.value"/>
-  </div>
-</div>
-<div class="r2">
-  <div class="f">
-    <label>Yatay Konum <span id="wmx-val">50</span>%</label>
-    <input type="range" id="f-wm-x" min="0" max="100" value="50" oninput="$('wmx-val').textContent=this.value"/>
-  </div>
-  <div class="f">
-    <label>Dikey Konum <span id="wmy-val">95</span>%</label>
-    <input type="range" id="f-wm-y" min="0" max="100" value="95" oninput="$('wmy-val').textContent=this.value"/>
-  </div>
-</div>
-<div class="r2">
-  <div class="f">
-    <label>Döndürme Açısı <span id="wmang-val">0</span>°</label>
-    <input type="range" id="f-wm-ang" min="-90" max="90" value="0" oninput="$('wmang-val').textContent=this.value"/>
-  </div>
-  <div class="f">
-    <label>Stil</label>
-    <select id="f-wm-style">
-      <option value="normal">Normal</option>
-      <option value="bold">Kalın</option>
-      <option value="italic">İtalik</option>
-    </select>
-  </div>
-</div>
-<div class="r2">
-  <div class="f">
-    <label>Hazır Konum</label>
-    <select id="f-wm-preset" onchange="applyWmPreset(this.value)">
-      <option value="">Serbest (X/Y ile ayarla)</option>
-      <option value="bottom-center" selected>Sayfa altı orta</option>
-      <option value="bottom-right">Sayfa altı sağ</option>
-      <option value="top-right">Sayfa üstü sağ</option>
-      <option value="center">Sayfa tam ortası</option>
-    </select>
-  </div>
-  <div class="f" style="display:flex;align-items:center">
-    <span style="font-size:12px;color:var(--soft)">X/Y kaydırıcılarıyla ince ayar yapın</span>
-  </div>
-</div>
 
-<div class="sec">4. Sayfa Düzeni & Çözüm Izgarası</div>
+    <!-- P5: Sayfa Düzeni -->
+    <div class="set-pane" id="p5">
+      <div class="sec">Sayfa Düzeni & Çözüm Izgarası</div>
       <div class="r2">
         <div class="f"><label>Sütun Sayısı</label>
           <select id="f-cols">
@@ -895,7 +932,6 @@ input,select,textarea{font:inherit}
           </select>
         </div>
       </div>
-
       <div class="r2">
         <div class="f"><label>Sorular arası çizgi</label>
           <select id="f-sep">
@@ -915,12 +951,14 @@ input,select,textarea{font:inherit}
       <div class="f"><label>Sütun arasına yazı (isteğe bağlı)</label>
         <input id="f-gutter" placeholder="Örn. testamed yayınları"/>
       </div>
-      
       <div class="chk"><input type="checkbox" id="f-info" checked/><label for="f-info">Ad Soyad / Sınıf / Puan tablosu</label></div>
       <div class="chk"><input type="checkbox" id="f-pts"/><label for="f-pts">Her soruda puan yazsın</label></div>
       <div class="chk"><input type="checkbox" id="f-key"/><label for="f-key">Sona cevap anahtarı sayfası</label></div>
+    </div>
 
-      <div class="sec">5. Kitapçık & Optik Form</div>
+    <!-- P6: Kitapçık & Optik -->
+    <div class="set-pane" id="p6">
+      <div class="sec">Kitapçık & Optik Form</div>
       <div class="f"><label>Kaç kitapçık</label>
         <select id="f-book">
           <option value="1" selected>Tek kitapçık</option>
@@ -931,7 +969,10 @@ input,select,textarea{font:inherit}
       </div>
       <div class="chk"><input type="checkbox" id="f-optic"/><label for="f-optic">Optik cevap kâğıdı ekle (ayrı sayfa)</label></div>
       <div class="chk"><input type="checkbox" id="f-qr"/><label for="f-qr">Sınav başlığına QR kod ekle</label></div>
+    </div>
 
+    <!-- P7: Sorular -->
+    <div class="set-pane" id="p7">
       <div class="sec">Sorular · <span id="setcnt">0</span> soru · toplam <span id="ptot">0</span> puan</div>
       <div class="r2">
         <div class="f"><label>Toplam puan</label><input id="f-total" type="number" value="100" oninput="spread()"/></div>
@@ -947,6 +988,9 @@ input,select,textarea{font:inherit}
       <button class="big" id="make" onclick="build()">Testi oluştur</button>
       <button class="ghost" style="margin-top:10px" onclick="saveBank()">💾 Soruları bankaya kaydet</button>
     </div>
+
+  </div>
+</div>
 
     <!-- 4. Ekran: Önizleme & İnteraktif A4 Mizanpajı -->
     <div class="scr" id="s-prev">
@@ -3899,6 +3943,15 @@ function addPlan(){
   });
 }
 })();
+
+
+function switchSetTab(id){
+  document.querySelectorAll('.set-tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.set-pane').forEach(p=>p.classList.remove('on'));
+  document.querySelector('.set-tab[data-pane="'+id+'"]')?.classList.add('on');
+  document.getElementById(id)?.classList.add('on');
+}
+
 </script>
 
 </body>
