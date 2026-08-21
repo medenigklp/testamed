@@ -460,6 +460,15 @@ input,select,textarea{font:inherit}
 .set-tab{flex-shrink:0;padding:8px 15px;border-radius:999px;border:1.5px solid var(--line);background:var(--w);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--soft);white-space:nowrap;transition:.14s cubic-bezier(.4,0,.2,1);cursor:pointer}
 .set-tab:active{transform:scale(.94)}
 .set-tab.on{background:var(--or);border-color:var(--or);color:#fff;box-shadow:0 2px 10px rgba(16,185,129,.28)}
+.set-panes{position:absolute;top:56px;left:0;right:0;bottom:0;overflow-y:auto;
+  padding:0 16px 96px;-webkit-overflow-scrolling:touch}
+#s-set .set-tabs{position:absolute;top:0;left:0;right:0;z-index:20;background:var(--bg)}
+#setbar{position:absolute;bottom:0;left:0;right:0;display:flex;gap:10px;align-items:center;
+  padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom));
+  background:rgba(245,247,242,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);z-index:40}
+#setbar .big{flex:2}
+#setbar .ghost{flex:1;white-space:nowrap}
 .set-panes{padding:0 16px 26px}
 .set-pane{display:none;animation:fadeIn .22s cubic-bezier(.4,0,.2,1)}
 .set-pane.on{display:block}
@@ -714,6 +723,10 @@ input,select,textarea{font:inherit}
             <option value="serif">Serif — Akademik Klasik</option>
             <option value="band">Bant — Üst Renkli Bant</option>
             <option value="corner">Köşe — Minimal Aksan</option>
+            <option value="wave">Wave — Akan Kesim (dinamik)</option>
+            <option value="sidebar">Sidebar — Yan Panel (dergi)</option>
+            <option value="stripe">Stripe — Çift Çizgi (zarif)</option>
+            <option value="badge">Badge — Madalyon (kurumsal)</option>
             <option value="minimal">Minimal — Tek Satır</option>
             <option value="osym">ÖSYM — Sınav Formatı</option>
           </select>
@@ -982,10 +995,15 @@ input,select,textarea{font:inherit}
       </div>
       <div id="qrows"></div>
       <div id="live"></div>
-      <button class="big" id="make" onclick="build()">Testi oluştur</button>
       <button class="ghost" style="margin-top:10px" onclick="saveBank()">💾 Soruları bankaya kaydet</button>
     </div>
 
+  </div>
+
+  <!-- Her sekmede görünen sabit alt çubuk -->
+  <div id="setbar">
+    <button class="ghost" id="setbar-save" onclick="saveTestDialog()" style="margin:0">💾 Kaydet</button>
+    <button class="big" id="make" onclick="build()" style="margin:0">Testi oluştur →</button>
   </div>
 </div>
 
@@ -1092,9 +1110,9 @@ function go(s){
     n.classList.toggle('now',  !side && i===at);
   });
   $('t-back').style.display = (s==='home') ? 'none':'inline-block';
-  $('t-next').style.display = (s==='view') ? 'inline-block':'none';
+  $('t-next').style.display = (s==='view'||s==='set') ? 'inline-block':'none';
   $('t-next').disabled = qs.length===0;
-  $('t-next').textContent = (editingTest? 'Teste dön':'İleri')+' ('+qs.length+') →';
+  $('t-next').textContent = (s==='set' ? 'Oluştur' : (editingTest?'Teste dön':'İleri'))+' →';
   $('t-lib').style.display = (s==='home') ? 'inline-block':'none';
   if(s==='set') fillSettings();
   if(s==='lib') enterLib();
@@ -1105,7 +1123,7 @@ function back(){
   if(screen==='lib'||screen==='ai'||screen==='panel') return go(qs.length?'set':'home'); 
   go(screen==='prev'?'set':screen==='set'?'view':'home'); 
 }
-function next(){ if(!qs.length) return toast('Önce en az bir soru seç'); go('set'); }
+function next(){ if(!qs.length) return toast('Önce en az bir soru seç'); if(screen==='set') return build(); go('set'); }
 
 /* Dosya Açma */
 function pick(k){ $(k==='pdf'?'in-pdf':'in-img').click(); }
@@ -2507,6 +2525,10 @@ function headerH(cfg){
     case 'serif':   return 26;
     case 'band':    return 24;
     case 'corner':  return 22;
+    case 'wave':    return 22;
+    case 'sidebar': return 26;
+    case 'stripe':  return 24;
+    case 'badge':   return 22;
     case 'osym':    return 26;
     default:        return 22;
   }
@@ -2829,6 +2851,82 @@ function headerImage(cfg){
       g.fillStyle='#475569'; g.font='600 '+(2*K)+'px '+BODY;
       g.fillText(t,x+1.2*K,by+2.6*K);
     });
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 7) WAVE — sağ üst akan renkli kesim, dinamik ═══ */
+  if(cfg.template==='wave'){
+    g.fillStyle=pal.d;
+    g.beginPath();
+    g.moveTo(W*0.62,0); g.lineTo(W,0); g.lineTo(W,H); g.lineTo(W*0.78,H);
+    g.closePath(); g.fill();
+    g.fillStyle=pal.a;
+    g.beginPath();
+    g.moveTo(W*0.70,0); g.lineTo(W,0); g.lineTo(W,H*0.55);
+    g.closePath(); g.fill();
+    g.textBaseline='alphabetic'; g.textAlign='left';
+    let fs=fit(kind,5.4,W*0.55,'800'); g.font='800 '+(fs*K)+'px '+DISP; g.fillStyle=pal.ink;
+    g.fillText(kind,3*K,H*0.44);
+    if(topic){ g.font='600 '+(2.5*K)+'px '+BODY; g.fillStyle=pal.m; g.fillText(topic,3*K,H*0.70); }
+    g.textAlign='right'; g.fillStyle='#fff';
+    g.font='800 '+(3*K)+'px '+DISP; g.fillText(lesson,W-4*K,H*0.40);
+    const line2=[cfg.grade?cfg.grade+'. Sınıf':'',teacher].filter(Boolean).join(' · ');
+    if(line2){ g.font='500 '+(2*K)+'px '+BODY; g.fillStyle=pal.soft; g.fillText(line2,W-4*K,H*0.66); }
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 8) SIDEBAR — sol tam boy panel + dikey ders, dergi kapağı ═══ */
+  if(cfg.template==='sidebar'){
+    const bw=W*0.22;
+    g.fillStyle=pal.d; g.fillRect(0,0,bw,H);
+    g.fillStyle=pal.a; g.fillRect(bw,0,0.8*K,H);
+    // dikey ders yazısı
+    g.save(); g.translate(bw*0.5,H*0.5); g.rotate(-Math.PI/2);
+    g.textAlign='center'; g.textBaseline='middle'; g.fillStyle='#fff';
+    let fs=fit(lesson,3.2,H*0.7,'800'); g.font='800 '+(fs*K)+'px '+DISP;
+    g.fillText(lesson,0,0); g.restore();
+    const rx=bw+5*K;
+    g.textAlign='left'; g.textBaseline='alphabetic';
+    let fk=fit(kind,5.2,W-rx-3*K,'800'); g.font='800 '+(fk*K)+'px '+DISP; g.fillStyle=pal.ink;
+    g.fillText(kind,rx,H*0.36);
+    if(topic){ g.font='600 '+(2.6*K)+'px '+BODY; g.fillStyle=pal.m; g.fillText(topic,rx,H*0.60); }
+    const sub=[teacher,cfg.grade?cfg.grade+'. Sınıf':''].filter(Boolean).join('  ·  ');
+    if(sub){ g.font='500 '+(2.1*K)+'px '+BODY; g.fillStyle='#94A3B8'; g.fillText(sub,rx,H*0.80); }
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 9) STRIPE — çift çizgi arasında ortalı, zarif ═══ */
+  if(cfg.template==='stripe'){
+    g.fillStyle=pal.a; g.fillRect(0,1.5*K,W,1.1*K);
+    g.fillStyle=pal.m; g.fillRect(0,3.2*K,W,0.4*K);
+    g.textAlign='center'; g.textBaseline='alphabetic'; g.fillStyle=pal.ink;
+    let fs=6; g.font='800 '+(fs*K)+'px '+DISP;
+    while(g.measureText(kind).width>W*0.8&&fs>2.5){fs-=0.2;g.font='800 '+(fs*K)+'px '+DISP;}
+    g.fillText(kind,W/2,H*0.52);
+    const sub=[lesson,topic].filter(Boolean).join('  ·  ');
+    if(sub){ g.font='600 '+(2.4*K)+'px '+BODY; g.fillStyle=pal.m; g.fillText(sub,W/2,H*0.74); }
+    g.fillStyle=pal.a; g.fillRect(0,H-2.6*K,W,1.1*K);
+    g.fillStyle=pal.m; g.fillRect(0,H-3.6*K,W,0.4*K);
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 10) BADGE — altıgen madalyon + başlık, kurumsal ═══ */
+  if(cfg.template==='badge'){
+    const r=H*0.34, cx=4*K+r, cy=H*0.46;
+    g.fillStyle=pal.d; g.beginPath();
+    for(let i=0;i<6;i++){ const a=Math.PI/180*(60*i-90); const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+      i?g.lineTo(x,y):g.moveTo(x,y); }
+    g.closePath(); g.fill();
+    g.fillStyle='#fff'; g.textAlign='center'; g.textBaseline='middle';
+    g.font='800 '+(2*K)+'px '+DISP;
+    g.fillText((lesson||'K').slice(0,3),cx,cy);
+    const rx=cx+r+4*K;
+    g.textAlign='left'; g.textBaseline='alphabetic';
+    let fs=fit(kind,4.8,W-rx-3*K,'800'); g.font='800 '+(fs*K)+'px '+DISP; g.fillStyle=pal.ink;
+    g.fillText(kind,rx,H*0.42);
+    const sub=[lesson,topic].filter(Boolean).join('  ·  ');
+    if(sub){ g.font='600 '+(2.3*K)+'px '+BODY; g.fillStyle=pal.m; g.fillText(sub,rx,H*0.66); }
+    g.fillStyle=pal.a; g.fillRect(rx,H-2.4*K,(W-rx-3*K)*0.4,0.7*K);
     g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
   }
 
