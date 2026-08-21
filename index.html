@@ -467,7 +467,6 @@ input,select,textarea{font:inherit}
 
 </style>
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
 
@@ -568,8 +567,8 @@ input,select,textarea{font:inherit}
               <button onclick="setFloatingOpt('C')" class="cfb-btn">C</button>
               <button onclick="setFloatingOpt('D')" class="cfb-btn">D</button>
               <button onclick="setFloatingOpt('E')" class="cfb-btn">E</button>
-              <button onclick="confirmFloatingCrop()" class="cfb-ok" title="Havuza Ekle"><i class="fa-solid fa-check"></i></button>
-              <button onclick="cancelFloatingCrop()" class="cfb-cancel" title="İptal"><i class="fa-solid fa-xmark"></i></button>
+              <button onclick="confirmFloatingCrop()" class="cfb-ok" title="Havuza Ekle">✓</button>
+              <button onclick="cancelFloatingCrop()" class="cfb-cancel" title="İptal">✕</button>
             </div>
             <div class="cfb-row">
               <input type="text" id="floatingCustomText" placeholder="Özel: Cevap yaz..." style="background:#1E2824; border:1px solid #2C3A36; border-radius:6px; color:#fff; font-size:11px; padding:4px 8px; flex:1; outline:none;"/>
@@ -1037,7 +1036,7 @@ input,select,textarea{font:inherit}
 <input type="file" id="in-pdf" accept="application/pdf" multiple hidden/>
 <input type="file" id="in-img" accept="image/*" multiple hidden/>
 <input type="file" id="in-backup" accept="application/json,.tmd,.kmyd" hidden/>
-<input type="file" id="in-pic" accept="image/*" hidden/>
+<input type="file" id="in-pic" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;left:-9999px"/>
 <div id="modal"><div id="mbox">
   <h3 id="mtitle">Kaydet</h3>
   <input id="m1" placeholder=""/>
@@ -1846,8 +1845,10 @@ Zorluk: ${lvl}.
 Kurallar:
 - Türkçe yaz, dil bilgisi ve terimler doğru olsun.
 - Her soru tam olarak 5 seçenekli (A-E) olsun.
-- Sayısal sorularda hesabı adım adım doğrula.
-- Alt/üst simgeleri Unicode yaz: H₂O, CO₂, 10⁻³, Ca²⁺.
+- Atom kütlelerini soru metninin içinde parantezle ver (örn. C:12, O:16, H:1, N:14, Na:23, Cl:35,5, Fe:56, Cu:63,5).
+- Alt/üst simgeleri Unicode yaz: H₂O, CO₂, 10⁻³, Ca²⁺, NH₄⁺, SO₄²⁻.
+- Sayısal sorularda hesabı adım adım kendin doğrula; doğru cevabın mutlaka A–E şıklarından biri olduğundan emin ol.
+- Şekil, grafik veya tablo gerektiren soru yazma; yalnızca metin tabanlı sorular üret.
 - "aciklama" alanına doğru cevabın gerekçesini yaz.
 
 SADECE şu JSON dizisini döndür:
@@ -1858,9 +1859,14 @@ async function copyPrompt(){
   const t=promptText();
   try{
     await navigator.clipboard.writeText(t);
-    toast('Metin kopyalandı');
+    toast('Metin kopyalandı — yapay zeka uygulamasına yapıştır');
   }catch(e){
-    toast('Kopyalanamadı',true);
+    const ta=document.createElement('textarea');
+    ta.value=t; ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast('Metin kopyalandı'); }
+    catch(_){ toast('Kopyalanamadı — metni elle seç',true); }
+    ta.remove();
   }
 }
 
@@ -1948,8 +1954,18 @@ async function genAI(){
 `Sen deneyimli bir ${lesson} öğretmenisin. ${grade?grade+'. sınıf ':''}${lesson} dersi için ${topic} konusunda ${n} adet beş seçenekli çoktan seçmeli soru yaz.
 ${goal?'Kazanım: '+goal:''}
 Zorluk: ${lvl}.
+Kurallar:
+- Türkçe yaz, dil bilgisi ve terimler doğru olsun.
+- Her soru tam olarak 5 seçenekli (A-E) olsun.
+- Atom kütlelerini soru metninin içinde parantezle ver (örn. C:12, O:16, H:1, N:14, Na:23, Cl:35,5, Fe:56, Cu:63,5).
+- Alt/üst simgeleri Unicode yaz: H₂O, CO₂, 10⁻³, Ca²⁺, NH₄⁺, SO₄²⁻.
+- Sayısal sorularda hesabı adım adım kendin doğrula; doğru cevabın mutlaka A–E şıklarından biri olduğundan emin ol.
+- Şekil, grafik veya tablo gerektiren soru yazma; yalnızca metin tabanlı sorular üret.
+- "aciklama" alanına doğru cevabın gerekçesini yaz.
+
 SADECE şu JSON formatında dizi döndür:
 [{"soru":"...","secenekler":["A şıkkı","B şıkkı","C şıkkı","D şıkkı","E şıkkı"],"dogru":"C","aciklama":"..."}]`;
+
 
   const out=$('a-out'); const btn=$('a-go');
   btn.disabled=true; btn.textContent='Üretiliyor…';
@@ -3523,117 +3539,78 @@ function drawBook(doc, book, first){
 }
 
 function drawWatermark(doc, cfg){
-  const mL = cfg.mLeft || 12;
-  const mR = cfg.mRight || 12;
-  const mT = cfg.mTop || 12;
-  const mB = cfg.mBottom || 12;
-  const op = Math.max(0, Math.min(100, cfg.wmOp || 30));
-  const sz = Math.max(8, Math.min(150, cfg.wmSz || 14));
-  const px = Math.max(0, Math.min(100, cfg.wmX || 50));
-  const py = Math.max(0, Math.min(100, cfg.wmY || 95));
-  const ang = cfg.wmAng || 0;
-  const style = cfg.wmStyle || 'normal';
+  try {
+    const mL = cfg.mLeft || 12;
+    const mR = cfg.mRight || 12;
+    const mT = cfg.mTop || 12;
+    const mB = cfg.mBottom || 12;
+    const op = Math.max(0, Math.min(100, cfg.wmOp || 30));
+    const sz = Math.max(8, Math.min(150, cfg.wmSz || 14));
+    const px = Math.max(0, Math.min(100, cfg.wmX || 50));
+    const py = Math.max(0, Math.min(100, cfg.wmY || 95));
+    const ang = cfg.wmAng || 0;
+    const style = cfg.wmStyle || 'normal';
 
-  const x = PAGE.w * px / 100;
-  const y = PAGE.h * py / 100;
+    const x = PAGE.w * px / 100;
+    const y = PAGE.h * py / 100;
 
-  const wmImgData = cfg.logoAsWm && cfg.logo ? cfg.logo : (cfg.wmImg || null);
+    const wmImgData = cfg.logoAsWm && cfg.logo ? cfg.logo : (cfg.wmImg || null);
+    const opacity = op / 100;
 
-  const opacity = op / 100;
+    // Data URL'den formatı algıla
+    function detectImageFormat(dataUrl) {
+      if (!dataUrl || typeof dataUrl !== 'string') return 'JPEG';
+      if (dataUrl.startsWith('data:image/png')) return 'PNG';
+      if (dataUrl.startsWith('data:image/webp')) return 'WEBP';
+      return 'JPEG';
+    }
 
-  const pages = doc.internal.getNumberOfPages();
-  for(let i=1; i<=pages; i++){
-    doc.setPage(i);
+    const pages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pages; i++) {
+      doc.setPage(i);
 
-    if(wmImgData && wmImgData.url){
-      const ratio = wmImgData.w / wmImgData.h;
-      const scaleFactor = 0.5 + (op / 100) * 0.8;
-      const maxW = PAGE.w * 0.90 * scaleFactor;
-      const maxH = PAGE.h * 0.85 * scaleFactor;
-      let iw = maxW, ih = iw / ratio;
-      if(ih > maxH){ ih = maxH; iw = ih * ratio; }
-      const ix = x - iw/2, iy = y - ih/2;
-      try {
-        const gstate = new doc.GState({opacity: opacity});
-        doc.setGState(gstate);
-        doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST');
-        doc.setGState(new doc.GState({opacity: 1}));
-      } catch(e) {
-        doc.addImage(wmImgData.url, 'JPEG', ix, iy, iw, ih, undefined, 'FAST');
+      if (wmImgData && wmImgData.url) {
+        try {
+          const ratio = wmImgData.w / wmImgData.h;
+          const scaleFactor = 0.5 + (op / 100) * 0.8;
+          const maxW = PAGE.w * 0.90 * scaleFactor;
+          const maxH = PAGE.h * 0.85 * scaleFactor;
+          let iw = maxW, ih = iw / ratio;
+          if (ih > maxH) { ih = maxH; iw = ih * ratio; }
+          const ix = x - iw / 2, iy = y - ih / 2;
+          const fmt = detectImageFormat(wmImgData.url);
+          try {
+            const gstate = new doc.GState({opacity: opacity});
+            doc.setGState(gstate);
+            doc.addImage(wmImgData.url, fmt, ix, iy, iw, ih, undefined, 'FAST');
+            doc.setGState(new doc.GState({opacity: 1}));
+          } catch (e2) {
+            doc.addImage(wmImgData.url, fmt, ix, iy, iw, ih, undefined, 'FAST');
+          }
+        } catch (e) {
+          // Filigran resmi eklenemezse sessizce devam et
+        }
+      }
+
+      if (cfg.watermark) {
+        try {
+          const fontStyle = style === 'bold' ? 'bold' : (style === 'italic' ? 'italic' : 'normal');
+          doc.setFont('helvetica', fontStyle);
+          doc.setFontSize(sz);
+          const grayVal = Math.round(255 - opacity * 255);
+          doc.setTextColor(grayVal, grayVal, grayVal);
+          if (ang !== 0) {
+            doc.text(cfg.watermark, x, y, {align: 'center', angle: ang});
+          } else {
+            doc.text(cfg.watermark, x, y, {align: 'center'});
+          }
+        } catch (e) {
+          // Metin filigranı eklenemezse sessizce devam et
+        }
       }
     }
-
-    if(cfg.watermark){
-      const fontStyle = style === 'bold' ? 'bold' : (style === 'italic' ? 'italic' : 'normal');
-      doc.setFont('helvetica', fontStyle);
-      doc.setFontSize(sz);
-      const grayVal = Math.round(255 - opacity * 255);
-      doc.setTextColor(grayVal, grayVal, grayVal);
-      if(ang !== 0){
-        doc.text(cfg.watermark, x, y, {align:'center', angle: ang});
-      } else {
-        doc.text(cfg.watermark, x, y, {align:'center'});
-      }
-    }
-  }
-}
-
-function drawKey(doc, book){
-  const mLeft = (CFG && CFG.mLeft) || 12;
-  const mRight = (CFG && CFG.mRight) || 12;
-  const mTop = (CFG && CFG.mTop) || 12;
-  doc.addPage();
-  const ttl='CEVAP ANAHTARI'+(book.letter?' — '+book.letter+' KİTAPÇIĞI':'');
-  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(17);
-  doc.text(ttl, PAGE.w/2, mTop+8, {align:'center'});
-  doc.setLineWidth(0.6); doc.setDrawColor(17);
-  doc.line(mLeft,mTop+11,PAGE.w-mRight,mTop+11);
-  const cw=(PAGE.w-mLeft-mRight)/5, ch=12;
-  book.list.forEach((q,i)=>{
-    const cx=mLeft+(i%5)*cw, cy=mTop+18+Math.floor(i/5)*ch;
-    doc.setDrawColor(140); doc.setLineWidth(0.2);
-    doc.roundedRect(cx+1,cy,cw-2,ch-3,1,1);
-    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(17);
-    doc.text((i+1)+' - '+(q.ans||'__'), cx+cw/2, cy+6, {align:'center'});
-  });
-}
-
-function drawOptic(doc, book){
-  const mLeft = (CFG && CFG.mLeft) || 12;
-  const mRight = (CFG && CFG.mRight) || 12;
-  const mTop = (CFG && CFG.mTop) || 12;
-  doc.addPage();
-  const ttl='OPTİK CEVAP KÂĞIDI'+(book.letter?' — '+book.letter:'');
-  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(17);
-  doc.text(ttl, PAGE.w/2, mTop+7, {align:'center'});
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(80);
-  doc.text('Ad Soyad: ..............................................    No: ............    Sınıf: ..........',
-    mLeft, mTop+15);
-  const tag=[(CFG.lesson||'test'),(book.letter||'-'),book.list.length+'s',
-    (CFG.date||'')].join('|');
-  const qs=18;
-  if(drawQR(doc,tag,PAGE.w-mRight-qs,mTop+2,qs)){
-    doc.setFontSize(6); doc.setTextColor(140);
-    doc.text(book.letter?book.letter+' kitapçığı':'testamed', PAGE.w-mRight-qs/2, mTop+qs+4, {align:'center'});
-  }
-
-  const opts=5, r=1.9, gap=6.2, rowH=8.4;
-  const n=book.list.length;
-  const perCol=Math.ceil(n/ (n>25?2:1));
-  const colW=(PAGE.w-mLeft-mRight)/(n>25?2:1);
-  const top=mTop+24;
-  for(let i=0;i<n;i++){
-    const col=Math.floor(i/perCol), row=i%perCol;
-    const bx=mLeft+col*colW, by=top+row*rowH;
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(17);
-    doc.text((i+1)+'.', bx, by+2, {align:'left'});
-    for(let o=0;o<opts;o++){
-      const cx=bx+10+o*gap, cy=by;
-      doc.setDrawColor(120); doc.setLineWidth(0.25);
-      doc.circle(cx,cy,r);
-      doc.setFontSize(6.5); doc.setTextColor(120);
-      doc.text(LET[o], cx, cy+0.9, {align:'center'});
-    }
+  } catch (e) {
+    // Tüm filigran işlemi başarısız olursa PDF yine üretilsin
   }
 }
 
