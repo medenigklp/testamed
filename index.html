@@ -363,6 +363,7 @@ input,select,textarea{font:inherit}
   margin-top:10px;background:#fff}
 #pv{flex:1;overflow:auto;background:#2B3833;padding:12px;-webkit-overflow-scrolling:touch}
 #pages{display:flex;flex-direction:column;gap:14px;align-items:center}
+.pg.land{aspect-ratio:297/210;max-width:720px}
 .pg{position:relative;width:100%;max-width:520px;aspect-ratio:210/297;background:#fff;
   box-shadow:0 6px 26px rgba(0,0,0,.3);border-radius:3px;overflow:hidden}
 .pg .ab{position:absolute;display:block}
@@ -1003,12 +1004,20 @@ input,select,textarea{font:inherit}
 
       <div class="sec">Sayfa Düzeni & Çözüm Izgarası</div>
       <div class="r2">
+        <div class="f"><label>Sayfa Yönü</label>
+          <select id="f-orient" onchange="preview()">
+            <option value="dikey" selected>Dikey (A4)</option>
+            <option value="yatay">Yatay (A4)</option>
+          </select>
+        </div>
         <div class="f"><label>Sütun Sayısı</label>
           <select id="f-cols">
             <option value="1">Tek sütun</option>
             <option value="2" selected>İki sütun</option>
             <option value="3">Üç sütun</option>
             <option value="4">Dört sütun</option>
+            <option value="5">Beş sütun</option>
+            <option value="6">Altı sütun</option>
           </select>
         </div>
         <div class="f"><label>Yerleşim</label>
@@ -1707,7 +1716,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm','f-logo-sz','f-logo-op','f-qfont','f-qsize','f-hfont','hz-kind','hz-lesson','hz-topic','hz-teacher','hw-kind','hw-lesson','hw-topic','hw-teacher'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-orient','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm','f-logo-sz','f-logo-op','f-qfont','f-qsize','f-hfont','hz-kind','hz-lesson','hz-topic','hz-teacher','hw-kind','hw-lesson','hw-topic','hw-teacher'];
 function loadTmpl(){
   setTimeout(()=>{try{['kind','lesson','topic','teacher'].forEach(hzLabel);}catch(_){}} ,0);
   try{
@@ -1849,7 +1858,7 @@ function fillSettings(){
   drawEditBar();
   if(!$('f-date').value) $('f-date').value=new Date().toLocaleDateString('tr-TR');
   spread();
-  ['f-cols','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm'].forEach(id=>{
+  ['f-cols','f-orient','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm'].forEach(id=>{
     const e=$(id); if(e && !e._w){ e._w=1;
       e.addEventListener('change',()=>{ preview(); saveTmpl(); });
       e.addEventListener('input',saveTmpl);
@@ -2268,6 +2277,7 @@ function colWidthMm(cfg){
   return (W-GAP*(n-1))/n;
 }
 async function reflowText(cfg){
+  setOrient(cfg);
   const cw=colWidthMm(cfg);
   const prevCFG=window.CFG; window.CFG=cfg;   // renderQuestion yazı ayarını buradan okur
   try{
@@ -2606,6 +2616,7 @@ function openTest(t,edit){
     set('f-school',c.school);set('f-lesson',c.lesson);set('f-class',c.cls);
     set('f-topic',c.topic);set('f-teacher',c.teacher);set('f-kind',c.kind||'TEST 1');
     set('f-cols',c.cols);set('f-sol',c.sol);set('f-max',c.max);
+    if($('f-orient')) $('f-orient').value=c.landscape?'yatay':'dikey';
     set('f-book',c.book);set('f-sep',c.sep);set('f-vsep',c.vsep);set('f-gutter',c.gutter);set('f-fill',c.fill);set('f-qfont',c.qfont);set('f-qsize',c.qsize);
     set('f-template',c.template||'ribbon');
     set('f-soltype',c.soltype||'grid');
@@ -2624,6 +2635,11 @@ function openTest(t,edit){
 
 /* ════════ A4 Mizanpaj ve Dizgi Motoru ════════ */
 const PAGE={w:210,h:297,m:12};
+function setOrient(cfg){
+  // A4: dikey 210×297, yatay 297×210
+  if(cfg && cfg.landscape){ PAGE.w=297; PAGE.h=210; }
+  else { PAGE.w=210; PAGE.h=297; }
+}
 const GAP=8, TITLE_H=5, AFTER=4, SOFT_K=0.88;
 
 function headerH(cfg){ 
@@ -2755,6 +2771,7 @@ function place(groups,K,cfg,colW){
 }
 
 function layout(list,cfg){
+  setOrient(cfg);
   const colW=colWidthMm(cfg);
 
   if (cfg.customPagePlan && Array.isArray(cfg.customPagePlan) && cfg.customPagePlan.length > 0) {
@@ -3372,7 +3389,7 @@ function drawPages(){
     host.appendChild(pageControlBar);
 
     // A4 Sayfası
-    const el=document.createElement('div'); el.className='pg';
+    const el=document.createElement('div'); el.className='pg'+(CFG.landscape?' land':'');
     if(i===0&&HDR){
       const h=document.createElement('img'); h.className='ab';
       h.src=HDR;
@@ -3531,6 +3548,7 @@ function cfgNow(){
     kind: ($('f-kind') && $('f-kind').value.trim()) || '',
     date: ($('f-date') && $('f-date').value.trim()) || '',
     cols: elCols ? (parseInt(elCols.value)||1) : 1,
+    landscape: ($('f-orient') && $('f-orient').value==='yatay'),
     sol: elSol ? (parseInt(elSol.value)||0) : 0,
     max: elMax ? (parseInt(elMax.value)||0) : 0,
     sep: ($('f-sep') && $('f-sep').value) || 'kesik',
@@ -3869,7 +3887,8 @@ function drawWatermark(doc, cfg){
 function makePdf(){
   if(!pdfReady||!window.jspdf) throw new Error('PDF motoru yüklenemedi');
   const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({unit:'mm',format:'a4',compress:true});
+  setOrient(CFG);
+  const doc=new jsPDF({unit:'mm',format:'a4',orientation:CFG.landscape?'landscape':'portrait',compress:true});
   const hasAns=qs.some(q=>q.ans);
 
   BOOKS.forEach((book,bi)=>{
