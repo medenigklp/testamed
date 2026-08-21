@@ -2741,8 +2741,7 @@ function headerImage(cfg){
   /* ═══ 3) BANT — üstte tek renk ince bant + altında beyaz künye ═══ */
   if(cfg.template==='band'){
     const bandH=H*0.52;
-    g.fillStyle=pal.d;
-    if(g.roundRect){g.beginPath();g.roundRect(0,0,W,bandH,[1.4*K,1.4*K,0,0]);g.fill();}else g.fillRect(0,0,W,bandH);
+    g.fillStyle=pal.d; g.fillRect(0,0,W,bandH);
     // bant içi: sol ders, sağ tür
     g.textBaseline='middle';
     const lx=drawLogo(bandH*0.7,bandH*0.7,4*K,bandH/2);
@@ -2767,8 +2766,7 @@ function headerImage(cfg){
   /* ═══ 4) KÖŞE — sol üst renkli aksan bloğu, gerisi minimal ═══ */
   if(cfg.template==='corner'){
     const bw=W*0.32, bh=H*0.62;
-    g.fillStyle=pal.d;
-    if(g.roundRect){g.beginPath();g.roundRect(0,0,bw,bh,[0,0,1.6*K,0]);g.fill();}else g.fillRect(0,0,bw,bh);
+    g.fillStyle=pal.d; g.fillRect(0,0,bw,bh);
     g.fillStyle=pal.a; g.fillRect(0,bh,bw*0.55,0.9*K);
     g.textBaseline='middle'; g.textAlign='center';
     g.fillStyle='#fff';
