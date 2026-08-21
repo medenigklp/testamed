@@ -727,7 +727,12 @@ input,select,textarea{font:inherit}
         <div class="f">
           <label>Başlık Şablonu</label>
           <select id="f-template" onchange="preview()">
-            <option value="ribbon" selected>Ribbon — Yan Şeritli (modern)</option>
+            <option value="periodic" selected>⬢ Periyodik — Element Hücresi (kimya)</option>
+            <option value="molecule">⬢ Molekül — Atom-Bağ Motifi</option>
+            <option value="hexagon">⬢ Hexagon — Bal Peteği</option>
+            <option value="blueprint">⬢ Blueprint — Deney Defteri</option>
+            <option value="editorial">⬢ Editoryal — Dergi Kapağı</option>
+            <option value="ribbon">Ribbon — Yan Şeritli (modern)</option>
             <option value="serif">Serif — Akademik Klasik</option>
             <option value="band">Bant — Üst Renkli Bant</option>
             <option value="corner">Köşe — Minimal Aksan</option>
@@ -2628,6 +2633,11 @@ function headerH(cfg){
     case 'sidebar': return 26;
     case 'stripe':  return 24;
     case 'badge':   return 22;
+    case 'hexagon': return 24;
+    case 'periodic':return 24;
+    case 'molecule':return 22;
+    case 'blueprint':return 24;
+    case 'editorial':return 26;
     case 'osym':    return 26;
     default:        return 22;
   }
@@ -2965,6 +2975,112 @@ function headerImage(cfg){
       g.fillStyle='#475569'; g.font='600 '+(2*K)+'px '+BODY;
       g.fillText(t,x+1.2*K,by+2.6*K);
     });
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 11) HEXAGON — bal peteği + ders altıgende, kimyanın imzası ═══ */
+  if(cfg.template==='hexagon'){
+    const hex=(cx,cy,r,fill,stroke)=>{
+      g.beginPath();
+      for(let k=0;k<6;k++){ const a=Math.PI/180*(60*k-90); const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+        k?g.lineTo(x,y):g.moveTo(x,y); }
+      g.closePath(); if(fill){g.fillStyle=fill;g.fill();} if(stroke){g.strokeStyle=stroke;g.lineWidth=1;g.stroke();}
+    };
+    const rr=3.2*K;
+    for(let row=-1;row<4;row++) for(let col=-1;col<3;col++){
+      const cx=col*rr*1.5, cy=row*rr*1.73+(col%2?rr*0.87:0);
+      if(cx<W*0.30) hex(cx,cy,rr,null,pal.line||'#D6E4DC');
+    }
+    const R=H*0.36, cx=W*0.14, cy=H/2;
+    hex(cx,cy,R,pal.d,null);
+    g.fillStyle='#fff'; g.textAlign='center'; g.textBaseline='middle';
+    g.font=rf('lesson',2.4,'800'); g.fillText(lesson,cx,cy);
+    const rx=W*0.30;
+    g.textAlign='left'; g.textBaseline='alphabetic';
+    let fs=fit(kind,5.4,W-rx-3*K,'800','kind'); g.font=wt('kind','800')+' '+(fs*K)+'px '+DISP; g.fillStyle=pal.ink;
+    g.fillText(kind,rx,H*0.42);
+    if(topic){ g.font=rfb('topic',2.5,'600'); g.fillStyle=pal.m; g.fillText(topic,rx,H*0.66); }
+    const sub=[cfg.grade?cfg.grade+'. Sınıf':'',teacher].filter(Boolean).join('  ·  ');
+    if(sub){ g.font=rfb('teacher',2,'500'); g.fillStyle='#94A3B8'; g.fillText(sub,rx,H*0.84); }
+    g.fillStyle=pal.a; g.fillRect(0,H-0.8*K,W,0.8*K);
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 12) PERİYODİK — ders adı periyodik tablo hücresi gibi ═══ */
+  if(cfg.template==='periodic'){
+    const s=H*0.72, x0=3*K, y0=(H-s)/2;
+    g.fillStyle=pal.d;
+    if(g.roundRect){g.beginPath();g.roundRect(x0,y0,s,s,1*K);g.fill();}else g.fillRect(x0,y0,s,s);
+    g.textAlign='left'; g.textBaseline='alphabetic';
+    g.fillStyle=pal.a; g.font='600 '+(1.9*K)+'px '+DISP;
+    g.fillText(cfg.grade||'11',x0+1.4*K,y0+2.6*K);
+    g.textAlign='center'; g.fillStyle='#fff';
+    const sym=(lesson||'Kİ').replace(/(.).*/,(m,a)=>a)+ (lesson.length>1?lesson[1].toLowerCase():'');
+    g.font='800 '+(4.6*K)+'px '+DISP; g.fillText(sym,x0+s/2,y0+s*0.62);
+    g.font='600 '+(1.5*K)+'px '+DISP; g.fillStyle='#A7F3D0';
+    g.fillText(lesson,x0+s/2,y0+s-1.4*K);
+    const rx=x0+s+5*K;
+    g.textAlign='left'; g.textBaseline='alphabetic';
+    let fs=fit(kind,5.4,W-rx-3*K,'800','kind'); g.font=wt('kind','800')+' '+(fs*K)+'px '+DISP; g.fillStyle=pal.ink;
+    g.fillText(kind,rx,H*0.40);
+    if(topic){ g.font=rfb('topic',2.6,'600'); g.fillStyle=pal.m; g.fillText(topic,rx,H*0.64); }
+    if(teacher){ g.font=rfb('teacher',2.1,'500'); g.fillStyle='#94A3B8'; g.fillText(teacher,rx,H*0.83); }
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 13) MOLEKÜL — atom-bağ motifi, minimal bilimsel ═══ */
+  if(cfg.template==='molecule'){
+    const ox=W*0.82, oy=H*0.5, L=2.6*K, R=0.9*K;
+    const nodes=[[ox,oy],[ox+L,oy-L*0.6],[ox+2*L,oy],[ox+L,oy+L*0.6],[ox-L,oy-L*0.6],[ox-L,oy+L*0.6]];
+    const bonds=[[0,1],[1,2],[2,3],[3,0],[0,4],[0,5]];
+    g.strokeStyle=pal.m; g.lineWidth=2;
+    bonds.forEach(([a,b])=>{ g.beginPath();g.moveTo(nodes[a][0],nodes[a][1]);g.lineTo(nodes[b][0],nodes[b][1]);g.stroke(); });
+    nodes.forEach((n,i)=>{ g.fillStyle=i===0?pal.a:pal.d; g.beginPath();g.arc(n[0],n[1],R,0,7);g.fill(); });
+    g.textAlign='left'; g.textBaseline='alphabetic';
+    let fs=fit(kind,5.2,W*0.6,'800','kind'); g.font=wt('kind','800')+' '+(fs*K)+'px '+DISP; g.fillStyle=pal.ink;
+    g.fillText(kind,3*K,H*0.40);
+    g.fillStyle=pal.a; g.fillRect(3*K,H*0.50,W*0.44,0.5*K);
+    const sub=[lesson,topic].filter(Boolean).join('  ·  ');
+    if(sub){ g.font=rfb('topic',2.4,'600'); g.fillStyle=pal.m; g.fillText(sub,3*K,H*0.66); }
+    if(cfg.grade){ g.font=rfb('teacher',2,'500'); g.fillStyle='#94A3B8'; g.fillText(cfg.grade+'. Sınıf',3*K,H*0.84); }
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 14) BLUEPRINT — deney defteri / teknik çizim ═══ */
+  if(cfg.template==='blueprint'){
+    g.fillStyle=pal.soft; g.fillRect(0,0,W,H);
+    g.strokeStyle='#D4E9DE'; g.lineWidth=1;
+    for(let gx=0;gx<W;gx+=2.5*K){ g.beginPath();g.moveTo(gx,0);g.lineTo(gx,H);g.stroke(); }
+    for(let gy=0;gy<H;gy+=2.5*K){ g.beginPath();g.moveTo(0,gy);g.lineTo(W,gy);g.stroke(); }
+    g.strokeStyle=pal.d; g.lineWidth=2; g.strokeRect(1*K,1*K,W-2*K,H-2*K);
+    g.strokeStyle=pal.m; g.beginPath();g.moveTo(1*K,4*K);g.lineTo(3*K,4*K);g.stroke();
+    const MONO='"Courier New",ui-monospace,monospace';
+    g.textAlign='left'; g.textBaseline='alphabetic';
+    g.fillStyle=pal.ink; g.font=wt('kind','700')+' '+(z('kind',4.6)*K)+'px '+MONO;
+    g.fillText(kind,3.5*K,H*0.40);
+    g.font=wt('topic','400')+' '+(z('topic',2.2)*K)+'px '+MONO; g.fillStyle=pal.m;
+    g.fillText([lesson,topic].filter(Boolean).join(' / '),3.5*K,H*0.62);
+    const meta=['SINIF: '+(cfg.grade||'—'),teacher?'OGR: '+teacher:''].filter(Boolean).join('   ');
+    g.font=wt('teacher','400')+' '+(z('teacher',1.8)*K)+'px '+MONO; g.fillStyle='#6B8578';
+    g.fillText(meta,3.5*K,H*0.80);
+    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ 15) EDİTORYAL — dev ince rakam + sıkı başlık, dergi ═══ */
+  if(cfg.template==='editorial'){
+    g.textAlign='left'; g.textBaseline='alphabetic';
+    g.fillStyle=pal.soft; g.font='300 '+(15*K)+'px '+DISP;
+    const numTxt=(cfg.kindNo||'01');
+    g.fillText(numTxt,2*K,H*0.82);
+    const rx=W*0.30;
+    g.fillStyle=pal.a; g.fillRect(rx-3*K,H*0.18,0.6*K,H*0.62);
+    g.fillStyle=pal.ink;
+    let fs=fit(kind,6,W-rx-3*K,'800','kind'); g.font=wt('kind','800')+' '+(fs*K)+'px '+DISP;
+    g.fillText(kind,rx,H*0.40);
+    g.font=rf('lesson',2.6,'800'); g.fillStyle=pal.m; g.fillText(lesson,rx,H*0.60);
+    if(topic){ g.font=rfb('topic',2.6,'500'); g.fillStyle='#475569'; g.fillText(topic,rx,H*0.76); }
+    const sub=[cfg.grade?cfg.grade+'. Sınıf':'',teacher].filter(Boolean).join('  ·  ');
+    if(sub){ g.font=rfb('teacher',2,'500'); g.fillStyle='#94A3B8'; g.fillText(sub,rx,H*0.90); }
     g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
   }
 
