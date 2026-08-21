@@ -2850,6 +2850,30 @@ function headerImage(cfg){
       g.drawImage(window._logoImg||cfg.logo.url,cx-lw/2,cy-lh/2,lw,lh); g.restore(); return lw; }
     catch(e){ return 0; }
   }
+  // Her şablonda tutarlı logo: köşeye damgala, sonra veri url döndür.
+  // pos: 'auto' şablonun serbest köşesini seçer.
+  function stamp(pos){
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{
+        const r=cfg.logo.w/cfg.logo.h;
+        const sizeMul=(cfg.logoSize||100)/100;
+        let lh=Math.min(H*0.62,(headerH(cfg)*0.55)*K)*sizeMul;
+        let lw=lh*r;
+        const maxw=W*0.22; if(lw>maxw){ lw=maxw; lh=lw/r; }
+        const maxh=H*0.72; if(lh>maxh){ lh=maxh; lw=lh*r; }
+        let x,y;
+        const P2=1.4*K;
+        // konum: şablona göre çakışmayan köşe
+        if(pos==='TL'){ x=P2; y=P2; }
+        else if(pos==='TR'){ x=W-lw-P2; y=P2; }
+        else if(pos==='BR'){ x=W-lw-P2; y=H-lh-P2; }
+        else { x=W-lw-P2; y=P2; }   // varsayılan sağ üst
+        g.save(); g.globalAlpha=(cfg.logoOp||100)/100;
+        g.drawImage(window._logoImg,x,y,lw,lh); g.restore();
+      }catch(e){}
+    }
+    return c.toDataURL('image/jpeg',0.95);
+  }
 
   const lesson=up(cfg.lesson||'KİMYA');
   const kind=up(cfg.kind||'TEST 1');
@@ -2885,7 +2909,7 @@ function headerImage(cfg){
     }
     // ince alt çizgi
     g.fillStyle=pal.a; g.fillRect(bar,H-0.7*K,W-bar,0.7*K);
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('BR');
   }
 
   /* ═══ 2) SERİF AKADEMİK — ortalı, çift ince çizgi, dingin ═══ */
@@ -2907,7 +2931,7 @@ function headerImage(cfg){
     g.beginPath();g.moveTo(W*0.36,H*0.68);g.lineTo(W*0.64,H*0.68);g.stroke();
     const sub=[lesson,topic].filter(Boolean).join('  ·  ');
     if(sub){ g.font=rfb('topic',2.5,'500'); g.fillStyle=pal.m; g.fillText(sub,W/2,H*0.86); }
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TL');
   }
 
   /* ═══ 3) BANT — üstte tek renk ince bant + altında beyaz künye ═══ */
@@ -2916,7 +2940,7 @@ function headerImage(cfg){
     g.fillStyle=pal.d; g.fillRect(0,0,W,bandH);
     // bant içi: sol ders, sağ tür
     g.textBaseline='middle';
-    const lx=drawLogo(bandH*0.7,bandH*0.7,4*K,bandH/2);
+    const lx=0;
     g.fillStyle='#fff'; g.textAlign='left';
     let fs=fit(lesson,3.8,W*0.5,'800','lesson'); g.font=wt('lesson','800')+' '+(fs*K)+'px '+DISP;
     g.fillText(lesson,(lx?lx*0+8*K:3*K),bandH/2);
@@ -2932,7 +2956,7 @@ function headerImage(cfg){
       g.font=rfb('teacher',2.3,'500'); g.fillText(teacher,W-3*K,cy); }
     g.strokeStyle=pal.soft; g.lineWidth=0.5*K;
     g.beginPath();g.moveTo(0,bandH);g.lineTo(W,bandH);g.stroke();
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TL');
   }
 
   /* ═══ 4) KÖŞE — sol üst renkli aksan bloğu, gerisi minimal ═══ */
@@ -2952,7 +2976,7 @@ function headerImage(cfg){
     g.fillText(kind,rx,H*0.42);
     if(topic){ g.font=rfb('topic',2.5,'600'); g.fillStyle=pal.m; g.fillText(topic,rx,H*0.66); }
     if(teacher){ g.font=rfb('teacher',2.1,'500'); g.fillStyle='#94A3B8'; g.fillText(teacher,rx,H*0.86); }
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TR');
   }
 
   /* ═══ 5) ÖSYM — resmi sınav formatı (korundu, rötuşlandı) ═══ */
@@ -2975,7 +2999,7 @@ function headerImage(cfg){
       g.fillStyle='#475569'; g.font='600 '+(2*K)+'px '+BODY;
       g.fillText(t,x+1.2*K,by+2.6*K);
     });
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TR');
   }
 
   /* ═══ 11) HEXAGON — bal peteği + ders altıgende, kimyanın imzası ═══ */
@@ -3003,7 +3027,7 @@ function headerImage(cfg){
     const sub=[cfg.grade?cfg.grade+'. Sınıf':'',teacher].filter(Boolean).join('  ·  ');
     if(sub){ g.font=rfb('teacher',2,'500'); g.fillStyle='#94A3B8'; g.fillText(sub,rx,H*0.84); }
     g.fillStyle=pal.a; g.fillRect(0,H-0.8*K,W,0.8*K);
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TR');
   }
 
   /* ═══ 12) PERİYODİK — ders adı periyodik tablo hücresi gibi ═══ */
@@ -3025,7 +3049,7 @@ function headerImage(cfg){
     g.fillText(kind,rx,H*0.40);
     if(topic){ g.font=rfb('topic',2.6,'600'); g.fillStyle=pal.m; g.fillText(topic,rx,H*0.64); }
     if(teacher){ g.font=rfb('teacher',2.1,'500'); g.fillStyle='#94A3B8'; g.fillText(teacher,rx,H*0.83); }
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TR');
   }
 
   /* ═══ 13) MOLEKÜL — atom-bağ motifi, minimal bilimsel ═══ */
@@ -3043,7 +3067,7 @@ function headerImage(cfg){
     const sub=[lesson,topic].filter(Boolean).join('  ·  ');
     if(sub){ g.font=rfb('topic',2.4,'600'); g.fillStyle=pal.m; g.fillText(sub,3*K,H*0.66); }
     if(cfg.grade){ g.font=rfb('teacher',2,'500'); g.fillStyle='#94A3B8'; g.fillText(cfg.grade+'. Sınıf',3*K,H*0.84); }
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TL');
   }
 
   /* ═══ 14) BLUEPRINT — deney defteri / teknik çizim ═══ */
@@ -3063,7 +3087,7 @@ function headerImage(cfg){
     const meta=['SINIF: '+(cfg.grade||'—'),teacher?'OGR: '+teacher:''].filter(Boolean).join('   ');
     g.font=wt('teacher','400')+' '+(z('teacher',1.8)*K)+'px '+MONO; g.fillStyle='#6B8578';
     g.fillText(meta,3.5*K,H*0.80);
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TR');
   }
 
   /* ═══ 15) EDİTORYAL — dev ince rakam + sıkı başlık, dergi ═══ */
@@ -3081,7 +3105,7 @@ function headerImage(cfg){
     if(topic){ g.font=rfb('topic',2.6,'500'); g.fillStyle='#475569'; g.fillText(topic,rx,H*0.76); }
     const sub=[cfg.grade?cfg.grade+'. Sınıf':'',teacher].filter(Boolean).join('  ·  ');
     if(sub){ g.font=rfb('teacher',2,'500'); g.fillStyle='#94A3B8'; g.fillText(sub,rx,H*0.90); }
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TR');
   }
 
   /* ═══ 7) WAVE — sağ üst akan renkli kesim, dinamik ═══ */
@@ -3102,7 +3126,7 @@ function headerImage(cfg){
     g.font=rf('lesson',3,'800'); g.fillText(lesson,W-4*K,H*0.40);
     const line2=[cfg.grade?cfg.grade+'. Sınıf':'',teacher].filter(Boolean).join(' · ');
     if(line2){ g.font=rfb('teacher',2,'500'); g.fillStyle=pal.soft; g.fillText(line2,W-4*K,H*0.66); }
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TL');
   }
 
   /* ═══ 8) SIDEBAR — sol tam boy panel + dikey ders, dergi kapağı ═══ */
@@ -3122,7 +3146,7 @@ function headerImage(cfg){
     if(topic){ g.font=rfb('topic',2.6,'600'); g.fillStyle=pal.m; g.fillText(topic,rx,H*0.60); }
     const sub=[teacher,cfg.grade?cfg.grade+'. Sınıf':''].filter(Boolean).join('  ·  ');
     if(sub){ g.font=rfb('teacher',2.1,'500'); g.fillStyle='#94A3B8'; g.fillText(sub,rx,H*0.80); }
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TR');
   }
 
   /* ═══ 9) STRIPE — çift çizgi arasında ortalı, zarif ═══ */
@@ -3137,7 +3161,7 @@ function headerImage(cfg){
     if(sub){ g.font=rfb('topic',2.4,'600'); g.fillStyle=pal.m; g.fillText(sub,W/2,H*0.74); }
     g.fillStyle=pal.a; g.fillRect(0,H-2.6*K,W,1.1*K);
     g.fillStyle=pal.m; g.fillRect(0,H-3.6*K,W,0.4*K);
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TL');
   }
 
   /* ═══ 10) BADGE — altıgen madalyon + başlık, kurumsal ═══ */
@@ -3157,7 +3181,7 @@ function headerImage(cfg){
     const sub=[lesson,topic].filter(Boolean).join('  ·  ');
     if(sub){ g.font=rfb('topic',2.3,'600'); g.fillStyle=pal.m; g.fillText(sub,rx,H*0.66); }
     g.fillStyle=pal.a; g.fillRect(rx,H-2.4*K,(W-rx-3*K)*0.4,0.7*K);
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('TR');
   }
 
   /* ═══ 6) MİNİMAL — tek satır, ince alt kural ═══ */
@@ -3169,7 +3193,7 @@ function headerImage(cfg){
     const sub=[lesson,topic,cfg.date].filter(Boolean).join('  ·  ');
     g.fillText(sub,W,H*0.5);
     g.fillStyle=pal.a; g.fillRect(0,H-1.1*K,W,1.1*K);
-    g.textAlign='left'; return c.toDataURL('image/jpeg',0.95);
+    g.textAlign='left'; return stamp('auto');
   }
 
   // varsayılan: minimal benzeri
@@ -3177,7 +3201,7 @@ function headerImage(cfg){
   g.fillText(kind,0,H/2);
   g.fillStyle=pal.a; g.fillRect(0,H-1*K,W,1*K);
   g.textAlign='left';
-  return c.toDataURL('image/jpeg',0.95);
+  return stamp('auto');
 }
 
 let PAGES=[], HDR='', CFG=null, BOOKS=[];
