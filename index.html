@@ -4174,8 +4174,11 @@ function foyRender(){
     card.appendChild(bar);
     const body=document.createElement('div'); body.className='foy-b-body';
     if(b.type==='head'){
-      body.innerHTML='<input class="foy-in" placeholder="Başlık metni (örn. Logaritma Fonksiyonu)" '+
-        'value="'+esc(b.text)+'" oninput="foyBlocks['+i+'].text=this.value"/>'+
+      body.innerHTML='<div class="foy-hprev"><span class="foy-htag" style="background:'+(b.color||'#8B5CF6')+'">'+
+        (esc(b.text)||'BAŞLIK').toUpperCase()+'</span>'+
+        '<span class="foy-hstripes" style="--sc:'+(b.color||'#8B5CF6')+'"></span></div>'+
+        '<input class="foy-in" placeholder="Başlık metni (örn. Logaritma Fonksiyonu)" '+
+        'value="'+esc(b.text)+'" oninput="foyBlocks['+i+'].text=this.value;foyRender()"/>'+
         '<div class="foy-colors">'+
         ['#8B5CF6','#0E7C5A','#1D4ED8','#B45309','#9B1C31','#0F766E'].map(c=>
           '<span class="foy-c'+(b.color===c?' on':'')+'" style="background:'+c+'" onclick="foyBlocks['+i+'].color=\''+c+'\';foyRender()"></span>').join('')+
@@ -4274,13 +4277,24 @@ async function foyBuild(){
 
   for(const b of foyBlocks){
     if(b.type==='head'){
-      ensure(12);
+      ensure(16);
       const rgb=hexToRgb(b.color||'#8B5CF6');
+      doc.setTextColor(255,255,255);
+      doc.setFont('helvetica','bold'); doc.setFontSize(12);
+      const label=(b.text||'').toUpperCase();
+      const tw2=doc.getTextWidth(label);
+      const h=8.5, sk=3, lw=tw2+9;
+      // eğik etiket (paralelkenar) — kapalı poligon (lines)
       doc.setFillColor(rgb[0],rgb[1],rgb[2]);
-      doc.rect(M,y,3,8,'F');
-      doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(rgb[0],rgb[1],rgb[2]);
-      doc.text((b.text||'').toUpperCase(), M+6, y+6);
-      y+=13;
+      doc.lines([[lw,0],[-sk,h],[-(lw-sk),0]], M, y, [1,1], 'F', true);
+      doc.text(label, M+4.5, y+6);
+      // diyagonal şeritler
+      let sx=M+lw+3;
+      for(let k=0;k<3;k++){
+        doc.lines([[3.5,0],[-sk,h],[-3.5,0]], sx, y, [1,1], 'F', true);
+        sx+=4.2;
+      }
+      y+=h+4;
     } else if(b.type==='text'){
       doc.setFont('helvetica','normal'); doc.setTextColor(40);
       const lines=wrap(b.text,11,W);
@@ -4396,6 +4410,9 @@ const css=`
 .foy-in{width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px}
 .foy-ta{width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;min-height:70px;resize:vertical;font-family:inherit;line-height:1.5}
 .foy-colors{display:flex;gap:7px}
+.foy-hprev{display:flex;align-items:stretch;height:32px;margin-bottom:4px}
+.foy-htag{display:flex;align-items:center;padding:0 16px 0 12px;color:#fff;font-weight:800;font-size:14px;letter-spacing:.03em;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 100%,0 100%)}
+.foy-hstripes{width:34px;background:repeating-linear-gradient(105deg,var(--sc) 0,var(--sc) 8px,transparent 8px,transparent 13px)}
 .foy-c{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .foy-c.on{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
 .foy-thumb{max-width:100%;max-height:160px;border-radius:8px;align-self:center}
