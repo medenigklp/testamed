@@ -733,7 +733,11 @@ input,select,textarea{font:inherit}
     <!-- Föy (Konu Anlatım) Ekranı -->
     <div class="scr" id="s-foy">
       <div id="foy-head">
-        <input id="foy-title" placeholder="Föy başlığı (örn. Logaritma — Temel Kavramlar)" oninput="foyRender()"/>
+        <input id="foy-title" placeholder="Föy başlığı (örn. Logaritma — Temel Kavramlar)"/>
+        <div class="foy-theme">
+          <span class="foy-theme-lbl">Föy rengi</span>
+          <div class="foy-theme-dots" id="foy-theme-dots"></div>
+        </div>
         <div class="foy-add">
           <button onclick="foyAdd('head')">＋ Başlık</button>
           <button onclick="foyAdd('text')">＋ Metin</button>
@@ -1110,7 +1114,13 @@ input,select,textarea{font:inherit}
       <div class="chk"><input type="checkbox" id="f-info" checked/><label for="f-info">Ad Soyad / Sınıf / Puan tablosu</label></div>
       <div class="chk"><input type="checkbox" id="f-conthdr" checked onchange="preview()"/><label for="f-conthdr">2. sayfadan itibaren üst bilgi çubuğu (ders · konu)</label></div>
       <div class="chk"><input type="checkbox" id="f-pts"/><label for="f-pts">Her soruda puan yazsın</label></div>
-      <div class="chk"><input type="checkbox" id="f-key"/><label for="f-key">Sona cevap anahtarı sayfası</label></div>
+      <div class="chk"><input type="checkbox" id="f-key"/><label for="f-key">Cevap anahtarı ekle</label></div>
+      <div class="f" id="f-keypos-wrap"><label>Cevap anahtarı konumu</label>
+        <select id="f-keypos">
+          <option value="son" selected>Son sayfada toplu liste</option>
+          <option value="altkose">Her sayfanın sağ alt köşesinde</option>
+        </select>
+      </div>
     </div>
 
     <!-- P6: Kitapçık & Optik -->
@@ -1701,6 +1711,14 @@ function showFloatingCropBar(x, y){
   bar.style.top = (y + 8) + 'px';
   setFloatingOpt('A');
   $('floatingCustomText').value = '';
+  // Föy moduysa: cevap şıkkı ve özel cevap satırlarını gizle (sadece ✓/✕ kalsın)
+  const foyMode = window.foyCropTarget!=null;
+  const rows = bar.querySelectorAll('.cfb-row');
+  rows.forEach((r,idx)=>{
+    const optBtns=r.querySelectorAll('.cfb-btn');
+    optBtns.forEach(b=>b.style.display=foyMode?'none':'');
+    if(idx===1) r.style.display=foyMode?'none':''; // özel cevap satırı
+  });
 }
 
 function hideFloatingCropBar(){
@@ -1717,6 +1735,17 @@ function setFloatingOpt(opt){
 
 function confirmFloatingCrop(){
   if(!pendingCropData) return;
+
+  // Föy kırpma modu: sonucu föy bloğuna yaz, föye dön
+  if(window.foyCropTarget!=null){
+    const bi=window.foyCropTarget; window.foyCropTarget=null;
+    if(foyBlocks[bi]) foyBlocks[bi].img=pendingCropData.img;
+    hideFloatingCropBar();
+    toast('Föye eklendi');
+    go('foy');
+    return;
+  }
+
   const custom = $('floatingCustomText').value.trim();
   const finalAns = custom || pendingCropOpt;
 
@@ -1738,6 +1767,7 @@ function confirmFloatingCrop(){
 
 function cancelFloatingCrop(){
   pendingCropData = null;
+  if(window.foyCropTarget!=null){ window.foyCropTarget=null; hideFloatingCropBar(); go('foy'); return; }
   hideFloatingCropBar();
 }
 
@@ -2668,7 +2698,7 @@ function openTest(t,edit){
     set('f-hdrtheme',c.hdrtheme||'emerald');
     set('f-qnumformat',c.qnumformat||'std');
     set('f-mleft',c.mLeft||12);set('f-mright',c.mRight||12);set('f-mtop',c.mTop||12);set('f-mbot',c.mBottom||12);
-    $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key;
+    $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key; if($('f-keypos')&&c.keypos)$('f-keypos').value=c.keypos;
     $('f-optic').checked=!!c.optic;$('f-qr').checked=!!c.qr;
     if(c.customPagePlan) customPageDistribution = c.customPagePlan.slice();
   }
@@ -3704,6 +3734,7 @@ function cfgNow(){
     info: $('f-info') ? $('f-info').checked : true,
     pts: $('f-pts') ? $('f-pts').checked : false,
     key: $('f-key') ? $('f-key').checked : false,
+    keypos: ($('f-keypos') && $('f-keypos').value) || 'son',
     book: parseInt($('f-book') && $('f-book').value)||1,
     optic: $('f-optic') ? $('f-optic').checked : false,
     qr: $('f-qr') ? $('f-qr').checked : false,
@@ -3974,6 +4005,19 @@ function drawBook(doc, book, first){
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(150);
     const foot=(book.letter?book.letter+' · ':'')+(i+1)+' / '+pages.length;
     doc.text(foot, PAGE.w-mRight, PAGE.h-6, {align:'right'});
+
+    // Cevap anahtarı — her sayfanın sağ alt köşesinde (o sayfadaki sorular)
+    if(CFG.key && (CFG.keypos==='altkose') && pg.items.length){
+      const ans=pg.items.filter(it=>it.q&&it.q.ans).map(it=>it.num+'-'+it.q.ans);
+      if(ans.length){
+        const trgb=P_THEME(CFG.hdrtheme).a;
+        doc.setFontSize(7); doc.setTextColor(trgb[0],trgb[1],trgb[2]);
+        const txt='Cevaplar: '+ans.join('  ');
+        const lines=doc.splitTextToSize(txt, 70);
+        let ky=PAGE.h-11-(lines.length-1)*3.2;
+        lines.forEach(ln=>{ doc.text(ln, PAGE.w-mRight, ky, {align:'right'}); ky+=3.2; });
+      }
+    }
   });
   if(CFG.teacher){
     doc.setFontSize(9); doc.setTextColor(60);
@@ -4067,10 +4111,36 @@ function makePdf(){
   BOOKS.forEach((book,bi)=>{
     drawBook(doc, book, bi===0);
     if(CFG.optic) drawOptic(doc, book);
-    if(CFG.key && hasAns) drawKey(doc, book);
+    if(CFG.key && hasAns && (CFG.keypos||'son')==='son') drawKeyPage(doc, book);
   });
   drawWatermark(doc, CFG);
   return doc;
+}
+
+// Cevap anahtarı — son sayfada toplu liste
+function drawKeyPage(doc, book){
+  doc.addPage();
+  const M=CFG.mLeft||14, W=PAGE.w-M-(CFG.mRight||14);
+  let y=M+4;
+  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(30);
+  doc.text('CEVAP ANAHTARI'+(book.letter?'  ·  '+book.letter+' Kitapçığı':''), M, y);
+  const trgb=P_THEME(CFG.hdrtheme).a;
+  doc.setDrawColor(trgb[0],trgb[1],trgb[2]); doc.setLineWidth(0.7);
+  doc.line(M,y+3,M+W,y+3); y+=12;
+  // ızgara: 5'li sütunlar
+  const list=book.list||qs;
+  const perCol=Math.ceil(list.length/ Math.max(1, Math.floor(W/38)));
+  const cols=Math.ceil(list.length/perCol);
+  const cw=W/cols;
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  list.forEach((q,idx)=>{
+    const col=Math.floor(idx/perCol), row=idx%perCol;
+    const x=M+col*cw, yy=y+row*8;
+    doc.setTextColor(90); doc.text((idx+1)+'.', x, yy);
+    doc.setTextColor(trgb[0],trgb[1],trgb[2]); doc.setFont('helvetica','bold');
+    doc.text(String(q.ans||'—'), x+9, yy);
+    doc.setFont('helvetica','normal');
+  });
 }
 
 function fileName(){
@@ -4118,6 +4188,14 @@ async function sharePdf(){
 
 /* ═══════════════ KONU ANLATIM FÖYÜ MODÜLÜ ═══════════════ */
 let foyBlocks=[];   // {type, ...içerik}
+let foyTheme='#8B5CF6';
+const FOY_THEMES=['#8B5CF6','#0E7C5A','#1D4ED8','#B45309','#9B1C31','#0F766E','#0891B2','#DB2777'];
+function foyRenderThemeDots(){
+  const host=$('foy-theme-dots'); if(!host) return;
+  host.innerHTML=FOY_THEMES.map(c=>'<span class="foy-tdot'+(foyTheme===c?' on':'')+'" style="background:'+c+'" onclick="foySetTheme(\''+c+'\')"></span>').join('');
+}
+function foySetTheme(c){ foyTheme=c; foyRenderThemeDots(); foyRender(); }
+
 let foyDragIdx=null;
 
 const FOY_LABELS={
@@ -4135,7 +4213,7 @@ const FOY_NOTE_KINDS={
 
 function foyAdd(type){
   const b={type};
-  if(type==='head'){ b.text=''; b.color='#8B5CF6'; }
+  if(type==='head'){ b.text=''; b.color=foyTheme; }
   else if(type==='text'){ b.text=''; }
   else if(type==='note'){ b.kind='uyari'; b.text=''; }
   else if(type==='pdf'){ b.img=null; }
@@ -4155,6 +4233,7 @@ function foyMove(i,dir){
 }
 
 function foyRender(){
+  foyRenderThemeDots();
   const host=$('foy-list'); if(!host) return;
   host.innerHTML='';
   if(!foyBlocks.length){
@@ -4163,22 +4242,26 @@ function foyRender(){
     return;
   }
   foyBlocks.forEach((b,i)=>{
-    const card=document.createElement('div'); card.className='foy-b';
+    const card=document.createElement('div'); card.className='foy-b'+(b.half?' half-on':'');
     // üst araç çubuğu
     const bar=document.createElement('div'); bar.className='foy-b-bar';
+    const halfBtn=(b.type==='space')?'':
+      '<button onclick="foyBlocks['+i+'].half=!foyBlocks['+i+'].half;foyRender()" title="Genişlik" class="wbtn">'+
+      (b.half?'◧ Yarım':'▭ Tam')+'</button>';
     bar.innerHTML='<span class="foy-b-t">'+FOY_LABELS[b.type]+'</span>'+
-      '<span class="foy-b-actions">'+
+      '<span class="foy-b-actions">'+halfBtn+
       '<button onclick="foyMove('+i+',-1)" title="Yukarı">▲</button>'+
       '<button onclick="foyMove('+i+',1)" title="Aşağı">▼</button>'+
       '<button onclick="foyDel('+i+')" title="Sil" class="del">✕</button></span>';
     card.appendChild(bar);
     const body=document.createElement('div'); body.className='foy-b-body';
     if(b.type==='head'){
-      body.innerHTML='<div class="foy-hprev"><span class="foy-htag" style="background:'+(b.color||'#8B5CF6')+'">'+
+      body.innerHTML='<div class="foy-hprev"><span class="foy-htag" id="htag'+i+'" style="background:'+(b.color||'#8B5CF6')+'">'+
         (esc(b.text)||'BAŞLIK').toUpperCase()+'</span>'+
-        '<span class="foy-hstripes" style="--sc:'+(b.color||'#8B5CF6')+'"></span></div>'+
+        '<span class="foy-hstripes" id="hstr'+i+'" style="--sc:'+(b.color||'#8B5CF6')+'"></span></div>'+
         '<input class="foy-in" placeholder="Başlık metni (örn. Logaritma Fonksiyonu)" '+
-        'value="'+esc(b.text)+'" oninput="foyBlocks['+i+'].text=this.value;foyRender()"/>'+
+        'value="'+esc(b.text)+'" oninput="foyBlocks['+i+'].text=this.value;'+
+        'var t=document.getElementById(\'htag'+i+'\');if(t)t.textContent=(this.value||\'BAŞLIK\').toUpperCase()"/>'+
         '<div class="foy-colors">'+
         ['#8B5CF6','#0E7C5A','#1D4ED8','#B45309','#9B1C31','#0F766E'].map(c=>
           '<span class="foy-c'+(b.color===c?' on':'')+'" style="background:'+c+'" onclick="foyBlocks['+i+'].color=\''+c+'\';foyRender()"></span>').join('')+
@@ -4187,11 +4270,15 @@ function foyRender(){
       body.innerHTML='<textarea class="foy-ta" placeholder="Metni buraya yaz (tanım, açıklama, formül...)" '+
         'oninput="foyBlocks['+i+'].text=this.value">'+esc(b.text)+'</textarea>';
     } else if(b.type==='note'){
-      body.innerHTML='<select class="foy-in" onchange="foyBlocks['+i+'].kind=this.value;foyRender()">'+
+      const nk=FOY_NOTE_KINDS[b.kind]||FOY_NOTE_KINDS.uyari;
+      body.innerHTML='<div class="foy-note-prev" style="background:'+nk.bg+';border-color:'+nk.c+'">'+
+        '<span class="foy-note-tag" style="background:'+nk.c+'">'+nk.t+'</span>'+
+        '<span class="foy-note-txt" id="ntxt'+i+'">'+(esc(b.text)||'Kutu içeriği burada görünür')+'</span></div>'+
+        '<select class="foy-in" onchange="foyBlocks['+i+'].kind=this.value;foyRender()">'+
         Object.keys(FOY_NOTE_KINDS).map(k=>'<option value="'+k+'"'+(b.kind===k?' selected':'')+'>'+
           FOY_NOTE_KINDS[k].ic+' '+FOY_NOTE_KINDS[k].t+'</option>').join('')+'</select>'+
         '<textarea class="foy-ta" placeholder="Kutu içeriği" '+
-        'oninput="foyBlocks['+i+'].text=this.value">'+esc(b.text)+'</textarea>';
+        'oninput="foyBlocks['+i+'].text=this.value;var t=document.getElementById(\'ntxt'+i+'\');if(t)t.textContent=this.value||\'Kutu içeriği burada görünür\'">'+esc(b.text)+'</textarea>';
     } else if(b.type==='pdf'){
       if(b.img){
         body.innerHTML='<img class="foy-thumb" src="'+b.img+'"/>'+
@@ -4221,18 +4308,36 @@ function foyRender(){
 
 function esc(s){ return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
-// PDF/foto bloğu için: mevcut kırpma akışını kullan
+// PDF/foto bloğu için: kitaptan kırp ya da galeriden seç
 function foyPickSource(i){
-  foyPendingBlock=i;
-  // basit dosya seçici (görsel) — PDF kırpma akışına bağlanabilir ama önce görsel
+  foyChoice(i);
+}
+function foyChoice(i){
+  const wrap=document.createElement('div');
+  wrap.className='foy-choice-ov';
+  wrap.innerHTML='<div class="foy-choice"><h3>Görsel kaynağı</h3>'+
+    '<button onclick="foyFromSource('+i+')">📄 PDF / kitaptan kırp</button>'+
+    '<button onclick="foyFromGallery('+i+')">🖼️ Galeriden / fotoğraftan seç</button>'+
+    '<button class="cx" onclick="this.closest(\'.foy-choice-ov\').remove()">Vazgeç</button></div>';
+  wrap.onclick=e=>{ if(e.target===wrap) wrap.remove(); };
+  document.body.appendChild(wrap);
+}
+function foyFromSource(i){
+  document.querySelectorAll('.foy-choice-ov').forEach(x=>x.remove());
+  window.foyCropTarget=i;
+  // kaynak ekranına git (PDF/foto yükleme + kırpma orada)
+  if(!active){ toast('Önce bir PDF veya fotoğraf yükle'); }
+  go('view');
+  toast('İstediğin yeri kutu çizerek kırp, onayla');
+}
+function foyFromGallery(i){
+  document.querySelectorAll('.foy-choice-ov').forEach(x=>x.remove());
   const inp=document.createElement('input');
   inp.type='file'; inp.accept='image/*';
-  inp.onchange=e=>{
+  inp.onchange=()=>{
     const f=inp.files[0]; if(!f) return;
     const fr=new FileReader();
-    fr.onload=()=>{ shrinkImage(fr.result,1400,(url)=>{
-      foyBlocks[i].img=url; foyRender();
-    }); };
+    fr.onload=()=>{ shrinkImage(fr.result,1400,(url)=>{ foyBlocks[i].img=url; foyRender(); }); };
     fr.readAsDataURL(f);
   };
   inp.click();
@@ -4241,12 +4346,12 @@ let foyPendingBlock=null;
 
 function foySave(){
   const t=($('foy-title')&&$('foy-title').value)||'Föy';
-  try{ localStorage.setItem('testamed_foy',JSON.stringify({title:t,blocks:foyBlocks})); 
+  try{ localStorage.setItem('testamed_foy',JSON.stringify({title:t,blocks:foyBlocks,theme:foyTheme})); 
     toast('Föy kaydedildi'); }catch(e){ toast('Kaydedilemedi',true); }
 }
 function foyLoad(){
   try{ const d=JSON.parse(localStorage.getItem('testamed_foy')||'null');
-    if(d){ if($('foy-title'))$('foy-title').value=d.title||''; foyBlocks=d.blocks||[]; foyRender(); }
+    if(d){ if($('foy-title'))$('foy-title').value=d.title||''; foyBlocks=d.blocks||[]; if(d.theme)foyTheme=d.theme; foyRender(); }
   }catch(e){}
 }
 
@@ -4268,85 +4373,116 @@ async function foyBuild(){
 
   // föy başlığı
   if(title){
-    doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(30);
+    const trgb=hexToRgb(foyTheme);
+    doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(trgb[0],trgb[1],trgb[2]);
     doc.text(title, M, y+6);
-    doc.setDrawColor(139,92,246); doc.setLineWidth(0.8);
+    doc.setDrawColor(trgb[0],trgb[1],trgb[2]); doc.setLineWidth(0.8);
     doc.line(M,y+9,M+W,y+9);
     y+=15;
   }
 
-  for(const b of foyBlocks){
+  // Tek bir bloğu (x,w) konumunda çiz, KULLANILAN yüksekliği döndür.
+  // measure=true ise çizmeden sadece yükseklik hesapla.
+  async function drawFB(b, x, w, yy, measure){
+    let cy=yy;
     if(b.type==='head'){
-      ensure(16);
-      const rgb=hexToRgb(b.color||'#8B5CF6');
-      doc.setTextColor(255,255,255);
-      doc.setFont('helvetica','bold'); doc.setFontSize(12);
-      const label=(b.text||'').toUpperCase();
-      const tw2=doc.getTextWidth(label);
-      const h=8.5, sk=3, lw=tw2+9;
-      // eğik etiket (paralelkenar) — kapalı poligon (lines)
-      doc.setFillColor(rgb[0],rgb[1],rgb[2]);
-      doc.lines([[lw,0],[-sk,h],[-(lw-sk),0]], M, y, [1,1], 'F', true);
-      doc.text(label, M+4.5, y+6);
-      // diyagonal şeritler
-      let sx=M+lw+3;
-      for(let k=0;k<3;k++){
-        doc.lines([[3.5,0],[-sk,h],[-3.5,0]], sx, y, [1,1], 'F', true);
-        sx+=4.2;
+      if(!measure){
+        const rgb=hexToRgb(b.color||'#8B5CF6');
+        doc.setTextColor(255,255,255);
+        doc.setFont('helvetica','bold'); doc.setFontSize(12);
+        const label=(b.text||'').toUpperCase();
+        const tw2=doc.getTextWidth(label);
+        const h=8.5, sk=3, lw=tw2+9;
+        doc.setFillColor(rgb[0],rgb[1],rgb[2]);
+        doc.lines([[lw,0],[-sk,h],[-(lw-sk),0]], x, cy, [1,1], 'F', true);
+        doc.text(label, x+4.5, cy+6);
+        let sx=x+lw+3;
+        for(let k=0;k<3;k++){ doc.lines([[3.5,0],[-sk,h],[-3.5,0]], sx, cy, [1,1], 'F', true); sx+=4.2; }
       }
-      y+=h+4;
+      return 12.5;
     } else if(b.type==='text'){
-      doc.setFont('helvetica','normal'); doc.setTextColor(40);
-      const lines=wrap(b.text,11,W);
-      lines.forEach(ln=>{ ensure(6); doc.text(ln,M,y+4); y+=5.6; });
-      y+=3;
+      doc.setFontSize(11);
+      const lines=doc.splitTextToSize(b.text||'', w);
+      if(!measure){
+        doc.setFont('helvetica','normal'); doc.setTextColor(40);
+        let ty=cy; lines.forEach(ln=>{ doc.text(ln,x,ty+4); ty+=5.6; });
+      }
+      return lines.length*5.6+3;
     } else if(b.type==='note'){
       const k=FOY_NOTE_KINDS[b.kind]||FOY_NOTE_KINDS.uyari;
-      const bg=hexToRgb(k.bg), fg=hexToRgb(k.c);
-      const lines=wrap(b.text,10.5,W-10);
-      const bh=Math.max(12, lines.length*5.2+8);
-      ensure(bh);
-      doc.setFillColor(bg[0],bg[1],bg[2]);
-      doc.roundedRect(M,y,W,bh,2,2,'F');
-      doc.setFillColor(fg[0],fg[1],fg[2]);
-      doc.rect(M,y,2.5,bh,'F');
-      doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(fg[0],fg[1],fg[2]);
-      doc.text(k.t, M+6, y+6);
-      doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(50);
-      let ty=y+11; lines.forEach(ln=>{ doc.text(ln,M+6,ty); ty+=5.2; });
-      y+=bh+4;
+      doc.setFontSize(10.5);
+      const lines=doc.splitTextToSize(b.text||'', w-14);
+      const tagH=7, bodyH=Math.max(8, lines.length*5.2+6), bh=tagH+bodyH;
+      if(!measure){
+        const bg=hexToRgb(k.bg), fg=hexToRgb(k.c);
+        doc.setFillColor(bg[0],bg[1],bg[2]); doc.roundedRect(x,cy,w,bh,2.5,2.5,'F');
+        doc.setFillColor(fg[0],fg[1],fg[2]); doc.rect(x,cy+2.5,2.5,bh-5,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(9);
+        const lw=doc.getTextWidth(k.t)+8, sk=2.5;
+        doc.setFillColor(fg[0],fg[1],fg[2]);
+        doc.lines([[lw,0],[-sk,tagH],[-(lw-sk),0]], x+4, cy+1.5, [1,1], 'F', true);
+        doc.setTextColor(255,255,255); doc.text(k.t, x+7, cy+6.2);
+        doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(45);
+        let ty=cy+tagH+5; lines.forEach(ln=>{ doc.text(ln,x+7,ty); ty+=5.2; });
+      }
+      return bh+5;
     } else if(b.type==='pdf'){
-      if(b.img){
-        const dim=await imgDim(b.img);
-        let iw=W*0.9, ih=iw*(dim.h/dim.w);
-        if(ih>150){ ih=150; iw=ih*(dim.w/dim.h); }
-        ensure(ih+4);
-        doc.addImage(b.img,'JPEG',M+(W-iw)/2,y,iw,ih);
-        y+=ih+5;
-      }
+      if(!b.img) return 0;
+      const dim=await imgDim(b.img);
+      let iw=w*0.96, ih=iw*(dim.h/dim.w);
+      const cap=measure? 999 : 150;
+      if(ih>cap){ ih=cap; iw=ih*(dim.w/dim.h); }
+      if(!measure) doc.addImage(b.img,'JPEG',x+(w-iw)/2,cy,iw,ih);
+      return ih+5;
     } else if(b.type==='example'){
-      ensure(10);
-      doc.setFillColor(236,240,248);
       const lbl='Örnek'+(b.text?' — '+b.text:'');
-      doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(30,64,120);
-      doc.roundedRect(M,y,Math.min(W,doc.getTextWidth(lbl)+8),7,1.5,1.5,'F');
-      doc.text(lbl, M+4, y+4.8);
-      y+=10;
-      // çözüm alanı
-      const sh=b.sol||25; ensure(sh);
-      const sx=M, sw=W;
-      if(b.grid==='grid'){
-        doc.setDrawColor(203,213,225); doc.setLineWidth(0.15);
-        for(let gx=sx;gx<=sx+sw;gx+=5) doc.line(gx,y,gx,y+sh);
-        for(let gy=y;gy<=y+sh;gy+=5) doc.line(sx,gy,sx+sw,gy);
-      } else if(b.grid==='lined'){
-        doc.setDrawColor(210,215,225); doc.setLineWidth(0.15);
-        for(let gy=y+6;gy<=y+sh;gy+=6) doc.line(sx,gy,sx+sw,gy);
+      const sh=b.sol||25;
+      if(!measure){
+        doc.setFillColor(236,240,248);
+        doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(30,64,120);
+        doc.roundedRect(x,cy,Math.min(w,doc.getTextWidth(lbl)+8),7,1.5,1.5,'F');
+        doc.text(lbl, x+4, cy+4.8);
+        const gy0=cy+10;
+        if(b.grid==='grid'){
+          doc.setDrawColor(203,213,225); doc.setLineWidth(0.15);
+          for(let gx=x;gx<=x+w;gx+=5) doc.line(gx,gy0,gx,gy0+sh);
+          for(let gy=gy0;gy<=gy0+sh;gy+=5) doc.line(x,gy,x+w,gy);
+        } else if(b.grid==='lined'){
+          doc.setDrawColor(210,215,225); doc.setLineWidth(0.15);
+          for(let gy=gy0+6;gy<=gy0+sh;gy+=6) doc.line(x,gy,x+w,gy);
+        }
       }
-      y+=sh+5;
+      return 10+sh+5;
     } else if(b.type==='space'){
-      y+=(b.h||20);
-      if(y>BOT){ doc.addPage(); y=M; }
+      return (b.h||20);
+    }
+    return 0;
+  }
+
+  // Yerleşim: half bloklar yan yana, tam bloklar bütün genişlik
+  const GAPX=8, colW=(W-GAPX)/2;
+  let i=0;
+  while(i<foyBlocks.length){
+    const b=foyBlocks[i];
+    const bHalf=b.half && b.type!=='space';
+    const next=foyBlocks[i+1];
+    const pairable = bHalf && next && next.half && next.type!=='space';
+    if(pairable){
+      // iki yarım blok yan yana
+      const hL=await drawFB(b,0,colW,0,true);
+      const hR=await drawFB(next,0,colW,0,true);
+      const rowH=Math.max(hL,hR);
+      ensure(rowH);
+      await drawFB(b, M, colW, y, false);
+      await drawFB(next, M+colW+GAPX, colW, y, false);
+      y+=rowH; i+=2;
+    } else {
+      const wBlk = bHalf ? colW : W;
+      const h=await drawFB(b,0,wBlk,0,true);
+      if(b.type==='space'){ y+=h; if(y>BOT){doc.addPage();y=M;} i++; continue; }
+      ensure(h);
+      await drawFB(b, M, wBlk, y, false);
+      y+=h; i++;
     }
   }
 
@@ -4396,6 +4532,11 @@ const css=`
 #s-foy{overflow-y:auto;padding:0;display:flex;flex-direction:column}
 #foy-head{padding:14px 16px 10px;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
 #foy-title{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;font-size:15px;font-weight:600;margin-bottom:9px}
+.foy-theme{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.foy-theme-lbl{font-size:12px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.03em}
+.foy-theme-dots{display:flex;gap:7px}
+.foy-tdot{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.foy-tdot.on{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
 .foy-add{display:flex;gap:7px;flex-wrap:wrap}
 .foy-add button{padding:8px 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--w);font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap}
 .foy-add button:active{background:var(--soft)}
@@ -4406,6 +4547,8 @@ const css=`
 .foy-b-t{font-weight:800;font-size:12px;color:var(--ink);text-transform:uppercase;letter-spacing:.03em}
 .foy-b-actions button{border:none;background:none;font-size:14px;padding:3px 6px;color:var(--soft);cursor:pointer}
 .foy-b-actions button.del{color:#e11d48}
+.foy-b-actions .wbtn{font-size:11px;font-weight:700;color:var(--or);padding:3px 8px;border:1px solid var(--line);border-radius:6px;margin-right:4px}
+.foy-b.half-on{border-color:var(--or)}
 .foy-b-body{padding:11px 12px;display:flex;flex-direction:column;gap:9px}
 .foy-in{width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px}
 .foy-ta{width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;min-height:70px;resize:vertical;font-family:inherit;line-height:1.5}
@@ -4413,6 +4556,9 @@ const css=`
 .foy-hprev{display:flex;align-items:stretch;height:32px;margin-bottom:4px}
 .foy-htag{display:flex;align-items:center;padding:0 16px 0 12px;color:#fff;font-weight:800;font-size:14px;letter-spacing:.03em;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 100%,0 100%)}
 .foy-hstripes{width:34px;background:repeating-linear-gradient(105deg,var(--sc) 0,var(--sc) 8px,transparent 8px,transparent 13px)}
+.foy-note-prev{border:1.5px solid;border-radius:9px;padding:8px 10px 10px;margin-bottom:4px;position:relative}
+.foy-note-tag{display:inline-block;color:#fff;font-weight:800;font-size:11px;padding:2px 10px 2px 8px;border-radius:4px;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%);margin-bottom:6px}
+.foy-note-txt{display:block;font-size:13px;color:#444;line-height:1.5;white-space:pre-wrap}
 .foy-c{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .foy-c.on{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
 .foy-thumb{max-width:100%;max-height:160px;border-radius:8px;align-self:center}
@@ -4422,6 +4568,11 @@ const css=`
 .foy-row select,.foy-row input[type=number]{padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;font-size:13px}
 #foy-bar{position:absolute;bottom:0;left:0;right:0;display:flex;gap:10px;align-items:center;padding:12px 16px;padding-bottom:calc(12px + var(--safe));background:rgba(245,247,242,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);z-index:30}
 #foy-bar .big{flex:2}#foy-bar .ghost{flex:1}
+.foy-choice-ov{position:fixed;inset:0;background:rgba(4,26,23,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px}
+.foy-choice{background:var(--w);border-radius:16px;padding:20px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px}
+.foy-choice h3{margin:0 0 6px;font-size:16px;color:var(--ink)}
+.foy-choice button{padding:14px;border:1.5px solid var(--line);border-radius:11px;background:var(--soft);font-size:14px;font-weight:700;color:var(--ink);text-align:left}
+.foy-choice button.cx{background:none;border:none;color:var(--soft);text-align:center;font-weight:600}
 .prof{display:flex;align-items:center;gap:13px;background:var(--w);border:1px solid var(--line);
   border-radius:16px;padding:14px;margin-bottom:4px;box-shadow:0 1px 2px rgba(14,26,23,.04)}
 .prof .pav{width:52px;height:52px;border-radius:15px;background:var(--bg);display:flex;
