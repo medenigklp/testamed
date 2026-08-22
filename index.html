@@ -364,6 +364,11 @@ input,select,textarea{font:inherit}
 #pv{flex:1;overflow:auto;background:#2B3833;padding:12px;-webkit-overflow-scrolling:touch}
 #pages{display:flex;flex-direction:column;gap:14px;align-items:center}
 .pg.land{aspect-ratio:297/210;max-width:720px}
+.pg .cont-hdr{position:absolute;display:flex;justify-content:space-between;align-items:flex-end;
+  padding-bottom:1.5%;border-bottom:1px solid;font-family:var(--body)}
+.pg .cont-hdr .ch-l{font-weight:800;font-size:1.5vw;letter-spacing:.02em}
+.pg .cont-hdr .ch-r{font-size:1.3vw;color:#94a3b8}
+@media(min-width:560px){.pg .cont-hdr .ch-l{font-size:8px}.pg .cont-hdr .ch-r{font-size:7px}}
 .pg{position:relative;width:100%;max-width:520px;aspect-ratio:210/297;background:#fff;
   box-shadow:0 6px 26px rgba(0,0,0,.3);border-radius:3px;overflow:hidden}
 .pg .ab{position:absolute;display:block}
@@ -1065,6 +1070,7 @@ input,select,textarea{font:inherit}
         <input id="f-gutter" placeholder="Örn. testamed yayınları"/>
       </div>
       <div class="chk"><input type="checkbox" id="f-info" checked/><label for="f-info">Ad Soyad / Sınıf / Puan tablosu</label></div>
+      <div class="chk"><input type="checkbox" id="f-conthdr" checked onchange="preview()"/><label for="f-conthdr">2. sayfadan itibaren üst bilgi çubuğu (ders · konu)</label></div>
       <div class="chk"><input type="checkbox" id="f-pts"/><label for="f-pts">Her soruda puan yazsın</label></div>
       <div class="chk"><input type="checkbox" id="f-key"/><label for="f-key">Sona cevap anahtarı sayfası</label></div>
     </div>
@@ -1716,7 +1722,7 @@ function drawTray(){
 
 /* Ayarlar & Şablonlar */
 const TMPL_KEY='testamed_tmpl';
-const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-orient','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm','f-logo-sz','f-logo-op','f-qfont','f-qsize','f-hfont','hz-kind','hz-lesson','hz-topic','hz-teacher','hw-kind','hw-lesson','hw-topic','hw-teacher'];
+const TMPL_FIELDS=['f-school','f-lesson','f-teacher','f-class','f-cols','f-orient','f-conthdr','f-max','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm','f-logo-sz','f-logo-op','f-qfont','f-qsize','f-hfont','hz-kind','hz-lesson','hz-topic','hz-teacher','hw-kind','hw-lesson','hw-topic','hw-teacher'];
 function loadTmpl(){
   setTimeout(()=>{try{['kind','lesson','topic','teacher'].forEach(hzLabel);}catch(_){}} ,0);
   try{
@@ -1858,7 +1864,7 @@ function fillSettings(){
   drawEditBar();
   if(!$('f-date').value) $('f-date').value=new Date().toLocaleDateString('tr-TR');
   spread();
-  ['f-cols','f-orient','f-max','f-sol','f-info','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm'].forEach(id=>{
+  ['f-cols','f-orient','f-max','f-sol','f-info','f-conthdr','f-school','f-lesson','f-teacher','f-class','f-book','f-sep','f-vsep','f-gutter','f-fill','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-kind','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm'].forEach(id=>{
     const e=$(id); if(e && !e._w){ e._w=1;
       e.addEventListener('change',()=>{ preview(); saveTmpl(); });
       e.addEventListener('input',saveTmpl);
@@ -2641,6 +2647,19 @@ function setOrient(cfg){
   else { PAGE.w=210; PAGE.h=297; }
 }
 const GAP=8, TITLE_H=6, AFTER=4, SOFT_K=0.88;
+const COMPACT_H=9;  // devam sayfası kompakt başlık yüksekliği (mm)
+// tema renklerini RGB olarak döndür (PDF için)
+function P_THEME(name){
+  const M={
+    emerald:{d:[11,61,46],a:[16,185,129]}, navy:{d:[12,27,51],a:[59,130,246]},
+    crimson:{d:[76,13,28],a:[225,29,72]}, amber:{d:[74,42,9],a:[245,158,11]},
+    dark:{d:[17,20,24],a:[100,116,139]}, purple:{d:[59,7,100],a:[139,92,246]},
+    teal:{d:[10,59,56],a:[20,184,166]}, rose:{d:[74,14,46],a:[236,72,153]},
+    slate:{d:[30,41,59],a:[100,116,139]}, gold:{d:[66,32,6],a:[202,138,4]},
+    indigo:{d:[30,27,75],a:[99,102,241]}
+  };
+  return M[name]||M.emerald;
+}
 
 function headerH(cfg){ 
   switch(cfg.template){
@@ -2669,11 +2688,13 @@ function slotFix(q, cfg){
 function availOf(i,cfg){ 
   const mTop = cfg.mTop || 12;
   const mBot = cfg.mBottom || 12;
-  return (PAGE.h - mBot) - (i===0 ? mTop + headerH(cfg) : mTop); 
+  const contH = (cfg.contHeader!==false) ? COMPACT_H : 0;
+  return (PAGE.h - mBot) - (i===0 ? mTop + headerH(cfg) : mTop + contH); 
 }
 function topOf(i,cfg){ 
   const mTop = cfg.mTop || 12;
-  return i===0 ? mTop + headerH(cfg) : mTop; 
+  const contH = (cfg.contHeader!==false) ? COMPACT_H : 0;
+  return i===0 ? mTop + headerH(cfg) : mTop + contH; 
 }
 
 function split(list,p){
@@ -2787,8 +2808,12 @@ function layout(list,cfg){
       groups.push(list.slice(offset));
     }
     const ks = groups.map((g, i) => pageK(g, availOf(i, cfg), colW, cfg));
-    const validKs = ks.filter(k => k !== null && !isNaN(k) && k > 0);
-    const K = validKs.length ? Math.min(1, Math.min(...validKs)) : 1;
+    // Bir grup hiç sığmıyorsa (çözüm boşlukları bile sayfaya sığmıyor) → plan geçersiz,
+    // doğal yerleşime dön ki sorular taşmasın, sayfalara bölünsün.
+    if (ks.some(k => k === null || isNaN(k) || k <= 0)) {
+      return packNatural(list, cfg, colW);
+    }
+    const K = Math.min(1, Math.min(...ks));
     return place(groups, K, cfg, colW);
   }
 
@@ -3396,6 +3421,17 @@ function drawPages(){
       h.style.cssText='left:'+pct(mLeft,PAGE.w)+';top:'+pct(mTop,PAGE.h)+
         ';width:'+pct(PAGE.w - mLeft - mRight, PAGE.w)+'';
       el.appendChild(h);
+    } else if(i>0 && CFG.contHeader!==false){
+      const ch=document.createElement('div'); ch.className='cont-hdr';
+      const pc=P_THEME(CFG.hdrtheme);
+      const rgb=a=>'rgb('+a[0]+','+a[1]+','+a[2]+')';
+      const left=(CFG.lesson||'').toUpperCase();
+      const right=(CFG.topic||CFG.school||CFG.teacher||'');
+      ch.innerHTML='<span class="ch-l" style="color:'+rgb(pc.d)+'">'+left+'</span>'+
+        '<span class="ch-r">'+right+'</span>';
+      ch.style.cssText='left:'+pct(mLeft,PAGE.w)+';top:'+pct(mTop,PAGE.h)+
+        ';width:'+pct(PAGE.w-mLeft-mRight,PAGE.w)+';border-color:'+rgb(pc.a);
+      el.appendChild(ch);
     }
 
     pg.items.forEach(it=>{
@@ -3549,6 +3585,7 @@ function cfgNow(){
     date: ($('f-date') && $('f-date').value.trim()) || '',
     cols: elCols ? (parseInt(elCols.value)||1) : 1,
     landscape: ($('f-orient') && $('f-orient').value==='yatay'),
+    contHeader: !($('f-conthdr') && $('f-conthdr').checked===false),
     sol: elSol ? (parseInt(elSol.value)||0) : 0,
     max: elMax ? (parseInt(elMax.value)||0) : 0,
     sep: ($('f-sep') && $('f-sep').value) || 'kesik',
@@ -3737,6 +3774,20 @@ function drawBook(doc, book, first){
         const tag=[(CFG.lesson||'test'),(book.letter||'-'),book.list.length+'s',(CFG.date||'')].join('|');
         drawQR(doc,tag,PAGE.w-mRight-13,mTop+(book.letter?9:0),13);
       }
+    } else if(CFG.contHeader!==false){
+      // Devam sayfaları: ince kompakt üst bilgi çubuğu
+      const th=COMPACT_H;
+      const cy=mTop+th-3;
+      const pc=P_THEME(CFG.hdrtheme);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(pc.d[0],pc.d[1],pc.d[2]);
+      const leftTxt=(CFG.lesson||'')+(book.letter?'  ·  '+book.letter:'');
+      doc.text(leftTxt.toUpperCase(), mLeft, cy);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(120);
+      const rightTxt=(CFG.topic||CFG.school||CFG.teacher||'');
+      if(rightTxt) doc.text(rightTxt, PAGE.w-mRight, cy, {align:'right'});
+      // ince çizgi
+      doc.setDrawColor(pc.a[0],pc.a[1],pc.a[2]); doc.setLineWidth(0.5);
+      doc.line(mLeft, mTop+th, PAGE.w-mRight, mTop+th);
     }
     pg.items.forEach(it=>{
       const labelText = formatQuestionNumber(it.num - 1, qNumFormat);
