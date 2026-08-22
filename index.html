@@ -4529,7 +4529,8 @@ function imgDim(url){
 
 const css=`
 #s-panel{overflow-y:auto;padding:16px;padding-bottom:calc(24px + var(--safe))}
-#s-foy{overflow-y:auto;padding:0;display:flex;flex-direction:column}
+#s-foy{overflow-y:auto;padding:0}
+#s-foy.on{display:flex;flex-direction:column}
 #foy-head{padding:14px 16px 10px;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
 #foy-title{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;font-size:15px;font-weight:600;margin-bottom:9px}
 .foy-theme{display:flex;align-items:center;gap:10px;margin-bottom:9px}
