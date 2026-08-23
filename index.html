@@ -742,6 +742,7 @@ input,select,textarea{font:inherit}
           <button onclick="foyAdd('head')">＋ Başlık</button>
           <button onclick="foyAdd('text')">＋ Metin</button>
           <button onclick="foyAdd('note')">＋ Kutu</button>
+          <button onclick="foyAdd('rx')">＋ Tepkime</button>
           <button onclick="foyAdd('pdf')">＋ PDF/Foto</button>
           <button onclick="foyAdd('example')">＋ Örnek</button>
           <button onclick="foyAdd('space')">＋ Boşluk</button>
@@ -4199,7 +4200,7 @@ function foySetTheme(c){ foyTheme=c; foyRenderThemeDots(); foyRender(); }
 let foyDragIdx=null;
 
 const FOY_LABELS={
-  head:'Başlık', text:'Metin', note:'Kutu', pdf:'PDF/Foto', example:'Örnek', space:'Boşluk'
+  head:'Başlık', text:'Metin', note:'Kutu', rx:'Tepkime', pdf:'PDF/Foto', example:'Örnek', space:'Boşluk'
 };
 // kutu türleri (renk + ikon)
 const FOY_NOTE_KINDS={
@@ -4210,12 +4211,22 @@ const FOY_NOTE_KINDS={
   tanim:{t:'TANIM', c:'#6D28D9', bg:'#F5F3FF', ic:'📖'},
   teorem:{t:'TEOREM', c:'#0F766E', bg:'#F0FDFA', ic:'∑'}
 };
+// tepkime kutusu renkleri (etiket + zemin)
+const FOY_RX_COLORS=[
+  {t:'#0b5563', bg:'#F5F9FA', tab:'#CDEBF2'},  // mavi
+  {t:'#4b3f7a', bg:'#F7F6FB', tab:'#D6D2EC'},  // mor
+  {t:'#8a4324', bg:'#FCF6F2', tab:'#F6D9C6'},  // turuncu
+  {t:'#8a2a45', bg:'#FCF3F6', tab:'#F6CBD8'},  // pembe
+  {t:'#2f6b34', bg:'#F5FAF5', tab:'#CFE7CE'},  // yeşil
+  {t:'#7a5a12', bg:'#FCF8EE', tab:'#F5E1B8'}   // sarı
+];
 
 function foyAdd(type){
   const b={type};
   if(type==='head'){ b.text=''; b.color=foyTheme; }
   else if(type==='text'){ b.text=''; }
   else if(type==='note'){ b.kind='uyari'; b.text=''; }
+  else if(type==='rx'){ b.label='Ayrışma Tepkimeleri'; b.color=0; b.eqs=''; b.img=null; }
   else if(type==='pdf'){ b.img=null; }
   else if(type==='example'){ b.text=''; b.sol=25; b.grid='lined'; }
   else if(type==='space'){ b.h=20; }
@@ -4279,13 +4290,19 @@ function foyRender(){
           FOY_NOTE_KINDS[k].ic+' '+FOY_NOTE_KINDS[k].t+'</option>').join('')+'</select>'+
         '<textarea class="foy-ta" placeholder="Kutu içeriği" '+
         'oninput="foyBlocks['+i+'].text=this.value;var t=document.getElementById(\'ntxt'+i+'\');if(t)t.textContent=this.value||\'Kutu içeriği burada görünür\'">'+esc(b.text)+'</textarea>';
-    } else if(b.type==='pdf'){
-      if(b.img){
-        body.innerHTML='<img class="foy-thumb" src="'+b.img+'"/>'+
-          '<button class="foy-mini" onclick="foyPickSource('+i+')">Değiştir</button>';
-      } else {
-        body.innerHTML='<button class="foy-mini" onclick="foyPickSource('+i+')">Kaynaktan kırp / görsel seç</button>';
-      }
+    } else if(b.type==='rx'){
+      const rc=FOY_RX_COLORS[b.color||0];
+      const eqPrev = b.eqs ? b.eqs.split('\n').map(l=>foyEqPretty(l)).join('<br>') : '<span style="color:#aaa">denklem</span>';
+      body.innerHTML=
+        '<div class="foy-rx-prev"><span class="foy-rx-tab" style="background:'+rc.tab+';color:'+rc.t+'">'+(esc(b.label)||'Tepkime')+'</span>'+
+          '<div class="foy-rx-body" id="rxp'+i+'" style="background:'+rc.bg+';border-color:'+rc.tab+'">'+eqPrev+(b.img?'<br><img src="'+b.img+'" style="max-width:100%;max-height:80px;margin-top:6px;border-radius:4px">':'')+'</div></div>'+
+        '<input class="foy-in" placeholder="Etiket (örn. Ayrışma Tepkimeleri)" value="'+esc(b.label)+'" oninput="foyBlocks['+i+'].label=this.value;var t=this.closest(\'.foy-b-body\').querySelector(\'.foy-rx-tab\');if(t)t.textContent=this.value||\'Tepkime\'"/>'+
+        '<div class="foy-colors">'+
+          FOY_RX_COLORS.map((c,ci)=>'<span class="foy-c'+((b.color||0)===ci?' on':'')+'" style="background:'+c.tab+'" onclick="foyBlocks['+i+'].color='+ci+';foyRender()"></span>').join('')+
+        '</div>'+
+        '<textarea class="foy-ta" placeholder="Denklemleri yaz (her satıra bir tane).&#10;Örnek: CaCO3(k) + isi -> CaO(k) + CO2(g)&#10;Sayılar otomatik alt indis olur, -> ok olur." '+
+          'oninput="foyBlocks['+i+'].eqs=this.value;var p=document.getElementById(\'rxp'+i+'\');if(p)p.innerHTML=foyEqPreviewHTML(this.value)+'+(b.img?'\'<br><img src=&quot;'+b.img+'&quot; style=&quot;max-width:100%;max-height:80px;margin-top:6px;border-radius:4px&quot;>\'':'\'\'')+'">'+esc(b.eqs)+'</textarea>'+
+        '<button class="foy-mini" onclick="foyPickSource('+i+')">'+(b.img?'Görseli değiştir':'İstersen kitaptan görsel kırp')+'</button>';
     } else if(b.type==='example'){
       body.innerHTML='<input class="foy-in" placeholder="Örnek metni (isteğe bağlı)" '+
         'value="'+esc(b.text)+'" oninput="foyBlocks['+i+'].text=this.value"/>'+
@@ -4307,6 +4324,40 @@ function foyRender(){
 }
 
 function esc(s){ return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// Denklem güzelleştirme: CaCO3(k) → CaCO₃₍ₖ₎ benzeri HTML
+function foyEqPretty(line){
+  if(!line) return '';
+  let s = esc(line);
+  // ok işaretleri (çift yönlü önce)
+  s = s.replace(/&lt;-&gt;|&lt;=&gt;|⇌/g,' ⇌ ').replace(/-&gt;|--&gt;|=&gt;/g,' ⟶ ');
+  // parantez içi hal: (k),(s),(g),(suda),(aq),(k) → alt simge
+  s = s.replace(/\(([a-zA-ZğüşıöçĞÜŞİÖÇ]{1,4})\)/g,'<sub>($1)</sub>');
+  // element sonrası sayılar → alt indis (harften sonra gelen rakam)
+  s = s.replace(/([A-Za-z\)])(\d+)/g,'$1<sub>$2</sub>');
+  // üst indis: ^+ ^2+ ^- gibi
+  s = s.replace(/\^(\d*[+\-])/g,'<sup>$1</sup>');
+  return s;
+}
+function foyEqPreviewHTML(text){
+  if(!text) return '<span style="color:#aaa">denklem</span>';
+  return text.split('\n').filter(l=>l.trim()).map(l=>foyEqPretty(l)).join('<br>');
+}
+// PDF için: sayıları unicode alt indise, ok işaretlerini düzelt
+function foyEqUnicode(line){
+  if(!line) return '';
+  const subs={'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉'};
+  const sups={'+':'⁺','-':'⁻','2':'²','3':'³'};
+  let s=line;
+  s=s.replace(/<->|<=>|⇌/g,' ⇌ ').replace(/->|-->|=>/g,' ⟶ ');
+  // (hal) → alt indis parantez
+  s=s.replace(/\(([a-zA-ZğüşıöçĞÜŞİÖÇ]{1,4})\)/g, (m,g)=>'('+g.split('').map(ch=>subs[ch]||ch).join('')+')');
+  // üst indis ^x
+  s=s.replace(/\^(\d*[+\-])/g,(m,g)=>g.split('').map(ch=>sups[ch]||ch).join(''));
+  // harften sonra gelen sayılar → alt indis
+  s=s.replace(/([A-Za-z\)])(\d+)/g,(m,a,d)=>a+d.split('').map(ch=>subs[ch]).join(''));
+  return s;
+}
 
 // PDF/foto bloğu için: kitaptan kırp ya da galeriden seç
 function foyPickSource(i){
@@ -4426,14 +4477,35 @@ async function foyBuild(){
         let ty=cy+tagH+5; lines.forEach(ln=>{ doc.text(ln,x+7,ty); ty+=5.2; });
       }
       return bh+5;
+    } else if(b.type==='rx'){
+      const rc=FOY_RX_COLORS[b.color||0];
+      const tab=hexToRgb(rc.tab), bg=hexToRgb(rc.bg), tc=hexToRgb(rc.t);
+      const eqLines=(b.eqs||'').split('\n').filter(l=>l.trim()).map(foyEqUnicode);
+      // görsel varsa yüksekliğini hesaba kat
+      let imgH=0, imgW=0;
+      if(b.img){ const dim=await imgDim(b.img); imgW=Math.min(w*0.9,60); imgH=imgW*(dim.h/dim.w); if(imgH>40){imgH=40;imgW=imgH*(dim.w/dim.h);} }
+      const tagH=7;
+      const bodyH=Math.max(9, eqLines.length*5.4+7) + (imgH?imgH+3:0);
+      const bh=tagH+bodyH;
+      if(!measure){
+        // gövde zemin
+        doc.setFillColor(bg[0],bg[1],bg[2]);
+        doc.roundedRect(x, cy+tagH-1, w, bodyH+1, 2.5,2.5,'F');
+        // eğik etiket
+        doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+        const lw=doc.getTextWidth(b.label||'Tepkime')+8, sk=2.5;
+        doc.setFillColor(tab[0],tab[1],tab[2]);
+        doc.lines([[lw,0],[-sk,tagH],[-(lw-sk),0]], x+3, cy, [1,1],'F',true);
+        doc.setTextColor(tc[0],tc[1],tc[2]); doc.text(b.label||'Tepkime', x+6, cy+5);
+        // denklemler
+        doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(30);
+        let ty=cy+tagH+6;
+        eqLines.forEach(ln=>{ doc.text(ln, x+7, ty); ty+=5.4; });
+        // görsel
+        if(b.img && imgH){ doc.addImage(b.img,'JPEG', x+7, ty-2, imgW, imgH); }
+      }
+      return bh+5;
     } else if(b.type==='pdf'){
-      if(!b.img) return 0;
-      const dim=await imgDim(b.img);
-      let iw=w*0.96, ih=iw*(dim.h/dim.w);
-      const cap=measure? 999 : 150;
-      if(ih>cap){ ih=cap; iw=ih*(dim.w/dim.h); }
-      if(!measure) doc.addImage(b.img,'JPEG',x+(w-iw)/2,cy,iw,ih);
-      return ih+5;
     } else if(b.type==='example'){
       const lbl='Örnek'+(b.text?' — '+b.text:'');
       const sh=b.sol||25;
@@ -4560,6 +4632,10 @@ const css=`
 .foy-note-prev{border:1.5px solid;border-radius:9px;padding:8px 10px 10px;margin-bottom:4px;position:relative}
 .foy-note-tag{display:inline-block;color:#fff;font-weight:800;font-size:11px;padding:2px 10px 2px 8px;border-radius:4px;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%);margin-bottom:6px}
 .foy-note-txt{display:block;font-size:13px;color:#444;line-height:1.5;white-space:pre-wrap}
+.foy-rx-prev{margin-bottom:6px}
+.foy-rx-tab{display:inline-block;font-weight:800;font-size:12px;padding:5px 16px 5px 10px;border-radius:8px 8px 0 0;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.foy-rx-body{border:1.5px solid;border-radius:0 8px 8px 8px;padding:9px 11px;font-size:14px;line-height:1.9;font-family:Georgia,serif}
+.foy-rx-body sub{font-size:.72em} .foy-rx-body sup{font-size:.72em}
 .foy-c{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .foy-c.on{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
 .foy-thumb{max-width:100%;max-height:160px;border-radius:8px;align-self:center}
