@@ -743,6 +743,7 @@ input,select,textarea{font:inherit}
           <button onclick="foyAdd('text')">＋ Metin</button>
           <button onclick="foyAdd('note')">＋ Kutu</button>
           <button onclick="foyAdd('rx')">＋ Tepkime</button>
+          <button onclick="foyAdd('graf')">＋ Grafik</button>
           <button onclick="foyAdd('pdf')">＋ PDF/Foto</button>
           <button onclick="foyAdd('example')">＋ Örnek</button>
           <button onclick="foyAdd('space')">＋ Boşluk</button>
@@ -4200,7 +4201,7 @@ function foySetTheme(c){ foyTheme=c; foyRenderThemeDots(); foyRender(); }
 let foyDragIdx=null;
 
 const FOY_LABELS={
-  head:'Başlık', text:'Metin', note:'Kutu', rx:'Tepkime', pdf:'PDF/Foto', example:'Örnek', space:'Boşluk'
+  head:'Başlık', text:'Metin', note:'Kutu', rx:'Tepkime', graf:'Grafik', pdf:'PDF/Foto', example:'Örnek', space:'Boşluk'
 };
 // kutu türleri (renk + ikon)
 const FOY_NOTE_KINDS={
@@ -4227,6 +4228,7 @@ function foyAdd(type){
   else if(type==='text'){ b.text=''; }
   else if(type==='note'){ b.kind='uyari'; b.text=''; }
   else if(type==='rx'){ b.label='Ayrışma Tepkimeleri'; b.color=0; b.eqs=''; b.img=null; }
+  else if(type==='graf'){ b.kind='endo'; b.both=true; }
   else if(type==='pdf'){ b.img=null; }
   else if(type==='example'){ b.text=''; b.sol=25; b.grid='lined'; }
   else if(type==='space'){ b.h=20; }
@@ -4303,6 +4305,17 @@ function foyRender(){
         '<textarea class="foy-ta" placeholder="Denklemleri yaz (her satıra bir tane).&#10;Örnek: CaCO3(k) + isi -> CaO(k) + CO2(g)&#10;Sayılar otomatik alt indis olur, -> ok olur." '+
           'oninput="foyBlocks['+i+'].eqs=this.value;var p=document.getElementById(\'rxp'+i+'\');if(p)p.innerHTML=foyEqPreviewHTML(this.value)+'+(b.img?'\'<br><img src=&quot;'+b.img+'&quot; style=&quot;max-width:100%;max-height:80px;margin-top:6px;border-radius:4px&quot;>\'':'\'\'')+'">'+esc(b.eqs)+'</textarea>'+
         '<button class="foy-mini" onclick="foyPickSource('+i+')">'+(b.img?'Görseli değiştir':'İstersen kitaptan görsel kırp')+'</button>';
+    } else if(b.type==='graf'){
+      const prev = b.both
+        ? '<div style="display:flex;gap:8px"><div style="flex:1">'+foyGrafSVG('endo')+'<div style="text-align:center;font-size:11px;font-weight:700;color:#2563EB">Endotermik</div></div><div style="flex:1">'+foyGrafSVG('exo')+'<div style="text-align:center;font-size:11px;font-weight:700;color:#DC2626">Ekzotermik</div></div></div>'
+        : '<div style="max-width:260px;margin:auto">'+foyGrafSVG(b.kind)+'<div style="text-align:center;font-size:11px;font-weight:700;color:'+(b.kind==='endo'?'#2563EB':'#DC2626')+'">'+(b.kind==='endo'?'Endotermik':'Ekzotermik')+'</div></div>';
+      body.innerHTML='<div class="foy-graf-prev">'+prev+'</div>'+
+        '<div class="foy-row"><label>Grafik türü</label>'+
+        '<select onchange="var v=this.value;foyBlocks['+i+'].both=(v===\'both\');if(v!==\'both\')foyBlocks['+i+'].kind=v;foyRender()">'+
+          '<option value="both"'+(b.both?' selected':'')+'>İkisi yan yana</option>'+
+          '<option value="endo"'+(!b.both&&b.kind==='endo'?' selected':'')+'>Sadece Endotermik</option>'+
+          '<option value="exo"'+(!b.both&&b.kind==='exo'?' selected':'')+'>Sadece Ekzotermik</option>'+
+        '</select></div>';
     } else if(b.type==='example'){
       body.innerHTML='<input class="foy-in" placeholder="Örnek metni (isteğe bağlı)" '+
         'value="'+esc(b.text)+'" oninput="foyBlocks['+i+'].text=this.value"/>'+
@@ -4321,6 +4334,35 @@ function foyRender(){
     card.appendChild(body);
     host.appendChild(card);
   });
+}
+
+// Enerji grafiği SVG üretici (kind: 'endo'|'exo')
+function foyGrafSVG(kind, wpx){
+  const w=wpx||250, h=w*0.66;
+  const s=w/250;
+  const endo = kind==='endo';
+  const col = endo ? '#2563EB' : '#DC2626';
+  const dcol = endo ? '#DC2626' : '#0E7C5A';
+  // eğri: endo düşükten yükseğe, exo yüksekten düşüğe
+  const path = endo
+    ? 'M46,116 C88,116 98,40 128,40 C158,40 150,66 205,66'
+    : 'M46,58 C88,58 98,24 128,24 C158,24 150,108 205,108';
+  const ry0 = endo?116:58, ry1 = endo?66:108;
+  const tName = endo?'Tepkenler':'Tepkenler', uName='Ürünler';
+  const tY = endo?110:50, uY = endo?58:124;
+  return '<svg viewBox="0 0 250 165" style="width:100%;height:auto">'+
+    '<line x1="34" y1="12" x2="34" y2="146" stroke="#333" stroke-width="1.5"/>'+
+    '<line x1="34" y1="146" x2="238" y2="146" stroke="#333" stroke-width="1.5"/>'+
+    '<text x="16" y="11" font-size="9" fill="#333">PE</text>'+
+    '<text x="112" y="160" font-size="8.5" fill="#333">Tepkime koordinatı</text>'+
+    '<path d="'+path+'" fill="none" stroke="'+col+'" stroke-width="2.5"/>'+
+    '<line x1="46" y1="'+ry0+'" x2="205" y2="'+ry0+'" stroke="'+col+'" stroke-dasharray="3 3" stroke-width="1"/>'+
+    '<line x1="207" y1="'+ry0+'" x2="207" y2="'+ry1+'" stroke="'+dcol+'" stroke-width="1.4" marker-end="url(#gm'+kind+')"/>'+
+    '<text x="146" y="'+tY+'" font-size="8.5" fill="'+col+'">'+tName+'</text>'+
+    '<text x="150" y="'+uY+'" font-size="8.5" fill="'+col+'">'+uName+'</text>'+
+    '<text x="210" y="'+((ry0+ry1)/2)+'" font-size="9" fill="'+dcol+'">ΔH'+(endo?'>0':'<0')+'</text>'+
+    '<defs><marker id="gm'+kind+'" markerWidth="7" markerHeight="7" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="'+dcol+'"/></marker></defs>'+
+    '</svg>';
 }
 
 function esc(s){ return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
@@ -4505,7 +4547,27 @@ async function foyBuild(){
         if(b.img && imgH){ doc.addImage(b.img,'JPEG', x+7, ty-2, imgW, imgH); }
       }
       return bh+5;
+    } else if(b.type==='graf'){
+      const gh = b.both ? 46 : 52;
+      if(!measure){
+        if(b.both){
+          const gw=(w-6)/2;
+          drawEnergyGraph(doc, 'endo', x, cy, gw, gh);
+          drawEnergyGraph(doc, 'exo', x+gw+6, cy, gw, gh);
+        } else {
+          const gw=Math.min(w, 120), gx=x+(w-gw)/2;
+          drawEnergyGraph(doc, b.kind, gx, cy, gw, gh);
+        }
+      }
+      return gh+6;
     } else if(b.type==='pdf'){
+      if(!b.img) return 0;
+      const dim=await imgDim(b.img);
+      let iw=w*0.96, ih=iw*(dim.h/dim.w);
+      const cap=measure? 999 : 150;
+      if(ih>cap){ ih=cap; iw=ih*(dim.w/dim.h); }
+      if(!measure) doc.addImage(b.img,'JPEG',x+(w-iw)/2,cy,iw,ih);
+      return ih+5;
     } else if(b.type==='example'){
       const lbl='Örnek'+(b.text?' — '+b.text:'');
       const sh=b.sol||25;
@@ -4583,6 +4645,51 @@ function foyDownload(doc,fn){
   toast('Föy PDF hazır');
 }
 
+// jsPDF ile enerji grafiği çiz (x,y sol üst; w,h mm)
+function drawEnergyGraph(doc, kind, x, y, w, h){
+  const endo = kind==='endo';
+  const col = endo ? [37,99,235] : [220,38,38];
+  const dcol = endo ? [220,38,38] : [14,124,90];
+  const ax = x+7, ay = y+h-8;         // eksen orijini
+  const aw = w-10, ah = h-12;
+  // eksenler
+  doc.setDrawColor(60); doc.setLineWidth(0.4);
+  doc.line(ax, y+2, ax, ay);          // dikey
+  doc.line(ax, ay, x+w-1, ay);        // yatay
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(60);
+  doc.text('PE', x+1, y+4);
+  doc.text('Tepkime koordinatı', ax+aw*0.18, ay+5);
+  // seviyeler
+  const loY = ay-ah*0.18, hiY = ay-ah*0.72;
+  const ry0 = endo?loY:hiY, ry1 = endo?hiY:loY;   // tepken sv, ürün sv
+  const peakY = Math.min(ry0,ry1)-ah*0.16;
+  const x0 = ax+aw*0.10, xm=ax+aw*0.5, x1=ax+aw*0.82;
+  // eğri (iki bezier)
+  doc.setDrawColor(col[0],col[1],col[2]); doc.setLineWidth(0.7);
+  doc.lines([[ (xm-x0)/2,0 ],[ (xm-x0)/2, peakY-ry0 ],[ (x1-xm)/2, 0 ],[ (x1-xm)/2, ry1-peakY ]], x0, ry0, [1,1],'S',false);
+  // referans kesikli çizgi (tepken seviyesi)
+  doc.setDrawColor(col[0],col[1],col[2]); doc.setLineWidth(0.3);
+  if(doc.setLineDashPattern) doc.setLineDashPattern([1,1],0);
+  doc.line(x0, ry0, x1, ry0);
+  if(doc.setLineDashPattern) doc.setLineDashPattern([],0);
+  // ΔH oku
+  doc.setDrawColor(dcol[0],dcol[1],dcol[2]); doc.setLineWidth(0.5);
+  doc.line(x1, ry0, x1, ry1);
+  // ok başı
+  const dir = ry1>ry0?1:-1;
+  doc.line(x1, ry1, x1-1, ry1-1.6*dir); doc.line(x1, ry1, x1+1, ry1-1.6*dir);
+  // etiketler
+  doc.setFontSize(5.5); doc.setTextColor(col[0],col[1],col[2]);
+  doc.text('Tepkenler', xm-2, ry0+(endo?3:-1.5));
+  doc.text('Ürünler', xm+3, ry1+(endo?-1.5:3));
+  doc.setTextColor(dcol[0],dcol[1],dcol[2]); doc.setFontSize(6);
+  doc.text('ΔH'+(endo?'>0':'<0'), x1+1, (ry0+ry1)/2);
+  // alt başlık
+  doc.setFont('helvetica','bold'); doc.setFontSize(6.5);
+  doc.setTextColor(col[0],col[1],col[2]);
+  doc.text(endo?'Endotermik':'Ekzotermik', ax+aw*0.3, ay+9);
+}
+
 try{ if(document.readyState!=='loading') foyLoad(); else document.addEventListener('DOMContentLoaded',foyLoad); }catch(e){}
 function hexToRgb(h){
   h=(h||'#000').replace('#','');
@@ -4636,6 +4743,7 @@ const css=`
 .foy-rx-tab{display:inline-block;font-weight:800;font-size:12px;padding:5px 16px 5px 10px;border-radius:8px 8px 0 0;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%)}
 .foy-rx-body{border:1.5px solid;border-radius:0 8px 8px 8px;padding:9px 11px;font-size:14px;line-height:1.9;font-family:Georgia,serif}
 .foy-rx-body sub{font-size:.72em} .foy-rx-body sup{font-size:.72em}
+.foy-graf-prev{background:#fff;border:1px solid var(--line,#ddd);border-radius:10px;padding:8px;margin-bottom:8px}
 .foy-c{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .foy-c.on{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
 .foy-thumb{max-width:100%;max-height:160px;border-radius:8px;align-self:center}
