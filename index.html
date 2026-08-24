@@ -298,6 +298,10 @@ input,select,textarea{font:inherit}
 .qrow .frmbtn.has{background:rgba(29,59,110,.14);border-color:#1D3B6E}
 .qrow .mv{display:flex;gap:4px;margin-left:auto}
 .qrow .mv button{width:30px;height:30px;border-radius:50%;background:var(--bg);font-size:14px;font-weight:700}
+.qrow.noterow{align-items:center}
+.notepill{flex:1;padding:8px 12px;border-radius:8px;font-size:13px;line-height:1.35}
+.notepill b{font-weight:800;letter-spacing:.03em}
+.ab.note{}
 .ans{display:flex;gap:4px}
 .ans button{width:30px;height:30px;border-radius:8px;background:var(--bg);font-size:12px;
   font-weight:700;color:var(--soft)}
@@ -405,6 +409,16 @@ input,select,textarea{font:inherit}
 .qf-lcorner{box-shadow:inset 3px 3px 0 -2px #3949AB, inset -3px 3px 0 -2px #3949AB, inset 3px -3px 0 -2px #3949AB, inset -3px -3px 0 -2px #3949AB}
 .qf-shadow{border:1px solid #d2d7e1;box-shadow:1px 1px 3px rgba(0,0,0,.12);border-radius:3px;background:#fff}
 .qf-box{border:1px solid #b4bec8;border-radius:2px}
+/* üst etiket stilleri — soruyu sarmaz */
+.qf-top-tag{border:none !important;background:none !important}
+.qf-top-tag[data-fr]::before{left:2px;top:-2px;font-size:5px;color:#fff;background:#3949AB;padding:1px 5px;border-radius:2px}
+.qf-top-bar{border:none !important;background:none !important;padding-top:7px !important}
+.qf-top-bar[data-fr]::before{left:0;right:0;top:0;font-size:5px;color:#fff;background:#1A237E;padding:1px 4px;text-align:left}
+.qf-top-line{border:none !important;border-top:1px solid #3949AB !important;background:none !important}
+.qf-top-line[data-fr]::before{left:0;top:-6px;font-size:5px;color:#3949AB;font-weight:800}
+.q-live-note{position:absolute;box-sizing:border-box;border-radius:3px;padding:4px 6px;font-size:6px;line-height:1.4;overflow:hidden}
+.q-live-note .qln-tag{display:inline-block;color:#fff;font-weight:800;font-size:5px;padding:1px 4px;border-radius:2px;margin-right:4px;letter-spacing:.03em}
+.q-live-note .qln-tx{color:#333;white-space:pre-wrap}
 .pg .cont-hdr{position:absolute;display:flex;justify-content:space-between;align-items:flex-end;
   padding-bottom:1.5%;border-bottom:1px solid;font-family:var(--body)}
 .pg .cont-hdr .ch-l{font-weight:800;font-size:1.5vw;letter-spacing:.02em}
@@ -1178,6 +1192,9 @@ input,select,textarea{font:inherit}
           <option value="double">klasik çift çizgi</option>
           <option value="lcorner">L köşe — minimal</option>
           <option value="shadow">gölgeli kart</option>
+          <option value="top-tag">üst etiket — sadece etiket (kutu yok)</option>
+          <option value="top-bar">üst çubuk — tam genişlik (yan/alt yok)</option>
+          <option value="top-line">üst çizgi + etiket</option>
           <option value="box">Sade çerçeve (ince kenarlık)</option>
         </select>
       </div>
@@ -1207,6 +1224,7 @@ input,select,textarea{font:inherit}
       <div class="addbar">
         <button class="ab pdf" onclick="addMore('file')">+ PDF / Foto</button>
         <button class="ab bank" onclick="addMore('bank')">+ Bankadan</button>
+        <button class="ab note" onclick="addNoteBlock()">+ Bilgi Kutusu</button>
         <button class="ab ai" onclick="go('ai')">✦ Yapay zeka</button>
       </div>
       <div id="qrows"></div>
@@ -1886,6 +1904,49 @@ function addMore(kind){
   go('home');
   toast('Bir PDF veya fotoğraf aç, seçtiğin sorular teste eklenecek');
 }
+
+// Bilgi kutusu türleri (soru arası serbest kutular)
+const NOTE_KINDS={
+  uyari:  {t:'UYARI',   c:[181,83,9],   bg:[255,251,235], bd:[253,230,138]},
+  onemli: {t:'ÖNEMLİ',  c:[155,28,49],  bg:[255,241,243], bd:[254,205,211]},
+  not:    {t:'NOT',     c:[29,78,216],  bg:[239,244,255], bd:[191,219,254]},
+  ornek:  {t:'ÖRNEK',   c:[14,124,90],  bg:[236,253,245], bd:[167,243,208]},
+  tanim:  {t:'TANIM',   c:[109,40,217], bg:[245,243,255], bd:[221,214,254]},
+  ipucu:  {t:'İPUCU',   c:[13,148,136], bg:[240,253,250], bd:[153,246,228]}
+};
+function addNoteBlock(){
+  const nb={ id:'nb_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+    type:'note', kind:'uyari', text:'', half:false };
+  qs.push(nb);
+  drawRows();
+  // hemen düzenleme aç
+  editNoteBlock(nb);
+  toast('Bilgi kutusu eklendi');
+}
+function editNoteBlock(nb){
+  const ov=document.createElement('div'); ov.className='foy-choice-ov';
+  const kinds=Object.keys(NOTE_KINDS).map(k=>{
+    const n=NOTE_KINDS[k]; const on=nb.kind===k;
+    return '<button onclick="setNoteKind(\''+nb.id+'\',\''+k+'\')" style="'+
+      (on?'border-color:var(--gr);font-weight:800;':'')+'color:rgb('+n.c.join(',')+')">'+n.t+'</button>';
+  }).join('');
+  ov.innerHTML='<div class="foy-choice" style="max-height:80vh;overflow-y:auto">'+
+    '<h3>Bilgi Kutusu</h3>'+
+    '<div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px">Tür:</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px">'+kinds+'</div>'+
+    '<div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px">İçerik yazısı:</div>'+
+    '<textarea id="nbText" placeholder="Kutunun içine yazılacak metni gir…" '+
+    'style="width:100%;min-height:100px;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:14px;line-height:1.5" '+
+    'oninput="setNoteText(\''+nb.id+'\',this.value)">'+esc(nb.text||'')+'</textarea>'+
+    '<label class="chk" style="display:flex;gap:8px;align-items:center;margin-top:10px"><input type="checkbox" id="nbHalf" '+(nb.half?'checked':'')+' onchange="setNoteHalf(\''+nb.id+'\',this.checked)"/> Yarım genişlik (yan yana sığsın)</label>'+
+    '<button class="cx" onclick="this.closest(\'.foy-choice-ov\').remove();drawRows();preview()">Tamam</button></div>';
+  ov.onclick=e=>{ if(e.target===ov){ ov.remove(); drawRows(); preview(); } };
+  document.body.appendChild(ov);
+}
+function _findNB(id){ return qs.find(x=>x.id===id); }
+function setNoteKind(id,k){ const n=_findNB(id); if(n){n.kind=k;} document.querySelectorAll('.foy-choice-ov').forEach(x=>x.remove()); editNoteBlock(n); }
+function setNoteText(id,t){ const n=_findNB(id); if(n) n.text=t; }
+function setNoteHalf(id,v){ const n=_findNB(id); if(n) n.half=v; }
 function drawEditBar(){
   const el=$('editbar'); if(!el) return;
   if(!editingTest){ el.style.display='none'; return; }
@@ -2043,6 +2104,26 @@ function drawRows(){
   $('make').disabled=!qs.length;
   qs.forEach((q,i)=>{
     const r=document.createElement('div'); r.className='qrow';
+    // ── BİLGİ KUTUSU satırı ──
+    if(q.type==='note'){
+      const nk=NOTE_KINDS[q.kind]||NOTE_KINDS.uyari;
+      r.classList.add('noterow');
+      r.innerHTML='<span class="qn">'+(i+1)+'.</span>'+
+        '<div class="notepill" style="background:rgb('+nk.bg.join(',')+');color:rgb('+nk.c.join(',')+');border:1px solid rgb('+nk.bd.join(',')+')">'+
+        '<b>'+nk.t+'</b> '+(q.text?esc(q.text.slice(0,40))+(q.text.length>40?'…':''):'<i style="opacity:.6">boş — düzenle</i>')+'</div>';
+      const mv=document.createElement('div'); mv.className='mv';
+      const ed=document.createElement('button'); ed.textContent='✎'; ed.title='Düzenle';
+      ed.onclick=()=>editNoteBlock(q);
+      const up=document.createElement('button'); up.textContent='↑';
+      up.onclick=()=>{ if(i>0){ [qs[i-1],qs[i]]=[qs[i],qs[i-1]]; drawRows(); preview(); } };
+      const dn=document.createElement('button'); dn.textContent='↓';
+      dn.onclick=()=>{ if(i<qs.length-1){ [qs[i+1],qs[i]]=[qs[i],qs[i+1]]; drawRows(); preview(); } };
+      const rm=document.createElement('button'); rm.textContent='✕';
+      rm.onclick=()=>{ qs.splice(i,1); drawRows(); preview(); };
+      mv.append(ed,up,dn,rm);
+      r.appendChild(mv); w.appendChild(r);
+      return;
+    }
     r.innerHTML='<span class="qn">'+(i+1)+'.</span><img src="'+q.img+'"/>';
     const a=document.createElement('div'); a.className='ans';
     ['A','B','C','D','E'].forEach(L=>{
@@ -2080,13 +2161,13 @@ function drawRows(){
 let picTarget=null;
 function pickPic(q){ picTarget=q; $('in-pic').click(); }
 
-const FRAME_LABEL={soru:'SORU',ornek:'ÖRNEK',uyari:'UYARI','bar-navy':'SORU','bar-bordo':'ETKİNLİK','bar-teal':'İNCELE','corner-red':'YENİ','corner-gold':'ÖNEMLİ'};
+const FRAME_LABEL={soru:'SORU',ornek:'ÖRNEK',uyari:'UYARI','bar-navy':'SORU','bar-bordo':'ETKİNLİK','bar-teal':'İNCELE','corner-red':'YENİ','corner-gold':'ÖNEMLİ','top-tag':'SORU','top-bar':'SORU','top-line':'SORU'};
 const FRAME_OPTS=[
   ['none','Genel ayarı kullan'],['soru','SORU (mor sekme)'],['ornek','ÖRNEK (yeşil)'],
   ['uyari','UYARI (turuncu)'],['bar-navy','Lacivert çubuk'],['bar-bordo','Bordo çubuk'],
   ['bar-teal','Turkuaz çubuk'],['corner-red','Köşe YENİ (kırmızı)'],['corner-gold','Köşe ÖNEMLİ (altın)'],
   ['seal','Mühür rozet'],['dashed','Noktalı ayraç'],['double','Çift çizgi'],
-  ['lcorner','L köşe'],['shadow','Gölgeli kart'],['box','Sade çerçeve']
+  ['lcorner','L köşe'],['shadow','Gölgeli kart'],['top-tag','Üst etiket (kutusuz)'],['top-bar','Üst çubuk (kutusuz)'],['top-line','Üst çizgi + etiket'],['box','Sade çerçeve']
 ];
 function openFramePicker(q){
   const ov=document.createElement('div'); ov.className='foy-choice-ov';
@@ -2743,7 +2824,7 @@ function saveTestDialog(){
     const name=v[0]||'Test';
     await DB.put('tests',{id:(editingTest?editingTest.id:'t_'+Date.now()),name,
       lesson:$('f-lesson').value.trim(),date:new Date().toLocaleDateString('tr-TR'),
-      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null})),
+      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false})),
       cfg:cfgNow()});
     if(editingTest) editingTest.name=name;
     closeModal(); toast('“'+name+'” kaydedildi');
@@ -2751,7 +2832,7 @@ function saveTestDialog(){
 }
 
 function openTest(t,edit){
-  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null}));
+  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false}));
   if(t.cfg && t.cfg.logo){
     window._logoData=t.cfg.logo;
     const img=new Image(); img.onload=()=>{window._logoImg=img;}; img.src=t.cfg.logo.url;
@@ -2907,7 +2988,18 @@ function _headerH_unused(cfg){
     default:        return 22;
   }
 }
+function noteBlockH(q, wmm){
+  // bilgi kutusu yüksekliği: etiket + metin satırları
+  const txt=(q.text||'').trim();
+  const charsPerLine=Math.max(20, Math.floor((wmm-10)/1.7));
+  const lines=Math.max(1, Math.ceil(txt.length/charsPerLine) + (txt.split('\n').length-1));
+  return 8 + lines*4.6 + 4; // tag + satırlar + padding (mm)
+}
 function slotFix(q, cfg){ 
+  if(q && q.type==='note'){
+    const wmm = q.half ? (PAGE.w-(cfg.mLeft||12)-(cfg.mRight||12)-8)/2 : (PAGE.w-(cfg.mLeft||12)-(cfg.mRight||12));
+    return noteBlockH(q, wmm) + AFTER;
+  }
   const sol = (q && q.sol != null) ? q.sol : cfg.sol;
   return TITLE_H + sol + AFTER; 
 }
@@ -3870,6 +3962,18 @@ function drawPages(){
     }
 
     pg.items.forEach(it=>{
+      // ── BİLGİ KUTUSU (önizleme) ──
+      if(it.q.type==='note'){
+        const nk=NOTE_KINDS[it.q.kind]||NOTE_KINDS.uyari;
+        const nb=document.createElement('div');
+        nb.className='q-live-note';
+        nb.style.cssText=`left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(it.w, PAGE.w)};`+
+          `background:rgb(${nk.bg.join(',')});border:1px solid rgb(${nk.bd.join(',')});border-left:3px solid rgb(${nk.c.join(',')})`;
+        nb.innerHTML='<span class="qln-tag" style="background:rgb('+nk.c.join(',')+')">'+nk.t+'</span>'+
+          '<span class="qln-tx">'+esc(it.q.text||'')+'</span>';
+        el.appendChild(nb);
+        return;
+      }
       const qBox = document.createElement('div');
       qBox.className = 'q-live-box';
       
@@ -4234,7 +4338,11 @@ function drawQFrame(doc, kind, x, y, w, h, cfg){
     double: {bd:[60,70,85], style:'double'},
     lcorner:{bd:[57,73,171], style:'lcorner'},
     shadow: {bd:[210,215,225], style:'shadow'},
-    box:    {tab:null, tc:null, bg:null, bd:[180,190,200], label:'', style:'box'}
+    box:    {tab:null, tc:null, bg:null, bd:[180,190,200], label:'', style:'box'},
+    // ── ÜST ETİKET stilleri (soruyu sarmaz, sadece üstte) ──
+    'top-tag':  {tab:[57,73,171], tc:[255,255,255], label:'SORU', style:'top-tag'},
+    'top-bar':  {tab:[26,35,126], tc:[255,255,255], label:'SORU', style:'top-bar'},
+    'top-line': {tab:[57,73,171], tc:[57,73,171], label:'SORU', style:'top-line'}
   };
   let f=FR[kind]; if(!f) return;
   // kullanıcının özel etiketi varsa onu kullan
@@ -4307,7 +4415,55 @@ function drawQFrame(doc, kind, x, y, w, h, cfg){
   } else if(f.style==='box'){
     doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.4);
     doc.roundedRect(x,y,w,h,2,2,'S');
+  } else if(f.style==='top-tag'){
+    // sadece üstte küçük renkli etiket, kutu yok
+    doc.setFont('helvetica','bold'); doc.setFontSize(7);
+    const lw=doc.getTextWidth(f.label)+7;
+    doc.setFillColor(f.tab[0],f.tab[1],f.tab[2]);
+    doc.roundedRect(x+2, y, lw, 6, 1.5, 1.5, 'F');
+    doc.setTextColor(f.tc[0],f.tc[1],f.tc[2]);
+    doc.text(f.label, x+5.5, y+4.2);
+  } else if(f.style==='top-bar'){
+    // üstte tam genişlik renkli çubuk, alt/yan çizgi yok
+    doc.setFillColor(f.tab[0],f.tab[1],f.tab[2]);
+    doc.roundedRect(x, y, w, 6.5, 1.5, 1.5, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+    doc.setTextColor(f.tc[0],f.tc[1],f.tc[2]);
+    doc.text(f.label, x+4, y+4.5);
+  } else if(f.style==='top-line'){
+    // üstte ince renkli çizgi + sol etiket
+    doc.setDrawColor(f.tab[0],f.tab[1],f.tab[2]); doc.setLineWidth(0.8);
+    doc.line(x, y+6, x+w, y+6);
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+    doc.setTextColor(f.tc[0],f.tc[1],f.tc[2]);
+    doc.text(f.label, x, y+4.2);
   }
+}
+
+function drawNoteBox(doc, q, x, y, w){
+  const nk=(typeof NOTE_KINDS!=='undefined' && NOTE_KINDS[q.kind]) || {t:'NOT',c:[29,78,216],bg:[239,244,255],bd:[191,219,254]};
+  const txt=(q.text||'').trim();
+  // metni satırlara böl
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+  const lines=doc.splitTextToSize(txt||' ', w-10);
+  const tagH=6.5, bodyH=Math.max(6, lines.length*4.6+4), bh=tagH+bodyH-2;
+  // zemin
+  doc.setFillColor(nk.bg[0],nk.bg[1],nk.bg[2]);
+  doc.roundedRect(x, y, w, bh, 2.2, 2.2, 'F');
+  // sol renk bar
+  doc.setFillColor(nk.c[0],nk.c[1],nk.c[2]);
+  doc.roundedRect(x, y+1.5, 2, bh-3, 1, 1, 'F');
+  // eğik etiket
+  doc.setFont('helvetica','bold'); doc.setFontSize(8);
+  const lw=doc.getTextWidth(nk.t)+7;
+  doc.setFillColor(nk.c[0],nk.c[1],nk.c[2]);
+  doc.lines([[lw,0],[-2,5.5],[-(lw-2),0]], x+4, y+0.5, [1,1], 'F', true);
+  doc.setTextColor(255,255,255);
+  doc.text(nk.t, x+6.5, y+4.4);
+  // metin
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(40,40,40);
+  let ty=y+tagH+3.5;
+  lines.forEach(ln=>{ doc.text(ln, x+6, ty); ty+=4.6; });
 }
 
 function drawQR(doc,text,x,y,size){
@@ -4372,6 +4528,11 @@ function drawBook(doc, book, first){
       doc.line(mLeft, mTop+th, PAGE.w-mRight, mTop+th);
     }
     pg.items.forEach(it=>{
+      // ── BİLGİ KUTUSU ──
+      if(it.q.type==='note'){
+        drawNoteBox(doc, it.q, it.x, it.y, it.colW);
+        return;
+      }
       // ── SORU ÇERÇEVESİ ──
       const frame = (it.q.frame && it.q.frame!=='none') ? it.q.frame : CFG.frame;
       if(frame && frame!=='none'){
