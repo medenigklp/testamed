@@ -809,6 +809,7 @@ input,select,textarea{font:inherit}
         <div class="f">
           <label>Başlık Şablonu</label>
           <select id="f-template" onchange="preview()">
+            <option value="letterhead">📄 Antetli Kağıda Bas (üst boş — kendi antetin)</option>
             <option value="resmi">★ Resmî — Sınav Kağıdı Başlığı (D-Y-NET)</option>
             <option value="kurumsal">★ Kurumsal — Dalgalı Antet</option>
             <option value="studio">★ Studio — İki Bloklu Yatay (modern)</option>
@@ -828,6 +829,12 @@ input,select,textarea{font:inherit}
             <option value="minimal">Minimal — Tek Satır</option>
             <option value="osym">ÖSYM — Sınav Formatı</option>
           </select>
+        </div>
+        <div class="f" id="lh-wrap" style="display:none">
+          <label>Antetin için üst boşluk: <b id="lh-val">45</b> mm</label>
+          <input type="range" id="f-lhgap" min="20" max="90" value="45" step="1"
+            oninput="document.getElementById('lh-val').textContent=this.value; preview()"/>
+          <label class="chk" style="margin-top:6px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-lhbar" checked onchange="preview()"/> Altta ince ders şeridi olsun</label>
         </div>
         <div class="f">
           <label>Antet Rengi (11 Renk)</label>
@@ -2003,6 +2010,9 @@ function spread(){
 }
 let _pvT=null;
 function preview(){
+  // antetli kağıt ayarını göster/gizle
+  const lhw=$('lh-wrap'), tpl=$('f-template');
+  if(lhw && tpl) lhw.style.display = (tpl.value==='letterhead') ? 'block' : 'none';
   clearTimeout(_pvT);
   _pvT=setTimeout(previewNow, 180);
 }
@@ -2048,21 +2058,20 @@ function drawRows(){
       pb.onclick=()=>pickPic(q);
       r.appendChild(pb);
     }
+    const mv=document.createElement('div'); mv.className='mv';
     // çerçeve seçici (bu soruya özel)
     const fb=document.createElement('button');
-    fb.className='picbtn frmbtn'+(q.frame&&q.frame!=='none'?' has':'');
+    fb.className='frmbtn'+(q.frame&&q.frame!=='none'?' has':'');
     fb.textContent='🎨';
     fb.title='Bu sorunun çerçevesi';
     fb.onclick=(e)=>{ e.stopPropagation(); openFramePicker(q); };
-    r.appendChild(fb);
-    const mv=document.createElement('div'); mv.className='mv';
     const up=document.createElement('button'); up.textContent='↑';
     up.onclick=()=>{ if(i>0){ [qs[i-1],qs[i]]=[qs[i],qs[i-1]]; drawRows(); } };
     const dn=document.createElement('button'); dn.textContent='↓';
     dn.onclick=()=>{ if(i<qs.length-1){ [qs[i+1],qs[i]]=[qs[i],qs[i+1]]; drawRows(); } };
     const rm=document.createElement('button'); rm.textContent='✕';
     rm.onclick=()=>{ qs.splice(i,1); drawTray(); drawRows(); };
-    mv.append(up,dn,rm);
+    mv.append(fb,up,dn,rm);
     r.append(a,mv); w.appendChild(r);
   });
 }
@@ -2838,6 +2847,7 @@ function headerH(cfg){
   let h;
   switch(cfg.template){
     case 'minimal': h=15; break;
+    case 'letterhead': h=(cfg && cfg.lhGap!=null)? cfg.lhGap : 45; break;
     case 'ribbon':  h=22; break;
     case 'serif':   h=26; break;
     case 'band':    h=24; break;
@@ -3334,6 +3344,25 @@ function headerImage(cfg){
     if(teacher||cfg.date){ g.fillStyle='rgba(255,255,255,.85)'; g.font='600 '+(2.2*K)+'px '+DISP;
       g.fillText(up(teacher||cfg.date||''),rx,H*0.72); }
     g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ LETTERHEAD — antetli kağıda bas: üst boş, altta ince ders şeridi ═══ */
+  if(cfg.template==='letterhead'){
+    g.textBaseline='alphabetic';
+    // üst kısım tamamen boş (kullanıcının bastırılmış anteti için)
+    if(cfg.lhBar!==false){
+      const barY=H-6*K;
+      g.strokeStyle=pal.m; g.lineWidth=0.6*K;
+      g.beginPath(); g.moveTo(0,barY); g.lineTo(W,barY); g.stroke();
+      g.fillStyle=pal.ink; g.textAlign='left';
+      let lfs=fit(lesson,3.0,W*0.6,'800','lesson'); g.font='800 '+(lfs*K)+'px '+DISP;
+      g.fillText(lesson, 0, barY+3.6*K);
+      g.fillStyle=pal.m; g.textAlign='right'; g.font='700 '+(2.2*K)+'px '+DISP;
+      let rt=up(kind)+(topic?'  ·  '+up(topic):'');
+      g.fillText(rt, W, barY+3.6*K);
+      g.textAlign='left';
+    }
     return c.toDataURL('image/jpeg',0.95);
   }
 
@@ -4029,6 +4058,8 @@ function cfgNow(){
     key: $('f-key') ? $('f-key').checked : false,
     keypos: ($('f-keypos') && $('f-keypos').value) || 'son',
     frame: ($('f-frame') && $('f-frame').value) || 'none',
+    lhGap: ($('f-lhgap') ? +$('f-lhgap').value : 45),
+    lhBar: ($('f-lhbar') ? $('f-lhbar').checked : true),
     book: parseInt($('f-book') && $('f-book').value)||1,
     optic: $('f-optic') ? $('f-optic').checked : false,
     qr: $('f-qr') ? $('f-qr').checked : false,
