@@ -2168,7 +2168,7 @@ function drawRows(){
     fb.onclick=(e)=>{ e.stopPropagation(); openFramePicker(q); };
     // not/uyarı (sorunun üstünde)
     const nt=document.createElement('button');
-    nt.className='frmbtn'+(q.note?' has':'');
+    nt.className='frmbtn'+(q.noteOn?' has':'');
     nt.textContent='📝';
     nt.title='Bu sorunun üstüne not/uyarı';
     nt.onclick=(e)=>{ e.stopPropagation(); openNotePicker(q); };
@@ -2208,7 +2208,7 @@ function openNotePicker(q){
     '<div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px">Not yazısı:</div>'+
     '<textarea id="qNoteText" placeholder="Bu sorunun üstünde görünecek not… (boş bırakırsan not olmaz)" '+
     'style="width:100%;min-height:90px;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:14px;line-height:1.5" '+
-    'oninput="if(window._noteQ){window._noteQ.note=this.value.trim()||null}">'+esc(q.note||'')+'</textarea>'+
+    'oninput="if(window._noteQ){window._noteQ.note=this.value.trim()||null;window._noteQ.noteOn=true}">'+esc(q.note||'')+'</textarea>'+
     '<div style="display:flex;gap:8px;margin-top:12px">'+
     '<button class="cx" style="flex:1" onclick="clearQNote()">Notu kaldır</button>'+
     '<button class="cx" style="flex:2;background:var(--gr);color:#fff;border-color:var(--gr)" onclick="this.closest(\'.foy-choice-ov\').remove();drawRows();preview()">Tamam</button>'+
@@ -2219,12 +2219,12 @@ function openNotePicker(q){
   document.body.appendChild(ov);
 }
 function setQNoteKind(btn,k){
-  if(window._noteQ) window._noteQ.noteKind=k;
+  if(window._noteQ){ window._noteQ.noteKind=k; window._noteQ.noteOn=true; }
   btn.parentElement.querySelectorAll('button').forEach(b=>{ b.style.borderColor=''; b.style.fontWeight=''; });
   btn.style.borderColor='var(--gr)'; btn.style.fontWeight='800';
 }
 function clearQNote(){
-  if(window._noteQ){ window._noteQ.note=null; }
+  if(window._noteQ){ window._noteQ.note=null; window._noteQ.noteOn=false; }
   document.querySelectorAll('.foy-choice-ov').forEach(x=>x.remove());
   drawRows(); preview(); toast('Not kaldırıldı');
 }
@@ -2884,7 +2884,7 @@ function saveTestDialog(){
     const name=v[0]||'Test';
     await DB.put('tests',{id:(editingTest?editingTest.id:'t_'+Date.now()),name,
       lesson:$('f-lesson').value.trim(),date:new Date().toLocaleDateString('tr-TR'),
-      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null})),
+      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null,noteOn:q.noteOn||false})),
       cfg:cfgNow()});
     if(editingTest) editingTest.name=name;
     closeModal(); toast('“'+name+'” kaydedildi');
@@ -2892,7 +2892,7 @@ function saveTestDialog(){
 }
 
 function openTest(t,edit){
-  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null}));
+  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null,noteOn:q.noteOn||false}));
   if(t.cfg && t.cfg.logo){
     window._logoData=t.cfg.logo;
     const img=new Image(); img.onload=()=>{window._logoImg=img;}; img.src=t.cfg.logo.url;
@@ -3056,8 +3056,9 @@ function noteBlockH(q, wmm){
   return 8 + lines*4.6 + 4; // tag + satırlar + padding (mm)
 }
 function qNoteH(q, wmm){
-  if(!q || !q.note) return 0;
-  const txt=q.note.trim();
+  if(!q || !q.noteOn) return 0;
+  const txt=(q.note||'').trim();
+  if(!txt) return 8.5; // sadece etiket (yazısız)
   const charsPerLine=Math.max(20, Math.floor((wmm-10)/1.7));
   const lines=Math.max(1, Math.ceil(txt.length/charsPerLine) + (txt.split('\n').length-1));
   return 7 + lines*4.2 + 3; // etiket + satırlar + boşluk (mm)
@@ -4047,7 +4048,7 @@ function drawPages(){
       
       // soru-üstü not (önizleme)
       let noff2=0;
-      if(it.q.note){
+      if(it.q.noteOn){
         const nk=NOTE_KINDS[it.q.noteKind||'uyari']||NOTE_KINDS.uyari;
         noff2=qNoteH(it.q, it.colW||it.w);
         const nb=document.createElement('div');
@@ -4055,7 +4056,7 @@ function drawPages(){
         nb.style.cssText=`left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(it.w, PAGE.w)};`+
           `background:rgb(${nk.bg.join(',')});border:1px solid rgb(${nk.bd.join(',')});border-left:3px solid rgb(${nk.c.join(',')})`;
         nb.innerHTML='<span class="qln-tag" style="background:rgb('+nk.c.join(',')+')">'+nk.t+'</span>'+
-          '<span class="qln-tx">'+esc(it.q.note)+'</span>';
+          '<span class="qln-tx">'+esc(it.q.note||'')+'</span>';
         el.appendChild(nb);
       }
       const boxW = it.w;
@@ -4524,9 +4525,22 @@ function drawQFrame(doc, kind, x, y, w, h, cfg){
 function drawNoteBox(doc, q, x, y, w){
   const nk=(typeof NOTE_KINDS!=='undefined' && NOTE_KINDS[q.kind]) || {t:'NOT',c:[29,78,216],bg:[239,244,255],bd:[191,219,254]};
   const txt=(q.text||'').trim();
+  // yazısızsa kompakt: sadece etiket şeridi
+  if(!txt){
+    const bh=7;
+    doc.setFillColor(nk.bg[0],nk.bg[1],nk.bg[2]);
+    doc.roundedRect(x, y, w, bh, 1.8, 1.8, 'F');
+    doc.setFillColor(nk.c[0],nk.c[1],nk.c[2]);
+    doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    const lw=doc.getTextWidth(nk.t)+7;
+    doc.lines([[lw,0],[-2,5.5],[-(lw-2),0]], x+4, y+0.7, [1,1], 'F', true);
+    doc.setTextColor(255,255,255);
+    doc.text(nk.t, x+6.5, y+4.6);
+    return;
+  }
   // metni satırlara böl
   doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
-  const lines=doc.splitTextToSize(txt||' ', w-10);
+  const lines=doc.splitTextToSize(txt, w-10);
   const tagH=6.5, bodyH=Math.max(6, lines.length*4.6+4), bh=tagH+bodyH-2;
   // zemin
   doc.setFillColor(nk.bg[0],nk.bg[1],nk.bg[2]);
@@ -4616,9 +4630,9 @@ function drawBook(doc, book, first){
       }
       // ── SORUYA BAĞLI NOT (sorunun üstünde) ──
       let noff=0;
-      if(it.q.note){
+      if(it.q.noteOn){
         noff = qNoteH(it.q, it.colW);
-        drawNoteBox(doc, {kind:it.q.noteKind||'uyari', text:it.q.note}, it.x, it.y, it.colW);
+        drawNoteBox(doc, {kind:it.q.noteKind||'uyari', text:it.q.note||''}, it.x, it.y, it.colW);
       }
       // ── SORU ÇERÇEVESİ ──
       const frame = (it.q.frame && it.q.frame!=='none') ? it.q.frame : CFG.frame;
