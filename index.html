@@ -1181,6 +1181,7 @@ input,select,textarea{font:inherit}
           <option value="box">Sade çerçeve (ince kenarlık)</option>
         </select>
       </div>
+      <label class="chk" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="f-framenosol" onchange="preview()"/> Çözüm alanı çerçevenin dışında kalsın (sadece soru çerçeveli)</label>
     </div>
     <div class="set-pane" id="p6">
       <div class="sec">Kitapçık & Optik Form</div>
@@ -3870,8 +3871,18 @@ function drawPages(){
       // Soru çerçevesi (bu soruya özel ya da genel)
       const _frame = (it.q.frame && it.q.frame!=='none') ? it.q.frame : (CFG.frame||'none');
       if(_frame && _frame!=='none'){
-        qBox.classList.add('qf-'+_frame);
-        qBox.setAttribute('data-fr', FRAME_LABEL[_frame]||'');
+        if(CFG.frameNoSol && it.sol>0){
+          // çerçeve sadece soru kısmını sarsın (çözüm hariç) — ayrı arka div
+          const fr=document.createElement('div');
+          fr.className='q-live-box qf-'+_frame;
+          fr.setAttribute('data-fr', FRAME_LABEL[_frame]||'');
+          const soruH = TITLE_H + it.h;
+          fr.style.cssText = `left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(boxW, PAGE.w)}; height:${pct(soruH, PAGE.h)}; pointer-events:none;`;
+          el.appendChild(fr);
+        } else {
+          qBox.classList.add('qf-'+_frame);
+          qBox.setAttribute('data-fr', FRAME_LABEL[_frame]||'');
+        }
       }
 
       // Soru Numarası
@@ -4058,6 +4069,7 @@ function cfgNow(){
     key: $('f-key') ? $('f-key').checked : false,
     keypos: ($('f-keypos') && $('f-keypos').value) || 'son',
     frame: ($('f-frame') && $('f-frame').value) || 'none',
+    frameNoSol: ($('f-framenosol') ? $('f-framenosol').checked : false),
     lhGap: ($('f-lhgap') ? +$('f-lhgap').value : 45),
     lhBar: ($('f-lhbar') ? $('f-lhbar').checked : true),
     book: parseInt($('f-book') && $('f-book').value)||1,
@@ -4354,7 +4366,9 @@ function drawBook(doc, book, first){
       if(frame && frame!=='none'){
         const fx=it.x-2.5, fw=it.colW+5;
         const fy=it.y-2.5;
-        const totalH=TITLE_H + it.h + (it.sol>0?it.sol:0);
+        // çözüm alanı çerçeve dışında kalsın seçeneği
+        const solIn = CFG.frameNoSol ? 0 : (it.sol>0?it.sol:0);
+        const totalH=TITLE_H + it.h + solIn;
         const fh=totalH+5;
         CFG._qnum=it.num;
         drawQFrame(doc, frame, fx, fy, fw, fh, CFG);
