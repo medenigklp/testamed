@@ -2147,13 +2147,19 @@ function drawRows(){
     fb.textContent='🎨';
     fb.title='Bu sorunun çerçevesi';
     fb.onclick=(e)=>{ e.stopPropagation(); openFramePicker(q); };
+    // not/uyarı (sorunun üstünde)
+    const nt=document.createElement('button');
+    nt.className='frmbtn'+(q.note?' has':'');
+    nt.textContent='📝';
+    nt.title='Bu sorunun üstüne not/uyarı';
+    nt.onclick=(e)=>{ e.stopPropagation(); openNotePicker(q); };
     const up=document.createElement('button'); up.textContent='↑';
-    up.onclick=()=>{ if(i>0){ [qs[i-1],qs[i]]=[qs[i],qs[i-1]]; drawRows(); } };
+    up.onclick=()=>{ if(i>0){ [qs[i-1],qs[i]]=[qs[i],qs[i-1]]; drawRows(); preview(); } };
     const dn=document.createElement('button'); dn.textContent='↓';
-    dn.onclick=()=>{ if(i<qs.length-1){ [qs[i+1],qs[i]]=[qs[i],qs[i+1]]; drawRows(); } };
+    dn.onclick=()=>{ if(i<qs.length-1){ [qs[i+1],qs[i]]=[qs[i],qs[i+1]]; drawRows(); preview(); } };
     const rm=document.createElement('button'); rm.textContent='✕';
-    rm.onclick=()=>{ qs.splice(i,1); drawTray(); drawRows(); };
-    mv.append(fb,up,dn,rm);
+    rm.onclick=()=>{ qs.splice(i,1); drawTray(); drawRows(); preview(); };
+    mv.append(fb,nt,up,dn,rm);
     r.append(a,mv); w.appendChild(r);
   });
 }
@@ -2169,6 +2175,41 @@ const FRAME_OPTS=[
   ['seal','Mühür rozet'],['dashed','Noktalı ayraç'],['double','Çift çizgi'],
   ['lcorner','L köşe'],['shadow','Gölgeli kart'],['top-tag','Üst etiket (kutusuz)'],['top-bar','Üst çubuk (kutusuz)'],['top-line','Üst çizgi + etiket'],['box','Sade çerçeve']
 ];
+function openNotePicker(q){
+  const ov=document.createElement('div'); ov.className='foy-choice-ov';
+  const kinds=Object.keys(NOTE_KINDS).map(k=>{
+    const n=NOTE_KINDS[k]; const on=(q.noteKind||'uyari')===k;
+    return '<button onclick="setQNoteKind(this,\''+k+'\')" data-k="'+k+'" style="'+
+      (on?'border-color:var(--gr);font-weight:800;':'')+'color:rgb('+n.c.join(',')+')">'+n.t+'</button>';
+  }).join('');
+  ov.innerHTML='<div class="foy-choice" style="max-height:80vh;overflow-y:auto">'+
+    '<h3>Sorunun üstüne not / uyarı</h3>'+
+    '<div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px">Tür:</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px">'+kinds+'</div>'+
+    '<div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px">Not yazısı:</div>'+
+    '<textarea id="qNoteText" placeholder="Bu sorunun üstünde görünecek not… (boş bırakırsan not olmaz)" '+
+    'style="width:100%;min-height:90px;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:14px;line-height:1.5" '+
+    'oninput="if(window._noteQ){window._noteQ.note=this.value.trim()||null}">'+esc(q.note||'')+'</textarea>'+
+    '<div style="display:flex;gap:8px;margin-top:12px">'+
+    '<button class="cx" style="flex:1" onclick="clearQNote()">Notu kaldır</button>'+
+    '<button class="cx" style="flex:2;background:var(--gr);color:#fff;border-color:var(--gr)" onclick="this.closest(\'.foy-choice-ov\').remove();drawRows();preview()">Tamam</button>'+
+    '</div></div>';
+  ov.onclick=e=>{ if(e.target===ov){ ov.remove(); drawRows(); preview(); } };
+  if(!q.noteKind) q.noteKind='uyari';
+  window._noteQ=q;
+  document.body.appendChild(ov);
+}
+function setQNoteKind(btn,k){
+  if(window._noteQ) window._noteQ.noteKind=k;
+  btn.parentElement.querySelectorAll('button').forEach(b=>{ b.style.borderColor=''; b.style.fontWeight=''; });
+  btn.style.borderColor='var(--gr)'; btn.style.fontWeight='800';
+}
+function clearQNote(){
+  if(window._noteQ){ window._noteQ.note=null; }
+  document.querySelectorAll('.foy-choice-ov').forEach(x=>x.remove());
+  drawRows(); preview(); toast('Not kaldırıldı');
+}
+
 function openFramePicker(q){
   const ov=document.createElement('div'); ov.className='foy-choice-ov';
   ov.innerHTML='<div class="foy-choice" style="max-height:78vh;overflow-y:auto"><h3>Bu sorunun çerçevesi</h3>'+
@@ -2824,7 +2865,7 @@ function saveTestDialog(){
     const name=v[0]||'Test';
     await DB.put('tests',{id:(editingTest?editingTest.id:'t_'+Date.now()),name,
       lesson:$('f-lesson').value.trim(),date:new Date().toLocaleDateString('tr-TR'),
-      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false})),
+      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null})),
       cfg:cfgNow()});
     if(editingTest) editingTest.name=name;
     closeModal(); toast('“'+name+'” kaydedildi');
@@ -2832,7 +2873,7 @@ function saveTestDialog(){
 }
 
 function openTest(t,edit){
-  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false}));
+  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null}));
   if(t.cfg && t.cfg.logo){
     window._logoData=t.cfg.logo;
     const img=new Image(); img.onload=()=>{window._logoImg=img;}; img.src=t.cfg.logo.url;
@@ -2995,13 +3036,21 @@ function noteBlockH(q, wmm){
   const lines=Math.max(1, Math.ceil(txt.length/charsPerLine) + (txt.split('\n').length-1));
   return 8 + lines*4.6 + 4; // tag + satırlar + padding (mm)
 }
+function qNoteH(q, wmm){
+  if(!q || !q.note) return 0;
+  const txt=q.note.trim();
+  const charsPerLine=Math.max(20, Math.floor((wmm-10)/1.7));
+  const lines=Math.max(1, Math.ceil(txt.length/charsPerLine) + (txt.split('\n').length-1));
+  return 7 + lines*4.2 + 3; // etiket + satırlar + boşluk (mm)
+}
 function slotFix(q, cfg){ 
   if(q && q.type==='note'){
     const wmm = q.half ? (PAGE.w-(cfg.mLeft||12)-(cfg.mRight||12)-8)/2 : (PAGE.w-(cfg.mLeft||12)-(cfg.mRight||12));
     return noteBlockH(q, wmm) + AFTER;
   }
   const sol = (q && q.sol != null) ? q.sol : cfg.sol;
-  return TITLE_H + sol + AFTER; 
+  const colW = (PAGE.w-(cfg.mLeft||12)-(cfg.mRight||12)-8)/2;
+  return qNoteH(q, colW) + TITLE_H + sol + AFTER; 
 }
 function availOf(i,cfg){ 
   const mTop = cfg.mTop || 12;
@@ -3977,9 +4026,22 @@ function drawPages(){
       const qBox = document.createElement('div');
       qBox.className = 'q-live-box';
       
+      // soru-üstü not (önizleme)
+      let noff2=0;
+      if(it.q.note){
+        const nk=NOTE_KINDS[it.q.noteKind||'uyari']||NOTE_KINDS.uyari;
+        noff2=qNoteH(it.q, it.colW||it.w);
+        const nb=document.createElement('div');
+        nb.className='q-live-note';
+        nb.style.cssText=`left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(it.w, PAGE.w)};`+
+          `background:rgb(${nk.bg.join(',')});border:1px solid rgb(${nk.bd.join(',')});border-left:3px solid rgb(${nk.c.join(',')})`;
+        nb.innerHTML='<span class="qln-tag" style="background:rgb('+nk.c.join(',')+')">'+nk.t+'</span>'+
+          '<span class="qln-tx">'+esc(it.q.note)+'</span>';
+        el.appendChild(nb);
+      }
       const boxW = it.w;
       const boxH = TITLE_H + it.h + (it.sol || 0);
-      qBox.style.cssText = `left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(boxW, PAGE.w)}; height:${pct(boxH, PAGE.h)};`;
+      qBox.style.cssText = `left:${pct(it.x, PAGE.w)}; top:${pct(it.y+noff2, PAGE.h)}; width:${pct(boxW, PAGE.w)}; height:${pct(boxH, PAGE.h)};`;
 
       // Soru çerçevesi (bu soruya özel ya da genel)
       const _frame = (it.q.frame && it.q.frame!=='none') ? it.q.frame : (CFG.frame||'none');
@@ -4533,11 +4595,17 @@ function drawBook(doc, book, first){
         drawNoteBox(doc, it.q, it.x, it.y, it.colW);
         return;
       }
+      // ── SORUYA BAĞLI NOT (sorunun üstünde) ──
+      let noff=0;
+      if(it.q.note){
+        noff = qNoteH(it.q, it.colW);
+        drawNoteBox(doc, {kind:it.q.noteKind||'uyari', text:it.q.note}, it.x, it.y, it.colW);
+      }
       // ── SORU ÇERÇEVESİ ──
       const frame = (it.q.frame && it.q.frame!=='none') ? it.q.frame : CFG.frame;
       if(frame && frame!=='none'){
         const fx=it.x-2.5, fw=it.colW+5;
-        const fy=it.y-2.5;
+        const fy=it.y-2.5+noff;
         // çözüm alanı çerçeve dışında kalsın seçeneği
         const solIn = CFG.frameNoSol ? 0 : (it.sol>0?it.sol:0);
         const totalH=TITLE_H + it.h + solIn;
@@ -4549,14 +4617,14 @@ function drawBook(doc, book, first){
       const labelText = formatQuestionNumber(it.num - 1, qNumFormat);
       if(labelText){
         doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(17);
-        doc.text(labelText, it.x, it.y+3.8);
+        doc.text(labelText, it.x, it.y+3.8+noff);
       }
       if(CFG.pts){
         doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(110);
-        doc.text('('+(it.q.pt||0)+' puan)', it.x+it.colW, it.y+3.8, {align:'right'});
+        doc.text('('+(it.q.pt||0)+' puan)', it.x+it.colW, it.y+3.8+noff, {align:'right'});
       } else if(CFG.yazili){
         // Yazılı modu: sağ üstte küçük puan kutusu ( ... / pt )
-        const pw=15, ph=6, px=it.x+it.colW-pw, py=it.y-0.5;
+        const pw=15, ph=6, px=it.x+it.colW-pw, py=it.y-0.5+noff;
         doc.setDrawColor(150); doc.setLineWidth(0.3);
         doc.roundedRect(px,py,pw,ph,1,1,'S');
         doc.setDrawColor(200); doc.line(px+pw*0.5,py+1,px+pw*0.5,py+ph-1);
@@ -4564,12 +4632,12 @@ function drawBook(doc, book, first){
         doc.text(String(it.q.pt||''), px+pw*0.75, py+4, {align:'center'});
         doc.setFontSize(6); doc.text('puan', px+pw*0.25, py+4, {align:'center'});
       }
-      doc.addImage(it.q.img,'JPEG',it.x,it.y+TITLE_H,it.w,it.h);
+      doc.addImage(it.q.img,'JPEG',it.x,it.y+TITLE_H+noff,it.w,it.h);
 
       // PDF İçi Çözüm Izgarası Çizimi (Kareli Defter)
       if(it.sol>0 && CFG){
         const solType = CFG.soltype || 'grid';
-        const sy = it.y+TITLE_H+it.h+1.5;
+        const sy = it.y+TITLE_H+it.h+1.5+noff;
         const sh = it.sol - 3;
         if(solType === 'grid'){
           doc.setDrawColor(203, 213, 225);
@@ -4588,7 +4656,7 @@ function drawBook(doc, book, first){
       if(it.sol>0 && CFG.sep!=='yok'){
         doc.setDrawColor(170); doc.setLineWidth(CFG.sep==='duz'?0.25:0.2);
         if(doc.setLineDashPattern && CFG.sep==='kesik') doc.setLineDashPattern([1.2,1.2],0);
-        const ly=it.y+TITLE_H+it.h+it.sol-1;
+        const ly=it.y+TITLE_H+it.h+it.sol-1+noff;
         doc.line(it.x,ly,it.x+it.colW,ly);
         if(doc.setLineDashPattern) doc.setLineDashPattern([],0);
       }
