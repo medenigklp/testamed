@@ -1133,6 +1133,13 @@ input,select,textarea{font:inherit}
           <option value="bar-navy">★ başlık çubuğu — lacivert</option>
           <option value="bar-bordo">başlık çubuğu — bordo</option>
           <option value="bar-teal">başlık çubuğu — turkuaz</option>
+          <option value="corner-red">köşe şeridi — YENİ (kırmızı)</option>
+          <option value="corner-gold">köşe şeridi — ÖNEMLİ (altın)</option>
+          <option value="seal">mühür rozet — numaralı</option>
+          <option value="dashed">noktalı ayraç çerçeve</option>
+          <option value="double">klasik çift çizgi</option>
+          <option value="lcorner">L köşe — minimal</option>
+          <option value="shadow">gölgeli kart</option>
           <option value="box">Sade çerçeve (ince kenarlık)</option>
         </select>
       </div>
@@ -3975,6 +3982,13 @@ function drawQFrame(doc, kind, x, y, w, h, cfg){
     'bar-navy': {tab:[26,35,126],  tc:[255,255,255], bg:null, bd:[26,35,126],  label:'SORU', style:'bar'},
     'bar-bordo':{tab:[78,52,46],   tc:[255,255,255], bg:null, bd:[78,52,46],   label:'ETKİNLİK', style:'bar'},
     'bar-teal': {tab:[13,148,136], tc:[255,255,255], bg:null, bd:[13,148,136], label:'İNCELE', style:'bar'},
+    'corner-red': {tab:[198,40,40], tc:[255,255,255], bd:[224,224,224], label:'YENİ', style:'corner'},
+    'corner-gold':{tab:[161,98,7], tc:[255,255,255], bd:[224,224,224], label:'ÖNEMLİ', style:'corner'},
+    seal:   {tab:[29,59,110], tc:[255,255,255], bd:[29,59,110], style:'seal'},
+    dashed: {bd:[120,130,145], style:'dashed'},
+    double: {bd:[60,70,85], style:'double'},
+    lcorner:{bd:[57,73,171], style:'lcorner'},
+    shadow: {bd:[210,215,225], style:'shadow'},
     box:    {tab:null, tc:null, bg:null, bd:[180,190,200], label:'', style:'box'}
   };
   const f=FR[kind]; if(!f) return;
@@ -3999,6 +4013,50 @@ function drawQFrame(doc, kind, x, y, w, h, cfg){
     doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
     doc.setTextColor(f.tc[0],f.tc[1],f.tc[2]);
     doc.text(f.label, x+4, y+4.5);
+  } else if(f.style==='corner'){
+    // kutu + sağ üst köşe üçgen şerit
+    doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.4);
+    doc.roundedRect(x,y,w,h,2,2,'S');
+    const cs=16;
+    doc.setFillColor(f.tab[0],f.tab[1],f.tab[2]);
+    doc.lines([[cs,0],[0,cs],[-cs,-cs]], x+w-cs, y, [1,1], 'F', true);
+    // köşe yazısı (45° döndürülmüş)
+    doc.setFont('helvetica','bold'); doc.setFontSize(5.5);
+    doc.setTextColor(f.tc[0],f.tc[1],f.tc[2]);
+    doc.text(f.label, x+w-6, y+5.5, {angle:-45, align:'center'});
+  } else if(f.style==='seal'){
+    // kutu + sol üst numaralı yuvarlak mühür
+    doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.5);
+    doc.roundedRect(x,y+3,w,h-3,2.5,2.5,'S');
+    doc.setFillColor(f.tab[0],f.tab[1],f.tab[2]);
+    doc.circle(x+6,y+5,4,'F');
+    // numara mühürde (soru no)
+    doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.setTextColor(f.tc[0],f.tc[1],f.tc[2]);
+    doc.text(String(cfg._qnum||'?'), x+6, y+7, {align:'center'});
+  } else if(f.style==='dashed'){
+    doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.4);
+    if(doc.setLineDashPattern) doc.setLineDashPattern([1.5,1.2],0);
+    doc.roundedRect(x,y,w,h,2,2,'S');
+    if(doc.setLineDashPattern) doc.setLineDashPattern([],0);
+  } else if(f.style==='double'){
+    doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]);
+    doc.setLineWidth(0.6); doc.rect(x,y,w,h);
+    doc.setLineWidth(0.3); doc.rect(x+1.2,y+1.2,w-2.4,h-2.4);
+  } else if(f.style==='lcorner'){
+    // sadece 4 köşe L işaretleri
+    doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.7);
+    const L=6;
+    doc.line(x,y,x+L,y); doc.line(x,y,x,y+L);
+    doc.line(x+w-L,y,x+w,y); doc.line(x+w,y,x+w,y+L);
+    doc.line(x,y+h-L,x,y+h); doc.line(x,y+h,x+L,y+h);
+    doc.line(x+w-L,y+h,x+w,y+h); doc.line(x+w,y+h-L,x+w,y+h);
+  } else if(f.style==='shadow'){
+    // hafif gölge + kart
+    doc.setFillColor(220,224,230);
+    doc.roundedRect(x+0.8,y+0.8,w,h,2.5,2.5,'F');
+    doc.setFillColor(255,255,255); doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.3);
+    doc.roundedRect(x,y,w,h,2.5,2.5,'FD');
   } else if(f.style==='box'){
     doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.4);
     doc.roundedRect(x,y,w,h,2,2,'S');
@@ -4074,6 +4132,7 @@ function drawBook(doc, book, first){
         const fy=it.y-2.5;
         const totalH=TITLE_H + it.h + (it.sol>0?it.sol:0);
         const fh=totalH+5;
+        CFG._qnum=it.num;
         drawQFrame(doc, frame, fx, fy, fw, fh, CFG);
       }
       const labelText = formatQuestionNumber(it.num - 1, qNumFormat);
