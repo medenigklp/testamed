@@ -1421,10 +1421,19 @@ async function render(){
   if(!active) return;
   const cv=$('page'), c=cv.getContext('2d',{willReadFrequently:true}), q=quality();
   const rot=active.rot||0;
+  // iOS canvas bellek limiti — toplam piksel sınırı (donma önlemi)
+  const MAXPX = 4000000; // ~4 megapiksel güvenli
   if(active.kind==='pdf'){
     const p=await active.pdf.getPage(pageNo);
     const base=p.getViewport({scale:1,rotation:rot});
-    const vp=p.getViewport({scale:scale*q,rotation:rot});
+    let renderScale=scale*q;
+    // hedef canvas çok büyükse ölçeği güvenli sınıra çek
+    const wantW=base.width/1*renderScale, wantH=base.height/1*renderScale;
+    if(wantW*wantH > MAXPX){
+      const shrink=Math.sqrt(MAXPX/(wantW*wantH));
+      renderScale*=shrink;
+    }
+    const vp=p.getViewport({scale:renderScale,rotation:rot});
     cv.width=Math.floor(vp.width); cv.height=Math.floor(vp.height);
     cv.style.width=Math.floor(base.width*scale)+'px';
     cv.style.height=Math.floor(base.height*scale)+'px';
@@ -1435,8 +1444,14 @@ async function render(){
     const swap=(rot===90||rot===270);
     const nw=swap?im.height:im.width, nh=swap?im.width:im.height;
     const cw=nw*scale;
-    cv.width=Math.floor(Math.min(nw*2,cw*q));
-    cv.height=Math.floor(cv.width*(nh/nw));
+    let cW=Math.floor(Math.min(nw*2,cw*q));
+    let cH=Math.floor(cW*(nh/nw));
+    // güvenli piksel sınırı
+    if(cW*cH > MAXPX){
+      const shrink=Math.sqrt(MAXPX/(cW*cH));
+      cW=Math.floor(cW*shrink); cH=Math.floor(cH*shrink);
+    }
+    cv.width=cW; cv.height=cH;
     cv.style.width=Math.floor(cw)+'px';
     cv.style.height=Math.floor(cw*(nh/nw))+'px';
     c.imageSmoothingQuality='high';
@@ -1615,7 +1630,11 @@ $('stage').addEventListener('touchmove',e=>{
   }
 },{passive:true});
 $('stage').addEventListener('touchend',e=>{
-  if(pinch&&e.touches.length<2){ pinch=null; render(); }
+  if(pinch&&e.touches.length<2){
+    pinch=null;
+    // render'ı bir sonraki frame'e bırak — donmayı önle
+    requestAnimationFrame(()=>{ try{ render(); }catch(_){ } });
+  }
 });
 function dist(e){
   return Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
