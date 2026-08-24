@@ -780,6 +780,7 @@ input,select,textarea{font:inherit}
         <div class="f">
           <label>Başlık Şablonu</label>
           <select id="f-template" onchange="preview()">
+            <option value="kurumsal">★ Kurumsal — Dalgalı Antet (resmî)</option>
             <option value="periodic" selected>⬢ Periyodik — Element Hücresi (kimya)</option>
             <option value="molecule">⬢ Molekül — Atom-Bağ Motifi</option>
             <option value="hexagon">⬢ Hexagon — Bal Peteği</option>
@@ -1123,9 +1124,19 @@ input,select,textarea{font:inherit}
           <option value="altkose">Her sayfanın sağ alt köşesinde</option>
         </select>
       </div>
+      <div class="f"><label>Soru çerçevesi (tüm sorulara)</label>
+        <select id="f-frame" onchange="preview()">
+          <option value="none" selected>Çerçevesiz (sade)</option>
+          <option value="soru">SORU — mor sekme etiket</option>
+          <option value="ornek">✓ ÖRNEK — yeşil sekme</option>
+          <option value="uyari">⚠ UYARI — turuncu sekme</option>
+          <option value="bar-navy">★ başlık çubuğu — lacivert</option>
+          <option value="bar-bordo">başlık çubuğu — bordo</option>
+          <option value="bar-teal">başlık çubuğu — turkuaz</option>
+          <option value="box">Sade çerçeve (ince kenarlık)</option>
+        </select>
+      </div>
     </div>
-
-    <!-- P6: Kitapçık & Optik -->
     <div class="set-pane" id="p6">
       <div class="sec">Kitapçık & Optik Form</div>
       <div class="f"><label>Kaç kitapçık</label>
@@ -2700,7 +2711,7 @@ function openTest(t,edit){
     set('f-hdrtheme',c.hdrtheme||'emerald');
     set('f-qnumformat',c.qnumformat||'std');
     set('f-mleft',c.mLeft||12);set('f-mright',c.mRight||12);set('f-mtop',c.mTop||12);set('f-mbot',c.mBottom||12);
-    $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key; if($('f-keypos')&&c.keypos)$('f-keypos').value=c.keypos;
+    $('f-info').checked=!!c.info;$('f-pts').checked=!!c.pts;$('f-key').checked=!!c.key; if($('f-keypos')&&c.keypos)$('f-keypos').value=c.keypos; if($('f-frame')&&c.frame)$('f-frame').value=c.frame;
     $('f-optic').checked=!!c.optic;$('f-qr').checked=!!c.qr;
     if(c.customPagePlan) customPageDistribution = c.customPagePlan.slice();
   }
@@ -2733,6 +2744,27 @@ function P_THEME(name){
   return M[name]||M.emerald;
 }
 
+function drawStar(g,cx,cy,r,pts){
+  g.beginPath();
+  for(let i=0;i<pts*2;i++){
+    const rad=(i%2===0)?r:r*0.42;
+    const a=(Math.PI/pts)*i - Math.PI/2;
+    const x=cx+Math.cos(a)*rad, y=cy+Math.sin(a)*rad;
+    if(i===0) g.moveTo(x,y); else g.lineTo(x,y);
+  }
+  g.closePath(); g.fill();
+}
+function roundRectPath(g,x,y,w,h,r){
+  r=Math.min(r,w/2,h/2);
+  g.beginPath();
+  g.moveTo(x+r,y);
+  g.arcTo(x+w,y,x+w,y+h,r);
+  g.arcTo(x+w,y+h,x,y+h,r);
+  g.arcTo(x,y+h,x,y,r);
+  g.arcTo(x,y,x+w,y,r);
+  g.closePath();
+}
+
 function headerH(cfg){ 
   let h;
   switch(cfg.template){
@@ -2750,6 +2782,7 @@ function headerH(cfg){
     case 'molecule':h=22; break;
     case 'blueprint':h=24; break;
     case 'editorial':h=26; break;
+    case 'kurumsal':h=34; break;
     case 'osym':    h=26; break;
     default:        h=22;
   }
@@ -3105,6 +3138,64 @@ function headerImage(cfg){
     g.strokeStyle=pal.soft; g.lineWidth=0.5*K;
     g.beginPath();g.moveTo(0,bandH);g.lineTo(W,bandH);g.stroke();
     g.textAlign='left'; return stamp('TL');
+  }
+
+  /* ═══ KURUMSAL — dalgalı çift eğri + kurum mührü + eğitim yılı + ders çubuğu ═══ */
+  if(cfg.template==='kurumsal'){
+    g.textBaseline='alphabetic';
+    const kwY=H*0.30;
+    // açık dalga (arka dolgu)
+    g.fillStyle=pal.soft;
+    g.beginPath();
+    g.moveTo(0,kwY*0.55);
+    g.bezierCurveTo(W*0.30,kwY*0.05, W*0.55,kwY*1.15, W,kwY*0.5);
+    g.lineTo(W,0); g.lineTo(0,0); g.closePath(); g.fill();
+    // koyu dalga çizgisi
+    g.strokeStyle=pal.m; g.lineWidth=1.4*K;
+    g.beginPath();
+    g.moveTo(0,kwY*0.72);
+    g.bezierCurveTo(W*0.30,kwY*0.20, W*0.55,kwY*1.3, W,kwY*0.66);
+    g.stroke();
+    g.strokeStyle=pal.a; g.lineWidth=0.7*K;
+    g.beginPath();
+    g.moveTo(0,kwY*0.86);
+    g.bezierCurveTo(W*0.32,kwY*0.36, W*0.56,kwY*1.44, W,kwY*0.82);
+    g.stroke();
+    // kurum mührü (orta üst)
+    const kcx=W*0.5, kcy=kwY*0.5, krr=kwY*0.44;
+    g.fillStyle='#fff'; g.strokeStyle=pal.m; g.lineWidth=1.1*K;
+    g.beginPath(); g.arc(kcx,kcy,krr,0,Math.PI*2); g.fill(); g.stroke();
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const rr2=cfg.logo.w/cfg.logo.h; let lh=krr*1.5,lw=lh*rr2; if(lw>krr*1.7){lw=krr*1.7;lh=lw/rr2;}
+        g.save(); g.beginPath(); g.arc(kcx,kcy,krr*0.9,0,Math.PI*2); g.clip();
+        g.drawImage(window._logoImg,kcx-lw/2,kcy-lh/2,lw,lh); g.restore(); }catch(e){}
+    } else {
+      g.fillStyle=pal.m; g.font='800 '+(1.7*K)+'px '+DISP; g.textAlign='center';
+      g.fillText('KURUM',kcx,kcy-0.2*K);
+      g.fillStyle=pal.a; drawStar(g,kcx,kcy+2.0*K,1.4*K,5);
+    }
+    // sağ: eğitim-öğretim yılı rozeti
+    g.fillStyle=pal.soft;
+    const eowW=W*0.34, eowH=kwY*0.5, eowX=W-eowW-2*K, eowY=kwY*0.28;
+    roundRectPath(g,eowX,eowY,eowW,eowH,eowH*0.5); g.fill();
+    g.fillStyle=pal.ink; g.font='800 '+(2.0*K)+'px '+DISP; g.textAlign='center';
+    g.fillText((cfg.year||'EĞİTİM - ÖĞRETİM YILI'),eowX+eowW/2,eowY+eowH*0.66);
+    // OKUL / KURUM ADI
+    g.fillStyle=pal.ink; g.textAlign='center';
+    let kfs=fit(school||'OKUL / KURUM ADI',3.4,W*0.7,'800','topic');
+    g.font='800 '+(kfs*K)+'px '+DISP;
+    g.fillText(school||'OKUL / KURUM ADI',W/2,kwY+H*0.16);
+    // DERS ADI çubuğu
+    const barY=kwY+H*0.20, barH=H*0.16, barW=W*0.62, barX=(W-barW)/2;
+    g.fillStyle=pal.m; roundRectPath(g,barX,barY,barW,barH,barH*0.18); g.fill();
+    g.fillStyle='#fff'; g.textAlign='center';
+    let kfs2=fit(lesson,3.4,barW-6*K,'800','lesson');
+    g.font='800 '+(kfs2*K)+'px '+DISP;
+    g.fillText(lesson,W/2,barY+barH*0.70);
+    g.fillStyle=pal.m; g.font='700 '+(1.8*K)+'px '+DISP;
+    g.fillText(up(kind),W/2,barY+barH+H*0.075);
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
   }
 
   /* ═══ 4) KÖŞE — sol üst renkli aksan bloğu, gerisi minimal ═══ */
@@ -3737,6 +3828,7 @@ function cfgNow(){
     pts: $('f-pts') ? $('f-pts').checked : false,
     key: $('f-key') ? $('f-key').checked : false,
     keypos: ($('f-keypos') && $('f-keypos').value) || 'son',
+    frame: ($('f-frame') && $('f-frame').value) || 'none',
     book: parseInt($('f-book') && $('f-book').value)||1,
     optic: $('f-optic') ? $('f-optic').checked : false,
     qr: $('f-qr') ? $('f-qr').checked : false,
@@ -3874,6 +3966,45 @@ const QR=(function(){
   }};
 })();
 
+// Soru çerçevesi çizici
+function drawQFrame(doc, kind, x, y, w, h, cfg){
+  const FR={
+    soru:   {tab:[232,234,246], tc:[57,73,171],  bg:[245,246,252], bd:[197,202,233], label:'SORU',   style:'tab'},
+    ornek:  {tab:[232,245,233], tc:[46,125,50],   bg:[241,248,242], bd:[165,214,167], label:'ÖRNEK',  style:'tab'},
+    uyari:  {tab:[255,243,224], tc:[230,81,0],    bg:[255,251,245], bd:[255,204,128], label:'UYARI',  style:'tab'},
+    'bar-navy': {tab:[26,35,126],  tc:[255,255,255], bg:null, bd:[26,35,126],  label:'SORU', style:'bar'},
+    'bar-bordo':{tab:[78,52,46],   tc:[255,255,255], bg:null, bd:[78,52,46],   label:'ETKİNLİK', style:'bar'},
+    'bar-teal': {tab:[13,148,136], tc:[255,255,255], bg:null, bd:[13,148,136], label:'İNCELE', style:'bar'},
+    box:    {tab:null, tc:null, bg:null, bd:[180,190,200], label:'', style:'box'}
+  };
+  const f=FR[kind]; if(!f) return;
+  if(f.style==='tab'){
+    // zemin kutu
+    if(f.bg){ doc.setFillColor(f.bg[0],f.bg[1],f.bg[2]); doc.roundedRect(x,y+4,w,h-4,2,2,'F'); }
+    doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.4);
+    doc.roundedRect(x,y+4,w,h-4,2,2,'S');
+    // sekme etiket
+    doc.setFont('helvetica','bold'); doc.setFontSize(7);
+    const lw=doc.getTextWidth(f.label)+6;
+    doc.setFillColor(f.tab[0],f.tab[1],f.tab[2]);
+    doc.roundedRect(x+2,y,lw,6,1.5,1.5,'F');
+    doc.setTextColor(f.tc[0],f.tc[1],f.tc[2]);
+    doc.text(f.label, x+5, y+4.2);
+  } else if(f.style==='bar'){
+    // üst başlık çubuğu
+    doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.4);
+    doc.roundedRect(x,y+6,w,h-6,2,2,'S');
+    doc.setFillColor(f.tab[0],f.tab[1],f.tab[2]);
+    doc.roundedRect(x,y,w,6.5,1.5,1.5,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+    doc.setTextColor(f.tc[0],f.tc[1],f.tc[2]);
+    doc.text(f.label, x+4, y+4.5);
+  } else if(f.style==='box'){
+    doc.setDrawColor(f.bd[0],f.bd[1],f.bd[2]); doc.setLineWidth(0.4);
+    doc.roundedRect(x,y,w,h,2,2,'S');
+  }
+}
+
 function drawQR(doc,text,x,y,size){
   try{
     const m=QR.make(text); const n=m.length; const s=size/n;
@@ -3936,6 +4067,15 @@ function drawBook(doc, book, first){
       doc.line(mLeft, mTop+th, PAGE.w-mRight, mTop+th);
     }
     pg.items.forEach(it=>{
+      // ── SORU ÇERÇEVESİ ──
+      const frame = (it.q.frame && it.q.frame!=='none') ? it.q.frame : CFG.frame;
+      if(frame && frame!=='none'){
+        const fx=it.x-2.5, fw=it.colW+5;
+        const fy=it.y-2.5;
+        const totalH=TITLE_H + it.h + (it.sol>0?it.sol:0);
+        const fh=totalH+5;
+        drawQFrame(doc, frame, fx, fy, fw, fh, CFG);
+      }
       const labelText = formatQuestionNumber(it.num - 1, qNumFormat);
       if(labelText){
         doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(17);
@@ -4452,6 +4592,8 @@ function foyLoad(){
 async function foyBuild(){
   if(!foyBlocks.length) return toast('Önce blok ekle',true);
   if(!pdfReady||!window.jspdf) return toast('PDF motoru hazır değil',true);
+  toast('Föy hazırlanıyor…');
+  await new Promise(r=>setTimeout(r,50));  // arayüzün nefes almasına izin ver
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4',compress:true});
   const M=14, W=210-M*2, BOT=297-M;
@@ -4596,28 +4738,32 @@ async function foyBuild(){
   // Yerleşim: half bloklar yan yana, tam bloklar bütün genişlik
   const GAPX=8, colW=(W-GAPX)/2;
   let i=0;
-  while(i<foyBlocks.length){
-    const b=foyBlocks[i];
-    const bHalf=b.half && b.type!=='space';
-    const next=foyBlocks[i+1];
-    const pairable = bHalf && next && next.half && next.type!=='space';
-    if(pairable){
-      // iki yarım blok yan yana
-      const hL=await drawFB(b,0,colW,0,true);
-      const hR=await drawFB(next,0,colW,0,true);
-      const rowH=Math.max(hL,hR);
-      ensure(rowH);
-      await drawFB(b, M, colW, y, false);
-      await drawFB(next, M+colW+GAPX, colW, y, false);
-      y+=rowH; i+=2;
-    } else {
-      const wBlk = bHalf ? colW : W;
-      const h=await drawFB(b,0,wBlk,0,true);
-      if(b.type==='space'){ y+=h; if(y>BOT){doc.addPage();y=M;} i++; continue; }
-      ensure(h);
-      await drawFB(b, M, wBlk, y, false);
-      y+=h; i++;
+  try{
+    while(i<foyBlocks.length){
+      const b=foyBlocks[i];
+      const bHalf=b.half && b.type!=='space';
+      const next=foyBlocks[i+1];
+      const pairable = bHalf && next && next.half && next.type!=='space';
+      if(pairable){
+        const hL=await drawFB(b,0,colW,0,true);
+        const hR=await drawFB(next,0,colW,0,true);
+        const rowH=Math.max(hL,hR);
+        ensure(rowH);
+        await drawFB(b, M, colW, y, false);
+        await drawFB(next, M+colW+GAPX, colW, y, false);
+        y+=rowH; i+=2;
+      } else {
+        const wBlk = bHalf ? colW : W;
+        const h=await drawFB(b,0,wBlk,0,true);
+        if(b.type==='space'){ y+=h; if(y>BOT){doc.addPage();y=M;} i++; continue; }
+        ensure(h);
+        await drawFB(b, M, wBlk, y, false);
+        y+=h; i++;
+      }
     }
+  }catch(err){
+    toast('PDF oluşturulamadı — bir blokta sorun var',true);
+    return;
   }
 
   // sayfa numaraları
@@ -4664,9 +4810,20 @@ function drawEnergyGraph(doc, kind, x, y, w, h){
   const ry0 = endo?loY:hiY, ry1 = endo?hiY:loY;   // tepken sv, ürün sv
   const peakY = Math.min(ry0,ry1)-ah*0.16;
   const x0 = ax+aw*0.10, xm=ax+aw*0.5, x1=ax+aw*0.82;
-  // eğri (iki bezier)
+  // eğri — güvenli çok-noktalı düz çizgi (bezier yerine, donma riski yok)
   doc.setDrawColor(col[0],col[1],col[2]); doc.setLineWidth(0.7);
-  doc.lines([[ (xm-x0)/2,0 ],[ (xm-x0)/2, peakY-ry0 ],[ (x1-xm)/2, 0 ],[ (x1-xm)/2, ry1-peakY ]], x0, ry0, [1,1],'S',false);
+  const pts=[];
+  const N=16;
+  for(let i=0;i<=N;i++){
+    const t=i/N;
+    const px = x0 + (x1-x0)*t;
+    // yumuşak tümsek: başlangıç ry0 → tepe peakY → bitiş ry1
+    let py;
+    if(t<0.5){ const u=t/0.5; py = ry0 + (peakY-ry0)*(u*u*(3-2*u)); }
+    else { const u=(t-0.5)/0.5; py = peakY + (ry1-peakY)*(u*u*(3-2*u)); }
+    pts.push([px,py]);
+  }
+  for(let i=0;i<pts.length-1;i++){ doc.line(pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1]); }
   // referans kesikli çizgi (tepken seviyesi)
   doc.setDrawColor(col[0],col[1],col[2]); doc.setLineWidth(0.3);
   if(doc.setLineDashPattern) doc.setLineDashPattern([1,1],0);
