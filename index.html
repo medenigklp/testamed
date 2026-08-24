@@ -294,6 +294,8 @@ input,select,textarea{font:inherit}
 .qrow .picbtn{width:34px;height:34px;border-radius:9px;background:var(--bg);font-size:14px;
   border:1.5px solid var(--line);flex-shrink:0}
 .qrow .picbtn.has{background:rgba(5,150,105,.15);border-color:var(--gr)}
+.qrow .frmbtn{font-size:15px}
+.qrow .frmbtn.has{background:rgba(29,59,110,.14);border-color:#1D3B6E}
 .qrow .mv{display:flex;gap:4px;margin-left:auto}
 .qrow .mv button{width:30px;height:30px;border-radius:50%;background:var(--bg);font-size:14px;font-weight:700}
 .ans{display:flex;gap:4px}
@@ -376,6 +378,33 @@ input,select,textarea{font:inherit}
 .pg .pbox span{padding:1px 3px;font-size:1vw;color:#999;border-right:1px solid #ccc}
 .pg .pbox b{padding:1px 4px;font-size:1vw;color:#333;min-width:12px;text-align:center}
 @media(min-width:560px){.pg .pbox span,.pg .pbox b{font-size:6.5px}}
+.q-live-box[data-fr]::before{content:attr(data-fr);position:absolute;z-index:3;font-weight:800;letter-spacing:.03em}
+/* sekme etiketli çerçeveler */
+.qf-soru,.qf-ornek,.qf-uyari{border-radius:2px}
+.qf-soru{outline:1px solid #C5CAE9;background:#F5F6FC}
+.qf-soru[data-fr]::before{left:2px;top:-2px;font-size:5px;color:#fff;background:#3949AB;padding:1px 4px;border-radius:2px}
+.qf-ornek{outline:1px solid #A5D6A7;background:#F1F8F2}
+.qf-ornek[data-fr]::before{left:2px;top:-2px;font-size:5px;color:#fff;background:#2E7D32;padding:1px 4px;border-radius:2px}
+.qf-uyari{outline:1px solid #FFCC80;background:#FFFBF5}
+.qf-uyari[data-fr]::before{left:2px;top:-2px;font-size:5px;color:#fff;background:#E65100;padding:1px 4px;border-radius:2px}
+/* başlık çubukları */
+.qf-bar-navy,.qf-bar-bordo,.qf-bar-teal{border:1px solid #ccc;padding-top:7px !important}
+.qf-bar-navy[data-fr]::before,.qf-bar-bordo[data-fr]::before,.qf-bar-teal[data-fr]::before{left:0;right:0;top:0;font-size:5px;color:#fff;padding:1px 4px}
+.qf-bar-navy{border-color:#1A237E}.qf-bar-navy[data-fr]::before{background:#1A237E}
+.qf-bar-bordo{border-color:#4E342E}.qf-bar-bordo[data-fr]::before{background:#4E342E}
+.qf-bar-teal{border-color:#0D9488}.qf-bar-teal[data-fr]::before{background:#0D9488}
+/* köşe şeritleri */
+.qf-corner-red,.qf-corner-gold{border:1px solid #ddd}
+.qf-corner-red[data-fr]::before,.qf-corner-gold[data-fr]::before{right:0;top:0;font-size:4px;color:#fff;padding:1px 3px;transform:none}
+.qf-corner-red[data-fr]::before{background:#C62828}
+.qf-corner-gold[data-fr]::before{background:#A16207}
+/* diğerleri */
+.qf-seal{border:1px solid #1D3B6E}
+.qf-dashed{border:1px dashed #78829180}
+.qf-double{outline:1px solid #3C4655;outline-offset:-2px;border:1px solid #3C4655}
+.qf-lcorner{box-shadow:inset 3px 3px 0 -2px #3949AB, inset -3px 3px 0 -2px #3949AB, inset 3px -3px 0 -2px #3949AB, inset -3px -3px 0 -2px #3949AB}
+.qf-shadow{border:1px solid #d2d7e1;box-shadow:1px 1px 3px rgba(0,0,0,.12);border-radius:3px;background:#fff}
+.qf-box{border:1px solid #b4bec8;border-radius:2px}
 .pg .cont-hdr{position:absolute;display:flex;justify-content:space-between;align-items:flex-end;
   padding-bottom:1.5%;border-bottom:1px solid;font-family:var(--body)}
 .pg .cont-hdr .ch-l{font-weight:800;font-size:1.5vw;letter-spacing:.02em}
@@ -499,7 +528,7 @@ input,select,textarea{font:inherit}
   border-top:1px solid var(--line);z-index:40}
 #setbar .big{flex:2}
 #setbar .ghost{flex:1;white-space:nowrap}
-.set-panes{padding:0 16px 26px}
+.set-panes{padding:0 16px 120px}
 .set-pane{display:none;animation:fadeIn .22s cubic-bezier(.4,0,.2,1)}
 .set-pane.on{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -2017,6 +2046,13 @@ function drawRows(){
       pb.onclick=()=>pickPic(q);
       r.appendChild(pb);
     }
+    // çerçeve seçici (bu soruya özel)
+    const fb=document.createElement('button');
+    fb.className='picbtn frmbtn'+(q.frame&&q.frame!=='none'?' has':'');
+    fb.textContent='▣';
+    fb.title='Bu sorunun çerçevesi';
+    fb.onclick=(e)=>{ e.stopPropagation(); openFramePicker(q); };
+    r.appendChild(fb);
     const mv=document.createElement('div'); mv.className='mv';
     const up=document.createElement('button'); up.textContent='↑';
     up.onclick=()=>{ if(i>0){ [qs[i-1],qs[i]]=[qs[i],qs[i-1]]; drawRows(); } };
@@ -2031,6 +2067,30 @@ function drawRows(){
 
 let picTarget=null;
 function pickPic(q){ picTarget=q; $('in-pic').click(); }
+
+const FRAME_LABEL={soru:'SORU',ornek:'ÖRNEK',uyari:'UYARI','bar-navy':'SORU','bar-bordo':'ETKİNLİK','bar-teal':'İNCELE','corner-red':'YENİ','corner-gold':'ÖNEMLİ'};
+const FRAME_OPTS=[
+  ['none','Genel ayarı kullan'],['soru','SORU (mor sekme)'],['ornek','ÖRNEK (yeşil)'],
+  ['uyari','UYARI (turuncu)'],['bar-navy','Lacivert çubuk'],['bar-bordo','Bordo çubuk'],
+  ['bar-teal','Turkuaz çubuk'],['corner-red','Köşe YENİ (kırmızı)'],['corner-gold','Köşe ÖNEMLİ (altın)'],
+  ['seal','Mühür rozet'],['dashed','Noktalı ayraç'],['double','Çift çizgi'],
+  ['lcorner','L köşe'],['shadow','Gölgeli kart'],['box','Sade çerçeve']
+];
+function openFramePicker(q){
+  const ov=document.createElement('div'); ov.className='foy-choice-ov';
+  ov.innerHTML='<div class="foy-choice" style="max-height:70vh;overflow-y:auto"><h3>Bu sorunun çerçevesi</h3>'+
+    FRAME_OPTS.map(o=>'<button onclick="setQFrame(this,\''+o[0]+'\')"'+((q.frame||'none')===o[0]?' style="border-color:var(--gr);font-weight:800"':'')+'>'+o[1]+'</button>').join('')+
+    '<button class="cx" onclick="this.closest(\'.foy-choice-ov\').remove()">Kapat</button></div>';
+  ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+  window._frameQ=q;
+  document.body.appendChild(ov);
+}
+function setQFrame(btn,val){
+  if(window._frameQ){ window._frameQ.frame = (val==='none'?null:val); }
+  document.querySelectorAll('.foy-choice-ov').forEach(x=>x.remove());
+  drawRows();
+  toast(val==='none'?'Genel çerçeve kullanılacak':'Çerçeve atandı');
+}
 
 /* ════════ Yapay Zeka Soru Üretimi ════════ */
 const PROV={
@@ -2662,7 +2722,7 @@ function saveTestDialog(){
     const name=v[0]||'Test';
     await DB.put('tests',{id:(editingTest?editingTest.id:'t_'+Date.now()),name,
       lesson:$('f-lesson').value.trim(),date:new Date().toLocaleDateString('tr-TR'),
-      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false})),
+      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null})),
       cfg:cfgNow()});
     if(editingTest) editingTest.name=name;
     closeModal(); toast('“'+name+'” kaydedildi');
@@ -2670,7 +2730,7 @@ function saveTestDialog(){
 }
 
 function openTest(t,edit){
-  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false}));
+  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null}));
   if(t.cfg && t.cfg.logo){
     window._logoData=t.cfg.logo;
     const img=new Image(); img.onload=()=>{window._logoImg=img;}; img.src=t.cfg.logo.url;
@@ -3651,6 +3711,13 @@ function drawPages(){
       const boxW = it.w;
       const boxH = TITLE_H + it.h + (it.sol || 0);
       qBox.style.cssText = `left:${pct(it.x, PAGE.w)}; top:${pct(it.y, PAGE.h)}; width:${pct(boxW, PAGE.w)}; height:${pct(boxH, PAGE.h)};`;
+
+      // Soru çerçevesi (bu soruya özel ya da genel)
+      const _frame = (it.q.frame && it.q.frame!=='none') ? it.q.frame : (CFG.frame||'none');
+      if(_frame && _frame!=='none'){
+        qBox.classList.add('qf-'+_frame);
+        qBox.setAttribute('data-fr', FRAME_LABEL[_frame]||'');
+      }
 
       // Soru Numarası
       const labelText = formatQuestionNumber(it.num - 1, qNumFormat);
