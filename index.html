@@ -810,6 +810,7 @@ input,select,textarea{font:inherit}
           <label>Başlık Şablonu</label>
           <select id="f-template" onchange="preview()">
             <option value="kurumsal">★ Kurumsal — Dalgalı Antet (resmî)</option>
+            <option value="studio">★ Studio — İki Bloklu Yatay (modern)</option>
             <option value="periodic" selected>⬢ Periyodik — Element Hücresi (kimya)</option>
             <option value="molecule">⬢ Molekül — Atom-Bağ Motifi</option>
             <option value="hexagon">⬢ Hexagon — Bal Peteği</option>
@@ -2850,6 +2851,7 @@ function headerH(cfg){
     case 'blueprint':h=24; break;
     case 'editorial':h=26; break;
     case 'kurumsal':h=34; break;
+    case 'studio':  h=26; break;
     case 'osym':    h=26; break;
     default:        h=22;
   }
@@ -3261,6 +3263,74 @@ function headerImage(cfg){
     g.fillText(lesson,W/2,barY+barH*0.70);
     g.fillStyle=pal.m; g.font='700 '+(1.8*K)+'px '+DISP;
     g.fillText(up(kind),W/2,barY+barH+H*0.075);
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ STUDIO — koyu sol blok + renkli sağ blok, dalga geçişli (teststud tarzı) ═══ */
+  if(cfg.template==='studio'){
+    g.textBaseline='alphabetic';
+    const splitX=W*0.42;          // sol/sağ ayrım noktası
+    const waveW=W*0.055;          // dalga geçiş genişliği (dar = az boşluk)
+    // sağ renkli blok (önce, altta)
+    g.fillStyle=pal.a;
+    g.beginPath();
+    g.moveTo(splitX+waveW*0.3, 0);
+    g.lineTo(W, 0); g.lineTo(W, H); g.lineTo(splitX+waveW, H);
+    // sol kenarı dalgalı
+    g.bezierCurveTo(splitX+waveW*0.2, H*0.7, splitX+waveW*0.8, H*0.3, splitX+waveW*0.3, 0);
+    g.closePath(); g.fill();
+    // sol koyu blok (üstte, yuvarlak sağ köşe)
+    g.fillStyle=pal.d;
+    const rad=H*0.28;
+    g.beginPath();
+    g.moveTo(0,0);
+    g.lineTo(splitX-rad,0);
+    g.quadraticCurveTo(splitX,0, splitX,rad);
+    g.lineTo(splitX,H-rad);
+    g.quadraticCurveTo(splitX,H, splitX-rad,H);
+    g.lineTo(0,H); g.closePath(); g.fill();
+    // yeşil aksan çizgisi (sol bloğun sağ kenarında ince)
+    g.strokeStyle=pal.a; g.lineWidth=1.6*K;
+    g.beginPath();
+    g.moveTo(splitX-rad*0.2,0.5*K);
+    g.quadraticCurveTo(splitX+1*K,rad, splitX+1*K,H*0.5);
+    g.quadraticCurveTo(splitX+1*K,H-rad, splitX-rad*0.2,H-0.5*K);
+    g.stroke();
+
+    // sol blok içeriği: logo/rozet + ders
+    let tx=3.5*K;
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=H*0.5,lw=lh*r; if(lw>W*0.12){lw=W*0.12;lh=lw/r;}
+        g.drawImage(window._logoImg, tx, (H-lh)/2, lw, lh); tx+=lw+2.5*K; }catch(e){}
+    } else {
+      // altıgen rozet
+      g.fillStyle=pal.a; const hx=tx+H*0.28, hy=H*0.5, hr=H*0.26;
+      g.beginPath();
+      for(let i=0;i<6;i++){ const a=Math.PI/3*i-Math.PI/2; const px=hx+hr*Math.cos(a),py=hy+hr*Math.sin(a); i?g.lineTo(px,py):g.moveTo(px,py); }
+      g.closePath(); g.fill();
+      g.fillStyle=pal.d; g.font='800 '+(2.2*K)+'px '+DISP; g.textAlign='center'; g.textBaseline='middle';
+      g.fillText((lesson||'K').slice(0,1),hx,hy);
+      g.textBaseline='alphabetic'; tx=hx+hr+2.5*K;
+    }
+    // ders adı (küçük üst etiket + büyük ad)
+    g.textAlign='left';
+    if(kind){ g.fillStyle=pal.a; g.font='700 '+(1.9*K)+'px '+DISP; g.fillText(up(kind),tx,H*0.38); }
+    g.fillStyle='#fff';
+    let dfs=fit(lesson,4.6,splitX-tx-2*K,'800','lesson'); g.font='800 '+(dfs*K)+'px '+DISP;
+    g.fillText(lesson,tx,H*0.66);
+    // "studio" alt (marka)
+    g.fillStyle='rgba(255,255,255,.55)'; g.font='600 '+(1.5*K)+'px '+DISP;
+    g.fillText(cfg.school? up(cfg.school).slice(0,14) :'testamed',tx,H*0.86);
+
+    // sağ blok içeriği: konu (büyük) + alt konu
+    g.fillStyle='#fff'; g.textAlign='left';
+    const rx=splitX+waveW+3*K;
+    const topicMain=up(topic||cfg.school||'KONU');
+    let tfs=fit(topicMain,3.6,W-rx-3*K,'800','topic'); g.font='800 '+(tfs*K)+'px '+DISP;
+    g.fillText(topicMain,rx,H*0.46);
+    if(teacher||cfg.date){ g.fillStyle='rgba(255,255,255,.85)'; g.font='600 '+(2.2*K)+'px '+DISP;
+      g.fillText(up(teacher||cfg.date||''),rx,H*0.72); }
     g.textAlign='left';
     return c.toDataURL('image/jpeg',0.95);
   }
