@@ -809,7 +809,8 @@ input,select,textarea{font:inherit}
         <div class="f">
           <label>Başlık Şablonu</label>
           <select id="f-template" onchange="preview()">
-            <option value="kurumsal">★ Kurumsal — Dalgalı Antet (resmî)</option>
+            <option value="resmi">★ Resmî — Sınav Kağıdı Başlığı (D-Y-NET)</option>
+            <option value="kurumsal">★ Kurumsal — Dalgalı Antet</option>
             <option value="studio">★ Studio — İki Bloklu Yatay (modern)</option>
             <option value="periodic" selected>⬢ Periyodik — Element Hücresi (kimya)</option>
             <option value="molecule">⬢ Molekül — Atom-Bağ Motifi</option>
@@ -2050,7 +2051,7 @@ function drawRows(){
     // çerçeve seçici (bu soruya özel)
     const fb=document.createElement('button');
     fb.className='picbtn frmbtn'+(q.frame&&q.frame!=='none'?' has':'');
-    fb.textContent='▣';
+    fb.textContent='🎨';
     fb.title='Bu sorunun çerçevesi';
     fb.onclick=(e)=>{ e.stopPropagation(); openFramePicker(q); };
     r.appendChild(fb);
@@ -2852,6 +2853,7 @@ function headerH(cfg){
     case 'editorial':h=26; break;
     case 'kurumsal':h=34; break;
     case 'studio':  h=26; break;
+    case 'resmi':   h=38; break;
     case 'osym':    h=26; break;
     default:        h=22;
   }
@@ -3331,6 +3333,60 @@ function headerImage(cfg){
     g.fillText(topicMain,rx,H*0.46);
     if(teacher||cfg.date){ g.fillStyle='rgba(255,255,255,.85)'; g.font='600 '+(2.2*K)+'px '+DISP;
       g.fillText(up(teacher||cfg.date||''),rx,H*0.72); }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ RESMİ — klasik sınav kağıdı başlığı (ince çerçeve, dengeli, ciddi) ═══ */
+  if(cfg.template==='resmi'){
+    g.textBaseline='alphabetic';
+    // dış ince çerçeve
+    g.strokeStyle=pal.ink; g.lineWidth=0.8*K;
+    g.strokeRect(1*K,1*K,W-2*K,H-2*K);
+    const cx=W/2;
+    let yy=H*0.14;
+    // üst satır: sol EĞİTİM-ÖĞRETİM YILI · sağ (boş/logo)
+    g.fillStyle=pal.m; g.font='700 '+(2.0*K)+'px '+DISP; g.textAlign='left';
+    g.fillText((cfg.year||'20__ / 20__ EĞİTİM-ÖĞRETİM YILI'), 4*K, yy);
+    // logo sağ üst köşe
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=H*0.28,lw=lh*r; if(lw>W*0.14){lw=W*0.14;lh=lw/r;}
+        g.drawImage(window._logoImg, W-lw-4*K, 3*K, lw, lh); }catch(e){}
+    }
+    // okul/kurum adı — ortalı, büyük
+    yy=H*0.34;
+    g.fillStyle=pal.ink; g.textAlign='center';
+    let sfs=fit(school||'OKUL / KURUM ADI',3.6,W*0.7,'800','topic'); g.font='800 '+(sfs*K)+'px '+DISP;
+    g.fillText(school||'OKUL / KURUM ADI', cx, yy);
+    // ders adı kutusu — ortalı renkli bar
+    const barW=W*0.5, barH=H*0.17, barX=cx-barW/2, barY=H*0.40;
+    g.fillStyle=pal.d; roundRectPath(g,barX,barY,barW,barH,1.5*K); g.fill();
+    g.fillStyle='#fff'; g.textAlign='center';
+    let lfs=fit(lesson,3.2,barW-6*K,'800','lesson'); g.font='800 '+(lfs*K)+'px '+DISP;
+    g.fillText(lesson, cx, barY+barH*0.72);
+    // sınav türü — kutunun altında küçük
+    g.fillStyle=pal.m; g.font='700 '+(1.8*K)+'px '+DISP;
+    g.fillText(up(kind), cx, barY+barH+2.6*K);
+    // alt bilgi satırı: Ad-Soyad ___ | Sınıf/No ___ | D-Y-NET kutuları
+    const infoY=H*0.80;
+    g.strokeStyle=pal.ink; g.lineWidth=0.4*K;
+    g.beginPath(); g.moveTo(3*K,infoY-4*K); g.lineTo(W-3*K,infoY-4*K); g.stroke();
+    g.textAlign='left'; g.fillStyle=pal.ink; g.font='700 '+(2.0*K)+'px '+DISP;
+    g.fillText('Ad-Soyad:', 4*K, infoY);
+    g.strokeStyle=pal.a; g.lineWidth=0.4*K;
+    g.beginPath(); g.moveTo(20*K,infoY+0.5*K); g.lineTo(W*0.42,infoY+0.5*K); g.stroke();
+    g.fillStyle=pal.ink; g.fillText('Sınıf/No:', W*0.45, infoY);
+    g.strokeStyle=pal.a;
+    g.beginPath(); g.moveTo(W*0.58,infoY+0.5*K); g.lineTo(W*0.70,infoY+0.5*K); g.stroke();
+    // D Y NET mini kutular
+    const cellW=W*0.09, cellH=H*0.16, cellY=infoY-3.6*K;
+    ['D','Y','NET'].forEach((L,i)=>{
+      const cxx=W*0.72+i*cellW;
+      g.strokeStyle=pal.ink; g.lineWidth=0.4*K; g.strokeRect(cxx,cellY,cellW-0.5*K,cellH);
+      g.fillStyle=pal.soft; g.fillRect(cxx,cellY,cellW-0.5*K,cellH*0.4);
+      g.fillStyle=pal.ink; g.font='700 '+(1.6*K)+'px '+DISP; g.textAlign='center';
+      g.fillText(L, cxx+(cellW-0.5*K)/2, cellY+cellH*0.32);
+    });
     g.textAlign='left';
     return c.toDataURL('image/jpeg',0.95);
   }
