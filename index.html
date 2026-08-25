@@ -1802,9 +1802,19 @@ function grab(x,y,w,h){
 function showFloatingCropBar(x, y){
   const bar = $('cropFloatingBar');
   const wrap = $('wrap').getBoundingClientRect();
+  const stage = $('stage').getBoundingClientRect();
   bar.style.display = 'flex';
   bar.style.left = Math.max(10, Math.min(wrap.width - 290, x)) + 'px';
-  bar.style.top = (y + 8) + 'px';
+  // dikey: seçimin altına koy; ama stage'in görünür alt sınırını aşıyorsa üstüne al
+  const barH = 90; // tahmini çubuk yüksekliği (px)
+  const wrapTop = wrap.top;
+  const stageBottom = stage.bottom - wrapTop; // wrap koordinatında stage alt sınırı
+  let top = y + 8;
+  if(top + barH > stageBottom){
+    // alta sığmıyor → seçimin üstüne koy
+    top = Math.max(6, y - barH - 8);
+  }
+  bar.style.top = top + 'px';
   setFloatingOpt('A');
   $('floatingCustomText').value = '';
   // Föy moduysa: cevap şıkkı ve özel cevap satırlarını gizle (sadece ✓/✕ kalsın)
