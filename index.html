@@ -3423,39 +3423,45 @@ function headerImage(cfg){
     g.moveTo(0,kwY*0.86);
     g.bezierCurveTo(W*0.32,kwY*0.36, W*0.56,kwY*1.44, W,kwY*0.82);
     g.stroke();
-    // kurum mührü (orta üst)
-    const kcx=W*0.5, kcy=kwY*0.5, krr=kwY*0.44;
-    g.fillStyle='#fff'; g.strokeStyle=pal.m; g.lineWidth=1.1*K;
+    // kurum mührü (orta üst) — büyütüldü
+    const kcx=W*0.5, kcy=kwY*0.5, krr=kwY*0.62;
+    g.fillStyle='#fff'; g.strokeStyle=pal.m; g.lineWidth=1.3*K;
     g.beginPath(); g.arc(kcx,kcy,krr,0,Math.PI*2); g.fill(); g.stroke();
+    // iç ince halka (mühür hissi)
+    g.strokeStyle=pal.a; g.lineWidth=0.5*K;
+    g.beginPath(); g.arc(kcx,kcy,krr*0.82,0,Math.PI*2); g.stroke();
     if(cfg.logo && cfg.logo.url && window._logoImg){
       try{ const rr2=cfg.logo.w/cfg.logo.h; let lh=krr*1.5,lw=lh*rr2; if(lw>krr*1.7){lw=krr*1.7;lh=lw/rr2;}
         g.save(); g.beginPath(); g.arc(kcx,kcy,krr*0.9,0,Math.PI*2); g.clip();
         g.drawImage(window._logoImg,kcx-lw/2,kcy-lh/2,lw,lh); g.restore(); }catch(e){}
     } else {
-      g.fillStyle=pal.m; g.font='800 '+(1.7*K)+'px '+DISP; g.textAlign='center';
-      g.fillText('KURUM',kcx,kcy-0.2*K);
-      g.fillStyle=pal.a; drawStar(g,kcx,kcy+2.0*K,1.4*K,5);
+      g.fillStyle=pal.m; g.font='800 '+(2.2*K)+'px '+DISP; g.textAlign='center';
+      g.fillText('KURUM',kcx,kcy-0.3*K);
+      g.fillStyle=pal.a; drawStar(g,kcx,kcy+2.6*K,1.9*K,5);
     }
-    // sağ: eğitim-öğretim yılı rozeti
-    g.fillStyle=pal.soft;
-    const eowW=W*0.34, eowH=kwY*0.5, eowX=W-eowW-2*K, eowY=kwY*0.28;
-    roundRectPath(g,eowX,eowY,eowW,eowH,eowH*0.5); g.fill();
-    g.fillStyle=pal.ink; g.font='800 '+(2.0*K)+'px '+DISP; g.textAlign='center';
-    g.fillText((cfg.year||'EĞİTİM - ÖĞRETİM YILI'),eowX+eowW/2,eowY+eowH*0.66);
-    // OKUL / KURUM ADI
-    g.fillStyle=pal.ink; g.textAlign='center';
-    let kfs=fit(school||'OKUL / KURUM ADI',3.4,W*0.7,'800','topic');
-    g.font='800 '+(kfs*K)+'px '+DISP;
-    g.fillText(school||'OKUL / KURUM ADI',W/2,kwY+H*0.16);
-    // DERS ADI çubuğu
-    const barY=kwY+H*0.20, barH=H*0.16, barW=W*0.62, barX=(W-barW)/2;
-    g.fillStyle=pal.m; roundRectPath(g,barX,barY,barW,barH,barH*0.18); g.fill();
-    g.fillStyle='#fff'; g.textAlign='center';
-    let kfs2=fit(lesson,3.4,barW-6*K,'800','lesson');
-    g.font='800 '+(kfs2*K)+'px '+DISP;
-    g.fillText(lesson,W/2,barY+barH*0.70);
-    g.fillStyle=pal.m; g.font='700 '+(1.8*K)+'px '+DISP;
-    g.fillText(up(kind),W/2,barY+barH+H*0.075);
+    // sağ: eğitim-öğretim yılı — sadece kullanıcı yıl girdiyse (arka kutu yok, temiz)
+    if(cfg.year){
+      g.fillStyle=pal.m; g.font='800 '+(2.2*K)+'px '+DISP; g.textAlign='right';
+      g.fillText(cfg.year, W-3*K, kwY*0.56);
+    }
+    // OKUL / KURUM ADI — sadece girildiyse
+    if(school){
+      g.fillStyle=pal.ink; g.textAlign='center';
+      let kfs=fit(school,3.6,W*0.7,'800','topic');
+      g.font='800 '+(kfs*K)+'px '+DISP;
+      g.fillText(school,W/2,kwY+H*0.16);
+    }
+    // DERS ADI çubuğu — sadece ders girildiyse
+    if(lesson){
+      const barY=kwY+H*0.20, barH=H*0.16, barW=W*0.62, barX=(W-barW)/2;
+      g.fillStyle=pal.m; roundRectPath(g,barX,barY,barW,barH,barH*0.18); g.fill();
+      g.fillStyle='#fff'; g.textAlign='center';
+      let kfs2=fit(lesson,3.4,barW-6*K,'800','lesson');
+      g.font='800 '+(kfs2*K)+'px '+DISP;
+      g.fillText(lesson,W/2,barY+barH*0.70);
+      if(kind){ g.fillStyle=pal.m; g.font='700 '+(1.8*K)+'px '+DISP;
+        g.fillText(up(kind),W/2,barY+barH+H*0.075); }
+    }
     g.textAlign='left';
     return c.toDataURL('image/jpeg',0.95);
   }
