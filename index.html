@@ -826,7 +826,17 @@ input,select,textarea{font:inherit}
             <option value="letterhead">📄 Antetli Kağıda Bas (üst boş — kendi antetin)</option>
             <option value="resmi">★ Resmî — Sınav Kağıdı Başlığı (D-Y-NET)</option>
             <option value="kurumsal">★ Kurumsal — Dalgalı Antet</option>
+            <option value="dalga-alt">〜 Dalga Alt — Ters Dalga</option>
+            <option value="dalga-cift">≋ Çift Dalga — Simetrik</option>
+            <option value="dalga-yumusak">⌇ Yumuşak Dalga — Yan Hizalı</option>
+            <option value="kose-kivrim">◜ Köşe Kıvrım — Logo + Kıvrım</option>
+            <option value="capraz-dalga">✕ Çapraz Dalga — Üst Blok + Çift Renk</option>
+            <option value="alt-dalga">◡ Alt Dalga — Logo Üstte, Dalga Altta</option>
             <option value="studio">★ Studio — İki Bloklu Yatay (modern)</option>
+            <option value="diagonal">◣ Diyagonal — Çapraz Kesim (modern)</option>
+            <option value="solvurgu">▌Sol Vurgu — Minimal Bant</option>
+            <option value="cerceveli">▭ Çerçeveli — Klasik Zarif</option>
+            <option value="bulten">▬ Bülten — Üst Bant + Ders (akademik)</option>
             <option value="periodic" selected>⬢ Periyodik — Element Hücresi (kimya)</option>
             <option value="molecule">⬢ Molekül — Atom-Bağ Motifi</option>
             <option value="hexagon">⬢ Hexagon — Bal Peteği</option>
@@ -3023,7 +3033,17 @@ function headerH(cfg){
     case 'blueprint':h=24; break;
     case 'editorial':h=26; break;
     case 'kurumsal':h=34; break;
+    case 'dalga-alt':h=32; break;
+    case 'dalga-cift':h=34; break;
+    case 'dalga-yumusak':h=30; break;
+    case 'kose-kivrim':h=32; break;
+    case 'capraz-dalga':h=34; break;
+    case 'alt-dalga':h=32; break;
     case 'studio':  h=26; break;
+    case 'diagonal':h=28; break;
+    case 'solvurgu':h=26; break;
+    case 'cerceveli':h=32; break;
+    case 'bulten':  h=30; break;
     case 'resmi':   h=38; break;
     case 'osym':    h=26; break;
     default:        h=22;
@@ -3462,6 +3482,306 @@ function headerImage(cfg){
       if(kind){ g.fillStyle=pal.m; g.font='700 '+(1.8*K)+'px '+DISP;
         g.fillText(up(kind),W/2,barY+barH+H*0.075); }
     }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ DIAGONAL — çapraz kesilmiş iki renk (modern/geometrik) ═══ */
+  if(cfg.template==='diagonal'){
+    g.textBaseline='alphabetic';
+    // sol koyu üçgen alan
+    g.fillStyle=pal.d;
+    g.beginPath(); g.moveTo(0,0); g.lineTo(W*0.58,0); g.lineTo(W*0.42,H); g.lineTo(0,H); g.closePath(); g.fill();
+    // ince vurgu şerit (diyagonal kenar)
+    g.strokeStyle=pal.a; g.lineWidth=1.5*K;
+    g.beginPath(); g.moveTo(W*0.58,0); g.lineTo(W*0.42,H); g.stroke();
+    // logo (sol) varsa
+    let tx=4*K;
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=H*0.5,lw=lh*r; if(lw>W*0.13){lw=W*0.13;lh=lw/r;}
+        g.drawImage(window._logoImg,tx,(H-lh)/2,lw,lh); tx+=lw+3*K; }catch(e){}
+    }
+    // sol: ders adı (beyaz)
+    g.fillStyle='#fff'; g.textAlign='left';
+    if(kind){ g.fillStyle=pal.a; g.font='700 '+(1.9*K)+'px '+DISP; g.fillText(up(kind),tx,H*0.4); }
+    g.fillStyle='#fff';
+    if(lesson){ let f=fit(lesson,4.4,W*0.42-tx,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,tx,H*0.66); }
+    // sağ: okul + yıl (koyu metin, beyaz zemin)
+    g.textAlign='right';
+    if(school){ g.fillStyle=pal.ink; let f=fit(school,3.2,W*0.4,'800','topic'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(school,W-4*K,H*0.42); }
+    if(cfg.year){ g.fillStyle=pal.m; g.font='700 '+(2.0*K)+'px '+DISP; g.fillText(cfg.year,W-4*K,H*0.64); }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ SOL VURGU — solda kalın dikey renk bandı + bilgiler (minimal) ═══ */
+  if(cfg.template==='solvurgu'){
+    g.textBaseline='alphabetic';
+    // sol kalın dikey bant
+    g.fillStyle=pal.d; g.fillRect(0,0,W*0.03,H);
+    g.fillStyle=pal.a; g.fillRect(W*0.03,0,W*0.008,H);
+    let tx=W*0.06;
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=H*0.44,lw=lh*r; if(lw>W*0.12){lw=W*0.12;lh=lw/r;}
+        g.drawImage(window._logoImg,tx,H*0.12,lw,lh); }catch(e){}
+    }
+    // ders adı (büyük, koyu)
+    g.fillStyle=pal.ink; g.textAlign='left';
+    if(lesson){ let f=fit(lesson,5.0,W*0.7,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,tx,H*0.5); }
+    // alt satır: okul · tür · yıl (ince gri)
+    const parts=[]; if(school)parts.push(school); if(kind)parts.push(up(kind)); if(cfg.year)parts.push(cfg.year);
+    if(parts.length){ g.fillStyle=pal.m; g.font='600 '+(2.0*K)+'px '+DISP; g.fillText(parts.join('   ·   '),tx,H*0.74); }
+    // sağ alt ince çizgi
+    g.strokeStyle=pal.soft; g.lineWidth=0.6*K;
+    g.beginPath(); g.moveTo(tx,H-2*K); g.lineTo(W-4*K,H-2*K); g.stroke();
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ ÇERÇEVELİ — ince çift çizgi çerçeve, ortada ders (klasik/zarif) ═══ */
+  if(cfg.template==='cerceveli'){
+    g.textBaseline='alphabetic';
+    // çift çerçeve
+    g.strokeStyle=pal.m; g.lineWidth=0.8*K;
+    g.strokeRect(2*K,2*K,W-4*K,H-4*K);
+    g.strokeStyle=pal.a; g.lineWidth=0.4*K;
+    g.strokeRect(3.5*K,3.5*K,W-7*K,H-7*K);
+    const cx=W/2;
+    // üst: okul + yıl (iki köşe)
+    g.textAlign='left'; g.fillStyle=pal.m; g.font='700 '+(1.9*K)+'px '+DISP;
+    if(school) g.fillText(school,5*K,H*0.2);
+    if(cfg.year){ g.textAlign='right'; g.fillText(cfg.year,W-5*K,H*0.2); }
+    // orta ince ayraç
+    g.strokeStyle=pal.soft; g.lineWidth=0.4*K;
+    g.beginPath(); g.moveTo(W*0.2,H*0.28); g.lineTo(W*0.8,H*0.28); g.stroke();
+    // ders adı (ortada, büyük)
+    g.textAlign='center'; g.fillStyle=pal.ink;
+    if(lesson){ let f=fit(lesson,4.6,W*0.8,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,cx,H*0.56); }
+    // tür (altında)
+    if(kind){ g.fillStyle=pal.m; g.font='700 '+(2.0*K)+'px '+DISP; g.fillText(up(kind),cx,H*0.74); }
+    // alt küçük süs (nokta)
+    g.fillStyle=pal.a; g.beginPath(); g.arc(cx,H*0.86,0.8*K,0,Math.PI*2); g.fill();
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ BÜLTEN — üstte düz renk bandı + altında ders kutusu (akademik) ═══ */
+  if(cfg.template==='bulten'){
+    g.textBaseline='alphabetic';
+    // üst düz renk bandı
+    const bandH=H*0.42;
+    g.fillStyle=pal.d; g.fillRect(0,0,W,bandH);
+    g.fillStyle=pal.a; g.fillRect(0,bandH,W,0.6*K);
+    // bant içi: logo + okul (sol), yıl (sağ)
+    let tx=4*K;
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=bandH*0.6,lw=lh*r; if(lw>W*0.1){lw=W*0.1;lh=lw/r;}
+        g.drawImage(window._logoImg,tx,bandH*0.2,lw,lh); tx+=lw+2.5*K; }catch(e){}
+    }
+    g.fillStyle='#fff'; g.textAlign='left';
+    if(school){ let f=fit(school,3.0,W*0.6,'800','topic'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(school,tx,bandH*0.62); }
+    if(cfg.year){ g.textAlign='right'; g.fillStyle=pal.soft; g.font='700 '+(2.0*K)+'px '+DISP; g.fillText(cfg.year,W-4*K,bandH*0.62); }
+    // alt: ders adı (büyük, ortalı) + tür
+    g.textAlign='center';
+    if(lesson){ g.fillStyle=pal.ink; let f=fit(lesson,4.4,W*0.8,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,W/2,bandH+H*0.32); }
+    if(kind){ g.fillStyle=pal.m; g.font='700 '+(1.9*K)+'px '+DISP; g.fillText(up(kind),W/2,bandH+H*0.5); }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ DALGA-ALT — başlık üstte, dalga altında akan (ters kurumsal) ═══ */
+  if(cfg.template==='dalga-alt'){
+    g.textBaseline='alphabetic';
+    const wy=H*0.72;
+    // alt açık dalga dolgu
+    g.fillStyle=pal.soft;
+    g.beginPath();
+    g.moveTo(0,wy*1.05);
+    g.bezierCurveTo(W*0.30,wy*0.80, W*0.55,wy*1.20, W,wy*0.92);
+    g.lineTo(W,H); g.lineTo(0,H); g.closePath(); g.fill();
+    // koyu dalga çizgileri
+    g.strokeStyle=pal.m; g.lineWidth=1.4*K;
+    g.beginPath(); g.moveTo(0,wy*0.92); g.bezierCurveTo(W*0.30,wy*0.66, W*0.55,wy*1.08, W,wy*0.80); g.stroke();
+    g.strokeStyle=pal.a; g.lineWidth=0.7*K;
+    g.beginPath(); g.moveTo(0,wy*0.80); g.bezierCurveTo(W*0.32,wy*0.54, W*0.56,wy*0.96, W,wy*0.68); g.stroke();
+    // üst: logo + okul (sol), yıl (sağ)
+    let tx=4*K;
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=H*0.24,lw=lh*r; if(lw>W*0.12){lw=W*0.12;lh=lw/r;}
+        g.drawImage(window._logoImg,tx,H*0.06,lw,lh); tx+=lw+2.5*K; }catch(e){}
+    }
+    g.textAlign='left'; g.fillStyle=pal.m; g.font='700 '+(2.0*K)+'px '+DISP;
+    if(school) g.fillText(school,tx,H*0.16);
+    if(cfg.year){ g.textAlign='right'; g.fillText(cfg.year,W-4*K,H*0.16); }
+    // orta: ders (büyük, ortalı) — dalganın üstünde kalacak şekilde
+    g.textAlign='center'; g.fillStyle=pal.ink;
+    if(lesson){ let f=fit(lesson,4.4,W*0.7,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,W/2,H*0.4); }
+    if(kind){ g.fillStyle=pal.m; g.font='700 '+(1.8*K)+'px '+DISP; g.fillText(up(kind),W/2,H*0.52); }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ DALGA-ÇİFT — üst ve alt iki dalga, arada bilgiler (simetrik) ═══ */
+  if(cfg.template==='dalga-cift'){
+    g.textBaseline='alphabetic';
+    // üst dalga
+    g.fillStyle=pal.soft;
+    g.beginPath(); g.moveTo(0,H*0.16); g.bezierCurveTo(W*0.30,H*0.02,W*0.60,H*0.28,W,H*0.12);
+    g.lineTo(W,0); g.lineTo(0,0); g.closePath(); g.fill();
+    g.strokeStyle=pal.m; g.lineWidth=1.2*K;
+    g.beginPath(); g.moveTo(0,H*0.20); g.bezierCurveTo(W*0.30,H*0.06,W*0.60,H*0.32,W,H*0.16); g.stroke();
+    // alt dalga
+    g.fillStyle=pal.soft;
+    g.beginPath(); g.moveTo(0,H*0.88); g.bezierCurveTo(W*0.40,H*0.74,W*0.70,H*1.02,W,H*0.86);
+    g.lineTo(W,H); g.lineTo(0,H); g.closePath(); g.fill();
+    g.strokeStyle=pal.m; g.lineWidth=1.2*K;
+    g.beginPath(); g.moveTo(0,H*0.84); g.bezierCurveTo(W*0.40,H*0.70,W*0.70,H*0.98,W,H*0.82); g.stroke();
+    // orta bilgiler
+    const cx=W/2;
+    g.textAlign='center';
+    if(school){ g.fillStyle=pal.m; g.font='700 '+(2.0*K)+'px '+DISP; g.fillText(school,cx,H*0.4); }
+    if(lesson){ g.fillStyle=pal.ink; let f=fit(lesson,4.2,W*0.7,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,cx,H*0.58); }
+    if(kind){ g.fillStyle=pal.m; g.font='700 '+(1.7*K)+'px '+DISP; g.fillText(up(kind),cx,H*0.7); }
+    // sağ üst yıl
+    if(cfg.year){ g.textAlign='right'; g.fillStyle=pal.a; g.font='700 '+(1.8*K)+'px '+DISP; g.fillText(cfg.year,W-4*K,H*0.12); }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ DALGA-YUMUŞAK — geniş yumuşak dalga + yan hizalı bilgiler ═══ */
+  if(cfg.template==='dalga-yumusak'){
+    g.textBaseline='alphabetic';
+    // geniş yumuşak dalga (sol koyu dolgu, sağa doğru incelen)
+    g.fillStyle=pal.d;
+    g.beginPath();
+    g.moveTo(0,0); g.lineTo(W*0.5,0);
+    g.bezierCurveTo(W*0.42,H*0.5, W*0.30,H*0.6, W*0.14,H);
+    g.lineTo(0,H); g.closePath(); g.fill();
+    // vurgu dalga çizgisi
+    g.strokeStyle=pal.a; g.lineWidth=1.4*K;
+    g.beginPath(); g.moveTo(W*0.5,0); g.bezierCurveTo(W*0.42,H*0.5,W*0.30,H*0.6,W*0.14,H); g.stroke();
+    // sol (koyu alan): logo + ders
+    let tx=4*K;
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=H*0.4,lw=lh*r; if(lw>W*0.12){lw=W*0.12;lh=lw/r;}
+        g.drawImage(window._logoImg,tx,H*0.1,lw,lh); }catch(e){}
+    }
+    g.textAlign='left'; g.fillStyle='#fff';
+    if(lesson){ let f=fit(lesson,4.2,W*0.42,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,tx,H*0.46); }
+    if(kind){ g.fillStyle=pal.a; g.font='700 '+(1.8*K)+'px '+DISP; g.fillText(up(kind),tx,H*0.64); }
+    // sağ (beyaz alan): okul + yıl
+    g.textAlign='right';
+    if(school){ g.fillStyle=pal.ink; let f=fit(school,3.2,W*0.4,'800','topic'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(school,W-4*K,H*0.44); }
+    if(cfg.year){ g.fillStyle=pal.m; g.font='700 '+(2.0*K)+'px '+DISP; g.fillText(cfg.year,W-4*K,H*0.62); }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ KÖŞE KIVRIM — sol üstte yuvarlak logo + köşe kıvrımları (Image 1 tarzı) ═══ */
+  if(cfg.template==='kose-kivrim'){
+    g.textBaseline='alphabetic';
+    // sol üst köşe: iç içe kıvrımlar (koyu + açık)
+    g.fillStyle=pal.d;
+    g.beginPath();
+    g.moveTo(0,0); g.lineTo(W*0.30,0);
+    g.bezierCurveTo(W*0.22,H*0.5, W*0.12,H*0.55, 0,H*0.62);
+    g.closePath(); g.fill();
+    g.fillStyle=pal.a;
+    g.beginPath();
+    g.moveTo(0,0); g.lineTo(W*0.22,0);
+    g.bezierCurveTo(W*0.15,H*0.42, W*0.08,H*0.46, 0,H*0.5);
+    g.closePath(); g.fill();
+    // sağ alt küçük kıvrım aksanı
+    g.fillStyle=pal.soft;
+    g.beginPath();
+    g.moveTo(W,H); g.lineTo(W*0.78,H);
+    g.bezierCurveTo(W*0.86,H*0.6, W*0.94,H*0.55, W,H*0.5);
+    g.closePath(); g.fill();
+    // yuvarlak logo alanı (sol üst, kıvrımların üstünde)
+    const lcx=W*0.11, lcy=H*0.32, lrr=H*0.2;
+    g.fillStyle='#fff'; g.beginPath(); g.arc(lcx,lcy,lrr,0,Math.PI*2); g.fill();
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=lrr*1.4,lw=lh*r; if(lw>lrr*1.6){lw=lrr*1.6;lh=lw/r;}
+        g.save(); g.beginPath(); g.arc(lcx,lcy,lrr*0.85,0,Math.PI*2); g.clip();
+        g.drawImage(window._logoImg,lcx-lw/2,lcy-lh/2,lw,lh); g.restore(); }catch(e){}
+    } else {
+      g.fillStyle=pal.d; g.beginPath();
+      for(let i=0;i<6;i++){ const a=Math.PI/3*i-Math.PI/2; const px=lcx+lrr*0.5*Math.cos(a),py=lcy+lrr*0.5*Math.sin(a); i?g.lineTo(px,py):g.moveTo(px,py); }
+      g.closePath(); g.fill();
+    }
+    // sağ üst: okul + yıl + ders
+    g.textAlign='right';
+    if(school){ g.fillStyle=pal.ink; let f=fit(school,3.0,W*0.55,'800','topic'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(school,W-4*K,H*0.28); }
+    if(lesson){ g.fillStyle=pal.m; let f=fit(lesson,3.6,W*0.55,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,W-4*K,H*0.52); }
+    const sub=[]; if(kind)sub.push(up(kind)); if(cfg.year)sub.push(cfg.year);
+    if(sub.length){ g.fillStyle=pal.a; g.font='700 '+(1.9*K)+'px '+DISP; g.fillText(sub.join('  ·  '),W-4*K,H*0.68); }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ ÇAPRAZ DALGA — üst koyu blok + iki renk çapraz ince dalgalar (Image 4 tarzı) ═══ */
+  if(cfg.template==='capraz-dalga'){
+    g.textBaseline='alphabetic';
+    // üst koyu blok
+    const topH=H*0.4;
+    g.fillStyle=pal.d; g.fillRect(0,0,W,topH);
+    // iki renk çapraz akan ince dalgalar (blok altından çıkan)
+    g.strokeStyle=pal.m; g.lineWidth=1.6*K;
+    g.beginPath();
+    g.moveTo(0,topH+H*0.18);
+    g.bezierCurveTo(W*0.35,topH-H*0.05, W*0.65,topH+H*0.3, W,topH+H*0.05);
+    g.stroke();
+    g.strokeStyle=pal.a; g.lineWidth=1.3*K;
+    g.beginPath();
+    g.moveTo(0,topH+H*0.05);
+    g.bezierCurveTo(W*0.35,topH+H*0.3, W*0.65,topH-H*0.05, W,topH+H*0.18);
+    g.stroke();
+    // üst blok: logo + marka (ortalı)
+    let cx=W/2;
+    g.textAlign='center';
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=topH*0.4,lw=lh*r; if(lw>W*0.12){lw=W*0.12;lh=lw/r;}
+        g.drawImage(window._logoImg,cx-lw/2,topH*0.12,lw,lh); }catch(e){}
+    }
+    if(school){ g.fillStyle='#fff'; let f=fit(school,3.4,W*0.6,'800','topic'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(school,cx,topH*0.62); }
+    if(kind){ g.fillStyle=pal.a; g.font='700 '+(1.7*K)+'px '+DISP; g.fillText(up(kind),cx,topH*0.85); }
+    // dalgaların altı: ders adı
+    if(lesson){ g.fillStyle=pal.ink; let f=fit(lesson,3.8,W*0.7,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,cx,H*0.88); }
+    if(cfg.year){ g.textAlign='right'; g.fillStyle=pal.m; g.font='700 '+(1.8*K)+'px '+DISP; g.fillText(cfg.year,W-4*K,H*0.88); }
+    g.textAlign='left';
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ ALT DALGA — logo üstte ortada + altta çift renk dalga (Image 5 tarzı) ═══ */
+  if(cfg.template==='alt-dalga'){
+    g.textBaseline='alphabetic';
+    // alt çift renk dalga
+    const wy=H*0.68;
+    g.fillStyle=pal.a;
+    g.beginPath();
+    g.moveTo(0,wy+H*0.12);
+    g.bezierCurveTo(W*0.35,wy-H*0.05, W*0.65,wy+H*0.2, W,wy);
+    g.lineTo(W,H); g.lineTo(0,H); g.closePath(); g.fill();
+    g.fillStyle=pal.d;
+    g.beginPath();
+    g.moveTo(0,wy+H*0.24);
+    g.bezierCurveTo(W*0.4,wy+H*0.08, W*0.7,wy+H*0.32, W,wy+H*0.16);
+    g.lineTo(W,H); g.lineTo(0,H); g.closePath(); g.fill();
+    // üst orta: logo + okul
+    const cx=W/2;
+    g.textAlign='center';
+    if(cfg.logo && cfg.logo.url && window._logoImg){
+      try{ const r=cfg.logo.w/cfg.logo.h; let lh=H*0.26,lw=lh*r; if(lw>W*0.14){lw=W*0.14;lh=lw/r;}
+        g.drawImage(window._logoImg,cx-lw/2,H*0.06,lw,lh); }catch(e){}
+      if(school){ g.fillStyle=pal.ink; let f=fit(school,3.0,W*0.6,'800','topic'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(school,cx,H*0.44); }
+    } else {
+      if(school){ g.fillStyle=pal.ink; let f=fit(school,3.4,W*0.6,'800','topic'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(school,cx,H*0.24); }
+      if(lesson){ g.fillStyle=pal.m; let f=fit(lesson,4.0,W*0.6,'800','lesson'); g.font='800 '+(f*K)+'px '+DISP; g.fillText(lesson,cx,H*0.46); }
+    }
+    // dalga içi (beyaz metin): ders/tür/yıl
+    g.fillStyle='#fff'; g.textAlign='center'; g.font='700 '+(1.9*K)+'px '+DISP;
+    const dparts=[]; if(cfg.logo && lesson)dparts.push(lesson); if(kind)dparts.push(up(kind)); if(cfg.year)dparts.push(cfg.year);
+    if(dparts.length) g.fillText(dparts.join('   ·   '),cx,H*0.9);
     g.textAlign='left';
     return c.toDataURL('image/jpeg',0.95);
   }
