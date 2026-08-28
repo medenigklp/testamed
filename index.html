@@ -899,11 +899,34 @@ input,select,textarea{font:inherit}
           text-transform:none;letter-spacing:0">↺ Otomatik</button>
       </div>
       <div class="f"><label>Antet Yazı Karakteri (tümü)</label>
-        <select id="f-hfont" onchange="preview()">
-          <option value="modern" selected>Modern — Bricolage (varsayılan)</option>
-          <option value="klasik">Klasik — Serif</option>
-          <option value="yuvarlak">Yuvarlak — Trebuchet</option>
-          <option value="daktilo">Daktilo — Mono</option>
+        <select id="f-hfont" onchange="ensureHFont(this.value).then(preview)">
+          <optgroup label="Modern / Sans">
+            <option value="modern" selected>Modern — Bricolage (varsayılan)</option>
+            <option value="jakarta">Sade — Plus Jakarta</option>
+            <option value="genis">Geniş — Montserrat</option>
+            <option value="teknik">Teknik — Space Grotesk</option>
+            <option value="yumusak">Yumuşak — Nunito</option>
+            <option value="yuvarlak">Yuvarlak — Trebuchet</option>
+          </optgroup>
+          <optgroup label="Dar / Sınav Başlığı">
+            <option value="kompakt">Kompakt — Oswald (dar, güçlü)</option>
+            <option value="dar">İnce Dar — Barlow Condensed</option>
+            <option value="baski">Baskı — Anton (çok kalın)</option>
+          </optgroup>
+          <optgroup label="Serif / Klasik">
+            <option value="klasik">Klasik — Georgia</option>
+            <option value="kitap">Kitap — Merriweather</option>
+            <option value="zarif">Zarif — Playfair Display</option>
+            <option value="ciddi">Ciddi — Libre Baskerville</option>
+          </optgroup>
+          <optgroup label="Sistem (iPhone'da en hızlı)">
+            <option value="avenir">Avenir — Temiz</option>
+            <option value="futura">Futura — Geometrik</option>
+            <option value="optima">Optima — Yumuşak Serifsiz</option>
+          </optgroup>
+          <optgroup label="Özel">
+            <option value="daktilo">Daktilo — Mono</option>
+          </optgroup>
         </select>
       </div>
       <div class="htype">
@@ -2114,6 +2137,45 @@ function spread(){
   drawEditBar();
 }
 let _pvT=null;
+/* ── Antet yazı karakteri tanımları (g: Google Fonts ailesi, gerektiğinde indirilir) ── */
+const HFONT_DEFS={
+  modern:   {css:'"Bricolage Grotesque","Plus Jakarta Sans",Arial,sans-serif'},
+  jakarta:  {css:'"Plus Jakarta Sans",Arial,sans-serif'},
+  genis:    {css:'"Montserrat",Arial,sans-serif', g:'Montserrat:wght@600;700;800'},
+  teknik:   {css:'"Space Grotesk","Plus Jakarta Sans",Arial,sans-serif', g:'Space+Grotesk:wght@500;600;700'},
+  yumusak:  {css:'"Nunito",Verdana,Arial,sans-serif', g:'Nunito:wght@600;700;800'},
+  yuvarlak: {css:'"Trebuchet MS",Verdana,Tahoma,sans-serif'},
+  kompakt:  {css:'"Oswald","Arial Narrow",Arial,sans-serif', g:'Oswald:wght@500;600;700'},
+  dar:      {css:'"Barlow Condensed","Arial Narrow",Arial,sans-serif', g:'Barlow+Condensed:wght@600;700;800'},
+  baski:    {css:'"Anton","Arial Narrow",Arial,sans-serif', g:'Anton'},
+  klasik:   {css:'Georgia,"Times New Roman","Noto Serif",serif', serif:true},
+  kitap:    {css:'"Merriweather",Georgia,serif', g:'Merriweather:wght@700;900', serif:true},
+  zarif:    {css:'"Playfair Display",Georgia,serif', g:'Playfair+Display:wght@600;700;800', serif:true},
+  ciddi:    {css:'"Libre Baskerville",Georgia,serif', g:'Libre+Baskerville:wght@400;700', serif:true},
+  avenir:   {css:'"Avenir Next",Avenir,"Segoe UI",Arial,sans-serif'},
+  futura:   {css:'Futura,"Century Gothic","Trebuchet MS",Arial,sans-serif'},
+  optima:   {css:'Optima,"Gill Sans","Segoe UI",Arial,sans-serif'},
+  daktilo:  {css:'"IBM Plex Mono","Courier New",ui-monospace,monospace'}
+};
+const _hfDone={};
+function ensureHFont(key){
+  const d=HFONT_DEFS[key];
+  if(!d) return Promise.resolve();
+  if(d.g && !_hfDone[key]){
+    _hfDone[key]=true;
+    try{
+      const l=document.createElement('link'); l.rel='stylesheet';
+      l.href='https://fonts.googleapis.com/css2?family='+d.g+'&display=swap';
+      document.head.appendChild(l);
+    }catch(e){}
+  }
+  if(!document.fonts || !document.fonts.load) return Promise.resolve();
+  const fam=d.css.split(',')[0];
+  return Promise.all(['400 24px '+fam,'600 24px '+fam,'700 24px '+fam,'800 24px '+fam]
+    .map(f=>{ try{ return document.fonts.load(f).catch(()=>{}); }catch(e){ return Promise.resolve(); } }))
+    .then(()=>{},()=>{});
+}
+
 function preview(){
   // antetli kağıt ayarını göster/gizle
   const lhw=$('lh-wrap'), tpl=$('f-template');
@@ -2126,6 +2188,7 @@ async function previewNow(){
   if(!qs.length){ el.style.display='none'; return; }
   el.style.display='block';
   const c=cfgNow();
+  await ensureHFont(c.hfont);
   await reflowText(c);
   const p=layout(qs,c);
   const dag=p.map(x=>x.count);
@@ -3285,14 +3348,9 @@ function headerImage(cfg){
     indigo: {d:'#1E1B4B',m:'#4338CA',a:'#6366F1',soft:'#EEF2FF',ink:'#1E1B4B'}
   };
   const pal=P[cfg.hdrtheme]||P.emerald;
-  const HFONTS={
-    modern:'"Bricolage Grotesque","Plus Jakarta Sans",Arial,sans-serif',
-    klasik:'Georgia,"Times New Roman","Noto Serif",serif',
-    yuvarlak:'"Trebuchet MS",Verdana,Tahoma,sans-serif',
-    daktilo:'"Courier New",ui-monospace,monospace'
-  };
-  const DISP=HFONTS[cfg.hfont]||HFONTS.modern;
-  const BODY=(cfg.hfont==='klasik')?HFONTS.klasik:'"Plus Jakarta Sans",Arial,sans-serif';
+  const _hd=HFONT_DEFS[cfg.hfont]||HFONT_DEFS.modern;
+  const DISP=_hd.css;
+  const BODY=_hd.serif?_hd.css:'"Plus Jakarta Sans",Arial,sans-serif';
   // her öğe için kullanıcı çarpanı (varsayılan 1.0) ve ağırlık
   const HZ=cfg.hsize||{};       // {kind,lesson,topic,teacher} → 0.6..1.8
   const HW=cfg.hweight||{};     // {kind,lesson,topic,teacher} → '400'|'600'|'800'
