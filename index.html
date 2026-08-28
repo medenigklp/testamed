@@ -2132,6 +2132,10 @@ let _pvT=null;
 const TPL_LIST=[
   {v:'letterhead', g:'Kendi Antetin', t:'📄 Antetli Kağıda Bas (üst boş)', core:1},
   {v:'ts-modul',   g:'Önerilen',      t:'▦ Modül — İnce Çift Çizgi', core:1},
+  {v:'ofis-sekme', g:'Ofis / Kırtasiye', t:'🗂 Dosya Sekmesi — Klasör Kulakçığı', core:1},
+  {v:'ofis-atac',  g:'Ofis / Kırtasiye', t:'📎 Ataçlı Şerit — Dosya Kapağı', core:1},
+  {v:'ofis-kareli',g:'Ofis / Kırtasiye', t:'▩ Kareli Kart — Not Kağıdı Dokusu', core:1},
+  {v:'ofis-etiket',g:'Ofis / Kırtasiye', t:'🏷 Etiket — Köşe Kıvrımlı Kart', core:1},
   {v:'ts-kurumsal',g:'Önerilen',      t:'▰ Kurumsal Blok — Koyu Blok + Bant', core:1},
   {v:'ts-geometrik',g:'Önerilen',     t:'◤ Geometrik — Çapraz Katmanlar', core:1},
   {v:'ts-polygon', g:'Önerilen',      t:'◈ Polygon — Ağ Deseni', core:1},
@@ -3148,6 +3152,10 @@ function headerH(cfg){
     case 'editorial':h=26; break;
     case 'kurumsal':h=34; break;
     case 'ts-modul':h=28; break;
+    case 'ofis-atac':h=27; break;
+    case 'ofis-sekme':h=28; break;
+    case 'ofis-kareli':h=28; break;
+    case 'ofis-etiket':h=26; break;
     case 'ts-kurumsal':h=27; break;
     case 'ts-geometrik':h=32; break;
     case 'ts-polygon':h=28; break;
@@ -3543,6 +3551,169 @@ function headerImage(cfg){
   /* ── ortak: harf aralıklı (tracking) yazı, sola dayalı ── */
   function spaced(t,x,y,ex){ let cx=x; for(const ch of t){ g.fillText(ch,cx,y); cx+=g.measureText(ch).width+ex; } return cx-x; }
   function spacedW(t,ex){ let w=0; for(const ch of t){ w+=g.measureText(ch).width+ex; } return w-ex; }
+
+  /* ── ortak: bir rengi beyazla karıştır (0=renk, 1=beyaz) ── */
+  function mixw(hex,t){
+    const h=hex.replace('#','');
+    const r=parseInt(h.substr(0,2),16), gg=parseInt(h.substr(2,2),16), b=parseInt(h.substr(4,2),16);
+    const m=v=>Math.round(v+(255-v)*t);
+    return 'rgb('+m(r)+','+m(gg)+','+m(b)+')';
+  }
+  /* ── ortak: kareli not kağıdı dokusu ── */
+  function gridBox(x,y,w,h,step,col){
+    g.save();
+    g.beginPath(); roundRectPath(g,x,y,w,h,1.2*K); g.clip();
+    g.strokeStyle=col; g.lineWidth=0.12*K;
+    for(let v=x+step; v<x+w; v+=step){ g.beginPath(); g.moveTo(v,y); g.lineTo(v,y+h); g.stroke(); }
+    for(let u=y+step; u<y+h; u+=step){ g.beginPath(); g.moveTo(x,u); g.lineTo(x+w,u); g.stroke(); }
+    g.restore();
+    g.strokeStyle='#DCE3EA'; g.lineWidth=0.25*K;
+    g.beginPath(); roundRectPath(g,x,y,w,h,1.2*K); g.stroke();
+  }
+  /* ── ortak: ataç ── */
+  function paperClip(x,y,w,h,col){
+    g.strokeStyle=col; g.lineWidth=w*0.13; g.lineCap='round'; g.lineJoin='round';
+    g.beginPath(); roundRectPath(g,x,y,w,h,w/2); g.stroke();
+    const iw=w*0.46, ix=x+(w-iw)/2;
+    g.beginPath(); roundRectPath(g,ix,y+h*0.16,iw,h*0.66,iw/2); g.stroke();
+    g.lineCap='butt';
+  }
+
+  /* ═══ OFİS-SEKME — klasör kulakçığı + yatay çizgi ═══ */
+  if(cfg.template==='ofis-sekme'){
+    g.textBaseline='alphabetic';
+    const BH=baseHeaderH(cfg)*K;
+    const ruleY=BH*0.74, tabX=2*K, tabW=W*0.46, tabTop=BH*0.10, sk=BH*0.14;
+    // kulakçık (üstü dar, altı geniş — klasör sekmesi)
+    g.fillStyle=pal.d;
+    g.beginPath();
+    g.moveTo(tabX,ruleY); g.lineTo(tabX,tabTop+sk);
+    g.quadraticCurveTo(tabX,tabTop, tabX+sk,tabTop);
+    g.lineTo(tabX+tabW-sk*1.6,tabTop);
+    g.quadraticCurveTo(tabX+tabW-sk*0.4,tabTop, tabX+tabW-sk*0.2,tabTop+sk*0.8);
+    g.lineTo(tabX+tabW,ruleY);
+    g.closePath(); g.fill();
+    // yatay ana çizgi + vurgu
+    g.fillStyle=pal.d; g.fillRect(0,ruleY,W,0.9*K);
+    g.fillStyle=pal.a; g.fillRect(0,ruleY+1.3*K,W*0.30,0.4*K);
+    // kulakçık içi: amblem + tür + ders
+    const ls=(ruleY-tabTop)*0.52, lx=tabX+2.2*K, ly=tabTop+(ruleY-tabTop-ls)/2;
+    brandMark(lx,ly,ls,'#FFFFFF');
+    const tx=lx+ls+2.4*K;
+    vstack([
+      line(kind,   TS.xxs, tabW*0.55, '700', 'kind',   {color:mixw(pal.a,0.35), track:0.5*K}),
+      line(lesson, TS.sm,  tabW-(tx-tabX)-2*K, '800', 'lesson', {color:'#FFFFFF'})
+    ], {x:tx, top:tabTop+1.2*K, bottom:ruleY-1.2*K, align:'left'});
+    // sağ üst: kurum + konu
+    vstack([
+      line(school, TS.sm,  W*0.44, '800', 'topic', {color:pal.ink}),
+      line(topic,  TS.cap, W*0.44, '600', 'topic', {color:'#5B6472', body:1})
+    ], {x:W-2.5*K, top:tabTop, bottom:ruleY-1.2*K, align:'right'});
+    // çizgi altı: yıl
+    if(cfg.year){ g.textAlign='right'; g.fillStyle='#8A93A0';
+      g.font='600 '+(TS.cap*K)+'px '+DISP; g.fillText(cfg.year,W-2.5*K,BH*0.95); g.textAlign='left'; }
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ OFİS-ATAÇ — dosya kapağı şeridi + ataç ═══ */
+  if(cfg.template==='ofis-atac'){
+    g.textBaseline='alphabetic';
+    const BH=baseHeaderH(cfg)*K;
+    const stX=3*K, stY=BH*0.12, stW=W*0.70, stH=BH*0.50;
+    // şerit
+    g.fillStyle=mixw(pal.m,0.72);
+    g.beginPath(); roundRectPath(g,stX,stY,stW,stH,1.6*K); g.fill();
+    // ataç (şeridin sol üstüne oturur)
+    paperClip(stX+1.4*K, stY-BH*0.075, 3.0*K, stH*0.95, pal.d);
+    // şerit içi: tür + ders
+    const tx=stX+6.5*K;
+    vstack([
+      line(kind,   TS.xxs, stW*0.5, '700', 'kind',   {color:pal.m, track:0.5*K}),
+      line(lesson, TS.sm,  stW-9*K, '800', 'lesson', {color:pal.ink})
+    ], {x:tx, top:stY, bottom:stY+stH, align:'left'});
+    // sağ: kurum + yıl
+    vstack([
+      line(school,   TS.xs,  W*0.26, '800', 'topic', {color:pal.ink}),
+      line(cfg.year, TS.cap, W*0.26, '600', null,    {color:'#8A93A0', body:1})
+    ], {x:W-3*K, top:stY, bottom:stY+stH, align:'right'});
+    // şerit altı: konu
+    if(topic){ g.textAlign='left'; g.fillStyle='#5B6472';
+      const f=fit(topic,TS.cap,W*0.7,'600','topic',BODY);
+      g.font='600 '+(f*K)+'px '+BODY; g.fillText(topic,stX+1*K,BH*0.78); }
+    // alt çizgi
+    g.fillStyle=pal.m; g.fillRect(0,BH*0.90,W*0.62,0.45*K);
+    g.fillStyle=pal.a; g.fillRect(W*0.635,BH*0.90,W*0.365,0.45*K);
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ OFİS-KARELİ — sol bilgi + sağda kareli not dokusu ═══ */
+  if(cfg.template==='ofis-kareli'){
+    g.textBaseline='alphabetic';
+    const BH=baseHeaderH(cfg)*K;
+    // sağ kareli kart
+    const gxx=W*0.60, gyy=BH*0.08, gww=W*0.40, ghh=BH*0.62;
+    gridBox(gxx,gyy,gww,ghh,1.6*K,mixw(pal.m,0.86));
+    // kartın üst kenarında renkli sekme
+    g.fillStyle=pal.m;
+    g.beginPath(); roundRectPath(g,gxx+gww*0.66,gyy-0.6*K,gww*0.26,1.2*K,0.6*K); g.fill();
+    // kart içi: kurum + yıl
+    vstack([
+      line(school,   TS.xs,  gww-4*K, '800', 'topic', {color:pal.ink}),
+      line(cfg.year, TS.cap, gww-4*K, '600', null,    {color:'#6B7280', body:1})
+    ], {x:gxx+gww/2, top:gyy, bottom:gyy+ghh, align:'center'});
+    // sol: amblem + metin
+    const ls=BH*0.40, lx=2*K, ly=BH*0.10;
+    brandMark(lx,ly,ls,pal.ink);
+    const tx=lx+ls+2.6*K;
+    vstack([
+      line(kind,   TS.xxs, W*0.34, '700', 'kind',   {color:pal.m, track:0.5*K}),
+      line(lesson, TS.md,  W*0.34, '800', 'lesson', {color:pal.ink}),
+      line(topic,  TS.cap, W*0.34, '600', 'topic',  {color:'#5B6472', body:1})
+    ], {x:tx, top:BH*0.08, bottom:BH*0.70, align:'left'});
+    // alt çizgi
+    g.fillStyle=pal.d; g.fillRect(0,BH*0.86,W,0.35*K);
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  /* ═══ OFİS-ETİKET — köşe kıvrımlı etiket kartı ═══ */
+  if(cfg.template==='ofis-etiket'){
+    g.textBaseline='alphabetic';
+    const BH=baseHeaderH(cfg)*K;
+    const lw=W*0.54, lx0=(W-lw)/2, ly0=BH*0.10, lh=BH*0.52, fold=2.6*K;
+    // etiket gövdesi (sağ üst köşesi kıvrık)
+    g.fillStyle=mixw(pal.m,0.93);
+    g.beginPath();
+    g.moveTo(lx0+1.2*K,ly0); g.lineTo(lx0+lw-fold,ly0); g.lineTo(lx0+lw,ly0+fold);
+    g.lineTo(lx0+lw,ly0+lh-1.2*K);
+    g.quadraticCurveTo(lx0+lw,ly0+lh, lx0+lw-1.2*K,ly0+lh);
+    g.lineTo(lx0+1.2*K,ly0+lh);
+    g.quadraticCurveTo(lx0,ly0+lh, lx0,ly0+lh-1.2*K);
+    g.lineTo(lx0,ly0+1.2*K);
+    g.quadraticCurveTo(lx0,ly0, lx0+1.2*K,ly0);
+    g.closePath(); g.fill();
+    g.strokeStyle=pal.m; g.lineWidth=0.35*K; g.stroke();
+    // kıvrık köşe
+    g.fillStyle=mixw(pal.m,0.68);
+    g.beginPath(); g.moveTo(lx0+lw-fold,ly0); g.lineTo(lx0+lw,ly0+fold); g.lineTo(lx0+lw-fold,ly0+fold);
+    g.closePath(); g.fill();
+    // etiket içi
+    vstack([
+      line(kind,   TS.xxs, lw-5*K, '700', 'kind',   {color:pal.m, track:0.55*K}),
+      line(lesson, TS.md,  lw-5*K, '800', 'lesson', {color:pal.ink}),
+      line(topic,  TS.cap, lw-5*K, '600', 'topic',  {color:'#5B6472', body:1})
+    ], {x:W/2, top:ly0, bottom:ly0+lh, align:'center', lead:0.7});
+    // sol amblem + sağ kurum
+    const ls=BH*0.34;
+    brandMark(2*K,ly0+(lh-ls)/2,ls,pal.ink);
+    vstack([
+      line(school,   TS.cap, W*0.20, '800', 'topic', {color:pal.ink}),
+      line(cfg.year, TS.xxs, W*0.20, '600', null,    {color:'#8A93A0', body:1})
+    ], {x:W-2*K, top:ly0, bottom:ly0+lh, align:'right', lead:0.6});
+    // alt çift çizgi
+    g.fillStyle=pal.d; g.fillRect(0,BH*0.80,W,0.45*K);
+    g.fillStyle=pal.a; g.fillRect(0,BH*0.87,W*0.22,0.30*K);
+    return c.toDataURL('image/jpeg',0.95);
+  }
 
   /* ═══ TS-MODÜL — beyaz zemin, sol logo + dikey ayraç, sağda çerçeveli kurum, altta ince çift çizgi ═══ */
   if(cfg.template==='ts-modul'){
