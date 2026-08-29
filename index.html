@@ -785,9 +785,22 @@ input,select,textarea{font:inherit}
           <span class="foy-theme-lbl">Sayfa çerçevesi</span>
           <select id="foy-frame" style="flex:1;min-width:0">
             <option value="none" selected>Yok — düz sayfa</option>
-            <option value="folder">Dosya — mavi klasör + kareli not sütunu</option>
-            <option value="folder-light">Dosya (açık) — baskı dostu</option>
-            <option value="notes">Sadece kareli not sütunu</option>
+            <optgroup label="Dosya / Klasör">
+              <option value="folder">Dosya — klasör zemini + kareli not sütunu</option>
+              <option value="folder-light">Dosya (açık) — zeminsiz, baskı dostu</option>
+              <option value="folder-sol">Dosya (sol) — not sütunu solda</option>
+              <option value="notes">Sadece kareli not sütunu</option>
+            </optgroup>
+            <optgroup label="Defter / Blok">
+              <option value="spiral">Spiralli Defter — üstten spiral</option>
+              <option value="defter">Çizgili Defter — kenar boşluğu + delikler</option>
+              <option value="kareli">Kareli Defter — 5 mm kare + kenar boşluğu</option>
+              <option value="kart">Kart — köşesi kıvrık, üst renk bandı</option>
+            </optgroup>
+            <optgroup label="Diğer">
+              <option value="pano">Sekreterlik Panosu — metal mandal</option>
+              <option value="cerceve">İnce Çerçeve — sade çift çizgi</option>
+            </optgroup>
           </select>
         </div>
         <div class="foy-add">
@@ -6052,73 +6065,147 @@ async function foyBuild(){
   const title=($('foy-title')&&$('foy-title').value)||'';
   const FRAME=($('foy-frame')&&$('foy-frame').value)||'none';
 
-  /* ── sayfa çerçevesi ───────────────────────────────────────────────
-     folder      : mavi dosya zemini + beyaz kağıt + kareli not sütunu + sekmeler
-     folder-light: aynı düzen, zemin yok (toner dostu)
-     notes       : sadece sağda kareli not sütunu                       */
+  /* ── sayfa çerçeveleri ──────────────────────────────────────────── */
   const tint=(hex,t)=>{ const c=hexToRgb(hex);
     return [Math.round(c[0]+(255-c[0])*t), Math.round(c[1]+(255-c[1])*t), Math.round(c[2]+(255-c[2])*t)]; };
-  const FR={folder:1,'folder-light':1,notes:1}[FRAME]?{
-    M: FRAME==='notes'? 14 : 17,
-    W: FRAME==='notes'? 124 : 118,
-    TOP: FRAME==='notes'? 16 : 30,
-    BOT: 279
-  }:{M:14, W:210-28, TOP:14, BOT:297-14};
+  const FRGEO={
+    none:         {M:14, W:182, TOP:14, BOT:283},
+    folder:       {M:17, W:118, TOP:30, BOT:279},
+    'folder-light':{M:17,W:118, TOP:30, BOT:279},
+    'folder-sol': {M:73, W:118, TOP:30, BOT:279},
+    notes:        {M:14, W:124, TOP:16, BOT:279},
+    spiral:       {M:16, W:178, TOP:34, BOT:281},
+    defter:       {M:30, W:166, TOP:24, BOT:279},
+    kareli:       {M:30, W:166, TOP:24, BOT:279},
+    kart:         {M:19, W:172, TOP:34, BOT:279},
+    pano:         {M:22, W:166, TOP:42, BOT:274},
+    cerceve:      {M:20, W:170, TOP:34, BOT:277}
+  };
+  const FR=FRGEO[FRAME]||FRGEO.none;
   const M=FR.M, W=FR.W, BOT=FR.BOT;
+  const TITLE_IN_FRAME=(FRAME==='folder'||FRAME==='folder-light'||FRAME==='folder-sol');
 
-  function drawFrame(){
-    if(FRAME==='none') return;
-    const full=(FRAME==='folder');
-    const soft=tint(foyTheme,0.86), mid=tint(foyTheme,0.62), ink=hexToRgb(foyTheme);
-    // dosya zemini
-    if(full){
-      doc.setFillColor(soft[0],soft[1],soft[2]);
-      doc.roundedRect(4,4,202,289,4,4,'F');
-    }
-    // sol beyaz kağıt
-    if(FRAME!=='notes'){
-      doc.setFillColor(255,255,255); doc.setDrawColor(214,222,230); doc.setLineWidth(0.25);
-      doc.roundedRect(10,11,132,276,1.5,1.5,'FD');
-    }
-    // sağ kareli not sütunu
-    const gx=FRAME==='notes'?146:146, gy=11, gw=52, gh=276;
+  function frGrid(gx,gy,gw,gh){
     doc.setFillColor(255,255,255); doc.setDrawColor(214,222,230); doc.setLineWidth(0.25);
     doc.roundedRect(gx,gy,gw,gh,1.5,1.5,'FD');
     doc.setDrawColor(226,232,240); doc.setLineWidth(0.12);
     for(let v=gx+4; v<gx+gw; v+=4) doc.line(v,gy+2,v,gy+gh-2);
     for(let h=gy+4; h<gy+gh; h+=4) doc.line(gx+2,h,gx+gw-2,h);
-    // sağ kenar sekmeleri
-    const tabs=[[18,tint(foyTheme,0.30)],[52,tint(foyTheme,0.55)],[86,tint(foyTheme,0.75)]];
-    tabs.forEach(function(t){
-      doc.setFillColor(t[1][0],t[1][1],t[1][2]);
-      doc.roundedRect(198,gy+t[0],8,26,2,2,'F');
-    });
-    // ciltleme halkaları (kağıt ile not sütunu arası)
-    if(FRAME!=='notes'){
-      [70,148,226].forEach(function(ry){
-        doc.setFillColor(90,98,110);
-        doc.circle(143.2,ry,1.5,'F'); doc.circle(147.8,ry,1.5,'F');
-        doc.setLineWidth(1.1); doc.setDrawColor(150,158,168);
-        doc.line(143.2,ry,147.8,ry);
+  }
+  function frClip(x,y,w,h,col){
+    doc.setDrawColor(col[0],col[1],col[2]); doc.setLineWidth(0.9);
+    doc.roundedRect(x,y,w,h,w/2,w/2,'S');
+    doc.roundedRect(x+w*0.23,y+h*0.16,w*0.54,h*0.66,w*0.27,w*0.27,'S');
+  }
+  function frTitle(x,y,maxW,col){
+    if(!title) return;
+    doc.setFont('helvetica','bold'); doc.setFontSize(12);
+    doc.setTextColor(col[0],col[1],col[2]);
+    doc.text(doc.splitTextToSize(title,maxW)[0], x, y);
+    doc.setTextColor(0);
+  }
+
+  function drawFrame(){
+    if(FRAME==='none') return;
+    const soft=tint(foyTheme,0.86), mid=tint(foyTheme,0.62), ink=hexToRgb(foyTheme);
+
+    if(FRAME==='folder'||FRAME==='folder-light'||FRAME==='folder-sol'){
+      const sol=(FRAME==='folder-sol');
+      if(FRAME==='folder'){ doc.setFillColor(soft[0],soft[1],soft[2]); doc.roundedRect(4,4,202,289,4,4,'F'); }
+      const px = sol?66:10, gx = sol?10:146;              // kağıt / kareli sütun x
+      doc.setFillColor(255,255,255); doc.setDrawColor(214,222,230); doc.setLineWidth(0.25);
+      doc.roundedRect(px,11,132,276,1.5,1.5,'FD');
+      frGrid(gx,11,52,276);
+      const tabX = sol?2:198;
+      [18,52,86].forEach((off,i)=>{ const t=tint(foyTheme,[0.30,0.55,0.75][i]);
+        doc.setFillColor(t[0],t[1],t[2]); doc.roundedRect(tabX,11+off,8,26,2,2,'F'); });
+      const rx = sol?63.5:143.2;
+      [70,148,226].forEach(ry=>{
+        doc.setLineWidth(1.1); doc.setDrawColor(150,158,168); doc.line(rx,ry,rx+4.6,ry);
+        doc.setFillColor(90,98,110); doc.circle(rx,ry,1.5,'F'); doc.circle(rx+4.6,ry,1.5,'F');
       });
-    }
-    // üst şerit + ataç
-    if(FRAME!=='notes'){
-      doc.setFillColor(mid[0],mid[1],mid[2]);
-      doc.roundedRect(6,6,136,15,2,2,'F');
-      // ataç
-      doc.setDrawColor(190,60,60); doc.setLineWidth(0.9);
-      doc.roundedRect(10,3.5,7,15,3.5,3.5,'S');
-      doc.roundedRect(11.6,6,3.8,10,1.9,1.9,'S');
-      doc.setFillColor(mid[0],mid[1],mid[2]);
-      doc.rect(9,15.5,9,3.2,'F');
-      // başlık şeridin içinde
-      if(title){
-        doc.setFont('helvetica','bold'); doc.setFontSize(12);
-        doc.setTextColor(ink[0],ink[1],ink[2]);
-        var tt=doc.splitTextToSize(title,112)[0];
-        doc.text(tt, 22, 15.5);
+      doc.setFillColor(mid[0],mid[1],mid[2]); doc.roundedRect(px-4,6,136,15,2,2,'F');
+      frClip(px,3.5,7,15,[190,60,60]);
+      doc.setFillColor(mid[0],mid[1],mid[2]); doc.rect(px-1,15.5,9,3.2,'F');
+      frTitle(px+12,15.5,112,ink);
+
+    } else if(FRAME==='spiral'){
+      doc.setFillColor(255,255,255); doc.setDrawColor(210,218,226); doc.setLineWidth(0.3);
+      doc.roundedRect(8,12,194,278,2,2,'FD');
+      doc.setFillColor(soft[0],soft[1],soft[2]); doc.roundedRect(8,12,194,17,2,2,'F');
+      // spiral telleri + delikler
+      for(let x=20; x<=190; x+=11){
+        doc.setDrawColor(150,158,168); doc.setLineWidth(1.6);
+        doc.line(x,6,x,19);
+        doc.setFillColor(255,255,255); doc.setDrawColor(190,198,206); doc.setLineWidth(0.3);
+        doc.circle(x,16.5,1.5,'FD');
       }
+      frTitle(14,26,180,ink);
+
+    } else if(FRAME==='defter'){
+      doc.setFillColor(255,255,255); doc.setDrawColor(214,222,230); doc.setLineWidth(0.25);
+      doc.roundedRect(8,8,194,281,2,2,'FD');
+      const rl=tint(foyTheme,0.80);
+      doc.setDrawColor(rl[0],rl[1],rl[2]); doc.setLineWidth(0.15);
+      for(let h=26; h<=280; h+=8) doc.line(14,h,198,h);
+      const ml=tint(foyTheme,0.35);
+      doc.setDrawColor(ml[0],ml[1],ml[2]); doc.setLineWidth(0.5);
+      doc.line(27,10,27,287);
+      [70,148,226].forEach(ry=>{
+        doc.setFillColor(255,255,255); doc.setDrawColor(180,188,196); doc.setLineWidth(0.35);
+        doc.circle(17,ry,2.6,'FD');
+      });
+
+    } else if(FRAME==='kareli'){
+      doc.setFillColor(255,255,255); doc.setDrawColor(214,222,230); doc.setLineWidth(0.25);
+      doc.roundedRect(8,8,194,281,2,2,'FD');
+      const gl=tint(foyTheme,0.78);
+      doc.setDrawColor(gl[0],gl[1],gl[2]); doc.setLineWidth(0.12);
+      for(let v=14; v<=198; v+=5) doc.line(v,18,v,283);
+      for(let h=18; h<=283; h+=5) doc.line(14,h,198,h);
+      const ml=tint(foyTheme,0.35);
+      doc.setDrawColor(ml[0],ml[1],ml[2]); doc.setLineWidth(0.5);
+      doc.line(29,10,29,287);
+      [70,148,226].forEach(ry=>{
+        doc.setFillColor(255,255,255); doc.setDrawColor(180,188,196); doc.setLineWidth(0.35);
+        doc.circle(18,ry,2.6,'FD');
+      });
+
+    } else if(FRAME==='kart'){
+      const fold=9;
+      doc.setFillColor(255,255,255); doc.setDrawColor(206,214,222); doc.setLineWidth(0.3);
+      doc.roundedRect(10,10,190,277,2,2,'FD');
+      doc.setFillColor(ink[0],ink[1],ink[2]); doc.rect(10,10,190,5,'F');
+      // sağ alt köşe kıvrımı
+      doc.setFillColor(255,255,255); doc.setDrawColor(206,214,222); doc.setLineWidth(0.3);
+      doc.triangle(200-fold,287,200,287-fold,200,287,'F');
+      doc.setFillColor(soft[0],soft[1],soft[2]);
+      doc.triangle(200-fold,287,200,287-fold,200-fold,287-fold,'F');
+      doc.setDrawColor(206,214,222); doc.line(200-fold,287,200,287-fold);
+      frTitle(16,26,178,ink);
+
+    } else if(FRAME==='pano'){
+      const bd=tint(foyTheme,0.62);
+      doc.setFillColor(bd[0],bd[1],bd[2]); doc.roundedRect(6,10,198,281,3,3,'F');
+      doc.setFillColor(255,255,255); doc.setDrawColor(200,208,216); doc.setLineWidth(0.25);
+      doc.roundedRect(14,22,182,262,1.5,1.5,'FD');
+      // metal mandal
+      doc.setFillColor(120,128,136); doc.roundedRect(86,4,38,16,2,2,'F');
+      doc.setFillColor(170,178,186); doc.roundedRect(94,8,22,7,1.5,1.5,'F');
+      doc.setFillColor(120,128,136); doc.roundedRect(98,17,14,6,1,1,'F');
+      frTitle(20,34,170,ink);
+
+    } else if(FRAME==='cerceve'){
+      doc.setDrawColor(ink[0],ink[1],ink[2]); doc.setLineWidth(0.7);
+      doc.rect(12,12,186,273,'S');
+      doc.setDrawColor(mid[0],mid[1],mid[2]); doc.setLineWidth(0.3);
+      doc.rect(14.5,14.5,181,268,'S');
+      frTitle(20,26,170,ink);
+
+    } else if(FRAME==='notes'){
+      frGrid(146,11,52,276);
+      [18,52,86].forEach((off,i)=>{ const t=tint(foyTheme,[0.30,0.55,0.75][i]);
+        doc.setFillColor(t[0],t[1],t[2]); doc.roundedRect(198,11+off,8,26,2,2,'F'); });
     }
     doc.setTextColor(0); doc.setLineWidth(0.2); doc.setDrawColor(0);
   }
@@ -6133,7 +6220,7 @@ async function foyBuild(){
   }
 
   // föy başlığı (çerçeveli modda üst şeritte yazıldı)
-  if(title && (FRAME==='none'||FRAME==='notes')){
+  if(title && !TITLE_IN_FRAME && FRAME!=='spiral' && FRAME!=='kart' && FRAME!=='pano' && FRAME!=='cerceve'){
     const trgb=hexToRgb(foyTheme);
     doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(trgb[0],trgb[1],trgb[2]);
     doc.text(title, M, y+6);
@@ -6296,7 +6383,7 @@ async function foyBuild(){
   const n=doc.getNumberOfPages();
   for(let p=1;p<=n;p++){ doc.setPage(p);
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(150);
-    const fy=(FRAME==='folder'||FRAME==='folder-light'||FRAME==='notes')?284:297-6;
+    const fy=(FRAME==='none')?(297-6):Math.min(291,FR.BOT+7);
     doc.text(p+' / '+n, M+W, fy, {align:'right'});
     if(title){ doc.text(title, M, fy); }
   }
