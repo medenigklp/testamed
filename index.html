@@ -28,7 +28,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --or:#10B981; --gr:#059669; --ye:#F59E0B; --cy:#06B6D4;
+  --or:#1E7A3C; --gr:#17633A; --ye:#B7791F; --cy:#1E7A3C; --tint:#EAF3EC;
   --ink:#0E1A17;
   --ink2:#2C3A36;
   --soft:#6E7C77;
@@ -39,7 +39,7 @@
   --safe:env(safe-area-inset-bottom,0px);
   --disp:'Bricolage Grotesque',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --body:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --mono:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
 html,body{height:100%}
 body{
@@ -69,7 +69,7 @@ input,select,textarea{font:inherit}
   font-size:13px;font-weight:700;white-space:nowrap;color:var(--ink);transition:.14s}
 .tbtn:active{transform:scale(.96)}
 .tbtn.go{background:var(--or);border-color:var(--or);color:#fff;
-  box-shadow:0 2px 10px rgba(16,185,129,.28)}
+  box-shadow:0 2px 10px rgba(30,122,60,.28)}
 .tbtn:disabled{opacity:.35;box-shadow:none}
 
 /* Navigasyon Rayı */
@@ -134,14 +134,14 @@ input,select,textarea{font:inherit}
 .brow.fine{gap:8px;background:var(--bg)}
 .brow.fine input[type=range]{flex:1;min-width:0;accent-color:var(--or);height:26px}
 .brow.fine .bb{padding:8px 11px}
-#skew.on{background:var(--cy);color:#fff;box-shadow:0 2px 8px rgba(6,182,212,.28)}
+#skew.on{background:var(--cy);color:#fff;box-shadow:0 2px 8px rgba(30,122,60,.28)}
 .brow.tools .bb{flex:1 1 auto;min-width:0;text-align:center}
 #files{overflow-x:auto}
 .bb{background:var(--bg);border-radius:10px;padding:9px 12px;font-size:13px;font-weight:700;
   color:var(--ink2);white-space:nowrap;flex-shrink:0;transition:.13s}
 .bb:active{transform:scale(.94)}
-.bb.on{background:var(--or);color:#fff;box-shadow:0 2px 8px rgba(16,185,129,.26)}
-#clean.on{background:var(--gr);color:#fff;box-shadow:0 2px 8px rgba(5,150,105,.28)}
+.bb.on{background:var(--or);color:#fff;box-shadow:0 2px 8px rgba(30,122,60,.26)}
+#clean.on{background:var(--gr);color:#fff;box-shadow:0 2px 8px rgba(30,122,60,.28)}
 #clean.hard{background:var(--ink);color:#fff;box-shadow:0 2px 8px rgba(14,26,23,.3)}
 @media(max-width:380px){.brow.tools .bb{font-size:12px;padding:9px 8px}}
 .bb:disabled{opacity:.35}
@@ -184,8 +184,8 @@ input,select,textarea{font:inherit}
 }
 #box{
   position:absolute;
-  border:2.5px solid #10B981 !important;
-  background:rgba(16,185,129,0.22) !important;
+  border:2.5px solid #1E7A3C !important;
+  background:rgba(30,122,60,0.22) !important;
   box-shadow:0 0 0 1px #ffffff, 0 4px 18px rgba(0,0,0,0.45);
   display:none;
   pointer-events:none !important;
@@ -199,7 +199,7 @@ input,select,textarea{font:inherit}
   bottom: -22px;
   right: 0;
   background: #091E19;
-  color: #10B981;
+  color: #1E7A3C;
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 700;
@@ -242,7 +242,7 @@ input,select,textarea{font:inherit}
 .cfb-ok{
   width:32px;height:30px;background:var(--or);color:#042f2e;border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;
-  box-shadow:0 2px 8px rgba(16,185,129,.3);
+  box-shadow:0 2px 8px rgba(30,122,60,.3);
 }
 .cfb-cancel{
   width:30px;height:30px;background:rgba(220,38,38,0.85);color:#fff;border-radius:8px;
@@ -277,7 +277,7 @@ input,select,textarea{font:inherit}
 .f input,.f select{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:11px;
   background:var(--w);color:var(--ink);outline:none;-webkit-appearance:none;font-size:15px;
   transition:.14s}
-.f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(6,182,212,.13)}
+.f input:focus,.f select:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(30,122,60,.13)}
 .f input::placeholder{color:#B5BEB9}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .r3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -293,7 +293,7 @@ input,select,textarea{font:inherit}
 .qrow img{width:46px;height:46px;object-fit:contain;background:var(--bg);border-radius:7px;flex-shrink:0}
 .qrow .picbtn{width:34px;height:34px;border-radius:9px;background:var(--bg);font-size:14px;
   border:1.5px solid var(--line);flex-shrink:0}
-.qrow .picbtn.has{background:rgba(5,150,105,.15);border-color:var(--gr)}
+.qrow .picbtn.has{background:rgba(30,122,60,.15);border-color:var(--gr)}
 .qrow .frmbtn{font-size:15px}
 .qrow .frmbtn.has{background:rgba(29,59,110,.14);border-color:#1D3B6E}
 .qrow .mv{display:flex;gap:4px;margin-left:auto}
@@ -308,8 +308,8 @@ input,select,textarea{font:inherit}
 .ans button.on{background:var(--gr);color:#fff}
 .big{width:100%;background:var(--or);color:#fff;border-radius:14px;padding:15px;
   font-family:var(--disp);font-size:15.5px;font-weight:700;letter-spacing:-.01em;margin-top:14px;
-  box-shadow:0 3px 14px rgba(16,185,129,.3);transition:.15s cubic-bezier(.4,0,.2,1)}
-.big:active{transform:translateY(1px);box-shadow:0 1px 6px rgba(16,185,129,.25)}
+  box-shadow:0 3px 14px rgba(30,122,60,.3);transition:.15s cubic-bezier(.4,0,.2,1)}
+.big:active{transform:translateY(1px);box-shadow:0 1px 6px rgba(30,122,60,.25)}
 .big:disabled{opacity:.35;box-shadow:none;transform:none}
 .ghost{width:100%;background:var(--w);border:1.5px solid var(--line);border-radius:12px;
   padding:12px;font-size:14px;font-weight:600;color:var(--ink2);margin-bottom:12px;transition:.14s}
@@ -334,7 +334,7 @@ input,select,textarea{font:inherit}
 .addbar .ab{flex:1;border-radius:12px;padding:12px;font-size:13.5px;font-weight:700}
 .addbar .pdf{background:var(--cy);color:#fff}
 .addbar .bank{background:var(--ye);color:#111}
-.addbar .ai{background:linear-gradient(135deg,#10B981,#06B6D4);color:#fff}
+.addbar .ai{background:linear-gradient(135deg,#1E7A3C,#06B6D4);color:#fff}
 .addbar .ab{font-size:12.5px;padding:11px 6px}
 #editbar{display:none;background:#ECFDF5;border:1.5px solid var(--or);border-radius:13px;
   padding:11px 13px;margin-bottom:14px;font-size:13px;font-weight:600;line-height:1.5}
@@ -470,7 +470,7 @@ input,select,textarea{font:inherit}
 }
 .q-live-box:hover{
   outline:2px dashed var(--or);
-  background:rgba(16,185,129,.03);
+  background:rgba(30,122,60,.03);
 }
 .q-live-ctrls{
   position:absolute;
@@ -524,7 +524,7 @@ input,select,textarea{font:inherit}
 .set-tabs::-webkit-scrollbar{display:none}
 .set-tab{flex-shrink:0;padding:8px 15px;border-radius:999px;border:1.5px solid var(--line);background:var(--w);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--soft);white-space:nowrap;transition:.14s cubic-bezier(.4,0,.2,1);cursor:pointer}
 .set-tab:active{transform:scale(.94)}
-.set-tab.on{background:var(--or);border-color:var(--or);color:#fff;box-shadow:0 2px 10px rgba(16,185,129,.28)}
+.set-tab.on{background:var(--or);border-color:var(--or);color:#fff;box-shadow:0 2px 10px rgba(30,122,60,.28)}
 .htype{display:flex;flex-direction:column;gap:9px;margin-top:4px}
 .htrow{display:flex;align-items:center;gap:9px}
 .htname{flex:0 0 92px;font-size:12px;font-weight:600;color:var(--ink2)}
@@ -547,6 +547,68 @@ input,select,textarea{font:inherit}
 .set-pane.on{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
+
+/* ═══ Sadeleştirme katmanı ═══ */
+body{background-image:none;background:var(--bg)}
+:focus-visible{outline-color:var(--or)}
+/* gölgeli parlamalar yok */
+.tbtn.go,.big,.bb.on,.set-tab.on,#skew.on,#clean.on,.cfb-ok,.big:active{box-shadow:none}
+/* ana sayfa kartları: tek renk, çizgi ikon */
+.card::before{display:none}
+.card{border-radius:14px;box-shadow:none}
+.card .ic{background:var(--tint);color:var(--or);border-radius:12px;width:44px;height:44px}
+.card .arw{color:#B9C3BD}
+/* adım çubuğu tek renk */
+#rail .n1,#rail .n2,#rail .n3,#rail .n4{color:var(--or)}
+#rail .lbl{text-transform:none;letter-spacing:0;font-size:11px;font-weight:600}
+/* etiketler: büyük harf ve daktilo fontu yerine sade yazı */
+.sec{text-transform:none;letter-spacing:-.01em;font-size:15px;margin:24px 0 10px}
+.f label{font-family:var(--body);text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:600;color:var(--ink2)}
+.hint b{text-transform:none;letter-spacing:-.01em;font-size:14px}
+.hint li::before{font-family:var(--body);font-size:10.5px}
+#tray h3{font-family:var(--body);text-transform:none;letter-spacing:0;font-size:12px}
+.info,.htval,#pginfo2,#live b,.qrow .qn,.th .n,#engine,#box::after,.pg .pf{font-family:var(--body)}
+#pginfo2{font-size:12px}
+#engine{font-size:11.5px}
+/* dar ekranda üçlü satırlar alt alta: seçimler kesilmesin */
+@media(max-width:520px){.r3{grid-template-columns:1fr}}
+.f select{text-overflow:ellipsis}
+/* renkli düğmeler sadeleşti */
+#b-share{background:var(--w);color:var(--ink);border:1.5px solid var(--line)}
+#b-savetest{background:var(--w);color:var(--ink);border:1.5px solid var(--line)}
+.qp-auto{cursor:pointer;background:var(--w);border:1.5px solid var(--line);color:var(--ink2)}
+.addbar{flex-wrap:wrap}
+.addbar .ab,.addbar .pdf,.addbar .bank,.addbar .ai{background:var(--w);color:var(--ink);border:1.5px solid var(--line);flex:1 1 40%}
+#eb-add,#eb-bank{background:var(--w);color:var(--ink);border:1.5px solid var(--line)}
+#editbar{background:var(--tint)}
+.chk{border-radius:12px}
+.qrow .picbtn,.qrow .frmbtn{display:inline-flex;align-items:center;justify-content:center;color:var(--ink2)}
+.qrow .picbtn.has,.qrow .frmbtn.has{background:var(--tint);border-color:var(--or);color:var(--or)}
+/* önizlemede sayfa başlığı çubuğu */
+.pgbar{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;max-width:520px;
+  color:#D5DDD8;font-size:12.5px;font-weight:600;margin-bottom:-6px}
+.pgbar-r{display:flex;align-items:center;gap:6px}
+.pgbar select,.pgbar button{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.18);
+  border-radius:8px;padding:6px 9px;font-size:12px;font-weight:600;-webkit-appearance:none}
+.pgbar button:active{background:rgba(255,255,255,.2)}
+.pgbar select option{color:#111}
+/* kaydet penceresi */
+#modal{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-end;justify-content:center;
+  background:rgba(14,26,23,.45);padding:14px;padding-bottom:calc(14px + var(--safe))}
+#modal.on{display:flex}
+#mbox{background:var(--w);border-radius:18px;width:100%;max-width:440px;padding:20px 18px 18px;
+  box-shadow:0 18px 50px rgba(14,26,23,.3);animation:rise .22s cubic-bezier(.2,.9,.3,1)}
+#mbox h3{font-family:var(--disp);font-size:19px;font-weight:700;letter-spacing:-.02em;margin-bottom:14px}
+#mbox input{display:block;width:100%;padding:13px;border:1.5px solid var(--line);border-radius:11px;
+  margin-bottom:9px;font-size:16px;background:var(--w);color:var(--ink);outline:none;-webkit-appearance:none}
+#mbox input:focus{border-color:var(--or)}
+.mbtns{display:flex;gap:10px;margin-top:8px}
+.mbtns button{flex:1;padding:14px;border-radius:12px;font-weight:700;font-size:15px}
+#mno{background:var(--bg);color:var(--ink2)}
+#mok{background:var(--or);color:#fff}
+@media(min-width:600px){#modal{align-items:center}}
+#s-panel .ps span,#s-panel .plan .pd span,#s-panel .chart .cb .m{text-transform:none;letter-spacing:0;font-size:11px}
+.pg .pn{font-variant-numeric:tabular-nums}
 </style>
 <base target="_blank">
 </head>
@@ -573,29 +635,29 @@ input,select,textarea{font:inherit}
 
     <!-- 1. Ekran: Kaynak -->
     <div class="scr on" id="s-home">
-      <div class="card" style="--accent:var(--cy)" onclick="pick('pdf')">
-        <div class="ic" style="background:var(--cy)">📄</div>
+      <div class="card" onclick="pick('pdf')">
+        <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></div>
         <div class="tx"><h2>PDF aç</h2><p>Kitap, föy veya deneme sınavı</p></div>
         <span class="arw">›</span>
       </div>
-      <div class="card" style="--accent:var(--gr)" onclick="pick('img')">
-        <div class="ic" style="background:var(--gr)">🖼️</div>
+      <div class="card" onclick="pick('img')">
+        <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/></svg></div>
         <div class="tx"><h2>Fotoğraf aç</h2><p>Tahtadan, defterden ya da kitaptan</p></div>
         <span class="arw">›</span>
       </div>
-      <div class="card" style="--accent:var(--or)" onclick="go('ai')">
-        <div class="ic" style="background:var(--or)">✦</div>
+      <div class="card" onclick="go('ai')">
+        <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2 6.5L20.5 12 14 14.5 12 21l-2-6.5L3.5 12 10 9.5z"/></svg></div>
         <div class="tx"><h2>Yapay zekaya yazdır</h2><p>Konu ve kazanım ver, sorular gelsin</p></div>
         <span class="arw">›</span>
       </div>
-      <div class="card" style="--accent:var(--ye)" onclick="go('lib')">
-        <div class="ic" style="background:var(--ye);color:var(--ink)">📚</div>
+      <div class="card" onclick="go('lib')">
+        <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="m15.6 5.3 3.5-.9 3.3 15-3.5.9z"/></svg></div>
         <div class="tx"><h2>Kitaplık</h2><p>Biriktirdiğin sorular ve hazır testler</p></div>
         <span class="arw">›</span>
       </div>
-      <div class="card" style="--accent:#8B5CF6" onclick="go('foy')">
-        <div class="ic" style="background:#8B5CF6">📝</div>
-        <div class="tx"><h2>Konu Anlatım Föyü</h2><p>Tanım, örnek, uyarı blokları · karışık içerik</p></div>
+      <div class="card" onclick="go('foy')">
+        <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/></svg></div>
+        <div class="tx"><h2>Konu Anlatım Föyü</h2><p>Tanım, örnek ve uyarı bloklarıyla çalışma kâğıdı</p></div>
         <span class="arw">›</span>
       </div>
       <div class="hint">
@@ -624,10 +686,10 @@ input,select,textarea{font:inherit}
           <button class="bb" onclick="zoom(1)">+</button>
         </div>
         <div class="brow tools">
-          <button class="bb on" id="mode" onclick="mode()">✂️ Seç</button>
+          <button class="bb on" id="mode" onclick="mode()">Seç</button>
           <button class="bb" id="rot" onclick="rotate()">⟳ Döndür</button>
           <button class="bb" id="skew" onclick="toggleSkew()">⤢ Düzelt</button>
-          <button class="bb" id="clean" onclick="toggleClean()">✨ Temizle</button>
+          <button class="bb" id="clean" onclick="toggleClean()">Temizle</button>
           <button class="bb" id="undo" onclick="undo()" disabled>↩︎</button>
         </div>
       </div>
@@ -706,11 +768,11 @@ input,select,textarea{font:inherit}
                 <option>Zor</option><option>Karışık</option></select></div>
           </div>
           <div class="sec">2 · Metni kopyala</div>
-          <button class="big" style="background:var(--cy)" onclick="copyPrompt()">📋 Hazır metni kopyala</button>
+          <button class="big" onclick="copyPrompt()">Hazır metni kopyala</button>
           <div class="pastehint">Kopyaladıktan sonra yapay zeka uygulamasını aç, sohbete yapıştır ve gönder.
             Gelen cevabın <b>tamamını</b> kopyalayıp aşağıya yapıştır.<br/>
             Şekilli soru gerekiyorsa: soruyu metin olarak ürettir, sonra soru listesinde
-            <b>🖼</b> düğmesiyle grafiği kendin ekle.</div>
+            <b>resim</b> düğmesiyle grafiği kendin ekle.</div>
           <div class="sec">3 · Cevabı yapıştır</div>
           <textarea id="p-in" rows="5" placeholder='Buraya yapıştır: [{"soru":"…"}]'></textarea>
           <button class="big" onclick="usePasted()">Soruları oku →</button>
@@ -753,7 +815,7 @@ input,select,textarea{font:inherit}
             </div>
           </div>
           <div class="chk"><input type="checkbox" id="a-calc" checked/><label for="a-calc">Hesaplama soruları da olsun</label></div>
-          <button class="big" id="a-go" onclick="genAI()">✦ Soruları üret</button>
+          <button class="big" id="a-go" onclick="genAI()">Soruları üret</button>
           <div class="aiwarn">Üretilen sorular <b>onayına sunulur</b>; sen eklemeden teste girmez.
             Yapay zeka hesap hatası yapabilir — özellikle sayısal soruları kontrol et.</div>
         </div>
@@ -816,7 +878,7 @@ input,select,textarea{font:inherit}
       </div>
       <div id="foy-list"></div>
       <div id="foy-bar">
-        <button class="ghost" onclick="foySave()" style="margin:0">💾 Kaydet</button>
+        <button class="ghost" onclick="foySave()" style="margin:0">Kaydet</button>
         <button class="big" onclick="foyBuild()" style="margin:0">Föyü oluştur →</button>
       </div>
     </div>
@@ -1168,16 +1230,16 @@ input,select,textarea{font:inherit}
       <div class="r2">
         <div class="f"><label>Çözüm Alanı Deseni</label>
           <select id="f-soltype" onchange="preview()">
-            <option value="grid" selected>Kareli Defter Izgarası (5x5 mm)</option>
-            <option value="lined">Çizgili Defter Alanı</option>
-            <option value="blank">Düz Çerçeveli Boşluk</option>
+            <option value="grid">Kareli (5 mm)</option>
+            <option value="lined">Çizgili</option>
+            <option value="blank" selected>Boş alan</option>
           </select>
         </div>
         <div class="f"><label>Varsayılan Çözüm Boşluğu</label>
           <select id="f-sol">
             <option value="0">Yok — en çok soru sığar</option>
             <option value="15">Dar — 15 mm</option>
-            <option value="30" selected>Orta (teststud.io) — 30 mm</option>
+            <option value="30" selected>Orta — 30 mm</option>
             <option value="50">Geniş — 50 mm</option>
           </select>
         </div>
@@ -1201,7 +1263,7 @@ input,select,textarea{font:inherit}
       <div class="f"><label>Sütun arasına yazı (isteğe bağlı)</label>
         <input id="f-gutter" placeholder="Örn. testamed yayınları"/>
       </div>
-      <div class="chk" style="background:var(--soft);border:1.5px solid var(--or);border-radius:10px;padding:10px"><input type="checkbox" id="f-yazili" onchange="onYaziliToggle()"/><label for="f-yazili"><b>✍️ Yazılı Sınav Modu</b> — puan kutuları, Ad-Soyad/No hanesi, cevap için çizgili boşluk</label></div>
+      <div class="chk" style="background:var(--tint);border:1.5px solid var(--or)"><input type="checkbox" id="f-yazili" onchange="onYaziliToggle()"/><label for="f-yazili"><b>Yazılı sınav modu</b> — puan kutuları, Ad-Soyad/No hanesi, cevap için çizgili boşluk</label></div>
       <div class="chk"><input type="checkbox" id="f-info" checked/><label for="f-info">Ad Soyad / Sınıf / Puan tablosu</label></div>
       <div class="chk"><input type="checkbox" id="f-conthdr" checked onchange="preview()"/><label for="f-conthdr">2. sayfadan itibaren üst bilgi çubuğu (ders · konu)</label></div>
       <div class="chk"><input type="checkbox" id="f-pts"/><label for="f-pts">Her soruda puan yazsın</label></div>
@@ -1216,9 +1278,9 @@ input,select,textarea{font:inherit}
         <select id="f-frame" onchange="preview()">
           <option value="none" selected>Çerçevesiz (sade)</option>
           <option value="soru">SORU — mor sekme etiket</option>
-          <option value="ornek">✓ ÖRNEK — yeşil sekme</option>
-          <option value="uyari">⚠ UYARI — turuncu sekme</option>
-          <option value="bar-navy">★ başlık çubuğu — lacivert</option>
+          <option value="ornek">ÖRNEK — yeşil sekme</option>
+          <option value="uyari">UYARI — turuncu sekme</option>
+          <option value="bar-navy">Başlık çubuğu — lacivert</option>
           <option value="bar-bordo">başlık çubuğu — bordo</option>
           <option value="bar-teal">başlık çubuğu — turkuaz</option>
           <option value="corner-red">köşe şeridi — YENİ (kırmızı)</option>
@@ -1265,14 +1327,14 @@ input,select,textarea{font:inherit}
       </div>
       <div id="qrows"></div>
       <div id="live"></div>
-      <button class="ghost" style="margin-top:10px" onclick="saveBank()">💾 Soruları bankaya kaydet</button>
+      <button class="ghost" style="margin-top:10px" onclick="saveBank()">Soruları bankaya kaydet</button>
     </div>
 
   </div>
 
   <!-- Her sekmede görünen sabit alt çubuk -->
   <div id="setbar">
-    <button class="ghost" id="setbar-save" onclick="saveTestDialog()" style="margin:0">💾 Kaydet</button>
+    <button class="ghost" id="setbar-save" onclick="saveTestDialog()" style="margin:0">Kaydet</button>
     <button class="big" id="make" onclick="build()" style="margin:0">Testi oluştur →</button>
   </div>
 </div>
@@ -1296,19 +1358,19 @@ input,select,textarea{font:inherit}
           </select>
         </div>
 
-        <button onclick="resetCustomPageDistribution()" class="quick-per-page" style="cursor:pointer; background:#064E3B; color:#34D399; border:1px solid #059669;" title="Tüm sayfaları otomatik dengeli dağılıma sıfırlar">
-          ⚡ Otomatik Dağıt
+        <button onclick="resetCustomPageDistribution()" class="quick-per-page qp-auto" title="Tüm sayfaları otomatik dengeli dağılıma sıfırlar">
+          Otomatik dağıt
         </button>
 
-        <button id="b-print" onclick="makeFile()">📄 PDF oluştur</button>
-        <button id="b-share" onclick="sharePdf()">📤 Paylaş</button>
-        <button id="b-savetest" onclick="saveTestDialog()">💾 Kaydet</button>
+        <button id="b-print" onclick="makeFile()">PDF oluştur</button>
+        <button id="b-share" onclick="sharePdf()">Paylaş</button>
+        <button id="b-savetest" onclick="saveTestDialog()">Kaydet</button>
       </div>
       <div id="bookpick"></div>
       <div id="pginfo2"></div>
       <div id="dl">
         <div class="dn" id="dl-name"></div>
-        <a id="dl-a" class="da" download>⬇︎ PDF'i kaydet</a>
+        <a id="dl-a" class="da" download>PDF'i kaydet</a>
         <button class="db" onclick="openPdf()">↗︎ Yeni sekmede aç</button>
         <div class="dh" id="dl-hint"></div>
         <iframe id="dl-view"></iframe>
@@ -1427,7 +1489,7 @@ function drawFiles(){
   docs.forEach(d=>{
     const b=document.createElement('button');
     b.className='ftab'+(active&&active.id===d.id?' on':'');
-    b.textContent=(d.kind==='pdf'?'📄 ':'🖼 ')+(d.name.length>18?d.name.slice(0,16)+'…':d.name);
+    b.textContent=(d.name.length>18?d.name.slice(0,16)+'…':d.name);
     b.onclick=async()=>{active=d;pageNo=1;drawFiles();await fitPage();syncFine();};
     w.appendChild(b);
   });
@@ -1537,7 +1599,7 @@ async function zoom(d){
 function mode(){
   selectMode=!selectMode;
   const b=$('mode');
-  b.textContent=selectMode?'✂️ Seç':'🖐 Kaydır';
+  b.textContent=selectMode?'Seç':'Kaydır';
   b.classList.toggle('on',selectMode);
   $('veil').style.display=selectMode?'block':'none';
   hideBox();
@@ -1685,7 +1747,7 @@ function toggleClean(){
   const b=$('clean');
   b.classList.toggle('on',cleanLv>0);
   b.classList.toggle('hard',cleanLv===2);
-  b.textContent = cleanLv===0 ? '✨ Temizle' : (cleanLv===1 ? '✨ Normal' : '✨ Güçlü');
+  b.textContent = cleanLv===0 ? 'Temizle' : (cleanLv===1 ? 'Temizle: normal' : 'Temizle: güçlü');
   toast(cleanLv===0 ? 'Temizleme kapalı'
        : cleanLv===1 ? 'Temizleme açık — sararma ve gölge kalkar'
        : 'Güçlü temizleme — soluk baskı ve kurşun kalem için');
@@ -2020,7 +2082,7 @@ function drawEditBar(){
   const el=$('editbar'); if(!el) return;
   if(!editingTest){ el.style.display='none'; return; }
   el.style.display='block';
-  el.innerHTML='✏️ <b>'+esc(editingTest.name)+'</b> düzenleniyor · '+qs.length+' soru'+
+  el.innerHTML='<b>'+esc(editingTest.name)+'</b> düzenleniyor · '+qs.length+' soru'+
     '<div class="eb"><button id="eb-new">Düzenlemeyi bırak · yeni test</button></div>';
   $('eb-new').onclick=()=>{ editingTest=null; qs=[]; drawTray(); drawEditBar(); drawRows(); preview(); toast('Yeni teste geçildi'); };
 }
@@ -2143,35 +2205,35 @@ function spread(){
 let _pvT=null;
 /* ── Antet şablonu listesi: çekirdek set önde, gerisi "tümünü göster" ile ── */
 const TPL_LIST=[
-  {v:'letterhead', g:'Kendi Antetin', t:'📄 Antetli Kağıda Bas (üst boş)', core:1},
+  {v:'letterhead', g:'Kendi Antetin', t:'Antetli Kağıda Bas (üst boş)', core:1},
   {v:'ts-modul',   g:'Önerilen',      t:'▦ Modül — İnce Çift Çizgi', core:1},
-  {v:'ofis-sekme', g:'Ofis / Kırtasiye', t:'🗂 Dosya Sekmesi — Klasör Kulakçığı', core:1},
-  {v:'ofis-atac',  g:'Ofis / Kırtasiye', t:'📎 Ataçlı Şerit — Dosya Kapağı', core:1},
+  {v:'ofis-sekme', g:'Ofis / Kırtasiye', t:'Dosya Sekmesi — Klasör Kulakçığı', core:1},
+  {v:'ofis-atac',  g:'Ofis / Kırtasiye', t:'Ataçlı Şerit — Dosya Kapağı', core:1},
   {v:'ofis-kareli',g:'Ofis / Kırtasiye', t:'▩ Kareli Kart — Not Kağıdı Dokusu', core:1},
-  {v:'ofis-etiket',g:'Ofis / Kırtasiye', t:'🏷 Etiket — Köşe Kıvrımlı Kart', core:1},
+  {v:'ofis-etiket',g:'Ofis / Kırtasiye', t:'Etiket — Köşe Kıvrımlı Kart', core:1},
   {v:'ts-kurumsal',g:'Önerilen',      t:'▰ Kurumsal Blok — Koyu Blok + Bant', core:1},
   {v:'ts-geometrik',g:'Önerilen',     t:'◤ Geometrik — Çapraz Katmanlar', core:1},
   {v:'ts-polygon', g:'Önerilen',      t:'◈ Polygon — Ağ Deseni', core:1},
-  {v:'kurumsal',   g:'Önerilen',      t:'★ Kurumsal — Dalgalı Antet + Mühür', core:1},
-  {v:'studio',     g:'Önerilen',      t:'★ Studio — İki Bloklu Yatay', core:1},
-  {v:'periodic',   g:'Kimya',         t:'⬢ Periyodik — Element Hücresi', core:1},
-  {v:'resmi',      g:'Sınav',         t:'★ Resmî — Sınav Kağıdı (D-Y-NET)', core:1},
+  {v:'kurumsal',   g:'Önerilen',      t:'Kurumsal — Dalgalı Antet + Mühür', core:1},
+  {v:'studio',     g:'Önerilen',      t:'Studio — İki Bloklu Yatay', core:1},
+  {v:'periodic',   g:'Kimya',         t:'Periyodik — Element Hücresi', core:1},
+  {v:'resmi',      g:'Sınav',         t:'Resmî — Sınav Kağıdı (D-Y-NET)', core:1},
   {v:'osym',       g:'Sınav',         t:'ÖSYM — Sınav Formatı', core:1},
   {v:'minimal',    g:'Sade',          t:'Minimal — Tek Satır', core:1},
   {v:'dalga-cift',   g:'Dalga',  t:'≋ Çift Dalga — Simetrik'},
   {v:'dalga-alt',    g:'Dalga',  t:'〜 Dalga Alt — Ters Dalga'},
   {v:'dalga-yumusak',g:'Dalga',  t:'⌇ Yumuşak Dalga — Yan Hizalı'},
-  {v:'capraz-dalga', g:'Dalga',  t:'✕ Çapraz Dalga — Üst Blok + Çift Renk'},
+  {v:'capraz-dalga', g:'Dalga',  t:'Çapraz Dalga — Üst Blok + Çift Renk'},
   {v:'alt-dalga',    g:'Dalga',  t:'◡ Alt Dalga — Logo Üstte'},
   {v:'kose-kivrim',  g:'Dalga',  t:'◜ Köşe Kıvrım — Logo + Kıvrım'},
   {v:'wave',         g:'Dalga',  t:'Wave — Akan Kesim'},
-  {v:'molecule',   g:'Kimya',   t:'⬢ Molekül — Atom-Bağ Motifi'},
-  {v:'hexagon',    g:'Kimya',   t:'⬢ Hexagon — Bal Peteği'},
-  {v:'blueprint',  g:'Kimya',   t:'⬢ Blueprint — Deney Defteri'},
+  {v:'molecule',   g:'Kimya',   t:'Molekül — Atom-Bağ Motifi'},
+  {v:'hexagon',    g:'Kimya',   t:'Hexagon — Bal Peteği'},
+  {v:'blueprint',  g:'Kimya',   t:'Blueprint — Deney Defteri'},
   {v:'cerceveli',  g:'Klasik',  t:'▭ Çerçeveli — Klasik Zarif'},
   {v:'serif',      g:'Klasik',  t:'Serif — Akademik Klasik'},
   {v:'bulten',     g:'Klasik',  t:'▬ Bülten — Üst Bant + Ders'},
-  {v:'editorial',  g:'Klasik',  t:'⬢ Editoryal — Dergi Kapağı'},
+  {v:'editorial',  g:'Klasik',  t:'Editoryal — Dergi Kapağı'},
   {v:'sidebar',    g:'Klasik',  t:'Sidebar — Yan Panel'},
   {v:'diagonal',   g:'Sade',    t:'◣ Diyagonal — Çapraz Kesim'},
   {v:'solvurgu',   g:'Sade',    t:'▌Sol Vurgu — Minimal Bant'},
@@ -2305,7 +2367,7 @@ function drawRows(){
     if(q.src){
       const pb=document.createElement('button');
       pb.className='picbtn'+(q.src.image?' has':'');
-      pb.textContent=q.src.image?'🖼 ✓':'🖼';
+      pb.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/></svg>';
       pb.title='Görsel ekle';
       pb.onclick=()=>pickPic(q);
       r.appendChild(pb);
@@ -2314,13 +2376,13 @@ function drawRows(){
     // çerçeve seçici (bu soruya özel)
     const fb=document.createElement('button');
     fb.className='frmbtn'+(q.frame&&q.frame!=='none'?' has':'');
-    fb.textContent='🎨';
+    fb.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>';
     fb.title='Bu sorunun çerçevesi';
     fb.onclick=(e)=>{ e.stopPropagation(); openFramePicker(q); };
     // not/uyarı (sorunun üstünde)
     const nt=document.createElement('button');
     nt.className='frmbtn'+(q.noteOn?' has':'');
-    nt.textContent='📝';
+    nt.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v11l-5 5H5z"/><path d="M14 20v-5h5"/><path d="M8 9h8M8 12.5h5"/></svg>';
     nt.title='Bu sorunun üstüne not/uyarı';
     nt.onclick=(e)=>{ e.stopPropagation(); openNotePicker(q); };
     const up=document.createElement('button'); up.textContent='↑';
@@ -2592,7 +2654,7 @@ SADECE şu JSON formatında dizi döndür:
   }catch(e){
     out.innerHTML='<div class="aiwarn" style="background:#FDECEA;color:#943126"><b>Hata:</b> '+esc(e.message)+'</div>';
   }
-  btn.disabled=false; btn.textContent='✦ Soruları üret';
+  btn.disabled=false; btn.textContent='Soruları üret';
 }
 
 function drawAIDraft(){
@@ -2809,7 +2871,7 @@ async function exportBackup(){
     const url=URL.createObjectURL(blob);
     const name='testamed-yedek-'+new Date().toISOString().slice(0,10)+'.tmd';
     const box=$('bkdl');
-    box.innerHTML='<a class="da" download="'+name+'" href="'+url+'" target="_blank">💾 '+name+'</a>'+
+    box.innerHTML='<a class="da" download="'+name+'" href="'+url+'" target="_blank">'+name+'</a>'+
       '<div class="bkwarn">Dosyayı İndirilenler\'e veya Bulut hesabınıza kaydedebilirsiniz.</div>';
     toast(bank.length+' soru · '+tests.length+' test yedeklendi');
   }catch(e){ toast('Yedek oluşturulamadı: '+e.message,true); }
@@ -2918,7 +2980,7 @@ function drawLib(){
     const lessons=[...new Set(bankItems.map(q=>q.lesson))].sort();
     filt.innerHTML='';
     const box=document.createElement('input');
-    box.className='lsearch'; box.placeholder='🔍 Ders veya konu ara…'; box.value=libQuery;
+    box.className='lsearch'; box.placeholder='Ders veya konu ara…'; box.value=libQuery;
     box.oninput=()=>{ libQuery=box.value; drawLibBody(); };
     filt.appendChild(box);
     const mk=(txt,val)=>{
@@ -2948,7 +3010,7 @@ function drawBackup(){
   body.innerHTML=
     '<div class="bkinfo">Cihazınızda <b>'+nb+' soru</b> ve <b>'+nt+' test</b> kayıtlı.'+
     ' Bunları tek dosyada yedekleyebilir; başka cihazda geri yükleyebilirsiniz.</div>'+
-    '<button class="big" style="margin:0 0 10px" onclick="exportBackup()">⬇︎ Yedek dosyası oluştur</button>'+
+    '<button class="big" style="margin:0 0 10px" onclick="exportBackup()">Yedek dosyası oluştur</button>'+
     '<div id="bkdl"></div>'+
     '<button class="ghost" id="bk-restore">↥ Yedekten geri yükle</button>';
   const rb=document.getElementById('bk-restore');
@@ -3087,7 +3149,7 @@ function openTest(t,edit){
     if($('f-orient')) $('f-orient').value=c.landscape?'yatay':'dikey';
     set('f-book',c.book);set('f-sep',c.sep);set('f-vsep',c.vsep);set('f-gutter',c.gutter);set('f-fill',c.fill);set('f-qfont',c.qfont);set('f-qsize',c.qsize);
     set('f-template',c.template||'ribbon');
-    set('f-soltype',c.soltype||'grid');
+    set('f-soltype',c.soltype||'blank');
     set('f-hdrtheme',c.hdrtheme||'emerald');
     set('f-qnumformat',c.qnumformat||'std');
     set('f-mleft',c.mLeft||12);set('f-mright',c.mRight||12);set('f-mtop',c.mTop||12);set('f-mbot',c.mBottom||12);
@@ -4872,21 +4934,15 @@ function drawPages(){
   PAGES.forEach((pg,i)=>{
     // Her Sayfanın Üstündeki Bağımsız Soru Sayısı & Aktarma Çubuğu
     const pageControlBar = document.createElement('div');
-    pageControlBar.className = 'no-print flex items-center justify-between bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-300 w-full max-w-[520px] mb-2 shadow-lg';
+    pageControlBar.className = 'no-print pgbar';
     pageControlBar.innerHTML = `
-      <div class="flex items-center gap-2">
-        <span class="font-bold text-emerald-400">📄 ${i+1}. Sayfa</span>
-        <span class="text-slate-400 font-mono font-bold">(${pg.count} Soru)</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="text-[11px] text-slate-400">Soru Sayısı:</span>
-        <select onchange="setIndividualPageCount(${i}, this.value)" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 font-bold text-emerald-400 font-mono outline-none cursor-pointer">
-          ${[1,2,3,4,5,6,7,8,10].map(n => `<option value="${n}" ${n === pg.count ? 'selected' : ''}>${n} Soru</option>`).join('')}
+      <span class="pgbar-t">${i+1}. sayfa</span>
+      <span class="pgbar-r">
+        <select onchange="setIndividualPageCount(${i}, this.value)" aria-label="Bu sayfadaki soru sayısı">
+          ${[1,2,3,4,5,6,7,8,10].map(n => `<option value="${n}" ${n === pg.count ? 'selected' : ''}>${n} soru</option>`).join('')}
         </select>
-        <button onclick="pushQuestionToNextPage(${i})" title="Bu sayfanın son sorusunu bir sonraki sayfaya aktarır" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-200 font-bold border border-slate-700 ml-1 flex items-center gap-1">
-          Aktar ➡
-        </button>
-      </div>
+        <button onclick="pushQuestionToNextPage(${i})" title="Bu sayfanın son sorusunu sonraki sayfaya aktarır">Son soruyu sonraki sayfaya at</button>
+      </span>
     `;
     host.appendChild(pageControlBar);
 
@@ -4997,7 +5053,7 @@ function drawPages(){
 
       // teststud.io Kareli / Çizgili Çözüm Alanı
       if(it.sol > 0 && CFG){
-        const solType = CFG.soltype || 'grid';
+        const solType = CFG.soltype || 'blank';
         if(solType === 'grid'){
           const sg = document.createElement('div');
           sg.className = 'sol-grid-box';
@@ -5144,7 +5200,7 @@ function cfgNow(){
     qfont: ($('f-qfont') && $('f-qfont').value) || 'sans',
     qsize: ($('f-qsize') && $('f-qsize').value) || 'normal',
     template: ($('f-template') && $('f-template').value) || 'ribbon',
-    soltype: ($('f-soltype') && $('f-soltype').value) || 'grid',
+    soltype: ($('f-soltype') && $('f-soltype').value) || 'blank',
     hdrtheme: ($('f-hdrtheme') && $('f-hdrtheme').value) || 'emerald',
     hfont: ($('f-hfont') && $('f-hfont').value) || 'modern',
     hsize: readHSize(),
@@ -5562,7 +5618,7 @@ function drawBook(doc, book, first){
 
       // PDF İçi Çözüm Izgarası Çizimi (Kareli Defter)
       if(it.sol>0 && CFG){
-        const solType = CFG.soltype || 'grid';
+        const solType = CFG.soltype || 'blank';
         const sy = it.y+TITLE_H+it.h+1.5+noff;
         const sh = it.sol - 3;
         if(solType === 'grid'){
@@ -6013,8 +6069,8 @@ function foyChoice(i){
   const wrap=document.createElement('div');
   wrap.className='foy-choice-ov';
   wrap.innerHTML='<div class="foy-choice"><h3>Görsel kaynağı</h3>'+
-    '<button onclick="foyFromSource('+i+')">📄 PDF / kitaptan kırp</button>'+
-    '<button onclick="foyFromGallery('+i+')">🖼️ Galeriden / fotoğraftan seç</button>'+
+    '<button onclick="foyFromSource('+i+')">PDF veya kitaptan kırp</button>'+
+    '<button onclick="foyFromGallery('+i+')">Galeriden fotoğraf seç</button>'+
     '<button class="cx" onclick="this.closest(\'.foy-choice-ov\').remove()">Vazgeç</button></div>';
   wrap.onclick=e=>{ if(e.target===wrap) wrap.remove(); };
   document.body.appendChild(wrap);
@@ -6611,8 +6667,7 @@ document.getElementById('main').appendChild(scr);
   if(!hint) return;
   const card=document.createElement('div');
   card.className='card';
-  card.style.setProperty('--accent','var(--ink)');
-  card.innerHTML='<div class="ic" style="background:var(--ink)">📊</div>'+
+    card.innerHTML='<div class="ic"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 20h18M6 16v-5M11 16V6M16 16v-8\"/></svg></div>'+
     '<div class="tx"><h2>Panel</h2><p>Testlerin, aylık hedefin ve sınav takvimin</p></div>'+
     '<span class="arw">›</span>';
   card.onclick=()=>go('panel');
@@ -6669,7 +6724,7 @@ async function renderPanel(){
 
   let h='';
 
-  h+='<div class="prof"><div class="pav">'+(pr.avatar||'👨‍🏫')+'</div>'+
+  h+='<div class="prof"><div class="pav">'+(pr.avatar&&!/[\u{1F300}-\u{1FAFF}]/u.test(pr.avatar)?pr.avatar:esc((pr.name||'Ö').trim().charAt(0).toLocaleUpperCase('tr')))+'</div>'+
      '<div class="pin"><b>'+esc(pr.name||'Öğretmen Profili')+'</b>'+
      '<span>'+esc(pr.branch||'Kimya Öğretmeni')+'</span></div>'+
      '<button class="ped" id="pn-edit">Düzenle</button></div>';
@@ -6679,7 +6734,7 @@ async function renderPanel(){
      '<b>'+buAy+' / '+hedef+'</b></div>'+
      '<div class="gbar'+(buAy>=hedef?' done':'')+'"><i style="width:'+yuzde+'%"></i></div>'+
      '<div class="gnote">'+
-     (buAy>=hedef ? '🎉 Hedef tamamlandı.' : (hedef-buAy)+' test kaldı · '+kalanGun+' gün')+
+     (buAy>=hedef ? 'Hedef tamamlandı.' : (hedef-buAy)+' test kaldı · '+kalanGun+' gün')+
      '</div></div>';
 
   h+='<div class="pstat">'+
@@ -6768,6 +6823,7 @@ function addPlan(){
     toast('Sınav eklendi');
   });
 }
+window.renderPanel=renderPanel;
 })();
 
 
