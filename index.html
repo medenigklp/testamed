@@ -607,6 +607,28 @@ body{background-image:none;background:var(--bg)}
 #mno{background:var(--bg);color:var(--ink2)}
 #mok{background:var(--or);color:#fff}
 @media(min-width:600px){#modal{align-items:center}}
+.cfb-ocr{background:#fff;color:#0E1A17;border-radius:6px;padding:5px 9px;font-size:11.5px;font-weight:800;white-space:nowrap}
+.ocr-ov{position:fixed;inset:0;z-index:1000;background:rgba(14,26,23,.45);display:flex;align-items:flex-end;justify-content:center;
+  padding:12px;padding-bottom:calc(12px + var(--safe))}
+.ocr-box{background:var(--w);border-radius:18px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;padding:18px 16px 14px;
+  box-shadow:0 18px 50px rgba(14,26,23,.3);animation:rise .22s cubic-bezier(.2,.9,.3,1)}
+.ocr-box h3{font-family:var(--disp);font-size:19px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.ocr-help{font-size:12.5px;color:var(--soft);line-height:1.45;margin-bottom:12px}
+.ocr-box label{display:block;font-size:12.5px;font-weight:700;color:var(--ink2);margin:10px 0 5px}
+.ocr-box label span{font-weight:500;color:var(--soft)}
+.ocr-box textarea{width:100%;min-height:120px;padding:11px 12px;border:1.5px solid var(--line);border-radius:11px;font-size:16px;
+  line-height:1.5;font-family:inherit;resize:vertical;outline:none}
+.ocr-opt{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ocr-opt b{width:20px;font-size:14px}
+.ocr-opt input{flex:1;min-width:0;padding:10px 11px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;outline:none}
+.ocr-box textarea:focus,.ocr-opt input:focus{border-color:var(--or)}
+.ocr-ok{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--line);color:#B9C3BD;font-weight:800;flex-shrink:0}
+.ocr-ok.on{background:var(--or);border-color:var(--or);color:#fff}
+.ocr-btns{display:flex;gap:9px;margin-top:14px}
+.ocr-btns button{flex:1;padding:14px;border-radius:12px;font-weight:700;font-size:14.5px}
+#ocr-img{background:var(--bg);color:var(--ink2)}
+#ocr-add{background:var(--or);color:#fff}
+.ocr-x{display:block;width:100%;margin-top:8px;padding:10px;color:var(--soft);font-weight:600;font-size:13.5px}
 #b-manual{background:var(--w);color:var(--ink);border:1.5px solid var(--line)}
 #b-manual.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 #manualbar{display:none;align-items:center;gap:10px;background:var(--tint);border-bottom:1px solid var(--line);
@@ -745,6 +767,7 @@ body{background-image:none;background:var(--bg)}
             </div>
             <div class="cfb-row">
               <input type="text" id="floatingCustomText" placeholder="Özel: Cevap yaz..." style="background:#1E2824; border:1px solid #2C3A36; border-radius:6px; color:#fff; font-size:11px; padding:4px 8px; flex:1; outline:none;"/>
+              <button onclick="ocrFromCrop()" class="cfb-ocr" title="Seçili bölgeyi yazıya çevir">Yazıya çevir</button>
             </div>
           </div>
 
@@ -898,6 +921,9 @@ body{background-image:none;background:var(--bg)}
           <button onclick="foyAdd('pdf')">＋ PDF/Foto</button>
           <button onclick="foyAdd('example')">＋ Örnek</button>
           <button onclick="foyAdd('space')">＋ Boşluk</button>
+          <button class="act" onclick="foyAdd('eslestir')">＋ Eşleştirme</button>
+          <button class="act" onclick="foyAdd('sirala')">＋ Sıralama</button>
+          <button class="act" onclick="foyAdd('bosluk')">＋ Boşluk doldurma</button>
         </div>
       </div>
       <div id="foy-list"></div>
@@ -1917,7 +1943,8 @@ function grab(x,y,w,h){
   pendingCropData = {
     img: t.toDataURL('image/jpeg',.90),
     w: t.width,
-    h: t.height
+    h: t.height,
+    rect: {x, y, w, h}
   };
 
   showFloatingCropBar(x, y + h);
@@ -1993,6 +2020,137 @@ function confirmFloatingCrop(){
   drawTray();
   hideFloatingCropBar();
   toast('Soru eklendi (' + finalAns + ')');
+}
+
+/* ═══ Kırpılan PDF bölgesini YAZIYA ÇEVİR (PDF'in kendi metin katmanından) ═══ */
+const SUBD={'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉','+':'₊','-':'₋','(':'₍',')':'₎'};
+const SUPD={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺','-':'⁻','−':'⁻','–':'⁻','(':'⁽',')':'⁾','n':'ⁿ'};
+const _mapChars=(s,M)=>{ let o=''; for(const ch of s){ if(!(ch in M)) return null; o+=M[ch]; } return o; };
+
+async function extractCropText(rect){
+  if(!active || active.kind!=='pdf') return {err:'foto'};
+  const p=await active.pdf.getPage(pageNo);
+  const rot=active.rot||0;
+  const vp=p.getViewport({scale:scale,rotation:rot});           // CSS piksel uzayı (düzeltme öncesi)
+  const tc=await p.getTextContent();
+  // ince düzeltme (eğiklik) açıksa noktaları aynı açıyla döndür
+  const fine=active.fine||0, cv=$('page');
+  const W0=vp.width, H0=vp.height, W1=parseFloat(cv.style.width)||W0, H1=parseFloat(cv.style.height)||H0;
+  const rad=fine*Math.PI/180, cs=Math.cos(rad), sn=Math.sin(rad);
+  const toCss=(x,y)=>{ if(!fine) return [x,y];
+    const dx=x-W0/2, dy=y-H0/2; return [W1/2+dx*cs-dy*sn, H1/2+dx*sn+dy*cs]; };
+  const items=[];
+  tc.items.forEach(it=>{
+    if(!it.str || !it.str.trim()) return;
+    const m=pdfjsLib.Util.transform(vp.transform,it.transform);
+    const fh=Math.hypot(m[2],m[3])||Math.hypot(m[0],m[1]);
+    const w=(it.width||0)*scale;
+    const [x,y]=toCss(m[4],m[5]);
+    const cx=x+w/2, cy=y-fh*0.35;
+    if(cx<rect.x-2||cx>rect.x+rect.w+2||cy<rect.y-2||cy>rect.y+rect.h+2) return;
+    items.push({s:it.str,x,y,w,h:fh});
+  });
+  if(!items.length) return {err:'bos'};
+  // satırlara grupla (taban çizgisine göre); küçük ve kaymış parçalar alt/üst indis olur
+  const hs=items.map(i=>i.h).sort((a,b)=>a-b), Hm=hs[Math.floor(hs.length*0.6)]||hs[0];
+  const main=items.filter(i=>i.h>=Hm*0.8).sort((a,b)=>a.y-b.y);
+  const lines=[];
+  main.forEach(it=>{ const L=lines.find(l=>Math.abs(l.y-it.y)<Hm*0.45); if(L){ L.its.push(it); } else lines.push({y:it.y,its:[it]}); });
+  items.filter(i=>i.h<Hm*0.8).forEach(it=>{
+    let best=null,bd=1e9; lines.forEach(l=>{ const d=Math.abs(l.y-it.y); if(d<bd){bd=d;best=l;} });
+    if(best && bd<Hm*0.9){ it.kind = it.y>best.y+Hm*0.08 ? 'sub' : (it.y<best.y-Hm*0.15 ? 'sup' : null); best.its.push(it); }
+    else lines.push({y:it.y,its:[it]});
+  });
+  lines.sort((a,b)=>a.y-b.y);
+  const out=lines.map(l=>{
+    l.its.sort((a,b)=>a.x-b.x);
+    let s='', lastEnd=null;
+    l.its.forEach(it=>{
+      let t=it.s;
+      if(it.kind){ const mm=_mapChars(t.trim(), it.kind==='sub'?SUBD:SUPD); if(mm) t=mm; }
+      if(lastEnd!=null){ const gap=it.x-lastEnd; if(gap>Hm*0.22 && !/\s$/.test(s) && !/^\s/.test(t) && !it.kind) s+=' '; }
+      s+=t; lastEnd=it.x+it.w;
+    });
+    return s.replace(/\s+/g,' ').trim();
+  }).filter(Boolean);
+  return {lines:out};
+}
+
+// satırları soru köküne ve şıklara ayır
+function parseQuestionText(lines){
+  // paragrafları birleştir: satır sonu tirelerini ve sarmaları düzelt; I., II., • gibi satırlar yeni satır kalsın
+  let txt='';
+  lines.forEach((l,i)=>{
+    if(!i){ txt=l; return; }
+    const newPar=/^(I{1,3}|IV|V|VI{0,3})[\.\)]\s/.test(l) || /^[•\-–]\s/.test(l) || /:$/.test(lines[i-1]) || /^[A-E][\)\.]\s?/.test(l);
+    if(newPar) txt+='\n'+l;
+    else if(/[a-zçğıöşü]-$/.test(txt)) txt=txt.slice(0,-1)+l;
+    else txt+=' '+l;
+  });
+  // baştaki soru numarası (12. / 12) / Soru 12)
+  txt=txt.replace(/^\s*(Soru\s*)?\d{1,3}\s*[\.\)]\s*/i,'');
+  // şıkları bul: A) ... B) ... (satır içi ya da satır başı)
+  const re=/(^|\s|\n)([A-E])\s*[\)\.]\s+/g; const marks=[]; let m;
+  while((m=re.exec(txt))){ marks.push({L:m[2],at:m.index+m[1].length,end:re.lastIndex}); }
+  // sıralı A,B,C… dizisini seç
+  let seq=[];
+  for(let s=0;s<marks.length;s++){ if(marks[s].L!=='A') continue;
+    const cand=[marks[s]]; let want='B';
+    for(let k=s+1;k<marks.length && want<='E';k++){ if(marks[k].L===want){ cand.push(marks[k]); want=String.fromCharCode(want.charCodeAt(0)+1); } }
+    if(cand.length>=2){ seq=cand; } }
+  if(seq.length<2) return {text:txt.trim(), options:[]};
+  const stem=txt.slice(0,seq[0].at).trim();
+  const options=seq.map((mk,i)=>txt.slice(mk.end, i+1<seq.length?seq[i+1].at:txt.length).replace(/\s*\n\s*/g,' ').trim());
+  return {text:stem, options};
+}
+
+async function ocrFromCrop(){
+  if(!pendingCropData) return;
+  if(!active || active.kind!=='pdf'){
+    toast('Fotoğrafta metin katmanı yok; şimdilik yalnızca PDF\'ten yazıya çevrilebiliyor',true); return; }
+  let r;
+  try{ r=await extractCropText(pendingCropData.rect); }catch(e){ r={err:'hata'}; }
+  if(r.err==='bos'){ toast('Bu bölgede yazı katmanı bulunamadı (taranmış PDF olabilir). Resim olarak ekleyebilirsin.',true); return; }
+  if(r.err){ toast('Yazıya çevrilemedi',true); return; }
+  const q=parseQuestionText(r.lines);
+  openOcrEditor(q);
+}
+
+function openOcrEditor(q){
+  const ov=document.createElement('div'); ov.className='ocr-ov'; ov.id='ocr-ov';
+  const ans=LET.indexOf(($('floatingCustomText').value.trim()||pendingCropOpt||'A').toUpperCase());
+  const opts=(q.options||[]).slice(0,5); while(opts.length<5) opts.push('');
+  ov.innerHTML='<div class="ocr-box">'+
+    '<h3>Yazıya çevrildi</h3>'+
+    '<p class="ocr-help">Kontrol et, gerekirse düzelt. Alt indisler H₂O gibi, yükler Fe³⁺ gibi yazılır. Şekil varsa ekledikten sonra soru listesindeki resim düğmesiyle ekleyebilirsin.</p>'+
+    '<label>Soru kökü</label><textarea id="ocr-stem">'+esc(q.text||'')+'</textarea>'+
+    '<label>Şıklar <span>(boş bıraktığın şık basılmaz)</span></label>'+
+    opts.map((o,i)=>'<div class="ocr-opt"><b>'+LET[i]+')</b><input id="ocr-o'+i+'" value="'+esc(o)+'"/>'+
+      '<button class="ocr-ok'+(i===ans?' on':'')+'" data-i="'+i+'" title="Doğru cevap">✓</button></div>').join('')+
+    '<div class="ocr-btns"><button id="ocr-img">Resim olarak ekle</button><button id="ocr-add">Yazı olarak ekle</button></div>'+
+    '<button id="ocr-x" class="ocr-x">Vazgeç</button></div>';
+  document.body.appendChild(ov);
+  let correct=ans<0?0:ans;
+  ov.querySelectorAll('.ocr-ok').forEach(b=>b.onclick=()=>{ correct=+b.dataset.i;
+    ov.querySelectorAll('.ocr-ok').forEach(x=>x.classList.toggle('on',x===b)); });
+  $('ocr-x').onclick=()=>ov.remove();
+  $('ocr-img').onclick=()=>{ ov.remove(); confirmFloatingCrop(); };
+  $('ocr-add').onclick=()=>{
+    const text=$('ocr-stem').value.trim();
+    const all=[0,1,2,3,4].map(i=>$('ocr-o'+i).value.trim());
+    let last=-1; all.forEach((v,i)=>{ if(v) last=i; });
+    const options=all.slice(0,last+1);
+    if(!text && !options.length){ toast('Soru boş',true); return; }
+    const c=Math.min(correct,Math.max(0,options.length-1));
+    const src={text,options,correct:options.length?c:0};
+    const cw=colWidthMm(cfgNow());
+    const prevC=CFG; if(!CFG) CFG=cfgNow();
+    let im; try{ im=renderQuestion(src,cw); } finally { CFG=prevC; }
+    qs.push({id:'t_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:im.img,w:im.w,h:im.h,cw:null,
+      src, pt:0, ans:options.length?LET[c]:($('floatingCustomText').value.trim()||''), sol:null, pageBreak:false, tags:['metin']});
+    ov.remove(); pendingCropData=null; drawTray(); hideFloatingCropBar();
+    toast('Soru yazı olarak eklendi');
+  };
 }
 
 function cancelFloatingCrop(){
@@ -6222,7 +6380,7 @@ function foySetTheme(c){ foyTheme=c; foyRenderThemeDots(); foyRender(); }
 let foyDragIdx=null;
 
 const FOY_LABELS={
-  head:'Başlık', text:'Metin', note:'Kutu', rx:'Tepkime', graf:'Grafik', pdf:'PDF/Foto', example:'Örnek', space:'Boşluk'
+  head:'Başlık', text:'Metin', note:'Kutu', rx:'Tepkime', graf:'Grafik', pdf:'PDF/Foto', example:'Örnek', space:'Boşluk', eslestir:'Eşleştirme', sirala:'Sıralama', bosluk:'Boşluk doldurma'
 };
 // kutu türleri (renk + ikon)
 const FOY_NOTE_KINDS={
@@ -6243,6 +6401,224 @@ const FOY_RX_COLORS=[
   {t:'#7a5a12', bg:'#FCF8EE', tab:'#F5E1B8'}   // sarı
 ];
 
+
+/* ═══ FÖY ETKİNLİKLERİ: Eşleştirme · Sıralama · Boşluk doldurma ═══
+   Tuvale çizilip PDF'e resim olarak eklenir; böylece Türkçe karakterler (ş, ğ, ı, İ) sorunsuz basılır. */
+const ACT_DEF={
+  eslestir:{tag:'EŞLEŞTİRME',
+    title:'Aşağıdaki tanecikleri uygun özellikleriyle eşleştiriniz.',
+    left:'Proton\nNötron\nElektron',
+    right:'Pozitif yüklü tanecik\nYüksüz tanecik\nNegatif yüklü tanecik', style:'kutu', shuffle:true},
+  sirala:{tag:'SIRALAMA',
+    title:'Atom modellerini ortaya atılış sırasına göre eskiden yeniye doğru sıralayınız.',
+    items:'Dalton atom modeli\nThomson atom modeli\nRutherford atom modeli\nBohr atom modeli', sep:'→', shuffle:true},
+  bosluk:{tag:'BOŞLUK DOLDURMA',
+    title:'Aşağıdaki cümlelerde boş bırakılan yerleri kelime havuzundaki uygun ifadelerle doldurunuz.',
+    text:'Atomun çekirdeğinde [proton] ve [nötron] bulunur.\nÇekirdeğin etrafında hareket eden negatif yüklü taneciğe [elektron] denir.\nBir atomun proton sayısına [atom numarası] denir.', bank:true}
+};
+function _actSeed(str){ let h=2166136261; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+function _actShuffle(arr,seedStr){
+  const a=arr.map((v,i)=>({v,i})); let s=_actSeed(seedStr)||1;
+  const rnd=()=>{ s|=0; s=s+0x6D2B79F5|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; };
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  if(a.length>1 && a.every((x,k)=>x.i===k)) a.push(a.shift());   // hiç değişmediyse kaydır
+  return a;
+}
+const _actLines=t=>(t||'').split('\n').map(s=>s.trim()).filter(Boolean);
+const _actCache=new Map();
+
+async function foyActRender(b,wmm,theme){
+  const key=JSON.stringify([b.type,b.title,b.left,b.right,b.style,b.shuffle,b.items,b.sep,b.text,b.bank,wmm,theme]);
+  if(_actCache.has(key)) return _actCache.get(key);
+  try{ if(document.fonts) await Promise.race([document.fonts.load('600 16px "Plus Jakarta Sans"'),new Promise(r=>setTimeout(r,800))]); }catch(_){}
+  const S=8, W=Math.round(wmm*S), MAXH=Math.round(400*S);
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=MAXH;
+  const g=cv.getContext('2d');
+  g.fillStyle='#fff'; g.fillRect(0,0,W,MAXH); g.textBaseline='alphabetic';
+  const FAM='"Plus Jakarta Sans",-apple-system,"Segoe UI",Arial,sans-serif';
+  const font=(wt,mm)=>{ g.font=wt+' '+(mm*S)+'px '+FAM; };
+  const th=hexToRgb(theme||'#1E7A3C'), TC='rgb('+th.join(',')+')';
+  const tint=t=>'rgb('+th.map(v=>Math.round(v+(255-v)*t)).join(',')+')';
+  const INK='#1F2933', SOFT='#5B6472', FS=3.7, LH=5.3;
+  const wrapW=(text,maxPx)=>{ const words=String(text).split(/\s+/); const out=[]; let cur='';
+    words.forEach(w=>{ const t=cur?cur+' '+w:w; if(g.measureText(t).width>maxPx && cur){ out.push(cur); cur=w; } else cur=t; });
+    if(cur) out.push(cur); return out.length?out:['']; };
+  const rr=(x,y,w,h,r)=>{ roundRectPath(g,x,y,w,h,r); };
+  let y=0;
+  // ── başlık: renkli etiket + yönerge ──
+  const tag=ACT_DEF[b.type].tag;
+  font('800',2.6); const tw=g.measureText(tag).width+5*S;
+  g.fillStyle=TC; rr(0,0,tw,5.6*S,1.4*S); g.fill();
+  g.fillStyle='#fff'; g.fillText(tag,2.5*S,3.85*S);
+  y=5.6*S+3.2*S;
+  if(b.title){ font('600',FS); g.fillStyle=INK;
+    wrapW(b.title,W).forEach(l=>{ g.fillText(l,0,y+3.6*S); y+=LH*S; }); y+=2.2*S; }
+
+  if(b.type==='eslestir'){
+    const L=_actLines(b.left), R0=_actLines(b.right);
+    const R=b.shuffle? _actShuffle(R0,(b.left||'')+'|'+(b.right||'')) : R0.map((v,i)=>({v,i}));
+    const LET='abcdefghijklmnoprstuvyz';
+    const gap=(b.style==='cizgi')?22*S:10*S, cw=(W-gap)/2, box=6*S;
+    const n=Math.max(L.length,R.length);
+    font('500',FS);
+    for(let i=0;i<n;i++){
+      const lt=L[i], rt=R[i];
+      const ltxt = lt!=null ? wrapW(lt, cw-(b.style==='kutu'?box+9*S:9*S)-4*S) : [];
+      const rtxt = rt!=null ? wrapW(rt.v, cw-8*S-(b.style==='cizgi'?4*S:0)) : [];
+      const rows=Math.max(ltxt.length,rtxt.length,1), rh=Math.max(rows*LH*S, box)+3.2*S;
+      // satır zemini
+      g.fillStyle= i%2? '#fff' : tint(0.94); rr(0,y,W,rh,1.4*S); g.fill();
+      const cy=y+rh/2;
+      if(lt!=null){
+        let x=2*S;
+        if(b.style==='kutu'){ g.strokeStyle=TC; g.lineWidth=0.35*S; rr(x,cy-box/2,box,box,1*S); g.fillStyle='#fff'; g.fill(); g.stroke(); x+=box+3*S; }
+        font('800',FS); g.fillStyle=TC; g.fillText((i+1)+'.',x,cy-(ltxt.length-1)*LH*S/2+1.3*S);
+        font('500',FS); g.fillStyle=INK;
+        ltxt.forEach((l,k)=>g.fillText(l,x+6*S,cy-(ltxt.length-1)*LH*S/2+1.3*S+k*LH*S));
+        if(b.style==='cizgi'){ g.fillStyle=TC; g.beginPath(); g.arc(cw-1.5*S,cy,1.1*S,0,Math.PI*2); g.fill(); }
+      }
+      if(rt!=null){
+        let x=cw+gap+(b.style==='cizgi'?4*S:1*S);
+        if(b.style==='cizgi'){ g.fillStyle=TC; g.beginPath(); g.arc(cw+gap+1.5*S,cy,1.1*S,0,Math.PI*2); g.fill(); }
+        font('800',FS); g.fillStyle=TC; g.fillText(LET[i]+')',x,cy-(rtxt.length-1)*LH*S/2+1.3*S);
+        font('500',FS); g.fillStyle=INK;
+        rtxt.forEach((l,k)=>g.fillText(l,x+6*S,cy-(rtxt.length-1)*LH*S/2+1.3*S+k*LH*S));
+      }
+      y+=rh+1*S;
+    }
+    if(b.style==='kutu'){ font('500',2.9); g.fillStyle=SOFT; g.fillText('Kutulara sağ sütundaki uygun harfi yazınız.',0,y+3.4*S); y+=5.5*S; }
+  }
+
+  else if(b.type==='sirala'){
+    const items=_actLines(b.items);
+    const sh=b.shuffle? _actShuffle(items,b.items||'') : items.map((v,i)=>({v,i}));
+    const LET='ABCDEFGHIJKLMNOPRSTUVYZ';
+    // madde kartları (sarmalı)
+    let x=0, rowH=0; const padX=2.4*S, chipH=8.2*S, badge=5*S, gx=3*S;
+    font('600',FS);
+    sh.forEach((it,k)=>{
+      let txt=it.v; let w=badge+2.4*S+g.measureText(txt).width+padX*2;
+      if(w>W){ while(txt.length>3 && badge+2.4*S+g.measureText(txt+'…').width+padX*2>W) txt=txt.slice(0,-1); txt+='…'; w=W; }
+      if(x>0 && x+w>W){ x=0; y+=chipH+2.6*S; }
+      g.fillStyle=tint(0.90); rr(x,y,w,chipH,2*S); g.fill();
+      g.fillStyle=TC; rr(x+1.6*S,y+(chipH-badge)/2,badge,badge,1.2*S); g.fill();
+      font('800',2.9); g.fillStyle='#fff'; g.textAlign='center'; g.fillText(LET[k],x+1.6*S+badge/2,y+chipH/2+1.05*S);
+      g.textAlign='left'; font('600',FS); g.fillStyle=INK; g.fillText(txt,x+1.6*S+badge+2.4*S,y+chipH/2+1.3*S);
+      x+=w+gx; rowH=chipH;
+    });
+    y+=rowH+5*S;
+    // cevap kutuları
+    const n=items.length, sepW=(b.sep&&b.sep!=='yok')?6*S:3*S;
+    let bw=Math.min(14*S,(W-(n-1)*sepW)/n), bh=9*S;
+    x=0;
+    for(let k=0;k<n;k++){
+      g.strokeStyle=TC; g.lineWidth=0.4*S; g.setLineDash([]); rr(x,y,bw,bh,1.4*S); g.stroke();
+      x+=bw;
+      if(k<n-1){ if(b.sep&&b.sep!=='yok'){ font('700',4.2); g.fillStyle=SOFT; g.textAlign='center'; g.fillText(b.sep,x+sepW/2,y+bh/2+1.5*S); g.textAlign='left'; } x+=sepW; }
+    }
+    y+=bh+3*S;
+  }
+
+  else if(b.type==='bosluk'){
+    const lines=_actLines(b.text);
+    const answers=[]; lines.forEach(l=>{ (l.match(/\[([^\]]+)\]/g)||[]).forEach(m=>answers.push(m.slice(1,-1).trim())); });
+    if(b.bank && answers.length){
+      const sh=_actShuffle(answers,b.text||'');
+      font('600',FS);
+      const chips=sh.map(a=>({t:a.v,w:g.measureText(a.v).width+5*S}));
+      // havuz kutusu yüksekliği
+      let x=3*S, rows=1; const cH=7*S, gpx=2.4*S;
+      chips.forEach(c=>{ if(x>3*S && x+c.w>W-3*S){ rows++; x=3*S; } x+=c.w+gpx; });
+      const boxH=rows*cH+(rows-1)*2*S+8.4*S;
+      g.strokeStyle=tint(0.55); g.lineWidth=0.3*S; g.setLineDash([1.2*S,1*S]); rr(0,y,W,boxH,2*S); g.stroke(); g.setLineDash([]);
+      font('800',2.5); g.fillStyle=TC; g.fillText('KELİME HAVUZU',3*S,y+3.6*S);
+      let cy=y+5.2*S; x=3*S; font('600',FS);
+      chips.forEach(c=>{ if(x>3*S && x+c.w>W-3*S){ x=3*S; cy+=cH+2*S; }
+        g.fillStyle=tint(0.90); rr(x,cy,c.w,cH,cH/2); g.fill();
+        g.fillStyle=INK; g.fillText(c.t,x+2.5*S,cy+cH/2+1.3*S); x+=c.w+gpx; });
+      y+=boxH+4*S;
+    }
+    font('500',FS); const spW=g.measureText(' ').width;
+    lines.forEach((ln,li)=>{
+      // parçalar: kelime / boşluk; boşluktan hemen sonra gelen ek (…[x]dir) bitişik kalır
+      const pieces=[]; const re=/\[([^\]]+)\]/g; let last=0, m;
+      let pendingSp=false;
+      while((m=re.exec(ln))){
+        const before=ln.slice(last,m.index);
+        if(before){ const startsSp=/^\s/.test(before); const parts=before.split(/(\s+)/).filter(Boolean);
+          parts.forEach((p,pi)=>{ if(/^\s+$/.test(p)){ pendingSp=true; return; } pieces.push({t:p,sp:pendingSp||(pi===0&&startsSp)}); pendingSp=false; }); }
+        font('500',FS);
+        pieces.push({blank:true,w:Math.max(20*S,g.measureText(m[1]).width+8*S),sp:pendingSp||/\s$/.test(before)});
+        pendingSp=false; last=re.lastIndex;
+      }
+      const tail=ln.slice(last);
+      if(tail){ const startsSp=/^\s/.test(tail); const parts=tail.split(/(\s+)/).filter(Boolean);
+        parts.forEach((p,pi)=>{ if(/^\s+$/.test(p)){ pendingSp=true; return; } pieces.push({t:p,sp:pendingSp||(pi===0&&startsSp)}); pendingSp=false; }); }
+      // satır kırma
+      const numW=7*S, maxW=W-numW; let lx=0; const rowsP=[[]];
+      pieces.forEach((p,pi)=>{ font('500',FS); const w=p.blank?p.w:g.measureText(p.t).width; const s=(rowsP[rowsP.length-1].length&&p.sp)?spW:0;
+        if(lx+s+w>maxW && rowsP[rowsP.length-1].length){ rowsP.push([]); lx=0; p._s=0; } else p._s=s;
+        p._w=w; rowsP[rowsP.length-1].push(p); lx+=p._s+w; });
+      font('800',FS); g.fillStyle=TC; g.fillText((li+1)+'.',0,y+4.6*S);
+      rowsP.forEach(row=>{
+        let x=numW; const base=y+4.6*S;
+        row.forEach(p=>{ x+=p._s;
+          if(p.blank){ g.strokeStyle=SOFT; g.lineWidth=0.3*S; g.setLineDash([0.9*S,0.7*S]);
+            g.beginPath(); g.moveTo(x+0.5*S,base+0.9*S); g.lineTo(x+p._w-0.5*S,base+0.9*S); g.stroke(); g.setLineDash([]); }
+          else { font('500',FS); g.fillStyle=INK; g.fillText(p.t,x,base); }
+          x+=p._w; });
+        y+=7.2*S;
+      });
+      y+=1.4*S;
+    });
+  }
+
+  const hpx=Math.min(MAXH,Math.ceil(y+1*S));
+  const out=document.createElement('canvas'); out.width=W; out.height=hpx;
+  out.getContext('2d').drawImage(cv,0,0);
+  const res={url:out.toDataURL('image/jpeg',0.93), h:hpx/S};
+  if(_actCache.size>40) _actCache.clear();
+  _actCache.set(key,res);
+  return res;
+}
+let _actT={};
+function foyActPreview(i){
+  clearTimeout(_actT[i]);
+  _actT[i]=setTimeout(async()=>{
+    const b=foyBlocks[i]; const im=document.getElementById('actp'+i); if(!b||!im) return;
+    const r=await foyActRender(b, b.half?87:182, foyTheme);
+    im.src=r.url;
+  },220);
+}
+function foyActEditor(b,i){
+  const set=(k,v)=>'foyBlocks['+i+'].'+k+'='+v+';foyActPreview('+i+')';
+  let h='<img id="actp'+i+'" class="foy-act-prev" alt="Önizleme"/>'+
+    '<label class="foy-lbl">Yönerge</label>'+
+    '<textarea class="foy-ta" style="min-height:48px" oninput="'+set('title','this.value')+'">'+esc(b.title||'')+'</textarea>';
+  if(b.type==='eslestir'){
+    h+='<div class="foy-two"><div><label class="foy-lbl">Sol sütun</label>'+
+      '<textarea class="foy-ta" oninput="'+set('left','this.value')+'">'+esc(b.left||'')+'</textarea></div>'+
+      '<div><label class="foy-lbl">Sağ sütun</label>'+
+      '<textarea class="foy-ta" oninput="'+set('right','this.value')+'">'+esc(b.right||'')+'</textarea></div></div>'+
+      '<div class="foy-help">Her satıra bir madde yaz. Sağ sütunda doğru eşleri sol sütunla aynı sırada yaz; uygulama karıştırarak basar. Sağa fazladan satır eklersen çeldirici olur.</div>'+
+      '<div class="foy-row"><label>Cevap şekli</label><select onchange="'+set('style','this.value')+'">'+
+        '<option value="kutu"'+(b.style==='kutu'?' selected':'')+'>Kutuya harf yazma</option>'+
+        '<option value="cizgi"'+(b.style==='cizgi'?' selected':'')+'>Çizgiyle birleştirme</option></select></div>'+
+      '<label class="foy-chk"><input type="checkbox"'+(b.shuffle?' checked':'')+' onchange="'+set('shuffle','this.checked')+'"/> Sağ sütunu karıştır</label>';
+  } else if(b.type==='sirala'){
+    h+='<label class="foy-lbl">Maddeler (doğru sırayla yaz, karışık basılır)</label>'+
+      '<textarea class="foy-ta" oninput="'+set('items','this.value')+'">'+esc(b.items||'')+'</textarea>'+
+      '<div class="foy-row"><label>Kutular arası işaret</label><select onchange="'+set('sep','this.value')+'">'+
+        [['→','→'],['<','<'],['>','>'],['yok','Yok']].map(o=>'<option value="'+o[0]+'"'+(b.sep===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></div>'+
+      '<label class="foy-chk"><input type="checkbox"'+(b.shuffle?' checked':'')+' onchange="'+set('shuffle','this.checked')+'"/> Maddeleri karıştır</label>';
+  } else if(b.type==='bosluk'){
+    h+='<label class="foy-lbl">Cümleler (boş kalacak kelimeyi [köşeli parantez] içine al)</label>'+
+      '<textarea class="foy-ta" style="min-height:96px" oninput="'+set('text','this.value')+'">'+esc(b.text||'')+'</textarea>'+
+      '<label class="foy-chk"><input type="checkbox"'+(b.bank?' checked':'')+' onchange="'+set('bank','this.checked')+'"/> Kelime havuzunu göster</label>';
+  }
+  return h;
+}
+
 function foyAdd(type){
   const b={type};
   if(type==='head'){ b.text=''; b.color=foyTheme; }
@@ -6253,6 +6629,7 @@ function foyAdd(type){
   else if(type==='pdf'){ b.img=null; }
   else if(type==='example'){ b.text=''; b.sol=25; b.grid='lined'; }
   else if(type==='space'){ b.h=20; }
+  else if(ACT_DEF[type]){ const d=ACT_DEF[type]; Object.keys(d).forEach(k=>{ if(k!=='tag') b[k]=d[k]; }); }
   foyBlocks.push(b);
   foyRender();
   // pdf bloğuysa hemen kaynak seçtir
@@ -6346,6 +6723,9 @@ function foyRender(){
           return '<option value="'+v+'"'+(b.grid===v?' selected':'')+'>'+t+'</option>';}).join('')+'</select>'+
         '<input type="number" min="0" max="120" value="'+b.sol+'" style="width:60px" '+
         'oninput="foyBlocks['+i+'].sol=parseInt(this.value)||0"/> mm</div>';
+    } else if(ACT_DEF[b.type]){
+      body.innerHTML=foyActEditor(b,i);
+      setTimeout(()=>foyActPreview(i),0);
     } else if(b.type==='space'){
       body.innerHTML='<div class="foy-row"><label>Boşluk yüksekliği</label>'+
         '<input type="range" min="5" max="120" value="'+b.h+'" style="flex:1" '+
@@ -6759,6 +7139,10 @@ async function foyBuild(){
         }
       }
       return 10+sh+5;
+    } else if(ACT_DEF[b.type]){
+      const r=await foyActRender(b,w,foyTheme);
+      if(!measure) doc.addImage(r.url,'JPEG',x,cy,w,r.h);
+      return r.h+6;
     } else if(b.type==='space'){
       return (b.h||20);
     }
@@ -6907,7 +7291,16 @@ const css=`
 .foy-tdot.on{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
 .foy-add{display:flex;gap:7px;flex-wrap:wrap}
 .foy-add button{padding:8px 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--w);font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap}
-.foy-add button:active{background:var(--soft)}
+.foy-add button:active{background:var(--tint)}
+.foy-add button.act{border-color:var(--or);color:var(--or)}
+.foy-act-prev{width:100%;min-height:40px;border:1px solid var(--line);border-radius:8px;background:#fff;display:block}
+.foy-lbl{font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:-4px}
+.foy-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.foy-two .foy-ta{min-height:96px}
+.foy-help{font-size:12px;color:var(--soft);line-height:1.4}
+.foy-chk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink)}
+.foy-chk input{width:19px;height:19px;accent-color:var(--or)}
+#foy-head select{padding:8px 10px;border:1.5px solid var(--line);border-radius:9px;background:var(--w);font-size:14px;-webkit-appearance:none;color:var(--ink)}
 #foy-list{flex:1;padding:14px 16px 96px;display:flex;flex-direction:column;gap:12px}
 .foy-empty{text-align:center;color:var(--soft);padding:40px 20px;line-height:1.7;font-size:14px}
 .foy-b{border:1.5px solid var(--line);border-radius:13px;overflow:hidden;background:var(--w)}
@@ -6935,7 +7328,7 @@ const css=`
 .foy-c{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .foy-c.on{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
 .foy-thumb{max-width:100%;max-height:160px;border-radius:8px;align-self:center}
-.foy-mini{padding:9px 13px;border:1.5px dashed var(--or);border-radius:9px;background:var(--soft);color:var(--ink);font-weight:700;font-size:13px}
+.foy-mini{padding:9px 13px;border:1.5px dashed var(--or);border-radius:9px;background:var(--tint);color:var(--ink);font-weight:700;font-size:13px}
 .foy-row{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink)}
 .foy-row label{font-weight:600;white-space:nowrap}
 .foy-row select,.foy-row input[type=number]{padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;font-size:13px}
