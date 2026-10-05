@@ -607,6 +607,25 @@ body{background-image:none;background:var(--bg)}
 #mno{background:var(--bg);color:var(--ink2)}
 #mok{background:var(--or);color:#fff}
 @media(min-width:600px){#modal{align-items:center}}
+#b-manual{background:var(--w);color:var(--ink);border:1.5px solid var(--line)}
+#b-manual.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+#manualbar{display:none;align-items:center;gap:10px;background:var(--tint);border-bottom:1px solid var(--line);
+  padding:9px 14px;font-size:12.5px;line-height:1.4;color:var(--ink2);flex-shrink:0}
+#manualbar span{flex:1}
+#manualbar button{background:var(--w);border:1.5px solid var(--line);border-radius:9px;padding:7px 10px;
+  font-size:12px;font-weight:700;white-space:nowrap}
+.q-gap-h{display:none}
+#pages.manual .q-live-box{outline:1.5px dashed rgba(30,122,60,.55);outline-offset:1px;touch-action:none;cursor:grab;
+  -webkit-user-select:none;-webkit-touch-callout:none}
+#pages.manual .q-live-box img{pointer-events:none;-webkit-user-drag:none}
+#pages.manual .q-live-box.dragging{z-index:50;outline:2px solid var(--or);background:rgba(234,243,236,.6);
+  box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:grabbing}
+#pages.manual .q-live-ctrls{display:none!important}
+#pages.manual .q-gap-h{display:flex;position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);
+  width:44px;height:22px;align-items:center;justify-content:center;touch-action:none;z-index:40;cursor:ns-resize}
+.q-gap-h i{display:block;width:30px;height:7px;border-radius:99px;background:var(--or);box-shadow:0 0 0 2px #fff}
+.q-gap-h[data-v]::after{content:attr(data-v);position:absolute;top:24px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;white-space:nowrap}
 #s-panel .ps span,#s-panel .plan .pd span,#s-panel .chart .cb .m{text-transform:none;letter-spacing:0;font-size:11px}
 .pg .pn{font-variant-numeric:tabular-nums}
 </style>
@@ -1362,12 +1381,14 @@ body{background-image:none;background:var(--bg)}
           Otomatik dağıt
         </button>
 
+        <button id="b-manual" onclick="toggleManual()">Elle düzenle</button>
         <button id="b-print" onclick="makeFile()">PDF oluştur</button>
         <button id="b-share" onclick="sharePdf()">Paylaş</button>
         <button id="b-savetest" onclick="saveTestDialog()">Kaydet</button>
       </div>
       <div id="bookpick"></div>
-      <div id="pginfo2"></div>
+      <div id="manualbar" style="display:none"><span>Soruyu sürükleyerek taşı. Alttaki yeşil tutamakla boşluğu büyüt ya da küçült.</span><button onclick="resetManual()">Konumları sıfırla</button></div>
+<div id="pginfo2"></div>
       <div id="dl">
         <div class="dn" id="dl-name"></div>
         <a id="dl-a" class="da" download>PDF'i kaydet</a>
@@ -3097,7 +3118,7 @@ function saveTestDialog(){
     const name=v[0]||'Test';
     await DB.put('tests',{id:(editingTest?editingTest.id:'t_'+Date.now()),name,
       lesson:$('f-lesson').value.trim(),date:new Date().toLocaleDateString('tr-TR'),
-      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null,noteOn:q.noteOn||false})),
+      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null,noteOn:q.noteOn||false,offX:q.offX||0,offY:q.offY||0})),
       cfg:cfgNow()});
     if(editingTest) editingTest.name=name;
     closeModal(); toast('“'+name+'” kaydedildi');
@@ -3105,7 +3126,7 @@ function saveTestDialog(){
 }
 
 function openTest(t,edit){
-  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null,noteOn:q.noteOn||false}));
+  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null,noteOn:q.noteOn||false,offX:q.offX||0,offY:q.offY||0}));
   if(t.cfg && t.cfg.logo){
     window._logoData=t.cfg.logo;
     const img=new Image(); img.onload=()=>{window._logoImg=img;}; img.src=t.cfg.logo.url;
@@ -3410,6 +3431,18 @@ function place(groups,K,cfg,colW){
 }
 
 function layout(list,cfg){
+  const pages=_layoutBase(list,cfg);
+  const W=PAGE.w, H=PAGE.h;
+  pages.forEach(pg=>pg.items.forEach(it=>{
+    const ox=+it.q.offX||0, oy=+it.q.offY||0;
+    if(!ox&&!oy) return;
+    const bh=TITLE_H+it.h+(it.sol||0);
+    it.x=Math.min(Math.max(it.x+ox,2),W-it.w-2);
+    it.y=Math.min(Math.max(it.y+oy,2),H-bh-2);
+  }));
+  return pages;
+}
+function _layoutBase(list,cfg){
   setOrient(cfg);
   const colW=colWidthMm(cfg);
 
@@ -4922,8 +4955,76 @@ function removeQuestionFromPreview(qId){
   }
 }
 
+/* ═══ Elle düzenleme: soruyu sürükle, alt tutamakla boşluğu ayarla ═══ */
+let MANUAL=false;
+function _curList(){ return (BOOKS.length && BOOKS[currentBookIdx]) ? BOOKS[currentBookIdx].list : qs; }
+function toggleManual(){
+  MANUAL=!MANUAL;
+  const b=$('b-manual'); if(b) b.classList.toggle('on',MANUAL);
+  const r=$('manualbar'); if(r) r.style.display=MANUAL?'flex':'none';
+  $('pages').classList.toggle('manual',MANUAL);
+  if(MANUAL) toast('Soruyu parmağınla sürükle · alttaki tutamakla boşluğu ayarla');
+}
+function resetManual(){
+  _curList().forEach(q=>{ q.offX=0; q.offY=0; });
+  qs.forEach(q=>{ q.offX=0; q.offY=0; });
+  recalcAndRedrawPages(); toast('Konumlar sıfırlandı');
+}
+function _sync(q,key,val){
+  q[key]=val;
+  const o=qs.find(x=>x.id===q.id); if(o&&o!==q) o[key]=val;
+}
+function attachManual(box,it,pageEl,boxH){
+  const q=it.q;
+  const mm=()=>PAGE.w/pageEl.clientWidth;
+  // taşıma
+  box.addEventListener('pointerdown',e=>{
+    if(!MANUAL || e.target.closest('.q-gap-h,.q-live-ctrls')) return;
+    e.preventDefault();
+    box.setPointerCapture(e.pointerId);
+    const sx=e.clientX, sy=e.clientY, k=mm();
+    box.classList.add('dragging');
+    const mv=ev=>{ box.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px)'; };
+    const up=ev=>{
+      box.removeEventListener('pointermove',mv); box.removeEventListener('pointerup',up); box.removeEventListener('pointercancel',up);
+      box.classList.remove('dragging'); box.style.transform='';
+      let dx=(ev.clientX-sx)*k, dy=(ev.clientY-sy)*k;
+      if(Math.abs(dx)<1 && Math.abs(dy)<1) return;
+      // sayfa dışına taşmasın
+      const bh=TITLE_H+it.h+(it.sol||0);
+      const nx=Math.min(Math.max(it.x+dx,2),PAGE.w-it.w-2), ny=Math.min(Math.max(it.y+dy,2),PAGE.h-bh-2);
+      let ox=Math.round(((+q.offX||0)+(nx-it.x))*2)/2, oy=Math.round(((+q.offY||0)+(ny-it.y))*2)/2;
+      if(Math.abs(ox)<1.5) ox=0; if(Math.abs(oy)<1.5) oy=0;   // eski yerine yakınsa yapışsın
+      _sync(q,'offX',ox); _sync(q,'offY',oy);
+      recalcAndRedrawPages();
+    };
+    box.addEventListener('pointermove',mv); box.addEventListener('pointerup',up); box.addEventListener('pointercancel',up);
+  });
+  // boşluk tutamağı
+  const h=document.createElement('div'); h.className='q-gap-h'; h.innerHTML='<i></i>';
+  box.appendChild(h);
+  h.addEventListener('pointerdown',e=>{
+    if(!MANUAL) return;
+    e.preventDefault(); e.stopPropagation();
+    h.setPointerCapture(e.pointerId);
+    const sy=e.clientY, k=mm(), base=it.sol||0;
+    let val=base;
+    const mv=ev=>{
+      val=Math.max(0,Math.round(base+(ev.clientY-sy)*k));
+      box.style.height=((boxH-base+val)/PAGE.h*100)+'%';
+      h.setAttribute('data-v',val+' mm');
+    };
+    const up=()=>{
+      h.removeEventListener('pointermove',mv); h.removeEventListener('pointerup',up); h.removeEventListener('pointercancel',up);
+      h.removeAttribute('data-v');
+      if(val!==base){ _sync(q,'sol',val); recalcAndRedrawPages(); toast('Alt boşluk: '+val+' mm'); }
+    };
+    h.addEventListener('pointermove',mv); h.addEventListener('pointerup',up); h.addEventListener('pointercancel',up);
+  });
+}
+
 function drawPages(){
-  const host=$('pages'); host.innerHTML='';
+  const host=$('pages'); host.innerHTML=''; host.classList.toggle('manual',MANUAL);
   const pct=(v,t)=>(v/t*100)+'%';
   const mLeft = (CFG && CFG.mLeft) || 12;
   const mRight = (CFG && CFG.mRight) || 12;
@@ -5080,6 +5181,7 @@ function drawPages(){
       qBox.appendChild(ctrls);
 
       el.appendChild(qBox);
+      attachManual(qBox, it, el, boxH);
 
       // Soru Alt Çizgisi
       if(it.sol>0 && CFG && CFG.sep!=='yok'){
