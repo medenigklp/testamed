@@ -645,6 +645,16 @@ body{background-image:none;background:var(--bg)}
 #pages.manual .q-live-box{outline:1.5px dashed rgba(30,122,60,.55);outline-offset:1px;touch-action:none;cursor:grab;
   -webkit-user-select:none;-webkit-touch-callout:none}
 #pages.manual .q-live-box img{pointer-events:none;-webkit-user-drag:none}
+#pages .q-live-box{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#pages .q-live-box img{pointer-events:none;-webkit-user-drag:none}
+#pages .q-live-box.pressing{transition:transform .25s;transform:scale(.98)}
+#pages .q-live-box.dragging{z-index:60;transition:none;background:rgba(234,243,236,.75);outline:2px solid var(--or);
+  box-shadow:0 10px 28px rgba(0,0,0,.28);opacity:.92;cursor:grabbing}
+body.qdrag{-webkit-user-select:none;user-select:none;overflow:hidden}
+#pages .pg:has(.dragging){overflow:visible;z-index:5}
+body.qdrag .q-live-ctrls{display:none!important}
+#pages .q-live-box.drop-before{box-shadow:inset 0 4px 0 var(--or)}
+#pages .q-live-box.drop-after{box-shadow:inset 0 -4px 0 var(--or)}
 #pages.manual .q-live-box.dragging{z-index:50;outline:2px solid var(--or);background:rgba(234,243,236,.6);
   box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:grabbing}
 #pages.manual .q-live-ctrls{display:none!important}
@@ -1412,13 +1422,13 @@ body{background-image:none;background:var(--bg)}
           Otomatik dağıt
         </button>
 
-        <button id="b-manual" onclick="toggleManual()">Elle düzenle</button>
+        <button id="b-manual" onclick="toggleManual()">Boyut ve boşluk</button>
         <button id="b-print" onclick="makeFile()">PDF oluştur</button>
         <button id="b-share" onclick="sharePdf()">Paylaş</button>
         <button id="b-savetest" onclick="saveTestDialog()">Kaydet</button>
       </div>
       <div id="bookpick"></div>
-      <div id="manualbar" style="display:none"><span>Soruyu sürükleyerek taşı. Alttaki tutamak boşluğu, sağ alt köşedeki tutamak sorunun boyutunu ayarlar.</span><button onclick="resetManual()">Hepsini sıfırla</button></div>
+      <div id="manualbar" style="display:none"><span>Alttaki tutamak boşluğu, sağ alt köşedeki tutamak sorunun boyutunu ayarlar. Bu modda soruyu basılı tutmadan da sürükleyebilirsin.</span><button onclick="resetManual()">Hepsini sıfırla</button></div>
 <div id="pginfo2"></div>
       <div id="dl">
         <div class="dn" id="dl-name"></div>
@@ -5351,7 +5361,7 @@ function toggleManual(){
   const b=$('b-manual'); if(b) b.classList.toggle('on',MANUAL);
   const r=$('manualbar'); if(r) r.style.display=MANUAL?'flex':'none';
   $('pages').classList.toggle('manual',MANUAL);
-  if(MANUAL) toast('Sürükle: taşı · alt tutamak: boşluk · köşe: boyut');
+  if(MANUAL) toast('Alt tutamak: boşluk · köşe tutamağı: boyut');
 }
 function resetManual(){
   _curList().forEach(q=>{ q.offX=0; q.offY=0; q.zoom=1; });
@@ -5362,32 +5372,91 @@ function _sync(q,key,val){
   q[key]=val;
   const o=qs.find(x=>x.id===q.id); if(o&&o!==q) o[key]=val;
 }
-function attachManual(box,it,pageEl,boxH){
-  const q=it.q;
-  const mm=()=>PAGE.w/pageEl.clientWidth;
-  // taşıma
-  box.addEventListener('pointerdown',e=>{
-    if(!MANUAL || e.target.closest('.q-gap-h,.q-size-h,.q-live-ctrls')) return;
-    e.preventDefault();
-    box.setPointerCapture(e.pointerId);
-    const sx=e.clientX, sy=e.clientY, k=mm();
-    box.classList.add('dragging');
-    const mv=ev=>{ box.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px)'; };
-    const up=ev=>{
-      box.removeEventListener('pointermove',mv); box.removeEventListener('pointerup',up); box.removeEventListener('pointercancel',up);
-      box.classList.remove('dragging'); box.style.transform='';
-      let dx=(ev.clientX-sx)*k, dy=(ev.clientY-sy)*k;
+
+/* Sürükle-bırak çekirdeği: başka bir sorunun üstüne bırakılırsa SIRA değişir (diğerleri kayar);
+   sayfanın boş yerine bırakılırsa soru oraya serbestçe yerleşir. */
+function _qMove(q,targetQ,after){
+  const list=_curList(); const from=list.indexOf(q); if(from<0) return false;
+  list.splice(from,1);
+  let to=targetQ?list.indexOf(targetQ):list.length;
+  if(to<0) to=list.length; else if(targetQ&&after) to++;
+  list.splice(to,0,q);
+  _sync(q,'offX',0); _sync(q,'offY',0);
+  if(currentBookIdx===0){ qs=list.slice(); try{ drawRows(); }catch(_){} drawTray(); }
+  return true;
+}
+function _dragCore(box,it,pageEl,sx,sy){
+  const q=it.q, k=PAGE.w/pageEl.clientWidth, pv=$('pv');
+  const sTop0=pv?pv.scrollTop:0;
+  box.classList.add('dragging'); document.body.classList.add('qdrag');
+  let tgt=null, after=false, lx=sx, ly=sy, raf=0;
+  const clear=()=>document.querySelectorAll('.drop-before,.drop-after').forEach(e=>e.classList.remove('drop-before','drop-after'));
+  const under=(x,y)=>{ const els=document.elementsFromPoint(x,y);
+    const b=els.find(e=>e.classList&&e.classList.contains('q-live-box')&&e!==box&&e._it);
+    const pg=els.find(e=>e.classList&&e.classList.contains('pg'));
+    return {b,pg}; };
+  const paint=()=>{ raf=0; const dy=(pv?pv.scrollTop-sTop0:0);
+    box.style.transform='translate('+(lx-sx)+'px,'+(ly-sy+dy)+'px)';
+    clear(); const {b}=under(lx,ly); tgt=b||null;
+    if(b){ const r=b.getBoundingClientRect(); after=ly>r.top+r.height/2; b.classList.add(after?'drop-after':'drop-before'); } };
+  const auto=setInterval(()=>{ if(!pv) return; const r=pv.getBoundingClientRect();
+    if(ly<r.top+60) pv.scrollTop-=14; else if(ly>r.bottom-60) pv.scrollTop+=14; else return;
+    if(!raf) raf=requestAnimationFrame(paint); },30);
+  return {
+    move(x,y){ lx=x; ly=y; if(!raf) raf=requestAnimationFrame(paint); },
+    end(){
+      clearInterval(auto); if(raf) cancelAnimationFrame(raf); clear();
+      const dyScroll=(pv?pv.scrollTop-sTop0:0);
+      box.classList.remove('dragging'); document.body.classList.remove('qdrag'); box.style.transform='';
+      const {b,pg}=under(lx,ly);
+      if(b){ const r=b.getBoundingClientRect(); const af=ly>r.top+r.height/2;
+        if(_qMove(q,b._it.q,af)){ recalcAndRedrawPages(); toast('Soru yeni yerine taşındı'); } return; }
+      if(pg && pg!==pageEl && pg._pi!=null && PAGES[pg._pi]){
+        const its=PAGES[pg._pi].items.filter(x=>x.q);
+        const last=its[its.length-1];
+        if(_qMove(q,last?last.q:null,true)){ recalcAndRedrawPages(); toast('Soru o sayfaya taşındı'); } return; }
+      if(pg!==pageEl) return;
+      let dx=(lx-sx)*k, dy=(ly-sy+dyScroll)*k;
       if(Math.abs(dx)<1 && Math.abs(dy)<1) return;
-      // sayfa dışına taşmasın
       const bh=TITLE_H+it.h+(it.sol||0);
       const nx=Math.min(Math.max(it.x+dx,2),PAGE.w-it.w-2), ny=Math.min(Math.max(it.y+dy,2),PAGE.h-bh-2);
       let ox=Math.round(((+q.offX||0)+(nx-it.x))*2)/2, oy=Math.round(((+q.offY||0)+(ny-it.y))*2)/2;
-      if(Math.abs(ox)<1.5) ox=0; if(Math.abs(oy)<1.5) oy=0;   // eski yerine yakınsa yapışsın
+      if(Math.abs(ox)<1.5) ox=0; if(Math.abs(oy)<1.5) oy=0;
       _sync(q,'offX',ox); _sync(q,'offY',oy);
       recalcAndRedrawPages();
-    };
+    }
+  };
+}
+function attachManual(box,it,pageEl,boxH){
+  const q=it.q;
+  const mm=()=>PAGE.w/pageEl.clientWidth;
+  box._it=it;
+  // taşıma — fare: her zaman · dokunmatik: basılı tut (Elle düzenle açıksa hemen)
+  box.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.q-gap-h,.q-size-h,.q-live-ctrls')) return;
+    if(!(MANUAL || e.pointerType==='mouse')) return;
+    if(e.pointerType==='mouse' && e.button!==0) return;
+    e.preventDefault();
+    box.setPointerCapture(e.pointerId);
+    const d=_dragCore(box,it,pageEl,e.clientX,e.clientY);
+    const mv=ev=>d.move(ev.clientX,ev.clientY);
+    const up=()=>{ box.removeEventListener('pointermove',mv); box.removeEventListener('pointerup',up); box.removeEventListener('pointercancel',up); d.end(); };
     box.addEventListener('pointermove',mv); box.addEventListener('pointerup',up); box.addEventListener('pointercancel',up);
   });
+  box.addEventListener('touchstart',e=>{
+    if(MANUAL || e.touches.length!==1 || e.target.closest('.q-gap-h,.q-size-h,.q-live-ctrls')) return;
+    const t=e.touches[0], sx=t.clientX, sy=t.clientY; let d=null, moved=false;
+    box.classList.add('pressing');
+    const timer=setTimeout(()=>{ box.classList.remove('pressing'); if(moved) return;
+      d=_dragCore(box,it,pageEl,sx,sy); try{ navigator.vibrate&&navigator.vibrate(12); }catch(_){} },300);
+    const tm=ev=>{ const p=ev.touches[0];
+      if(d){ ev.preventDefault(); d.move(p.clientX,p.clientY); }
+      else if(Math.hypot(p.clientX-sx,p.clientY-sy)>8){ moved=true; clearTimeout(timer); box.classList.remove('pressing'); } };
+    const te=()=>{ clearTimeout(timer); box.classList.remove('pressing');
+      box.removeEventListener('touchmove',tm); box.removeEventListener('touchend',te); box.removeEventListener('touchcancel',te);
+      if(d) d.end(); };
+    box.addEventListener('touchmove',tm,{passive:false}); box.addEventListener('touchend',te); box.addEventListener('touchcancel',te);
+  },{passive:true});
   // boşluk tutamağı
   const h=document.createElement('div'); h.className='q-gap-h'; h.innerHTML='<i></i>';
   box.appendChild(h);
@@ -5465,7 +5534,7 @@ function drawPages(){
     host.appendChild(pageControlBar);
 
     // A4 Sayfası
-    const el=document.createElement('div'); el.className='pg'+(CFG.landscape?' land':'');
+    const el=document.createElement('div'); el.className='pg'+(CFG.landscape?' land':''); el._pi=i;
     if(i===0&&HDR){
       const baseH=baseHeaderH(CFG);
       const h=document.createElement('img'); h.className='ab';
@@ -5782,7 +5851,7 @@ async function build(){
     drawBookPick(0);
     $('dl').style.display='none';
     go('prev');
-    toast('Test hazır · Sayfa soru sayılarını ve boşluklarını düzenleyebilirsiniz');
+    toast('Test hazır · Soruyu basılı tutup sürükleyerek yerini değiştirebilirsin');
   }catch(err){ toast('Test oluşturulamadı: '+err.message,true); }
 }
 
