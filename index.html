@@ -967,6 +967,41 @@ body.showing{overflow:hidden}
 #show .sh-dots button.on{background:#fff;color:#0b1220}
 @media (orientation:landscape){ #show #sh-img{max-height:calc(100vh - 150px);max-height:calc(100dvh - 150px)} }
 
+/* ═══ Logo konumu ═══ */
+.logo-pos{margin-top:12px;padding:10px 12px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--w)}
+.logo-pos > label{font-weight:700}
+.lp-seg{display:flex;gap:6px;margin-top:6px}
+.lp-seg button{flex:1;min-width:0;padding:10px 4px;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;font-size:12.5px;color:var(--ink2);white-space:nowrap}
+.lp-seg button.on{background:var(--or);border-color:var(--or);color:#fff}
+.lp-reset{margin-top:10px;width:100%;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;font-size:13px;color:var(--ink2)}
+#hdrprev-img{touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#hdrprev-img.lp-drag{opacity:.5}
+.lp-ghost{position:absolute;pointer-events:none;opacity:.9;outline:2px dashed var(--or);outline-offset:2px;border-radius:3px;z-index:5;object-fit:contain}
+
+/* ═══ Şablon galerisi ═══ */
+.tg-open{display:block;margin-top:8px;width:100%;padding:11px 10px;border-radius:11px;border:1.5px solid var(--or);background:var(--w);color:var(--or);font-weight:800;font-size:13.5px}
+#tplgal{position:fixed;inset:0;z-index:9998;background:var(--bg);display:none;flex-direction:column}
+#tplgal.on{display:flex}
+#tplgal .tg-head{display:flex;align-items:center;gap:10px;padding:max(12px,env(safe-area-inset-top)) 14px 10px;background:var(--w);border-bottom:1px solid var(--line)}
+#tplgal .tg-head b{font-size:16px}
+#tplgal .tg-head span{flex:1;color:var(--soft);font-size:12px;font-weight:600}
+#tplgal .tg-x{width:42px;height:38px;border-radius:10px;background:var(--bg);font-size:16px}
+#tplgal .tg-colors{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;background:var(--w);border-bottom:1px solid var(--line);scrollbar-width:none;flex-shrink:0}
+#tplgal .tg-colors::-webkit-scrollbar{display:none}
+#tplgal .tg-colors button{flex:0 0 auto;width:32px;height:32px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(15,23,42,.2);padding:0}
+#tplgal .tg-colors button.on{box-shadow:0 0 0 3px var(--or)}
+#tplgal .tg-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 12px max(18px,env(safe-area-inset-bottom))}
+#tplgal .tg-grp h4{margin:16px 2px 8px;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--soft)}
+#tplgal .tg-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:620px){ #tplgal .tg-grid{grid-template-columns:1fr 1fr} }
+#tplgal .tg-tile{display:block;text-align:left;background:var(--w);border:1.5px solid var(--line);border-radius:12px;padding:8px;width:100%;cursor:pointer}
+#tplgal .tg-tile.on{border-color:var(--or);box-shadow:0 0 0 2px var(--or) inset}
+#tplgal .tg-img{display:block;background:#fff;border-radius:6px;overflow:hidden;min-height:38px;border:1px solid #eef0f2}
+#tplgal .tg-img img{display:block;width:100%}
+#tplgal .tg-img img:not([src]){visibility:hidden}
+#tplgal .tg-tile b{display:block;margin-top:6px;font-size:13px;color:var(--ink)}
+#tplgal .tg-tile i{display:block;font-style:normal;font-size:11.5px;color:var(--soft)}
+
 </style>
 <base target="_blank">
 </head>
@@ -1213,6 +1248,7 @@ body.showing{overflow:hidden}
               <input class="foy-in" id="foy-sag" placeholder="Sağ üst yazı (öğretmen)" oninput="foySetSave()"/>
             </div>
             <div class="foy-row"><label>Şablon</label><select id="foy-tpl" onchange="foySetSave()" style="flex:1;min-width:0"></select></div>
+            <button type="button" class="tg-open" style="margin:0 0 8px" onclick="openTplGallery('foy')">▦ Şablonları resimli gör ve seç</button>
             <div class="foy-row"><label>Antet rengi</label><select id="foy-hcolor" onchange="foySetSave()" style="flex:1;min-width:0"></select></div>
             <div class="foy-lbl" style="margin:2px 0 0">Hazır temalar</div>
             <div class="foy-presets" id="foy-presets"></div>
@@ -1282,6 +1318,7 @@ body.showing{overflow:hidden}
         <div class="f">
           <label>Başlık Şablonu</label>
           <select id="f-template" onchange="preview()"></select>
+          <button type="button" class="tg-open" onclick="openTplGallery('test')">▦ Şablonları resimli gör ve seç</button>
           <button type="button" id="tpl-more" onclick="toggleTplAll()"
             style="margin-top:6px;font-family:var(--body);font-size:11px;font-weight:700;
             color:var(--or);background:none;border:none;padding:0;text-align:left">
@@ -1294,8 +1331,9 @@ body.showing{overflow:hidden}
           <label class="chk" style="margin-top:6px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="f-lhbar" checked onchange="preview()"/> Altta ince ders şeridi olsun</label>
         </div>
         <div class="f">
-          <label>Antet Rengi (11 Renk)</label>
+          <label>Antet Rengi (31 renk)</label>
           <select id="f-hdrtheme" onchange="fillThemeSwatches();preview()">
+            <optgroup label="Klasik renkler">
             <option value="emerald" selected>Zümrüt Yeşil</option>
             <option value="navy">Gece Mavisi / Lacivert</option>
             <option value="crimson">Bordo / Kırmızı</option>
@@ -1307,6 +1345,9 @@ body.showing{overflow:hidden}
             <option value="slate">Arduvaz / Gri-Mavi</option>
             <option value="gold">Altın / Sarı</option>
             <option value="indigo">İndigo / Derin Lacivert</option>
+            </optgroup>
+            <optgroup label="Yeni renkler" id="th-new"></optgroup>
+            <optgroup label="İki renkli kombinler" id="th-duo"></optgroup>
           </select>
           <div class="thsw" id="hdrtheme-sw" aria-label="Hızlı renk seçimi"></div>
           <label style="margin-top:10px">Koyu blok rengi</label>
@@ -1518,6 +1559,34 @@ body.showing{overflow:hidden}
           <div class="f" style="margin-top:6px;margin-bottom:0">
             <label>Logo opaklığı <span id="logoop-val">100</span>%</label>
             <input type="range" id="f-logo-op" min="10" max="100" value="100" oninput="document.getElementById('logoop-val').textContent=this.value;hdrPreview()"/>
+          </div>
+          <div class="logo-pos">
+            <label>Logo konumu</label>
+            <div class="lp-seg" id="lp-seg">
+              <button type="button" data-v="auto" onclick="logoAlignSet('auto')">Otomatik</button>
+              <button type="button" data-v="sol" onclick="logoAlignSet('sol')">Sol</button>
+              <button type="button" data-v="orta" onclick="logoAlignSet('orta')">Orta</button>
+              <button type="button" data-v="sag" onclick="logoAlignSet('sag')">Sağ</button>
+            </div>
+            <select id="f-logo-align" style="display:none"><option value="auto" selected>auto</option><option value="sol">sol</option><option value="orta">orta</option><option value="sag">sag</option></select>
+            <div class="f" style="margin:8px 0 0">
+              <label>Sağa / sola kaydır <span id="logodx-val">0</span> mm</label>
+              <input type="range" id="f-logo-dx" min="-100" max="100" step="0.5" value="0" oninput="logoPosChanged()"/>
+            </div>
+            <div class="f" style="margin:6px 0 0">
+              <label>Yukarı / aşağı kaydır <span id="logody-val">0</span> mm</label>
+              <input type="range" id="f-logo-dy" min="-25" max="25" step="0.5" value="0" oninput="logoPosChanged()"/>
+            </div>
+            <div class="f" style="margin:6px 0 0">
+              <label>Logonun arkası</label>
+              <select id="f-logo-bg" onchange="logoPosChanged()">
+                <option value="yok" selected>Şeffaf (zemin yok)</option>
+                <option value="beyaz">Beyaz kutu</option>
+                <option value="daire">Beyaz daire</option>
+              </select>
+            </div>
+            <button type="button" class="lp-reset" onclick="logoPosReset()">↺ Logoyu şablonun yerine geri al</button>
+            <div class="subhint">İpucu: Üstteki antet önizlemesinde <b>logoya dokunup sürükleyerek</b> de taşıyabilirsin.</div>
           </div>
           <div class="chk" style="margin-top:6px;margin-bottom:0;padding:6px 0">
             <input type="checkbox" id="f-logo-wm" onchange="toggleLogoAsWatermark()"/>
@@ -2595,8 +2664,9 @@ function drawTray(){
 const TMPL_KEY='testamed_tmpl';
 const TMPL_FIELDS=['f-sep','f-vsep','f-gutter','f-fill','f-frame','f-framenosol','f-key','f-keypos','f-pts','f-optic','f-qr','f-lhgap','f-lhbar',
   'f-school','f-lesson','f-teacher','f-class','f-cols','f-orient','f-conthdr','f-yazili','f-sol','f-book','f-template','f-soltype','f-hdrtheme','f-qnumformat','f-mleft','f-mright','f-mtop','f-mbot','f-watermark','f-wm-op','f-wm-sz','f-wm-x','f-wm-y','f-wm-ang','f-wm-style','f-wm-area','f-wm-preset','f-logo-wm','f-logo-sz','f-logo-op','f-qfont','f-qsize','f-hfont','hz-all','hz-kind','hz-lesson','hz-topic','hz-teacher','hw-kind','hw-lesson','hw-topic','hw-teacher'];
-TMPL_FIELDS.push('f-blockcolor','f-numcolor','f-linecolor','f-footstyle','f-foottext','f-contstyle','f-guttpos','f-qgap','f-cover','f-cover-time','f-cover-note');
+TMPL_FIELDS.push('f-logo-align','f-logo-dx','f-logo-dy','f-logo-bg','f-blockcolor','f-numcolor','f-linecolor','f-footstyle','f-foottext','f-contstyle','f-guttpos','f-qgap','f-cover','f-cover-time','f-cover-note');
 function loadTmpl(){
+  try{ fillThemeOptions(); }catch(_){}
   setTimeout(()=>{try{['kind','lesson','topic','teacher'].forEach(hzLabel);}catch(_){}} ,0);
   try{
     const t=JSON.parse(localStorage.getItem(TMPL_KEY)||'{}');
@@ -2622,6 +2692,7 @@ function loadTmpl(){
     if($('wmy-val') && $('f-wm-y')) $('wmy-val').textContent=$('f-wm-y').value;
     if($('wmang-val') && $('f-wm-ang')) $('wmang-val').textContent=$('f-wm-ang').value;
     if($('qgap-val') && $('f-qgap')) $('qgap-val').textContent=$('f-qgap').value;
+    logoPosUI();
   }catch(_){}
   try{ fillThemeSwatches(); }catch(_){}
 }
@@ -2860,6 +2931,17 @@ const TPL_LIST=[
   {v:'gradyan',    g:'Yeni · Modern', t:'Gün Batımı — Renk Geçişli', core:1},
   {v:'firca',      g:'Yeni · Modern', t:'Fırça — El Boyaması Vuruşlar', core:1},
   {v:'ciftton',    g:'Yeni · Modern', t:'İki Ton — Koyu + Açık Blok', core:1},
+  {v:'tablo',      g:'Yeni · Kart & Tablo', t:'Bilgi Tablosu — Resmî Hücreler', core:1},
+  {v:'kutu3',      g:'Yeni · Kart & Tablo', t:'Üç Kart — Renkli Üst Çizgi', core:1},
+  {v:'cerceve2',   g:'Yeni · Kart & Tablo', t:'Sekmeli Çerçeve — Modern', core:1},
+  {v:'monogram',   g:'Yeni · Kart & Tablo', t:'Harf Rozeti — Büyük Baş Harf', core:1},
+  {v:'topografik', g:'Yeni · Desenli', t:'Topografik — İnce Dalga Çizgileri', core:1},
+  {v:'mozaik',     g:'Yeni · Desenli', t:'Mozaik — Üçgen Desen', core:1},
+  {v:'noktali',    g:'Yeni · Desenli', t:'Noktalı Doku — Yarım Ton', core:1},
+  {v:'kurdele',    g:'Yeni · Desenli', t:'Kurdele — Ortada Şerit', core:1},
+  {v:'bant',       g:'Yeni · Desenli', t:'Defter & Bant — Eğlenceli', core:1},
+  {v:'benzen',     g:'Yeni · Kimya',  t:'Benzen — Aromatik Halkalar', core:1},
+  {v:'erlen',      g:'Yeni · Kimya',  t:'Laboratuvar — Erlenmeyer', core:1},
   {v:'spektrum',   g:'Yeni · Kimya',  t:'Spektrum — Emisyon Çizgileri', core:1},
   {v:'reaktif',    g:'Yeni · Kimya',  t:'Reaktif — Şişe Etiketi', core:1},
   {v:'orbital',    g:'Yeni · Kimya',  t:'Orbital — Atom Yörüngesi', core:1},
@@ -2903,7 +2985,7 @@ const TPL_LIST=[
   {v:'stripe',     g:'Sade',    t:'Stripe — Çift Çizgi'},
   {v:'badge',      g:'Sade',    t:'Badge — Madalyon'}
 ];
-let _tplAll=false;
+let _tplAll=true;
 function fillTemplateSelect(keep){
   const sel=document.getElementById('f-template'); if(!sel) return;
   const cur=keep||sel.value||'periodic';
@@ -2962,6 +3044,144 @@ function ensureHFont(key){
     .then(()=>{},()=>{});
 }
 
+/* ════════ Logo konumu: hizalama · kaydırma · antet önizlemesinde parmakla sürükleme ════════ */
+function _mmTxt(v){ v=Math.round((+v||0)*2)/2; return (v>0?'+':'')+String(v).replace('.',','); }
+function logoPosUI(){
+  const a=$('f-logo-align'), dx=$('f-logo-dx'), dy=$('f-logo-dy');
+  if($('logodx-val') && dx) $('logodx-val').textContent=_mmTxt(dx.value);
+  if($('logody-val') && dy) $('logody-val').textContent=_mmTxt(dy.value);
+  document.querySelectorAll('#lp-seg button').forEach(b=>b.classList.toggle('on', !!a && b.dataset.v===a.value));
+}
+function logoPosChanged(){ logoPosUI(); hdrPreview(); try{ saveTmpl(); }catch(_){} }
+function logoAlignSet(v){
+  const a=$('f-logo-align'); if(!a) return;
+  a.value=v;
+  const dx=$('f-logo-dx'), dy=$('f-logo-dy'); if(dx) dx.value=0; if(dy) dy.value=0;
+  logoPosChanged();
+  if(!window._logoData) toast('Önce yukarıdan bir logo seç');
+}
+function logoPosReset(){
+  const a=$('f-logo-align'), dx=$('f-logo-dx'), dy=$('f-logo-dy'), bg=$('f-logo-bg');
+  if(a) a.value='auto'; if(dx) dx.value=0; if(dy) dy.value=0; if(bg) bg.value='yok';
+  logoPosChanged(); toast('Logo şablonun yerine alındı');
+}
+(function(){
+  let st=null;
+  const P=e=>{ const t=(e.touches&&e.touches[0])||(e.changedTouches&&e.changedTouches[0])||e; return {x:t.clientX,y:t.clientY}; };
+  function start(e){
+    const im=document.getElementById('hdrprev-img'), L=window._hdrPrevLogo;
+    if(!im || !L || !window._logoData || !window._logoImg) return;
+    const r=im.getBoundingClientRect(), pr=im.parentElement.getBoundingClientRect(), p=P(e);
+    const k=r.width/L.W, lx=L.x*k, ly=L.y*k, lw=L.w*k, lh=L.h*k, m=12;
+    if(p.x<r.left+lx-m || p.x>r.left+lx+lw+m || p.y<r.top+ly-m || p.y>r.top+ly+lh+m) return;  // logoya değil → sayfa kaysın
+    if(e.cancelable) e.preventDefault();
+    const gh=document.createElement('img'); gh.className='lp-ghost'; gh.src=window._logoData.url; gh.alt='';
+    const ox=r.left-pr.left, oy=r.top-pr.top;
+    gh.style.cssText='left:'+(ox+lx)+'px;top:'+(oy+ly)+'px;width:'+lw+'px;height:'+lh+'px';
+    im.parentElement.appendChild(gh); im.classList.add('lp-drag');
+    st={p0:p,r,ox,oy,lx,ly,lw,lh,gh,ddx:0,ddy:0,moved:false,
+        dx0:parseFloat(($('f-logo-dx')||{}).value)||0, dy0:parseFloat(($('f-logo-dy')||{}).value)||0};
+  }
+  function move(e){
+    if(!st) return; if(e.cancelable) e.preventDefault();
+    const p=P(e);
+    const nx=Math.max(0,Math.min(st.r.width-st.lw, st.lx+(p.x-st.p0.x)));
+    const ny=Math.max(0,Math.min(st.r.height-st.lh, st.ly+(p.y-st.p0.y)));
+    st.gh.style.left=(st.ox+nx)+'px'; st.gh.style.top=(st.oy+ny)+'px';
+    st.ddx=nx-st.lx; st.ddy=ny-st.ly; st.moved=st.moved||Math.abs(st.ddx)+Math.abs(st.ddy)>2;
+  }
+  function end(){
+    if(!st) return; const s=st; st=null;
+    s.gh.remove(); const im=document.getElementById('hdrprev-img'); if(im) im.classList.remove('lp-drag');
+    if(!s.moved) return;
+    const c=cfgNow(); setOrient(c);
+    const mmPx=(PAGE.w-(c.mLeft||12)-(c.mRight||12))/s.r.width;
+    const dx=$('f-logo-dx'), dy=$('f-logo-dy'); if(!dx||!dy) return;
+    dx.value=Math.max(-100,Math.min(100,Math.round((s.dx0+s.ddx*mmPx)*2)/2));
+    dy.value=Math.max(-25,Math.min(25,Math.round((s.dy0+s.ddy*mmPx)*2)/2));
+    logoPosChanged();
+  }
+  function bind(){
+    const im=document.getElementById('hdrprev-img'); if(!im || im._lp) return; im._lp=1;
+    im.addEventListener('touchstart',start,{passive:false});
+    im.addEventListener('touchmove',move,{passive:false});
+    im.addEventListener('touchend',end); im.addEventListener('touchcancel',end);
+    im.addEventListener('mousedown',start);
+    document.addEventListener('mousemove',move); document.addEventListener('mouseup',end);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
+  window._lpBind=bind;
+})();
+
+/* ════════ Şablon galerisi: bütün başlık şablonları küçük resimlerle (test ve föy) ════════ */
+let _tgTarget='test', _tgJob=0;
+function openTplGallery(target){
+  _tgTarget=target||'test';
+  let ov=document.getElementById('tplgal');
+  if(!ov){
+    ov=document.createElement('div'); ov.id='tplgal';
+    ov.innerHTML='<div class="tg-head"><b>Başlık şablonu seç</b><span id="tg-cnt"></span><button class="tg-x" onclick="closeTplGallery()" aria-label="Kapat">✕</button></div>'+
+      '<div class="tg-colors" id="tg-colors" aria-label="Antet rengi"></div><div class="tg-body" id="tg-body"></div>';
+    document.body.appendChild(ov);
+    ov.querySelector('#tg-body').addEventListener('click',e=>{ const b=e.target.closest('.tg-tile'); if(b) pickTplFromGallery(b.dataset.v); });
+    ov.querySelector('#tg-colors').addEventListener('click',e=>{ const b=e.target.closest('button[data-v]'); if(b) tgSetTheme(b.dataset.v); });
+  }
+  ov.classList.add('on'); document.body.classList.add('showing');
+  tgBuild(true);
+}
+function closeTplGallery(){ const ov=document.getElementById('tplgal'); if(ov) ov.classList.remove('on'); document.body.classList.remove('showing'); _tgJob++; }
+function _tgCur(){
+  return _tgTarget==='foy' ? {tpl:($('foy-tpl')||{}).value, th:($('foy-hcolor')||{}).value}
+                           : {tpl:($('f-template')||{}).value, th:($('f-hdrtheme')||{}).value};
+}
+function tgSetTheme(v){
+  if(_tgTarget==='foy'){ const e=$('foy-hcolor'); if(e){ e.value=v; foySetSave(); } }
+  else { const e=$('f-hdrtheme'); if(e){ e.value=v; fillThemeSwatches(); preview(); try{ saveTmpl(); }catch(_){} } }
+  tgBuild(false);
+}
+function tgBuild(scroll){
+  fillThemeOptions();
+  const cur=_tgCur(), job=++_tgJob, sel=$('f-hdrtheme');
+  document.getElementById('tg-colors').innerHTML=Array.from(sel.options).map(o=>{ const t=P_THEME(o.value);
+    return '<button type="button" data-v="'+o.value+'" class="'+(o.value===cur.th?'on':'')+'" title="'+esc(o.textContent)+'" aria-label="'+esc(o.textContent)+'" style="background:linear-gradient(135deg,'+_rgbS(t.d)+' 0 50%,'+_rgbS(t.a)+' 50% 100%)"></button>'; }).join('');
+  const list=TPL_LIST.filter(x=>!(_tgTarget==='foy' && x.v==='letterhead'));
+  const groups=[]; list.forEach(x=>{ let gr=groups.find(q=>q.g===x.g); if(!gr){ gr={g:x.g,items:[]}; groups.push(gr); } gr.items.push(x); });
+  const body=document.getElementById('tg-body'), st0=body.scrollTop;
+  body.innerHTML=groups.map(gr=>'<div class="tg-grp"><h4>'+esc(gr.g)+'</h4><div class="tg-grid">'+gr.items.map(x=>{
+      const nm=x.t.split('—'), n0=nm[0].replace(/^[^0-9A-Za-zÇĞİÖŞÜçğıöşü]+/,'').trim();
+      return '<button type="button" class="tg-tile'+(x.v===cur.tpl?' on':'')+'" data-v="'+x.v+'"><span class="tg-img"><img alt=""/></span>'+
+        '<b>'+esc(n0)+'</b>'+(nm[1]?'<i>'+esc(nm[1].trim())+'</i>':'')+'</button>'; }).join('')+'</div></div>').join('');
+  document.getElementById('tg-cnt').textContent=list.length+' şablon · '+sel.options.length+' renk';
+  if(scroll){ const on=body.querySelector('.tg-tile.on'); if(on) setTimeout(()=>{ try{ on.scrollIntoView({block:'center'}); }catch(_){} },30); }
+  else body.scrollTop=st0;
+  const base=_tgTarget==='foy' ? null : cfgNow();
+  const fst=_tgTarget==='foy' ? foySet() : null;
+  const tiles=[...body.querySelectorAll('.tg-tile')]; let i=0;
+  const step=()=>{
+    if(job!==_tgJob) return;
+    const t0=performance.now();
+    while(i<tiles.length && performance.now()-t0<30){
+      const b=tiles[i++], v=b.dataset.v;
+      try{
+        let c;
+        if(_tgTarget==='foy'){ c=foyHdrCfg(Object.assign({},fst,{tpl:v}),14,182); setOrient({landscape:false}); }
+        else { c=Object.assign({},base,{template:v}); setOrient(c); }
+        c._K=2.4;
+        b.querySelector('img').src=headerImage(c);
+      }catch(e){}
+    }
+    if(i<tiles.length) setTimeout(step,0);
+  };
+  setTimeout(step,20);
+}
+function pickTplFromGallery(v){
+  const rec=TPL_LIST.find(x=>x.v===v);
+  if(_tgTarget==='foy'){ const e=$('foy-tpl'); if(e){ e.value=v; foySetSave(); } }
+  else { fillTemplateSelect(v); const e=$('f-template'); if(e) e.value=v; preview(); try{ saveTmpl(); }catch(_){} }
+  closeTplGallery();
+  toast((rec ? rec.t.split('—')[0].replace(/^[^0-9A-Za-zÇĞİÖŞÜçğıöşü]+/,'').trim() : v)+' seçildi');
+}
+
 let _hpT=null;
 function hdrPreview(){
   clearTimeout(_hpT);
@@ -2973,8 +3193,13 @@ function hdrPreview(){
     try{
       setOrient(c);
       im.src=headerImage(c);
+      window._hdrPrevLogo=window._hdrLogoRect?Object.assign({},window._hdrLogoRect):null;
       const lt=c.template==='letterhead';
       $('hdrprev-cap').textContent=lt?'Antetli kâğıt: üst kısım boş bırakılır':(window._logoData&&!window._logoImg?'Logo yükleniyor…':'Antet önizlemesi');
+      if(!lt && window._logoData && window._logoImg){
+        $('hdrprev-cap').textContent = window._hdrPrevLogo ? 'Antet önizlemesi · logoya dokunup sürükleyebilirsin'
+          : 'Bu şablonda logo yeri yok · Logo & Filigran → Logo konumu: Sol / Orta / Sağ';
+      }
     }catch(e){ $('hdrprev-cap').textContent='Önizleme çizilemedi'; }
   },140);
 }
@@ -3808,6 +4033,8 @@ function openTest(t,edit){
     set('f-logo-sz',t.cfg.logoSize);
     if($('logosz-val')) $('logosz-val').textContent = t.cfg.logoSize || 100;
     set('f-logo-op',t.cfg.logoOp);
+    set('f-logo-align',t.cfg.logoAlign||'auto'); set('f-logo-dx',t.cfg.logoDX||0); set('f-logo-dy',t.cfg.logoDY||0); set('f-logo-bg',t.cfg.logoBg||'yok');
+    try{ logoPosUI(); }catch(_){}
     if($('logoop-val')) $('logoop-val').textContent = t.cfg.logoOp || 100;
     set('f-wm-area',t.cfg.wmArea); set('f-wm-preset',t.cfg.wmPreset||'');
     if($('wmop-val')) $('wmop-val').textContent = t.cfg.wmOp || 30;
@@ -3826,6 +4053,7 @@ function openTest(t,edit){
     set('f-book',c.book);set('f-sep',c.sep);set('f-vsep',c.vsep);set('f-gutter',c.gutter);set('f-fill',c.fill);set('f-qfont',c.qfont);set('f-qsize',c.qsize);
     set('f-template',c.template||'ribbon');
     set('f-soltype',c.soltype||'blank');
+    try{ fillThemeOptions(); }catch(_){}
     set('f-hdrtheme',c.hdrtheme||'emerald');
     set('f-qnumformat',c.qnumformat||'std');
     set('f-mleft',c.mLeft||12);set('f-mright',c.mRight||12);set('f-mtop',c.mTop||12);set('f-mbot',c.mBottom||12);
@@ -3868,6 +4096,7 @@ function P_THEME(name){
   };
   const MID={emerald:[14,124,90],navy:[29,59,110],crimson:[155,28,49],amber:[180,83,9],dark:[49,55,63],purple:[109,40,217],
     teal:[13,148,136],rose:[190,24,93],slate:[71,85,105],gold:[161,98,7],indigo:[67,56,202]};
+  if(!M[name] && THEME_EXTRA[name]){ const t=THEME_EXTRA[name]; return {d:hex2rgb(t.d),a:hex2rgb(t.a),m:hex2rgb(t.m)}; }
   const r=M[name]||M.emerald; r.m=MID[name]||MID.emerald;
   return r;
 }
@@ -3939,6 +4168,17 @@ function headerH(cfg){
     case 'firca':   h=26; break;
     case 'serit':   h=28; break;
     case 'blokcapraz':h=30; break;
+    case 'tablo':   h=30; break;
+    case 'kutu3':   h=28; break;
+    case 'monogram':h=26; break;
+    case 'topografik':h=26; break;
+    case 'mozaik':  h=26; break;
+    case 'noktali': h=24; break;
+    case 'kurdele': h=30; break;
+    case 'benzen':  h=26; break;
+    case 'erlen':   h=28; break;
+    case 'cerceve2':h=28; break;
+    case 'bant':    h=28; break;
     case 'spektrum':h=27; break;
     case 'reaktif': h=28; break;
     case 'orbital': h=27; break;
@@ -4204,9 +4444,34 @@ function _layoutBase(list,cfg){
   return nat;
 }
 
+/* Ek antet renkleri — tek kaynak: antet çizimi, PDF renkleri, renk listeleri buradan beslenir */
+const THEME_EXTRA={
+  royal:     {t:'Kraliyet Mavisi',  s:'Kraliyet', d:'#0B1F4D',m:'#1E40AF',a:'#2563EB',soft:'#EFF6FF'},
+  sky:       {t:'Gök Mavisi',       s:'Gök',      d:'#0C3554',m:'#0369A1',a:'#0EA5E9',soft:'#F0F9FF'},
+  cyan:      {t:'Camgöbeği',        s:'Camgöbeği',d:'#083344',m:'#0E7490',a:'#06B6D4',soft:'#ECFEFF'},
+  petrol:    {t:'Petrol Mavisi',    s:'Petrol',   d:'#0F2D3A',m:'#1F5F74',a:'#3A8FA8',soft:'#EEF6F8'},
+  forest:    {t:'Orman Yeşili',     s:'Orman',    d:'#052E16',m:'#166534',a:'#16A34A',soft:'#F0FDF4'},
+  lime:      {t:'Fıstık Yeşili',    s:'Fıstık',   d:'#1A2E05',m:'#4D7C0F',a:'#84CC16',soft:'#F7FEE7'},
+  olive:     {t:'Zeytin Yeşili',    s:'Zeytin',   d:'#2A2E12',m:'#5C6A21',a:'#9BAA3A',soft:'#F7F8EC'},
+  orange:    {t:'Canlı Turuncu',    s:'Turuncu+', d:'#431407',m:'#C2410C',a:'#F97316',soft:'#FFF7ED'},
+  coral:     {t:'Mercan',           s:'Mercan',   d:'#4A1D12',m:'#D9573A',a:'#FF7F5C',soft:'#FFF4EF'},
+  magenta:   {t:'Fuşya',            s:'Fuşya',    d:'#4A044E',m:'#A21CAF',a:'#D946EF',soft:'#FDF4FF'},
+  wine:      {t:'Mürdüm / Şarap',   s:'Mürdüm',   d:'#3B0A1E',m:'#7E1D3F',a:'#C0396A',soft:'#FCF1F5'},
+  brown:     {t:'Kahve / Toprak',   s:'Kahve',    d:'#3B2314',m:'#8B5A2B',a:'#C08A4E',soft:'#FAF5EF'},
+  mono:      {t:'Siyah-Beyaz (yazıcı dostu)', s:'Siyah-Beyaz', d:'#111111',m:'#3A3A3A',a:'#777777',soft:'#F4F4F4'},
+  navygold:  {t:'Lacivert + Altın', s:'Lacivert+Altın', g:1, d:'#0F1E3D',m:'#1E3A8A',a:'#D4A017',soft:'#FBF7EA'},
+  navygreen: {t:'Lacivert + Yeşil', s:'Lacivert+Yeşil', g:1, d:'#14213D',m:'#1F3A68',a:'#22C55E',soft:'#F0FDF4'},
+  navyred:   {t:'Lacivert + Kırmızı', s:'Lacivert+Kırmızı', g:1, d:'#0F1E3D',m:'#1E3A8A',a:'#E11D48',soft:'#FFF1F3'},
+  maroongold:{t:'Bordo + Altın',    s:'Bordo+Altın', g:1, d:'#4A0E1C',m:'#8B1E3F',a:'#D4A017',soft:'#FBF6EA'},
+  purplegold:{t:'Mor + Altın',      s:'Mor+Altın', g:1, d:'#2E1065',m:'#5B21B6',a:'#EAB308',soft:'#FEFCE8'},
+  tealcoral: {t:'Petrol + Mercan',  s:'Petrol+Mercan', g:1, d:'#0B3B3C',m:'#0F766E',a:'#FB7185',soft:'#FFF1F2'},
+  blackorange:{t:'Siyah + Turuncu', s:'Siyah+Turuncu', g:1, d:'#141414',m:'#2E2E2E',a:'#F97316',soft:'#FFF7ED'}
+};
+function hex2rgb(h){ h=String(h||'#000').replace('#',''); return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)]; }
+
 /* Başlık Çizim Motoru (5 Renk, ÖSYM Şablonu & Yazı Görünürlük Düzeltmesi) */
 function headerImage(cfg){
-  const K=8;
+  const K=cfg._K||8;
   const mLeft=cfg.mLeft||12, mRight=cfg.mRight||12;
   const wmm=PAGE.w-mLeft-mRight, hmm=baseHeaderH(cfg);
   const c=document.createElement('canvas');
@@ -4215,6 +4480,12 @@ function headerImage(cfg){
   // Logo boyutu ve opaklığı tüm şablonlarda aynı çalışsın: logo çizimleri tek yerden ölçeklenir.
   // Logo, durduğu köşeye/kenara yaslı büyür; antet yüksekliğini aşmaz.
   const _LZ=Math.max(0.4,Math.min(2,(cfg.logoSize||100)/100)), _LOP=Math.max(0.1,Math.min(1,(cfg.logoOp||100)/100));
+  // Logo konumu: şablonun yeri (auto) · sol · orta · sağ + elle kaydırma (mm) + isteğe bağlı beyaz zemin.
+  // Konum değiştiyse şablonun çizdiği logo atlanır, logo en sonda (her şeyin üstünde) yeni yerine çizilir.
+  const _LA=cfg.logoAlign||'auto', _LDX=+cfg.logoDX||0, _LDY=+cfg.logoDY||0, _LBG=cfg.logoBg||'yok';
+  const _LMOVED=(_LA!=='auto')||_LDX!==0||_LDY!==0||_LBG!=='yok';
+  let _logoReq=null;
+  window._hdrLogoRect=null;
   const _di=g.drawImage.bind(g);
   g.drawImage=function(img){
     if(window._logoImg && img===window._logoImg && arguments.length===5){
@@ -4227,9 +4498,37 @@ function headerImage(cfg){
       let nx=ax<0.34?x:(ax>0.66?x+w-nw:x+(w-nw)/2);
       let ny=ay<0.34?y:(ay>0.66?y+h-nh:y+(h-nh)/2);
       nx=Math.max(0,Math.min(W0-nw,nx)); ny=Math.max(0,Math.min(H0-nh,ny));
-      g.save(); g.globalAlpha=g.globalAlpha*_LOP; _di(img,nx,ny,nw,nh); g.restore(); return;
+      if(_LMOVED){ if(!_logoReq) _logoReq={x:nx,y:ny,w:nw,h:nh}; return; }
+      g.save(); g.globalAlpha=g.globalAlpha*_LOP; _di(img,nx,ny,nw,nh); g.restore();
+      if(!window._hdrLogoRect) window._hdrLogoRect={x:nx,y:ny,w:nw,h:nh,W:W0,H:H0};
+      return;
     }
     return _di.apply(null,arguments);
+  };
+  const _toURL=c.toDataURL.bind(c);
+  c.toDataURL=function(){
+    if(_LMOVED && cfg.logo && cfg.logo.url && window._logoImg){
+      try{
+        const W0=c.width, H0=c.height, P2=1.4*K, r=(cfg.logo.w||1)/(cfg.logo.h||1);
+        let q=_logoReq;
+        if(!q){ let lh=Math.min(H0*0.62,baseHeaderH(cfg)*0.55*K)*_LZ, lw=lh*r;
+          if(lw>W0*0.3){ lw=W0*0.3; lh=lw/r; } if(lh>H0*0.96){ lh=H0*0.96; lw=lh*r; }
+          q={x:W0-lw-P2,y:(H0-lh)/2,w:lw,h:lh}; }
+        let x=q.x, y=q.y; const w=q.w, h=q.h;
+        if(_LA==='sol') x=P2; else if(_LA==='orta') x=(W0-w)/2; else if(_LA==='sag') x=W0-w-P2;
+        if(_LA!=='auto') y=(H0-h)/2;
+        x+=_LDX*K; y+=_LDY*K;
+        const pad=(_LBG!=='yok')?1.2*K:0;
+        x=Math.max(pad,Math.min(W0-w-pad,x)); y=Math.max(Math.min(pad,(H0-h)/2),Math.min(H0-h-Math.min(pad,(H0-h)/2),y));
+        g.save();
+        if(_LBG==='beyaz'){ g.fillStyle='#fff'; roundRectPath(g,x-pad,y-pad,w+2*pad,h+2*pad,1.6*K); g.fill(); }
+        else if(_LBG==='daire'){ g.fillStyle='#fff'; g.beginPath(); g.arc(x+w/2,y+h/2,Math.min(Math.max(w,h)/2+pad,H0/2),0,Math.PI*2); g.fill(); }
+        g.globalAlpha=_LOP; _di(window._logoImg,x,y,w,h);
+        g.restore();
+        window._hdrLogoRect={x,y,w,h,W:W0,H:H0};
+      }catch(e){}
+    }
+    return _toURL.apply(null,arguments);
   };
   g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
   const W=c.width, H=c.height;
@@ -4248,6 +4547,7 @@ function headerImage(cfg){
     gold:   {d:'#422006',m:'#A16207',a:'#CA8A04',soft:'#FEFCE8',ink:'#422006'},
     indigo: {d:'#1E1B4B',m:'#4338CA',a:'#6366F1',soft:'#EEF2FF',ink:'#1E1B4B'}
   };
+  Object.keys(THEME_EXTRA).forEach(k=>{ const t=THEME_EXTRA[k]; P[k]={d:t.d,m:t.m,a:t.a,soft:t.soft,ink:t.d}; });
   let pal=P[cfg.hdrtheme]||P.emerald;
   // koyu blok rengi: temanın koyusu yerine lacivert / siyah / antrasit seçilebilir
   const _BLK={lacivert:'#14213D',siyah:'#111418',antrasit:'#2B3036',bordo:'#4A1020'};
@@ -4318,13 +4618,22 @@ function headerImage(cfg){
         let lw=lh*r;
         const maxw=W*0.22; if(lw>maxw){ lw=maxw; lh=lw/r; }
         const maxh=H*0.72; if(lh>maxh){ lh=maxh; lw=lh*r; }
-        let x,y;
         const P2=1.4*K;
-        // konum: şablona göre çakışmayan köşe
-        if(pos==='TL'){ x=P2; y=P2; }
-        else if(pos==='TR'){ x=W-lw-P2; y=P2; }
-        else if(pos==='BR'){ x=W-lw-P2; y=H-lh-P2; }
-        else { x=W-lw-P2; y=P2; }   // varsayılan sağ üst
+        // konum: şablonun önerdiği köşe tercih edilir; o köşede yazı varsa en boş köşe seçilir
+        const C={TL:[P2,P2],TR:[W-lw-P2,P2],BR:[W-lw-P2,H-lh-P2],BL:[P2,H-lh-P2]};
+        const pref=C[pos]?pos:'TR';
+        let best=pref;
+        try{
+          let bestS=Infinity; const full=g.getImageData(0,0,c.width,c.height).data;
+          [pref].concat(['TR','TL','BR','BL'].filter(k=>k!==pref)).forEach((k,idx)=>{
+            const p0=C[k], bw=Math.min(lw*_LZ,W*0.45), bh=Math.min(lh*_LZ,H*0.96);
+            let bx=(k==='TR'||k==='BR')?p0[0]+lw-bw:p0[0], by=(k==='BR'||k==='BL')?p0[1]+lh-bh:p0[1];
+            bx=Math.max(0,Math.min(W-bw,bx)); by=Math.max(0,Math.min(H-bh,by));
+            const sc=_inkScore(full,bx,by,bw,bh)+idx*0.004;
+            if(sc<bestS){ bestS=sc; best=k; }
+          });
+        }catch(_){}
+        const x=C[best][0], y=C[best][1];
         g.save();
         g.drawImage(window._logoImg,x,y,lw,lh); g.restore();
       }catch(e){}
@@ -4332,6 +4641,23 @@ function headerImage(cfg){
     return c.toDataURL('image/jpeg',0.95);
   }
 
+  // bir bölgedeki "yazı/çizgi yoğunluğu" (komşu pikseller arası keskin fark oranı) — logo için boş köşe arar
+  function _inkScore(d,x,y,w,h){
+    x=Math.round(x); y=Math.round(y); w=Math.max(2,Math.round(w)); h=Math.max(1,Math.round(h));
+    const st=2, CW=c.width; let e=0, n=0;
+    for(let yy=y;yy<y+h;yy+=st) for(let xx=x;xx<x+w-st;xx+=st){
+      const i=(yy*CW+xx)*4, j=i+st*4;
+      if(Math.abs(d[i]-d[j])+Math.abs(d[i+1]-d[j+1])+Math.abs(d[i+2]-d[j+2])>90) e++; n++; }
+    return n?e/n:0;
+  }
+  // stamp() logosunun sağda kapladığı genişlik — sağa yaslı yazılar bu kadar içeri alınır (logo yazının üstüne binmesin)
+  function stampW(){
+    if(!(cfg.logo && cfg.logo.url && window._logoImg) || _LMOVED) return 0;
+    const r=cfg.logo.w/cfg.logo.h; let lh=Math.min(H*0.62,(baseHeaderH(cfg)*0.55)*K), lw=lh*r;
+    if(lw>W*0.22){ lw=W*0.22; lh=lw/r; } if(lh>H*0.72){ lh=H*0.72; lw=lh*r; }
+    let nw=lw*_LZ, nh=lh*_LZ; if(nh>H*0.96){ nw*=H*0.96/nh; } if(nw>W*0.45) nw=W*0.45;
+    return nw+3*K;
+  }
   const lesson=up(cfg.lesson||'KİMYA');
   const kind=up(cfg.kind||'TEST 1');
   const topic=up(cfg.topic||'');
@@ -4483,7 +4809,7 @@ function headerImage(cfg){
     vstack([
       line(school,   TS.xs,  W*0.26, '800', 'topic', {color:pal.ink}),
       line(cfg.year, TS.cap, W*0.26, '600', null,    {color:'#8A93A0', body:1})
-    ], {x:W-3*K, top:stY, bottom:stY+stH, align:'right'});
+    ], {x:W-3*K-((cfg.logo&&cfg.logo.url&&window._logoImg&&!_LMOVED)?W*0.1+2.5*K:0), top:stY, bottom:stY+stH, align:'right'});
     // şerit altı: konu
     if(topic){ g.textAlign='left'; g.fillStyle='#5B6472';
       const f=fit(topic,TS.cap,W*0.7,'600','topic',BODY);
@@ -4491,7 +4817,7 @@ function headerImage(cfg){
     // alt çizgi
     g.fillStyle=pal.m; g.fillRect(0,BH*0.90,W*0.62,0.45*K);
     g.fillStyle=pal.a; g.fillRect(W*0.635,BH*0.90,W*0.365,0.45*K);
-    drawLogo(W*0.1, H*0.42, W*0.79, H*0.24); return c.toDataURL('image/jpeg',0.95);
+    drawLogo(W*0.1, H*0.42, W-3*K-W*0.05, stY+stH/2); return c.toDataURL('image/jpeg',0.95);
   }
 
   /* ═══ OFİS-KARELİ — sol bilgi + sağda kareli not dokusu ═══ */
@@ -4777,7 +5103,7 @@ function headerImage(cfg){
     // sağ alt: öğretmen
     if(teacher){
       g.font=rfb('teacher',TS.tag,'500'); g.fillStyle='#64748B'; g.textAlign='right';
-      g.fillText(teacher,W,H-2.4*K);
+      g.fillText(teacher,W-stampW(),H-2.4*K);
     }
     // ince alt çizgi
     g.fillStyle=pal.a; g.fillRect(bar,H-0.7*K,W-bar,0.7*K);
@@ -4815,7 +5141,7 @@ function headerImage(cfg){
     const lx=0;
     g.fillStyle='#fff'; g.textAlign='left';
     let fs=fit(lesson,TS.md,W*0.5,'800','lesson'); g.font=wt('lesson','800')+' '+(fs*K)+'px '+DISP;
-    g.fillText(lesson,(lx?lx*0+8*K:3*K),bandH/2);
+    g.fillText(lesson,3*K+stampW(),bandH/2);
     g.fillStyle=pal.a; g.textAlign='right';
     g.font=rf('kind',TS.md,'800');
     g.fillText(kind,W-3*K,bandH/2);
@@ -4936,7 +5262,8 @@ function headerImage(cfg){
     let tx=W*0.06;
     if(cfg.logo && cfg.logo.url && window._logoImg){
       try{ const r=cfg.logo.w/cfg.logo.h; let lh=H*0.44,lw=lh*r; if(lw>W*0.12){lw=W*0.12;lh=lw/r;}
-        g.drawImage(window._logoImg,tx,H*0.12,lw,lh); }catch(e){}
+        g.drawImage(window._logoImg,tx,(H-Math.min(lh*_LZ,H*0.96))/2*0.9,lw,lh);
+        if(!_LMOVED){ let nw=lw*_LZ, nh=lh*_LZ; if(nh>H*0.96){ nw*=H*0.96/nh; } tx+=Math.min(nw,W*0.45)+2.5*K; } }catch(e){}
     }
     // ders adı (büyük, koyu)
     g.fillStyle=pal.ink; g.textAlign='left';
@@ -5477,9 +5804,10 @@ function headerImage(cfg){
     g.moveTo(W*0.70,0); g.lineTo(W,0); g.lineTo(W,H*0.55);
     g.closePath(); g.fill();
     g.textBaseline='alphabetic'; g.textAlign='left';
-    let fs=fit(kind,TS.xl,W*0.55,'800','kind'); g.font=wt('kind','800')+' '+(fs*K)+'px '+DISP; g.fillStyle=pal.ink;
-    g.fillText(kind,3*K,H*0.44);
-    if(topic){ g.font=rfb('topic',TS.xs,'600'); g.fillStyle=pal.m; g.fillText(topic,3*K,H*0.70); }
+    const wvx=3*K+stampW();
+    let fs=fit(kind,TS.xl,W*0.55-stampW(),'800','kind'); g.font=wt('kind','800')+' '+(fs*K)+'px '+DISP; g.fillStyle=pal.ink;
+    g.fillText(kind,wvx,H*0.44);
+    if(topic){ g.font=rfb('topic',TS.xs,'600'); g.fillStyle=pal.m; g.fillText(topic,wvx,H*0.70); }
     g.textAlign='right'; g.fillStyle='#fff';
     g.font=rf('lesson',TS.sm,'800'); g.fillText(lesson,W-4*K,H*0.40);
     const line2=[cfg.grade?cfg.grade+'. Sınıf':'',teacher].filter(Boolean).join(' · ');
@@ -5576,7 +5904,7 @@ function headerImage(cfg){
       line(school,  TS.xs,  W*0.38,'800','teacher',{color:pal.ink}),
       line(teacher, TS.cap, W*0.38,'600','teacher',{color:'#5B6472', body:1}),
       line([cfg.cls,cfg.date].filter(Boolean).join('  ·  '), TS.cap, W*0.38,'600',null,{color:'#8A93A0', body:1})
-    ], {x:W, top:top, bottom:bot, align:'right', lead:1.0});
+    ], {x:W-stampW(), top:top, bottom:bot, align:'right', lead:1.0});
     g.fillStyle=pal.d; g.fillRect(0,BH-0.9*K,W,0.35*K);
     return stamp('TR');
   }
@@ -5718,7 +6046,7 @@ function headerImage(cfg){
     ], {x:0, top:1.2*K, bottom:BH-3.4*K, align:'left', lead:1.2});
     g.fillStyle=pal.d; g.fillRect(0,BH-1.4*K,W,1.0*K);
     g.fillStyle=pal.a; g.fillRect(0,BH-1.4*K,W*0.18,1.0*K);
-    drawLogo(W*0.11, H*0.50, W*0.635, H*0.44); return c.toDataURL('image/jpeg',0.95);
+    drawLogo(W*0.11, H*0.50, W*0.6, H*0.44); return c.toDataURL('image/jpeg',0.95);
   }
 
   /* ═══ YENİ: DERECELİ — büret / mezür ölçeği ═══ */
@@ -5749,7 +6077,7 @@ function headerImage(cfg){
       line(school,  TS.xs,  W*0.38,'800','teacher',{color:pal.ink}),
       line(cfg.teacher, TS.cap, W*0.38,'600','teacher',{color:'#5B6472', body:1}),
       line([cfg.cls,cfg.date].filter(Boolean).join('  ·  '), TS.cap, W*0.38,'600',null,{color:'#8A93A0', body:1})
-    ], {x:W, top:top, bottom:bot-1.2*K, align:'right', lead:1.0});
+    ], {x:W-stampW(), top:top, bottom:bot-1.2*K, align:'right', lead:1.0});
     g.textAlign='left';
     return stamp('TR');
   }
@@ -5758,7 +6086,7 @@ function headerImage(cfg){
   const _hasLogo=!!(cfg.logo&&cfg.logo.url&&window._logoImg);
   function markOn(x,y,size,dark){
     // koyu zeminde: logo varsa beyaz yuvarlak plaka, yoksa açık renkli amblem
-    if(dark && _hasLogo){ g.fillStyle='#fff'; g.beginPath(); g.arc(x+size/2,y+size/2,size*0.6,0,Math.PI*2); g.fill(); }
+    if(dark && _hasLogo && !_LMOVED){ g.fillStyle='#fff'; g.beginPath(); g.arc(x+size/2,y+size/2,size*0.6,0,Math.PI*2); g.fill(); }
     brandMark(x,y,size, dark && !_hasLogo ? mixw(pal.a,0.15) : pal.m);
   }
   const _sub=[cfg.cls,cfg.date].filter(Boolean).join('  ·  ');
@@ -5801,7 +6129,7 @@ function headerImage(cfg){
     g.fillStyle='rgba(255,255,255,.08)'; g.beginPath(); g.arc(W*0.99,BH*1.05,BH*0.75,0,Math.PI*2); g.fill();
     g.restore();
     const ms=hh*0.58, mx=3.2*K, my=y0+(hh-ms)/2;
-    g.fillStyle='rgba(255,255,255,.96)'; g.beginPath(); roundRectPath(g,mx-1.1*K,my-1.1*K,ms+2.2*K,ms+2.2*K,1.8*K); g.fill();
+    if(!(_hasLogo && _LMOVED)){ g.fillStyle='rgba(255,255,255,.96)'; g.beginPath(); roundRectPath(g,mx-1.1*K,my-1.1*K,ms+2.2*K,ms+2.2*K,1.8*K); g.fill(); }
     brandMark(mx,my,ms,pal.m);
     const tx=mx+ms+4.2*K;
     vstack([ line(lesson,TS.lg,W*0.28,'800','lesson',{color:'#fff'}),
@@ -5810,8 +6138,8 @@ function headerImage(cfg){
     vstack([ line(_cTop,TS.md,W*0.32,'800','kind',{color:'#fff'}),
              line(_cSub,TS.xs,W*0.32,'600','topic',{color:'rgba(255,255,255,.88)',body:1}) ],
            {x:W*0.58, top:y0, bottom:y0+hh, align:'center', lead:1.0});
-    vstack([ line(_rTop,TS.xs,W*0.2,'800','teacher',{color:'#fff'}),
-             line(_rSub,TS.cap,W*0.2,'600','teacher',{color:'rgba(255,255,255,.88)',body:1}) ],
+    vstack([ line(_rTop,TS.xs,W*0.2,'800','teacher',{color:pal.d}),
+             line(_rSub,TS.cap,W*0.2,'600','teacher',{color:pal.d,body:1}) ],
            {x:W-3.2*K, top:y0, bottom:y0+hh, align:'right', lead:0.9});
     // alt noktalar
     [0,1,2].forEach(i=>{ g.fillStyle=i===0?pal.a:mixw(pal.a,0.45+i*0.18); g.beginPath(); g.arc(W-3.2*K-i*2.6*K, BH-0.9*K, 0.7*K,0,Math.PI*2); g.fill(); });
@@ -5933,6 +6261,324 @@ function headerImage(cfg){
     return c.toDataURL('image/jpeg',0.95);
   }
 
+  /* ═══ YENİ 2. PAKET: kart & tablo · desenli · kimya ═══ */
+  const _seed=n=>{ let sd=n; return ()=>{ sd=(sd*16807)%2147483647; return sd/2147483647; }; };
+  const mixc=(h1,h2,t)=>{ const a=hex2rgb(h1), b=hex2rgb(h2); return 'rgb('+a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(',')+')'; };
+  // boş kalan kutuya öğrencinin dolduracağı "Ad Soyad ......" satırı
+  const nameSlot=(x,y,w,h,al)=>{ g.fillStyle=mixw(pal.d,0.35); g.font='700 '+(TS.cap*K)+'px '+BODY; g.textAlign=al==='center'?'center':'left';
+    const cx=al==='center'?x+w/2:x; g.fillText('Ad Soyad', cx, y+h*0.42); g.textAlign='left';
+    g.strokeStyle=mixw(pal.d,0.55); g.lineWidth=0.25*K; g.setLineDash([0.6*K,0.8*K]);
+    g.beginPath(); g.moveTo(x+w*0.08,y+h*0.72); g.lineTo(x+w*0.92,y+h*0.72); g.stroke(); g.setLineDash([]); };
+
+  if(cfg.template==='tablo'){
+    g.textBaseline='alphabetic';
+    const BH=H, rr=1.6*K, th=BH*0.36, lw=0.3*K;
+    g.save(); roundRectPath(g,lw,lw,W-2*lw,BH-2*lw,rr); g.clip();
+    g.fillStyle=pal.d; g.fillRect(0,0,W,th);
+    g.fillStyle=pal.a; g.fillRect(0,th,W,0.5*K);
+    g.restore();
+    g.strokeStyle=mixw(pal.d,0.35); g.lineWidth=lw; roundRectPath(g,lw,lw,W-2*lw,BH-2*lw,rr); g.stroke();
+    let lx=2.5*K;
+    if(_hasLogo){ const ms=th*0.72; markOn(lx,(th-ms)/2,ms,true); lx+=ms+2.4*K; }
+    vstack([ line(school||_tch, TS.xs, W*0.3-lx, '800', 'teacher', {color:'#fff'}) ], {x:lx, top:0, bottom:th, align:'left'});
+    vstack([ line(kind, TS.md, W*0.36, '800', 'kind', {color:'#fff', track:0.2*K}) ], {x:W/2, top:0, bottom:th, align:'center'});
+    vstack([ line(_sub, TS.cap, W*0.22, '700', null, {color:'rgba(255,255,255,.85)', body:1}) ], {x:W-2.5*K, top:0, bottom:th, align:'right'});
+    const cells=[['DERS',lesson,'lesson'],['KONU',topic,'topic'],['ÖĞRETMEN',school?_tch:'','teacher']].filter(x=>x[1]);
+    const y0=th+0.5*K, cw=(W-2*lw)/cells.length;
+    cells.forEach((cl,i)=>{
+      const x0=lw+i*cw;
+      if(i){ g.fillStyle=mixw(pal.d,0.75); g.fillRect(x0,y0+1.8*K,0.25*K,BH-y0-3.6*K); }
+      vstack([ line(cl[0], TS.cap, cw-4*K, '800', null, {color:pal.m, track:0.35*K, body:1}),
+               line(cl[1], TS.sm, cw-4*K, '800', cl[2], {color:pal.ink}) ],
+             {x:x0+cw/2, top:y0, bottom:BH, align:'center', lead:1.2});
+    });
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='kutu3'){
+    g.textBaseline='alphabetic';
+    const BH=H, gap=2*K, y0=0.6*K, bh=BH-1.2*K, rr=1.8*K;
+    const w1=W*0.30, w2=W*0.40-2*gap, w3=W-w1-w2-2*gap;
+    const xs=[0, w1+gap, w1+gap+w2+gap], ws=[w1,w2,w3], tops=[pal.d,pal.a,pal.m];
+    xs.forEach((x,i)=>{
+      g.save(); roundRectPath(g,x,y0,ws[i],bh,rr); g.clip();
+      g.fillStyle=i===1?pal.soft:'#fff'; g.fillRect(x,y0,ws[i],bh);
+      g.fillStyle=tops[i]; g.fillRect(x,y0,ws[i],1.3*K);
+      g.restore();
+      g.strokeStyle=mixw(pal.d,0.72); g.lineWidth=0.28*K; roundRectPath(g,x,y0,ws[i],bh,rr); g.stroke();
+    });
+    const b3a=_rTop||_sub, b3b=_rTop?_rSub:'', b1s=_rTop?_sub:'';
+    let tx=xs[0]+2.6*K;
+    if(_hasLogo){ const ms=bh*0.5; brandMark(tx,y0+(bh-ms)/2+0.6*K,ms,pal.m); tx+=ms+2.2*K; }
+    vstack([ line(lesson, TS.lg, xs[0]+w1-tx-2*K, '800', 'lesson', {color:pal.ink}),
+             line(b1s, TS.cap, xs[0]+w1-tx-2*K, '600', null, {color:mixw(pal.d,0.35), body:1}) ],
+           {x:tx, top:y0+1.3*K, bottom:y0+bh, align:'left', lead:1.0});
+    vstack([ line(_cTop, TS.md, w2-4*K, '800', 'kind', {color:pal.m}),
+             line(_cSub, TS.xs, w2-4*K, '600', 'topic', {color:mixw(pal.d,0.3), body:1}) ],
+           {x:xs[1]+w2/2, top:y0+1.3*K, bottom:y0+bh, align:'center', lead:1.0});
+    if(b3a) vstack([ line(b3a, TS.xs, w3-4*K, '800', 'teacher', {color:pal.d}),
+             line(b3b, TS.cap, w3-4*K, '600', 'teacher', {color:mixw(pal.d,0.3), body:1}) ],
+           {x:xs[2]+w3/2, top:y0+1.3*K, bottom:y0+bh, align:'center', lead:0.9});
+    else nameSlot(xs[2],y0+1.3*K,w3,bh-1.3*K,'center');
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='monogram'){
+    g.textBaseline='alphabetic';
+    const BH=H, sq=BH*0.86, sy=(BH-sq)/2, rr=2.2*K;
+    const gr=g.createLinearGradient(0,sy,sq,sy+sq); gr.addColorStop(0,pal.m); gr.addColorStop(1,pal.d);
+    g.fillStyle=gr; roundRectPath(g,0,sy,sq,sq,rr); g.fill();
+    g.strokeStyle='rgba(255,255,255,.28)'; g.lineWidth=0.35*K; roundRectPath(g,1.2*K,sy+1.2*K,sq-2.4*K,sq-2.4*K,rr-1*K); g.stroke();
+    if(_hasLogo && !_LMOVED){ const ps=sq*0.7; g.fillStyle='#fff'; roundRectPath(g,(sq-ps)/2,sy+(sq-ps)/2,ps,ps,1.6*K); g.fill();
+      brandMark((sq-ps*0.8)/2,sy+(sq-ps*0.8)/2,ps*0.8,pal.m); }
+    else { const L0=(lesson||'K').trim().charAt(0)||'K'; g.fillStyle='#fff'; g.textAlign='center';
+      g.font='800 '+(sq*0.6)+'px '+DISP; g.fillText(L0, sq/2, sy+sq*0.71); g.textAlign='left'; }
+    const tx=sq+4*K, tw=W*0.62-tx;
+    vstack([ line(_cTop, TS.tag, tw, '800', 'kind', {color:pal.a, track:0.45*K}),
+             line(lesson, TS.xl, tw, '800', 'lesson', {color:pal.ink}),
+             line(_cSub, TS.xs, tw, '600', 'topic', {color:mixw(pal.d,0.35), body:1}) ],
+           {x:tx, top:0, bottom:BH*0.86, align:'left', lead:0.9});
+    vstack([ line(_rTop, TS.xs, W*0.3, '800', 'teacher', {color:pal.d}),
+             line(_rSub, TS.cap, W*0.3, '600', 'teacher', {color:mixw(pal.d,0.35), body:1}),
+             line(_sub, TS.cap, W*0.3, '600', null, {color:mixw(pal.d,0.45), body:1}) ],
+           {x:W-1*K, top:0, bottom:BH*0.86, align:'right', lead:0.9});
+    g.fillStyle=mixw(pal.a,0.45); g.fillRect(tx,BH*0.9,W-tx,0.35*K);
+    g.fillStyle=pal.d; g.fillRect(tx,BH*0.9-0.35*K,14*K,1.05*K);
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='topografik'){
+    g.textBaseline='alphabetic';
+    const BH=H, x0=W*0.38;
+    g.save(); g.lineWidth=0.26*K; g.lineCap='round';
+    for(let k2=0;k2<11;k2++){
+      const gr=g.createLinearGradient(x0,0,W,0);
+      gr.addColorStop(0,'rgba(255,255,255,0)'); gr.addColorStop(0.35,mixw(pal.a,0.3)); gr.addColorStop(1,mixw(pal.m,0.1));
+      g.strokeStyle=gr; g.globalAlpha=0.35+0.06*(k2%4);
+      g.beginPath();
+      const yb=BH*(-0.05+k2*0.105);
+      for(let i=0;i<=90;i++){ const t=i/90, x=x0+(W-x0)*t;
+        const y=yb+Math.sin(t*Math.PI*2.2+k2*0.55)*BH*0.07+Math.sin(t*Math.PI*5.3+k2*1.3)*BH*0.025;
+        i?g.lineTo(x,y):g.moveTo(x,y); }
+      g.stroke();
+    }
+    g.restore();
+    g.fillStyle=pal.a; roundRectPath(g,0,BH*0.1,1.2*K,BH*0.8,0.6*K); g.fill();
+    let tx=3.8*K;
+    if(_hasLogo){ const ms=BH*0.56; brandMark(tx,(BH-ms)/2,ms,pal.m); tx+=ms+3*K; }
+    vstack([ line(_cTop, TS.tag, W*0.42, '800', 'kind', {color:pal.m, track:0.45*K}),
+             line(lesson, TS.xl, W*0.42, '800', 'lesson', {color:pal.ink}),
+             line(_cSub, TS.xs, W*0.42, '600', 'topic', {color:mixw(pal.d,0.35), body:1}) ],
+           {x:tx, top:0, bottom:BH, align:'left', lead:0.9});
+    vstack([ line(_rTop, TS.xs, W*0.28, '800', 'teacher', {color:pal.d}),
+             line(_rSub, TS.cap, W*0.28, '600', 'teacher', {color:pal.d, body:1}),
+             line(_sub, TS.cap, W*0.28, '600', null, {color:mixw(pal.d,0.3), body:1}) ],
+           {x:W-2*K, top:0, bottom:BH, align:'right', lead:0.9});
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='mozaik'){
+    g.textBaseline='alphabetic';
+    const BH=H, x0=W*0.56, sk=BH*0.35, rnd=_seed(97);
+    g.save(); g.beginPath(); g.moveTo(x0+sk,0); g.lineTo(W,0); g.lineTo(W,BH); g.lineTo(x0,BH); g.closePath(); g.clip();
+    const cs=BH/3, cols=Math.ceil((W-x0+sk)/(cs/2))+3;
+    const shades=[pal.d,pal.m,pal.a,mixw(pal.a,0.35),mixw(pal.m,0.25),mixw(pal.a,0.6)];
+    for(let r=0;r<3;r++) for(let ci=0;ci<cols;ci++){
+      const xL=x0-cs+ci*cs/2, yy=r*cs, upw=(ci+r)%2===0;
+      const col=shades[Math.floor(rnd()*shades.length)];
+      g.fillStyle=col; g.strokeStyle=col; g.lineWidth=1;
+      g.beginPath();
+      if(upw){ g.moveTo(xL,yy+cs); g.lineTo(xL+cs/2,yy); g.lineTo(xL+cs,yy+cs); }
+      else { g.moveTo(xL,yy); g.lineTo(xL+cs,yy); g.lineTo(xL+cs/2,yy+cs); }
+      g.closePath(); g.fill(); g.stroke();
+    }
+    g.restore();
+    if(_rTop||_rSub){
+      const pw=W*0.3, ph=BH*0.52, px=W-pw-2*K, py=(BH-ph)/2;
+      g.fillStyle=pal.d; g.globalAlpha=0.93; roundRectPath(g,px,py,pw,ph,ph/2); g.fill(); g.globalAlpha=1;
+      vstack([ line(_rTop, TS.xs, pw-6*K, '800','teacher',{color:'#fff'}),
+               line(_rSub, TS.cap, pw-6*K,'600','teacher',{color:'rgba(255,255,255,.85)',body:1}) ],
+             {x:px+pw/2, top:py, bottom:py+ph, align:'center', lead:0.8});
+    }
+    let tx=0.5*K;
+    if(_hasLogo){ const ms=BH*0.56; brandMark(tx,(BH-ms)/2,ms,pal.m); tx+=ms+3*K; }
+    vstack([ line(lesson, TS.xl, x0-tx-2*K, '800','lesson',{color:pal.ink}),
+             line(_cTop, TS.sm, x0-tx-2*K, '800','kind',{color:pal.m}),
+             line(_cSub, TS.xs, x0-tx-2*K, '600','topic',{color:mixw(pal.d,0.35),body:1}),
+             line(_sub, TS.cap, x0-tx-2*K, '600', null, {color:mixw(pal.d,0.45), body:1}) ],
+           {x:tx, top:0, bottom:BH, align:'left', lead:0.85});
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='noktali'){
+    g.textBaseline='alphabetic';
+    const BH=H, sp=2.1*K, cx0=W*0.66, sw=W*0.19;
+    g.fillStyle=pal.a;
+    for(let y=sp/2;y<BH-1.2*K;y+=sp) for(let x=sp/2;x<W;x+=sp){
+      const t=Math.exp(-Math.pow((x-cx0)/sw,2))*(0.6+0.4*Math.sin(y/BH*Math.PI));
+      const r=t*sp*0.46; if(r<0.12*K) continue;
+      g.globalAlpha=0.22+0.55*t; g.beginPath(); g.arc(x,y,r,0,Math.PI*2); g.fill();
+    }
+    g.globalAlpha=1;
+    g.fillStyle=pal.d; g.fillRect(0,BH-0.8*K,W*0.5,0.8*K);
+    g.fillStyle=pal.a; g.fillRect(W*0.5+1*K,BH-0.8*K,W*0.5-1*K,0.8*K);
+    let tx=0;
+    if(_hasLogo){ const ms=BH*0.6; brandMark(tx,(BH-ms)/2-0.4*K,ms,pal.m); tx+=ms+3*K; }
+    vstack([ line(lesson, TS.xl, W*0.44-tx, '800','lesson',{color:pal.ink}),
+             line([_cTop,_cSub].filter(Boolean).join('  ·  '), TS.xs, W*0.48-tx, '700','kind',{color:pal.m}) ],
+           {x:tx, top:0, bottom:BH-1*K, align:'left', lead:1.0});
+    vstack([ line(_rTop, TS.xs, W*0.24, '800','teacher',{color:pal.d}),
+             line(_rSub||_sub, TS.cap, W*0.24, '600','teacher',{color:mixw(pal.d,0.3),body:1}) ],
+           {x:W, top:0, bottom:BH-1*K, align:'right', lead:0.9});
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='kurdele'){
+    g.textBaseline='alphabetic';
+    const BH=H, rh=BH*0.3, ry=BH*0.5-rh/2, x1=W*0.30, x2=W*0.70, tl=8*K, drop=1.8*K;
+    g.fillStyle=pal.d;
+    g.beginPath(); g.moveTo(x1+2*K,ry+drop); g.lineTo(x1-tl,ry+drop); g.lineTo(x1-tl+3*K,ry+drop+rh/2); g.lineTo(x1-tl,ry+drop+rh); g.lineTo(x1+2*K,ry+drop+rh); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(x2-2*K,ry+drop); g.lineTo(x2+tl,ry+drop); g.lineTo(x2+tl-3*K,ry+drop+rh/2); g.lineTo(x2+tl,ry+drop+rh); g.lineTo(x2-2*K,ry+drop+rh); g.closePath(); g.fill();
+    const gr=g.createLinearGradient(x1,0,x2,0); gr.addColorStop(0,mixc(pal.a,'#000000',0.22)); gr.addColorStop(0.5,pal.a); gr.addColorStop(1,mixc(pal.a,'#000000',0.22));
+    g.fillStyle=gr; g.fillRect(x1,ry,x2-x1,rh);
+    g.fillStyle='rgba(255,255,255,.35)'; g.fillRect(x1,ry+0.7*K,x2-x1,0.3*K); g.fillRect(x1,ry+rh-1*K,x2-x1,0.3*K);
+    g.fillStyle='rgba(0,0,0,.38)';
+    g.beginPath(); g.moveTo(x1,ry+rh); g.lineTo(x1+2*K,ry+rh); g.lineTo(x1+2*K,ry+rh+drop); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(x2,ry+rh); g.lineTo(x2-2*K,ry+rh); g.lineTo(x2-2*K,ry+rh+drop); g.closePath(); g.fill();
+    vstack([ line(kind, TS.md, x2-x1-6*K, '800','kind',{color:'#fff', track:0.25*K}) ], {x:W/2, top:ry, bottom:ry+rh, align:'center'});
+    vstack([ line(lesson, TS.lg, x2-x1+10*K, '800','lesson',{color:pal.ink}) ], {x:W/2, top:0, bottom:ry-0.3*K, align:'center'});
+    vstack([ line(topic, TS.xs, x2-x1+10*K, '700','topic',{color:mixw(pal.d,0.3)}) ], {x:W/2, top:ry+rh+drop, bottom:BH, align:'center'});
+    let lx=0.5*K;
+    if(_hasLogo){ const ms=BH*0.5; brandMark(lx,(BH-ms)/2,ms,pal.m); lx+=ms+2.4*K; }
+    vstack([ line(_sub, TS.cap, Math.max(10*K,x1-tl-lx-2*K), '700', null, {color:mixw(pal.d,0.3), body:1}) ], {x:lx, top:0, bottom:BH, align:'left'});
+    vstack([ line(_rTop, TS.xs, W-(x2+tl)-3*K, '800','teacher',{color:pal.d}),
+             line(_rSub, TS.cap, W-(x2+tl)-3*K,'600','teacher',{color:mixw(pal.d,0.3),body:1}) ],
+           {x:W-0.5*K, top:0, bottom:BH, align:'right', lead:0.9});
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='benzen'){
+    g.textBaseline='alphabetic';
+    const BH=H, R=BH*0.2, col=mixw(pal.a,0.35);
+    const hexPts=(cx,cy)=>{ const p=[]; for(let i=0;i<6;i++){ const a=Math.PI/3*i+Math.PI/6; p.push([cx+R*Math.cos(a),cy+R*Math.sin(a)]); } return p; };
+    const dx=R*Math.sqrt(3), cy0=BH*0.5, bx=W*0.5;
+    const rings=[[bx,cy0-R*0.75],[bx+dx,cy0-R*0.75],[bx+dx/2,cy0+R*0.75],[bx+dx*1.5,cy0+R*0.75],[bx+dx*2.5,cy0+R*0.75],[bx+dx*3,cy0-R*0.75]];
+    rings.forEach(([cx,cy])=>{
+      const p=hexPts(cx,cy); g.strokeStyle=col; g.lineWidth=0.4*K; g.lineJoin='round';
+      g.beginPath(); p.forEach((q,k)=>k?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1])); g.closePath(); g.stroke();
+      g.strokeStyle=mixw(pal.a,0.55); g.lineWidth=0.26*K; g.beginPath(); g.arc(cx,cy,R*0.55,0,Math.PI*2); g.stroke();
+    });
+    const subst=(x,y,ang,txt)=>{ const x2=x+Math.cos(ang)*R*0.9, y2=y+Math.sin(ang)*R*0.9;
+      g.strokeStyle=col; g.lineWidth=0.4*K; g.beginPath(); g.moveTo(x,y); g.lineTo(x2,y2); g.stroke();
+      g.fillStyle=mixw(pal.m,0.2); g.font='800 '+(TS.cap*K)+'px '+BODY;
+      g.textAlign=Math.cos(ang)<-0.1?'right':(Math.cos(ang)>0.1?'left':'center');
+      g.fillText(txt, x2+Math.cos(ang)*0.8*K, y2+Math.sin(ang)*0.8*K+TS.cap*K*0.35); g.textAlign='left'; };
+    { const p=hexPts(rings[5][0],rings[5][1]); subst(p[5][0],p[5][1],-Math.PI/6,'OH'); }
+    { const p=hexPts(rings[0][0],rings[0][1]); subst(p[3][0],p[3][1],Math.PI+Math.PI/6,'NH₂'); }
+    const gr=g.createLinearGradient(0,0,0,BH); gr.addColorStop(0,pal.a); gr.addColorStop(1,pal.m);
+    g.fillStyle=gr; roundRectPath(g,0,BH*0.08,2.2*K,BH*0.84,1.1*K); g.fill();
+    let tx=5*K;
+    if(_hasLogo){ const ms=BH*0.56; brandMark(tx,(BH-ms)/2,ms,pal.m); tx+=ms+3*K; }
+    vstack([ line(_cTop, TS.tag, W*0.44-tx, '800','kind',{color:pal.a, track:0.45*K}),
+             line(lesson, TS.xl, W*0.44-tx, '800','lesson',{color:pal.ink}),
+             line(_cSub, TS.xs, W*0.44-tx, '600','topic',{color:mixw(pal.d,0.35),body:1}) ],
+           {x:tx, top:0, bottom:BH, align:'left', lead:0.9});
+    vstack([ line(_rTop, TS.xs, W*0.24, '800','teacher',{color:pal.d}),
+             line(_rSub, TS.cap, W*0.24, '600','teacher',{color:mixw(pal.d,0.3),body:1}),
+             line(_sub, TS.cap, W*0.24, '600', null, {color:mixw(pal.d,0.45),body:1}) ],
+           {x:W-1*K, top:0, bottom:BH, align:'right', lead:0.9});
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='erlen'){
+    g.textBaseline='alphabetic';
+    const BH=H;
+    g.fillStyle=pal.soft; roundRectPath(g,0,0,W,BH,2*K); g.fill();
+    const fh=BH*0.82, fy=(BH-fh)/2, fw=fh*0.8, fx=4*K, nw=fw*0.28, nh=fh*0.3, cx=fx+fw/2, cr=1.2*K;
+    const flask=()=>{ g.beginPath(); g.moveTo(cx-nw/2,fy); g.lineTo(cx+nw/2,fy); g.lineTo(cx+nw/2,fy+nh);
+      g.lineTo(fx+fw,fy+fh-cr); g.quadraticCurveTo(fx+fw,fy+fh,fx+fw-cr,fy+fh); g.lineTo(fx+cr,fy+fh);
+      g.quadraticCurveTo(fx,fy+fh,fx,fy+fh-cr); g.lineTo(cx-nw/2,fy+nh); g.closePath(); };
+    g.save(); flask(); g.clip();
+    g.fillStyle='#fff'; g.fillRect(fx-1,fy-1,fw+2,fh+2);
+    const ly=fy+fh*0.55, gr=g.createLinearGradient(0,ly,0,fy+fh); gr.addColorStop(0,pal.a); gr.addColorStop(1,mixc(pal.a,'#000000',0.3));
+    g.fillStyle=gr; g.beginPath(); g.moveTo(fx-1,ly);
+    for(let i=0;i<=20;i++){ const x=fx+fw*i/20; g.lineTo(x, ly+Math.sin(i/20*Math.PI*3)*0.5*K); }
+    g.lineTo(fx+fw+1,fy+fh+1); g.lineTo(fx-1,fy+fh+1); g.closePath(); g.fill();
+    g.fillStyle='rgba(255,255,255,.75)';
+    [[0.35,0.8,0.7],[0.6,0.72,0.5],[0.48,0.9,0.45],[0.7,0.86,0.6]].forEach(b=>{ g.beginPath(); g.arc(fx+fw*b[0],fy+fh*b[1],b[2]*K,0,Math.PI*2); g.fill(); });
+    g.restore();
+    g.strokeStyle=pal.d; g.lineWidth=0.5*K; g.lineJoin='round'; flask(); g.stroke();
+    g.fillStyle=pal.d; roundRectPath(g,cx-nw/2-0.8*K,fy-0.4*K,nw+1.6*K,1.1*K,0.5*K); g.fill();
+    g.strokeStyle=mixw(pal.a,0.15); g.lineWidth=0.3*K;
+    [[cx+nw/2+1.7*K,fy+nh*0.62,0.6],[cx+nw/2+2.7*K,fy+nh*0.28,0.45],[cx+nw/2+1.9*K,fy+0.7*K,0.35]].forEach(b=>{ g.beginPath(); g.arc(b[0],b[1],b[2]*K,0,Math.PI*2); g.stroke(); });
+    let rx=W-2.5*K;
+    if(_hasLogo){ const ms=BH*0.56; brandMark(rx-ms,(BH-ms)/2,ms,pal.m); rx-=ms+3*K; }
+    const tx=fx+fw+5*K;
+    vstack([ line(lesson, TS.xl, W*0.4, '800','lesson',{color:pal.ink}),
+             line(_cTop, TS.sm, W*0.4, '800','kind',{color:pal.m}),
+             line(_cSub, TS.xs, W*0.4, '600','topic',{color:mixw(pal.d,0.35),body:1}) ],
+           {x:tx, top:0, bottom:BH, align:'left', lead:0.9});
+    vstack([ line(_rTop, TS.xs, Math.max(14*K,rx-W*0.64), '800','teacher',{color:pal.d}),
+             line(_rSub, TS.cap, Math.max(14*K,rx-W*0.64), '600','teacher',{color:mixw(pal.d,0.3),body:1}),
+             line(_sub, TS.cap, Math.max(14*K,rx-W*0.64), '600', null, {color:mixw(pal.d,0.45),body:1}) ],
+           {x:rx, top:0, bottom:BH, align:'right', lead:0.9});
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='cerceve2'){
+    g.textBaseline='alphabetic';
+    const BH=H, top=3.2*K, rr=2*K, lw=0.32*K;
+    g.strokeStyle=mixw(pal.d,0.4); g.lineWidth=lw; roundRectPath(g,lw,top,W-2*lw,BH-top-lw,rr); g.stroke();
+    g.font='800 '+(TS.tag*K)+'px '+DISP;
+    let tw2=0; for(const ch of kind) tw2+=g.measureText(ch).width+0.35*K;
+    const tabW=Math.min(W*0.5,tw2+7*K), tabH=6.4*K, tabX=4*K;
+    g.fillStyle=pal.d; roundRectPath(g,tabX,0,tabW,tabH,1.6*K); g.fill();
+    vstack([ line(kind, TS.tag, tabW-5*K, '800','kind',{color:'#fff', track:0.35*K}) ], {x:tabX+tabW/2, top:0, bottom:tabH, align:'center'});
+    const y0=top, c1=W*0.36, c2=W*0.34, c3=W-c1-c2, x1=c1, x2=c1+c2;
+    g.fillStyle=mixw(pal.d,0.78);
+    if(topic) g.fillRect(x1,y0+3*K,0.25*K,BH-y0-5*K);
+    g.fillRect(x2,y0+3*K,0.25*K,BH-y0-5*K);
+    let tx=3*K;
+    if(_hasLogo){ const ms=(BH-y0)*0.55; brandMark(tx,y0+(BH-y0-ms)/2,ms,pal.m); tx+=ms+2.4*K; }
+    vstack([ line(lesson, TS.lg, x1-tx-2.5*K, '800','lesson',{color:pal.ink}),
+             line(_sub, TS.cap, x1-tx-2.5*K, '600', null, {color:mixw(pal.d,0.35), body:1}) ],
+           {x:tx, top:y0+1*K, bottom:BH, align:'left', lead:1.0});
+    vstack([ line(topic, TS.sm, c2-5*K, '800','topic',{color:pal.m}) ], {x:x1+c2/2, top:y0+1*K, bottom:BH, align:'center'});
+    if(_rTop) vstack([ line(_rTop, TS.xs, c3-5*K, '800','teacher',{color:pal.d}),
+             line(_rSub, TS.cap, c3-5*K, '600','teacher',{color:mixw(pal.d,0.3),body:1}) ],
+           {x:W-3*K, top:y0+1*K, bottom:BH, align:'right', lead:0.9});
+    else nameSlot(x2,y0+1*K,c3,BH-y0-1*K,'center');
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
+  if(cfg.template==='bant'){
+    g.textBaseline='alphabetic';
+    const BH=H, pt=1.5*K;
+    g.fillStyle='#FFFDF6'; roundRectPath(g,0,pt,W,BH-pt,1.4*K); g.fill();
+    g.strokeStyle='rgba(0,0,0,.09)'; g.lineWidth=0.25*K; roundRectPath(g,0,pt,W,BH-pt,1.4*K); g.stroke();
+    g.strokeStyle=mixw(pal.a,0.78); g.lineWidth=0.18*K;
+    for(let y=pt+5.2*K;y<BH-1*K;y+=4.2*K){ g.beginPath(); g.moveTo(0.3*K,y); g.lineTo(W-0.3*K,y); g.stroke(); }
+    const mx=16*K; g.strokeStyle='rgba(225,29,72,.45)'; g.lineWidth=0.3*K; g.beginPath(); g.moveTo(mx,pt); g.lineTo(mx,BH); g.stroke();
+    if(_hasLogo){ const ms=Math.min(12*K,BH*0.5); brandMark((mx-ms)/2,(BH-ms)/2+1*K,ms,pal.m); }
+    const tape=(cx,cy,w,h,ang)=>{ g.save(); g.translate(cx,cy); g.rotate(ang); g.fillStyle=pal.a; g.globalAlpha=0.5;
+      const z=0.8*K, n=5; g.beginPath(); g.moveTo(-w/2,-h/2); g.lineTo(w/2,-h/2);
+      for(let i=1;i<=n;i++) g.lineTo(w/2-(i%2?z:0), -h/2+h*i/n);
+      g.lineTo(-w/2,h/2);
+      for(let i=n-1;i>=0;i--) g.lineTo(-w/2+(i%2?z:0), -h/2+h*i/n);
+      g.closePath(); g.fill(); g.restore(); };
+    tape(10*K,3.4*K,20*K,6*K,-0.14); tape(W-12*K,3.6*K,22*K,6*K,0.12);
+    const tx=mx+4*K;
+    vstack([ line(lesson, TS.xl, W*0.5, '800','lesson',{color:pal.ink}),
+             line(_cTop, TS.sm, W*0.5, '800','kind',{color:pal.m}),
+             line(_cSub, TS.xs, W*0.5, '600','topic',{color:mixw(pal.d,0.35),body:1}) ],
+           {x:tx, top:pt+1*K, bottom:BH, align:'left', lead:0.9});
+    vstack([ line(_rTop, TS.xs, W*0.26, '800','teacher',{color:pal.d}),
+             line(_rSub, TS.cap, W*0.26, '600','teacher',{color:mixw(pal.d,0.3),body:1}),
+             line(_sub, TS.cap, W*0.26, '600', null, {color:mixw(pal.d,0.45),body:1}) ],
+           {x:W-3*K, top:pt+4*K, bottom:BH, align:'right', lead:0.9});
+    return c.toDataURL('image/jpeg',0.95);
+  }
+
   /* ═══ 6) MİNİMAL — tek satır, ince alt kural ═══ */
   if(cfg.template==='minimal'){
     g.textBaseline='alphabetic';
@@ -5940,7 +6586,7 @@ function headerImage(cfg){
     g.fillText(kind,0,H*0.5);
     g.fillStyle='#64748B'; g.font='600 '+(TS.xs*K)+'px '+BODY; g.textAlign='right';
     const sub=[lesson,topic,cfg.date].filter(Boolean).join('  ·  ');
-    g.fillText(sub,W,H*0.5);
+    g.fillText(sub,W-stampW(),H*0.5);
     g.fillStyle=pal.a; g.fillRect(0,H-1.1*K,W,1.1*K);
     g.textAlign='left'; return stamp('auto');
   }
@@ -6682,6 +7328,10 @@ function cfgNow(){
     logo: window._logoData || null,
     logoSize: parseInt($('f-logo-sz') && $('f-logo-sz').value) || 100,
     logoOp: parseInt($('f-logo-op') && $('f-logo-op').value) || 100,
+    logoAlign: ($('f-logo-align') && $('f-logo-align').value) || 'auto',
+    logoDX: parseFloat($('f-logo-dx') && $('f-logo-dx').value) || 0,
+    logoDY: parseFloat($('f-logo-dy') && $('f-logo-dy').value) || 0,
+    logoBg: ($('f-logo-bg') && $('f-logo-bg').value) || 'yok',
     watermark: ($('f-watermark') && $('f-watermark').value.trim()) || '',
     wmImg: window._wmImgData || null,
     logoAsWm: $('f-logo-wm') ? $('f-logo-wm').checked : false,
@@ -7406,7 +8056,14 @@ function coverImage(cfg,book){
 }
 
 /* ════════ Hızlı renk seçici (antet teması) ════════ */
+function fillThemeOptions(){
+  const sel=document.getElementById('f-hdrtheme'); if(!sel||sel._ext) return; sel._ext=1;
+  const cur=sel.value, nw=document.getElementById('th-new'), duo=document.getElementById('th-duo');
+  Object.keys(THEME_EXTRA).forEach(k=>{ const t=THEME_EXTRA[k], o=document.createElement('option'); o.value=k; o.textContent=t.t; (t.g?duo:nw).appendChild(o); });
+  sel.value=cur;
+}
 function fillThemeSwatches(){
+  fillThemeOptions();
   const box=document.getElementById('hdrtheme-sw'), sel=document.getElementById('f-hdrtheme'); if(!box||!sel) return;
   if(!box.childElementCount){
     box.innerHTML=Array.from(sel.options).map(o=>{ const t=P_THEME(o.value);
@@ -8092,7 +8749,8 @@ const FOY_PRESETS=[
   {n:'Sade',          tpl:'minimal',    hc:'dark',    c:'#334155'}
 ];
 const FOY_HC=[['emerald','Zümrüt'],['navy','Lacivert'],['crimson','Bordo'],['amber','Turuncu'],['dark','Grafit'],
-  ['purple','Mor'],['teal','Turkuaz'],['rose','Pembe'],['slate','Arduvaz'],['gold','Altın'],['indigo','İndigo']];
+  ['purple','Mor'],['teal','Turkuaz'],['rose','Pembe'],['slate','Arduvaz'],['gold','Altın'],['indigo','İndigo']]
+  .concat(Object.keys(THEME_EXTRA).map(k=>[k,THEME_EXTRA[k].s]));
 const FOY_ETK_COLORS=['#1D74C9','#7C3AED','#DC2626','#0E7C5A','#EA580C','#0F766E'];
 const FOY_K_COLORS=['#15803D','#0E7490','#C2410C','#7C3AED','#DC2626','#1D4ED8'];
 
