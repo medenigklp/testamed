@@ -1013,7 +1013,14 @@ body.showing{overflow:hidden}
 #qclean .qc-head b{flex:1;font-size:15px}
 #qclean .qc-x{width:42px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;font-size:16px}
 #qclean .qc-save{padding:9px 18px;border-radius:10px;background:#16A34A;color:#fff;font-weight:800;font-size:14px}
-#qclean .qc-stage{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px;display:flex}
+#qclean .qc-stagew{position:relative;flex:1;min-height:0;display:flex}
+#qclean .qc-stage{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px;display:flex;touch-action:pan-x pan-y}
+#qclean .qc-zbox{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:3}
+#qclean .qc-zbox button{width:44px;height:44px;border-radius:12px;background:rgba(17,20,24,.82);color:#fff;font-size:24px;font-weight:600;line-height:1;
+  box-shadow:0 4px 14px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18)}
+#qclean .qc-zbox button.fit{font-size:19px}
+#qclean .qc-zbox b{min-width:44px;text-align:center;font-size:11.5px;font-weight:800;background:rgba(17,20,24,.82);border-radius:8px;padding:3px 4px;color:#fff}
+#qclean .qc-hint{font-size:12px;line-height:1.4;color:var(--soft);margin-top:-2px}
 #qclean .qc-wrap{position:relative;margin:auto}
 #qclean #qc-cv{display:block;background:#fff;border-radius:4px;box-shadow:0 6px 24px rgba(0,0,0,.45);touch-action:none;max-width:none}
 #qclean .qc-stage.pan #qc-cv{touch-action:auto}
@@ -1030,7 +1037,7 @@ body.showing{overflow:hidden}
 #qclean .qc-sw.on{border:2px solid #fff;box-shadow:0 0 0 1.5px var(--ink2)}
 #qclean #qc-unpick{width:34px;height:34px;border-radius:9px;background:var(--bg);border:1.5px solid var(--line);font-size:13px}
 #qclean .qc-seg{display:flex;gap:6px}
-#qclean .qc-seg button{flex:1;padding:10px 4px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;font-size:13px;color:var(--ink2)}
+#qclean .qc-seg button{flex:1;padding:10px 2px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;font-size:12.5px;color:var(--ink2);white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
 #qclean .qc-seg button.on{background:var(--ink);border-color:var(--ink);color:#fff}
 #qclean .qc-inline{display:flex;align-items:center;gap:10px}
 #qclean .qc-inline label{flex:0 0 auto}
@@ -2838,8 +2845,8 @@ function grab(x,y,w,h){
   // "otomatik temizle" açıksa filigran ayarları kırpılan soruya hemen uygulanır (orijinal saklanır)
   let _img0=null, _qc=null;
   try{ const s=qcSettings(); if(s.auto && qcActive(s)){ _img0=t.toDataURL('image/jpeg',.90);
-    const id=c.getImageData(0,0,t.width,t.height); qcFilter(id,s); c.putImageData(id,0,0);
-    _qc={thr:s.thr,pick:s.pick,tol:s.tol,gray:s.gray,ops:[]}; } }catch(_){}
+    const id=c.getImageData(0,0,t.width,t.height); if(+s.thr>0||s.pick||s.gray) qcFilter(id,s); if(+s.sharp>0) qcSharpen(id,s.sharp); c.putImageData(id,0,0);
+    _qc={thr:s.thr,pick:s.pick,tol:s.tol,gray:s.gray,sharp:+s.sharp||0,ops:[]}; } }catch(_){}
 
   pendingCropData = {
     img: t.toDataURL('image/jpeg',.90),
@@ -3093,11 +3100,11 @@ function drawTray(){
 const QC_KEY='testamed_qclean';
 let QC=null;
 function qcSettings(){
-  const d={auto:false,thr:0,pick:null,tol:30,gray:false};
+  const d={auto:false,thr:0,pick:null,tol:30,gray:false,sharp:0};
   try{ return Object.assign(d, JSON.parse(localStorage.getItem(QC_KEY)||'{}')); }catch(_){ return d; }
 }
 function qcSaveSettings(s){ try{ localStorage.setItem(QC_KEY, JSON.stringify(s)); }catch(_){} }
-function qcActive(p){ return !!(p && ((+p.thr>0) || p.pick || p.gray)); }
+function qcActive(p){ return !!(p && ((+p.thr>0) || p.pick || p.gray || (+p.sharp>0))); }
 /* piksel filtresi: açık renkleri beyazlat · seçilen filigran rengini sil · isteğe bağlı siyah-beyaz */
 function qcFilter(id,p){
   const d=id.data, on=+p.thr>0, T=250-(+p.thr)*1.1, SOFT=22;
@@ -3115,24 +3122,109 @@ function qcFilter(id,p){
   }
   return id;
 }
-function qcDrawOps(ctx,ops){
-  ctx.save(); ctx.fillStyle='#fff'; ctx.strokeStyle='#fff'; ctx.lineCap='round'; ctx.lineJoin='round';
-  (ops||[]).forEach(o=>{
-    if(o.t==='r'){ ctx.fillRect(o.x,o.y,o.w,o.h); return; }
-    if(!o.pts||!o.pts.length) return;
-    if(o.pts.length===1){ ctx.beginPath(); ctx.arc(o.pts[0][0],o.pts[0][1],o.r,0,Math.PI*2); ctx.fill(); return; }
-    ctx.lineWidth=o.r*2; ctx.beginPath(); o.pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.stroke();
-  });
-  ctx.restore();
+/* ── dokun-sil: dokunulan renkli izi (logo/filigran artığı) bul ve sil ──
+   Tohum rengine benzeyen ya da açık+renkli (pastel) pikseller büyütülür; koyu yazı korunur.
+   Yazı çizgilerinin üstünden küçük boşluklarla atlanır; logonun yakındaki diğer renkli parçaları da alınır. */
+function qcWand(id,o){
+  const W=id.width, H=id.height, d=id.data, N=W*H;
+  const x0=Math.round(o.x), y0=Math.round(o.y);
+  if(x0<0||y0<0||x0>=W||y0>=H) return 0;
+  // parlaklık + renk sapması (gri/siyah yazıda ~0, soluk filigranda belirgin)
+  const L=new Uint8Array(N), CR=new Int16Array(N), CG=new Int16Array(N), CB=new Int16Array(N), M=new Float32Array(N);
+  for(let p=0,i=0;p<N;p++,i+=4){ const r=d[i],g=d[i+1],b=d[i+2], m=(r+g+b)/3;
+    L[p]=(r*77+g*150+b*29)>>8; CR[p]=r-m; CG[p]=g-m; CB[p]=b-m; M[p]=Math.sqrt(CR[p]*CR[p]+CG[p]*CG[p]+CB[p]*CB[p]); }
+  const t=Math.max(0.4,Math.min(2,(+o.tol||60)/60)), multi=o.multi!==false;
+  // tohum: dokunulan yerin çevresindeki renkli (soluk da olsa) pikseller
+  let sr=0,sg=0,sb=0,sl=0,sn=0;
+  const RS=Math.max(10,Math.round(Math.max(W,H)/60));
+  for(let R=2;R<=RS && sn<5;R+=2){ sr=sg=sb=sl=sn=0;
+    for(let y=Math.max(0,y0-R);y<=Math.min(H-1,y0+R);y++) for(let x=Math.max(0,x0-R);x<=Math.min(W-1,x0+R);x++){
+      const p=y*W+x; if(L[p]<120 || M[p]<4) continue; sr+=CR[p]; sg+=CG[p]; sb+=CB[p]; sl+=L[p]; sn++; } }
+  if(sn<5) return 0;
+  const SC=[sr/sn,sg/sn,sb/sn], SM=Math.max(1,Math.hypot(SC[0],SC[1],SC[2])), SL=sl/sn;
+  const magThr=Math.max(2.5,SM*0.42/t), cosThr=Math.max(0.45,Math.min(0.93,1-0.22*t));
+  const like=p=>{ if(L[p]<105 || M[p]<magThr || L[p]<SL-80) return false;
+    return (CR[p]*SC[0]+CG[p]*SC[1]+CB[p]*SC[2])/(M[p]*SM)>cosThr; };
+  const pastel=p=>L[p]>175 && M[p]>=Math.max(5,6/t);
+  const cand=new Uint8Array(N);
+  for(let p=0;p<N;p++) if(like(p) || (multi && pastel(p))) cand[p]=1;
+  let start=-1;
+  for(let R=0;R<=RS && start<0;R++) for(let y=Math.max(0,y0-R);y<=Math.min(H-1,y0+R) && start<0;y++) for(let x=Math.max(0,x0-R);x<=Math.min(W-1,x0+R);x++){
+    if(Math.max(Math.abs(x-x0),Math.abs(y-y0))!==R) continue; const p=y*W+x; if(cand[p] && like(p)){ start=p; break; } }
+  if(start<0) return 0;
+  const g=Math.max(3,Math.round(Math.max(W,H)/220)), maxN=Math.round(N*0.38);
+  const sel=new Uint8Array(N), st=new Int32Array(N);
+  let n=0, mnx=W, mxx=0, mny=H, mxy=0;
+  const grow=seedP=>{
+    let sp=0; sel[seedP]=1; st[sp++]=seedP;
+    while(sp){ const p=st[--sp]; n++; if(n>maxN) return false;
+      const x=p%W, y=(p-x)/W; if(x<mnx)mnx=x; if(x>mxx)mxx=x; if(y<mny)mny=y; if(y>mxy)mxy=y;
+      for(let yy=Math.max(0,y-g);yy<=Math.min(H-1,y+g);yy++){ const row=yy*W;
+        for(let xx=Math.max(0,x-g);xx<=Math.min(W-1,x+g);xx++){ const q=row+xx; if(cand[q] && !sel[q]){ sel[q]=1; st[sp++]=q; } } } }
+    return true; };
+  if(!grow(start)) return -1;
+  // aynı logonun yakındaki diğer renkli parçaları
+  if(multi){
+    const ex=Math.max(Math.round(Math.max(W,H)*0.04),Math.round(Math.max(mxx-mnx,mxy-mny)*0.6));
+    const bx0=Math.max(0,mnx-ex), bx1=Math.min(W-1,mxx+ex), by0=Math.max(0,mny-ex), by1=Math.min(H-1,mxy+ex);
+    for(let y=by0;y<=by1;y++) for(let x=bx0;x<=bx1;x++){ const p=y*W+x; if(cand[p] && !sel[p] && pastel(p)){ if(!grow(p)) return -1; } }
+  }
+  if(n<8) return 0;
+  // sil: seçilenler beyaz; çevresindeki renkli kenar griye, çok açık kalıntı beyaza
+  const near=new Uint8Array(N);
+  for(let y=Math.max(0,mny);y<=Math.min(H-1,mxy);y++) for(let x=Math.max(0,mnx);x<=Math.min(W-1,mxx);x++){
+    const p=y*W+x; if(!sel[p]) continue;
+    for(let yy=Math.max(0,y-g);yy<=Math.min(H-1,y+g);yy++) for(let xx=Math.max(0,x-g);xx<=Math.min(W-1,x+g);xx++) near[yy*W+xx]=1; }
+  // filigran sayfayı bir renk tonuyla "çarpar": yazı kenarındaki karışık pikselleri tondan arındırıp gri bırak (yazı incelmesin)
+  const SW=Math.max(150,Math.min(250,SL)), clean=p=>{ const v=Math.min(255,L[p]*255/SW); return v>243?255:v; };
+  for(let y=Math.max(0,mny-g);y<=Math.min(H-1,mxy+g);y++) for(let x=Math.max(0,mnx-g);x<=Math.min(W-1,mxx+g);x++){
+    const p=y*W+x, i=p*4;
+    if(sel[p]){ const v=clean(p); d[i]=d[i+1]=d[i+2]=v; continue; }
+    if(!near[p]) continue;
+    if(L[p]>228){ d[i]=d[i+1]=d[i+2]=255; continue; }
+    if(M[p]>=4){ const v=clean(p); d[i]=d[i+1]=d[i+2]=v; }
+  }
+  return n;
 }
-/* orijinal görsel + ayarlar → temizlenmiş tuval */
+/* netleştir: soluk yazıyı koyulaştır + kenarları keskinleştir (beyaz zemin beyaz kalır) */
+function qcSharpen(id,amt){
+  const a=Math.max(0,Math.min(100,+amt||0))/100; if(!a) return id;
+  const W=id.width, H=id.height, d=id.data, N=W*H;
+  const r=Math.max(1,Math.round(Math.max(W,H)/900)), win=2*r+1;
+  const src=new Float32Array(N*3), tmp=new Float32Array(N*3), blur=new Float32Array(N*3);
+  for(let p=0,i=0;p<N;p++,i+=4){ src[p*3]=d[i]; src[p*3+1]=d[i+1]; src[p*3+2]=d[i+2]; }
+  for(let y=0;y<H;y++) for(let c=0;c<3;c++){ let s=0; const row=y*W;
+    for(let x=-r;x<=r;x++) s+=src[(row+Math.min(W-1,Math.max(0,x)))*3+c];
+    for(let x=0;x<W;x++){ tmp[(row+x)*3+c]=s/win; s+=src[(row+Math.min(W-1,x+r+1))*3+c]-src[(row+Math.max(0,x-r))*3+c]; } }
+  for(let x=0;x<W;x++) for(let c=0;c<3;c++){ let s=0;
+    for(let y=-r;y<=r;y++) s+=tmp[(Math.min(H-1,Math.max(0,y))*W+x)*3+c];
+    for(let y=0;y<H;y++){ blur[(y*W+x)*3+c]=s/win; s+=tmp[(Math.min(H-1,y+r+1)*W+x)*3+c]-tmp[(Math.max(0,y-r)*W+x)*3+c]; } }
+  const amount=a*1.5, k=1+a*0.5;
+  for(let p=0,i=0;p<N;p++,i+=4) for(let c=0;c<3;c++){
+    const v0=src[p*3+c]; let v=v0+amount*(v0-blur[p*3+c]); v=255-(255-v)*k;
+    d[i+c]=v<0?0:(v>255?255:v); }
+  return id;
+}
+function qcDrawOps(ctx,ops){
+  (ops||[]).forEach(o=>{
+    if(o.t==='w'){ const c=ctx.canvas, id=ctx.getImageData(0,0,c.width,c.height); o._n=qcWand(id,o); if(o._n>0) ctx.putImageData(id,0,0); return; }
+    ctx.save(); ctx.fillStyle='#fff'; ctx.strokeStyle='#fff'; ctx.lineCap='round'; ctx.lineJoin='round';
+    if(o.t==='r'){ ctx.fillRect(o.x,o.y,o.w,o.h); ctx.restore(); return; }
+    if(!o.pts||!o.pts.length){ ctx.restore(); return; }
+    if(o.pts.length===1){ ctx.beginPath(); ctx.arc(o.pts[0][0],o.pts[0][1],o.r,0,Math.PI*2); ctx.fill(); ctx.restore(); return; }
+    ctx.lineWidth=o.r*2; ctx.beginPath(); o.pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.stroke();
+    ctx.restore();
+  });
+}
+/* orijinal görsel + ayarlar → temizlenmiş tuval (filtre → silgiler/dokun-sil → netleştir) */
 function qcCompose(im,p,ops,cv){
   cv=cv||document.createElement('canvas');
   cv.width=im.naturalWidth||im.width; cv.height=im.naturalHeight||im.height;
   const ctx=cv.getContext('2d',{willReadFrequently:true});
   ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height); ctx.drawImage(im,0,0);
-  if(qcActive(p)){ const id=ctx.getImageData(0,0,cv.width,cv.height); qcFilter(id,p); ctx.putImageData(id,0,0); }
+  if(+p.thr>0 || p.pick || p.gray){ const id=ctx.getImageData(0,0,cv.width,cv.height); qcFilter(id,p); ctx.putImageData(id,0,0); }
   qcDrawOps(ctx,ops);
+  if(+p.sharp>0){ const id=ctx.getImageData(0,0,cv.width,cv.height); qcSharpen(id,p.sharp); ctx.putImageData(id,0,0); }
   return cv;
 }
 function qcLoad(url){ return new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>res(null); im.src=url; }); }
@@ -3143,8 +3235,8 @@ function openQClean(id){
   if(!q||!q.img) return toast('Bu sorunun görseli yok',true);
   const s=qcSettings(), own=q.qc||null;
   QC={q, ops:own&&own.ops?own.ops.map(o=>JSON.parse(JSON.stringify(o))):[],
-      thr:own?own.thr:0, pick:own?own.pick:null, tol:own?own.tol:(s.tol||30), gray:own?!!own.gray:false,
-      mode:'brush', zoom:1, bs:18, base:null, bdata:null, cur:null, peek:false};
+      thr:own?own.thr:0, pick:own?own.pick:null, tol:own?own.tol:(s.tol||30), gray:own?!!own.gray:false, sharp:own?(+own.sharp||0):0,
+      mode:'wand', wt:60, zoom:1, bs:18, base:null, bdata:null, cur:null, peek:false};
   let ov=$('qclean');
   if(!ov){ ov=document.createElement('div'); ov.id='qclean'; ov.innerHTML=QC_HTML; document.body.appendChild(ov); qcBind(); }
   $('qc-auto').checked=!!s.auto;
@@ -3162,26 +3254,36 @@ function openQClean(id){
 }
 const QC_HTML=
  '<div class="qc-head"><button class="qc-x" onclick="closeQClean()" aria-label="Vazgeç">✕</button><b>Görseli temizle</b><button class="qc-save" onclick="qcSave()">Kaydet</button></div>'+
- '<div class="qc-stage" id="qc-stage"><div class="qc-wrap" id="qc-wrap"><canvas id="qc-cv"></canvas><div class="qc-rect" id="qc-rect"></div></div></div>'+
+ '<div class="qc-stagew"><div class="qc-stage" id="qc-stage"><div class="qc-wrap" id="qc-wrap"><canvas id="qc-cv"></canvas><div class="qc-rect" id="qc-rect"></div></div></div>'+
+  '<div class="qc-zbox"><button type="button" onclick="qcZoom(1)" aria-label="Yakınlaştır">+</button><b id="qc-z">%100</b><button type="button" onclick="qcZoom(-1)" aria-label="Uzaklaştır">−</button><button type="button" class="fit" onclick="qcZoomSet(1)" aria-label="Ekrana sığdır">⤢</button></div></div>'+
  '<div class="qc-tools">'+
+  '<div class="qc-seg" id="qc-mode"><button type="button" data-m="wand">🪄 Dokun-sil</button><button type="button" data-m="brush">🖌 Silgi</button><button type="button" data-m="rect">▭ Alan</button><button type="button" data-m="pan">✋ Kaydır</button></div>'+
+  '<div class="qc-hint" id="qc-hint"></div>'+
+  '<div class="qc-sec qc-inline" id="qc-wrow"><label>Dokun-sil gücü</label><input type="range" id="qc-wt" min="25" max="120" step="1" value="60"/></div>'+
+  '<div class="qc-sec qc-inline" id="qc-bsrow"><label>Silgi boyu</label><input type="range" id="qc-bs" min="6" max="60" step="1" value="18"/></div>'+
+  '<div class="qc-btns"><button type="button" onclick="qcUndo()">↶ Geri al</button><button type="button" id="qc-peek">Önce / Sonra</button><button type="button" onclick="qcOriginal()">⟲ Orijinal</button></div>'+
+  '<div class="qc-sec"><label>Netleştir · soluk yazıyı koyulaştır <b id="qc-sh-v">Kapalı</b></label>'+
+   '<input type="range" id="qc-sh" min="0" max="100" step="1" value="0"/></div>'+
   '<div class="qc-sec"><label>Açık renkli filigranı sil <b id="qc-thr-v">Kapalı</b></label>'+
    '<input type="range" id="qc-thr" min="0" max="100" step="1" value="0"/></div>'+
   '<div class="qc-sec qc-pickrow"><button type="button" id="qc-pick">🎯 Filigranın rengine dokun</button><span class="qc-sw" id="qc-sw"></span><button type="button" id="qc-unpick" aria-label="Renk seçimini kaldır">✕</button></div>'+
   '<div class="qc-sec" id="qc-tolrow"><label>Renk benzerliği <b id="qc-tol-v">30</b></label><input type="range" id="qc-tol" min="6" max="80" step="1" value="30"/></div>'+
-  '<div class="qc-seg" id="qc-mode"><button type="button" data-m="brush">🖌 Silgi</button><button type="button" data-m="rect">▭ Alan sil</button><button type="button" data-m="pan">✋ Kaydır</button></div>'+
-  '<div class="qc-sec qc-inline"><label>Silgi</label><input type="range" id="qc-bs" min="6" max="60" step="1" value="18"/>'+
-   '<span class="qc-zoom"><button type="button" onclick="qcZoom(-1)" aria-label="Uzaklaştır">−</button><b id="qc-z">%100</b><button type="button" onclick="qcZoom(1)" aria-label="Yakınlaştır">+</button></span></div>'+
-  '<div class="qc-btns"><button type="button" onclick="qcUndo()">↶ Geri al</button><button type="button" id="qc-peek">Önce / Sonra</button><button type="button" onclick="qcOriginal()">⟲ Orijinal</button></div>'+
   '<label class="qc-chk"><input type="checkbox" id="qc-gray"/> Siyah-beyaz yap</label>'+
   '<label class="qc-chk"><input type="checkbox" id="qc-auto"/> Bundan sonra kırptığım sorulara otomatik uygula</label>'+
   '<button type="button" class="qc-all" id="qc-all" onclick="qcApplyAll()">Bu ayarları bütün sorulara uygula</button>'+
  '</div>';
-function qcParams(){ return {thr:+QC.thr||0, pick:QC.pick||null, tol:+QC.tol||30, gray:!!QC.gray}; }
+function qcParams(){ return {thr:+QC.thr||0, pick:QC.pick||null, tol:+QC.tol||30, gray:!!QC.gray, sharp:+QC.sharp||0}; }
 function qcSyncUI(){
   if(!QC) return;
   $('qc-thr').value=QC.thr; $('qc-thr-v').textContent=QC.thr>0?('%'+QC.thr):'Kapalı';
   $('qc-tol').value=QC.tol; $('qc-tol-v').textContent=QC.tol;
-  $('qc-gray').checked=QC.gray; $('qc-bs').value=QC.bs;
+  $('qc-gray').checked=QC.gray; $('qc-bs').value=QC.bs; $('qc-wt').value=QC.wt;
+  $('qc-sh').value=QC.sharp; $('qc-sh-v').textContent=QC.sharp>0?('%'+QC.sharp):'Kapalı';
+  $('qc-wrow').style.display=QC.mode==='wand'?'':'none'; $('qc-bsrow').style.display=QC.mode==='brush'?'':'none';
+  const H={wand:'Silmek istediğin renkli lekeye, logo parçasına dokun. Sürükleyerek kaydır, iki parmakla büyüt.',
+    brush:'Silmek istediğin yeri parmağınla boya. İki parmakla büyüt ve kaydır.', rect:'Silinecek yeri kutu içine al. İki parmakla büyüt ve kaydır.',
+    pan:'Parmağınla kaydır, iki parmakla büyüt.', pick:'Resimde filigranın rengine dokun.'};
+  $('qc-hint').textContent=H[QC.mode]||'';
   const sw=$('qc-sw'); sw.style.background=QC.pick?'rgb('+QC.pick.join(',')+')':'transparent'; sw.classList.toggle('on',!!QC.pick);
   $('qc-unpick').style.display=QC.pick?'':'none'; $('qc-tolrow').style.display=QC.pick?'':'none';
   $('qc-pick').classList.toggle('on',QC.mode==='pick');
@@ -3195,32 +3297,46 @@ function qcRender(){
   if(QC.peek){ cv.width=QC.base.naturalWidth; cv.height=QC.base.naturalHeight; const x=cv.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,cv.width,cv.height); x.drawImage(QC.base,0,0); return; }
   qcCompose(QC.base,qcParams(),QC.ops,cv);
 }
-function qcZoom(d){
+function qcZoomSet(z,cx,cy){
   if(!QC) return;
-  QC.zoom=Math.max(1,Math.min(4,Math.round((QC.zoom+(d*0.5))*10)/10));
-  const st=$('qc-stage'), cv=$('qc-cv'), W=st.clientWidth-24;
-  const nat=QC.base?QC.base.naturalWidth:W;
+  const st=$('qc-stage'), cv=$('qc-cv'); if(!st||!cv) return;
+  const sr=st.getBoundingClientRect(); if(cx==null){ cx=sr.left+sr.width/2; cy=sr.top+sr.height/2; }
+  const r0=cv.getBoundingClientRect(), fx=r0.width?(cx-r0.left)/r0.width:0.5, fy=r0.height?(cy-r0.top)/r0.height:0.5;
+  QC.zoom=Math.max(1,Math.min(6,z));
+  const W=st.clientWidth-24, nat=QC.base?QC.base.naturalWidth:W;
   cv.style.width=Math.round(Math.min(W,nat*1.5)*QC.zoom)+'px';
+  const r1=cv.getBoundingClientRect();
+  st.scrollLeft+=(r1.left+fx*r1.width)-cx; st.scrollTop+=(r1.top+fy*r1.height)-cy;
   $('qc-z').textContent='%'+Math.round(QC.zoom*100);
 }
+function qcZoom(d){ if(!QC) return; qcZoomSet(d===0?QC.zoom:(d>0?QC.zoom*1.5:QC.zoom/1.5)); }
 function qcPt(e){
   const t=(e.touches&&e.touches[0])||(e.changedTouches&&e.changedTouches[0])||e;
   const cv=$('qc-cv'), r=cv.getBoundingClientRect();
   return {x:(t.clientX-r.left)*cv.width/r.width, y:(t.clientY-r.top)*cv.height/r.height, sx:t.clientX-r.left, sy:t.clientY-r.top, k:cv.width/r.width};
 }
+function qcWandAt(x,y){
+  QC.ops.push({t:'w',x:Math.round(x),y:Math.round(y),tol:QC.wt});
+  qcRender();
+  const o=QC.ops[QC.ops.length-1];
+  if(!(o._n>0)){ QC.ops.pop(); qcRender(); toast(o._n===-1?'Çok geniş bir alan seçildi — gücü azalt ya da “Alan” ile sil':'Burada silinecek renkli iz bulunamadı — lekenin tam üstüne dokun',true); }
+}
 function qcBind(){
-  const cv=$('qc-cv');
+  const cv=$('qc-cv'), st=$('qc-stage');
+  const multi=e=>e.touches && e.touches.length>1;
   const down=e=>{
-    if(!QC||!QC.base) return;
+    if(!QC||!QC.base||multi(e)) return;
     if(QC.mode==='pan') return;
     if(e.cancelable) e.preventDefault();
     const p=qcPt(e);
     if(QC.mode==='pick'){
       const d=QC.bdata, W=d.width, H=d.height; let r=0,g=0,b=0,n=0;
       for(let yy=Math.max(0,(p.y|0)-2);yy<=Math.min(H-1,(p.y|0)+2);yy++) for(let xx=Math.max(0,(p.x|0)-2);xx<=Math.min(W-1,(p.x|0)+2);xx++){ const i=(yy*W+xx)*4; r+=d.data[i]; g+=d.data[i+1]; b+=d.data[i+2]; n++; }
-      QC.pick=n?[Math.round(r/n),Math.round(g/n),Math.round(b/n)]:null; QC.mode='brush';
+      QC.pick=n?[Math.round(r/n),Math.round(g/n),Math.round(b/n)]:null; QC.mode='wand';
       qcSyncUI(); qcRender(); return;
     }
+    const t=(e.touches&&e.touches[0])||e;
+    if(QC.mode==='wand'){ QC.cur={t:'wt', x:p.x, y:p.y, cx:t.clientX, cy:t.clientY, moved:false}; return; }
     if(QC.mode==='brush'){
       QC.cur={t:'b', r:Math.max(1,Math.round(QC.bs*p.k/2)), pts:[[Math.round(p.x),Math.round(p.y)]]};
       const x=cv.getContext('2d'); x.fillStyle='#fff'; x.beginPath(); x.arc(p.x,p.y,QC.cur.r,0,Math.PI*2); x.fill();
@@ -3230,9 +3346,12 @@ function qcBind(){
     }
   };
   const move=e=>{
-    if(!QC||!QC.cur) return;
+    if(!QC||!QC.cur||multi(e)) return;
     if(e.cancelable) e.preventDefault();
     const p=qcPt(e);
+    if(QC.cur.t==='wt'){ const t=(e.touches&&e.touches[0])||e, dx=t.clientX-QC.cur.cx, dy=t.clientY-QC.cur.cy;
+      if(QC.cur.moved || Math.hypot(dx,dy)>8){ QC.cur.moved=true; st.scrollLeft-=dx; st.scrollTop-=dy; QC.cur.cx=t.clientX; QC.cur.cy=t.clientY; }
+      return; }
     if(QC.cur.t==='b'){
       const pts=QC.cur.pts, last=pts[pts.length-1];
       const x=cv.getContext('2d'); x.strokeStyle='#fff'; x.lineCap='round'; x.lineJoin='round'; x.lineWidth=QC.cur.r*2;
@@ -3248,6 +3367,7 @@ function qcBind(){
   const up=()=>{
     if(!QC||!QC.cur) return;
     const c=QC.cur; QC.cur=null; $('qc-rect').style.display='none';
+    if(c.t==='wt'){ if(!c.moved) qcWandAt(c.x,c.y); return; }
     if(c.t==='b') QC.ops.push({t:'b',r:c.r,pts:c.pts});
     else { const x=Math.round(Math.min(c.x0,c.x1)), y=Math.round(Math.min(c.y0,c.y1)), w=Math.round(Math.abs(c.x1-c.x0)), h=Math.round(Math.abs(c.y1-c.y0));
       if(w>2&&h>2) QC.ops.push({t:'r',x,y,w,h}); }
@@ -3257,11 +3377,34 @@ function qcBind(){
   cv.addEventListener('touchmove',move,{passive:false});
   cv.addEventListener('touchend',up); cv.addEventListener('touchcancel',up);
   cv.addEventListener('mousedown',down); document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+  // iki parmak: büyüt/küçült + kaydır (her modda)
+  let pin=null;
+  const dist=(a,b)=>Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+  st.addEventListener('touchstart',e=>{
+    if(!QC||e.touches.length!==2) return;
+    if(e.cancelable) e.preventDefault();
+    if(QC.cur){ QC.cur=null; $('qc-rect').style.display='none'; qcRender(); }
+    const a=e.touches[0], b=e.touches[1];
+    pin={d0:Math.max(10,dist(a,b)), z0:QC.zoom, cx:(a.clientX+b.clientX)/2, cy:(a.clientY+b.clientY)/2};
+  },{passive:false});
+  st.addEventListener('touchmove',e=>{
+    if(!pin||!QC||e.touches.length!==2) return;
+    if(e.cancelable) e.preventDefault();
+    const a=e.touches[0], b=e.touches[1], cx=(a.clientX+b.clientX)/2, cy=(a.clientY+b.clientY)/2;
+    st.scrollLeft-=cx-pin.cx; st.scrollTop-=cy-pin.cy; pin.cx=cx; pin.cy=cy;
+    qcZoomSet(pin.z0*dist(a,b)/pin.d0,cx,cy);
+  },{passive:false});
+  const pend=e=>{ if(e.touches.length<2) pin=null; };
+  st.addEventListener('touchend',pend); st.addEventListener('touchcancel',pend);
+  // masaüstü: ctrl/⌘ + tekerlek ile büyüt
+  st.addEventListener('wheel',e=>{ if(!QC||!(e.ctrlKey||e.metaKey)) return; e.preventDefault(); qcZoomSet(QC.zoom*(e.deltaY<0?1.12:1/1.12),e.clientX,e.clientY); },{passive:false});
   $('qc-thr').addEventListener('input',e=>{ QC.thr=+e.target.value; qcSyncUI(); clearTimeout(QC._t); QC._t=setTimeout(qcRender,40); });
   $('qc-tol').addEventListener('input',e=>{ QC.tol=+e.target.value; qcSyncUI(); clearTimeout(QC._t); QC._t=setTimeout(qcRender,40); });
+  $('qc-sh').addEventListener('input',e=>{ QC.sharp=+e.target.value; qcSyncUI(); clearTimeout(QC._t); QC._t=setTimeout(qcRender,60); });
   $('qc-bs').addEventListener('input',e=>{ QC.bs=+e.target.value; });
+  $('qc-wt').addEventListener('input',e=>{ QC.wt=+e.target.value; });
   $('qc-gray').addEventListener('change',e=>{ QC.gray=e.target.checked; qcRender(); });
-  $('qc-pick').addEventListener('click',()=>{ QC.mode=QC.mode==='pick'?'brush':'pick'; qcSyncUI(); });
+  $('qc-pick').addEventListener('click',()=>{ QC.mode=QC.mode==='pick'?'wand':'pick'; qcSyncUI(); });
   $('qc-unpick').addEventListener('click',()=>{ QC.pick=null; qcSyncUI(); qcRender(); });
   $('qc-mode').addEventListener('click',e=>{ const b=e.target.closest('button[data-m]'); if(!b) return; QC.mode=b.dataset.m; qcSyncUI(); });
   const pk=$('qc-peek');
@@ -3271,7 +3414,7 @@ function qcBind(){
   pk.addEventListener('mousedown',on); pk.addEventListener('mouseup',off); pk.addEventListener('mouseleave',off);
 }
 function qcUndo(){ if(!QC) return; if(QC.ops.length){ QC.ops.pop(); qcRender(); } else toast('Geri alınacak silgi işlemi yok'); }
-function qcOriginal(){ if(!QC) return; QC.ops=[]; QC.thr=0; QC.pick=null; QC.gray=false; qcSyncUI(); qcRender(); toast('Orijinal görsel — kaydedersen temizlik kaldırılır'); }
+function qcOriginal(){ if(!QC) return; QC.ops=[]; QC.thr=0; QC.pick=null; QC.gray=false; QC.sharp=0; qcSyncUI(); qcRender(); toast('Orijinal görsel — kaydedersen temizlik kaldırılır'); }
 function closeQClean(){ const ov=$('qclean'); if(ov) ov.classList.remove('on'); document.body.classList.remove('showing'); QC=null; }
 function qcRefreshViews(){
   try{ drawTray(); }catch(_){}
@@ -3281,11 +3424,11 @@ function qcStore(q,url,p,ops){
   const clean=!qcActive(p) && !(ops&&ops.length);
   if(clean){ const b=q.img0||q.annBase||q.img; delete q.img0; delete q.qc; annRebase(q,b); return; }
   if(!q.img0) q.img0=q.annBase||q.img;
-  q.qc={thr:p.thr,pick:p.pick,tol:p.tol,gray:p.gray,ops:ops||[]};
+  q.qc={thr:p.thr,pick:p.pick,tol:p.tol,gray:p.gray,sharp:+p.sharp||0,ops:(ops||[]).map(o=>{ const c=Object.assign({},o); delete c._n; return c; })};
   annRebase(q,url);
 }
 function qcRemember(p){
-  const s=qcSettings(); s.thr=p.thr; s.pick=p.pick; s.tol=p.tol; s.gray=p.gray; s.auto=$('qc-auto').checked; qcSaveSettings(s);
+  const s=qcSettings(); s.thr=p.thr; s.pick=p.pick; s.tol=p.tol; s.gray=p.gray; s.sharp=+p.sharp||0; s.auto=$('qc-auto').checked; qcSaveSettings(s);
 }
 function qcSave(){
   if(!QC||!QC.base) return closeQClean();
@@ -6249,7 +6392,7 @@ function qtOC(){ const q=_selQ(); openOC(q&&q.id); }
 /* ════════ Sürüm ve güncelleme ════════
    Ana ekrana eklenen uygulamada yenile düğmesi yok: açılışta ve uygulamaya geri dönüldüğünde
    sitedeki version.json okunur; daha yeni sürüm varsa üstte "Güncelle" şeridi çıkar. */
-const APP_VERSION='2026.11.15.2';
+const APP_VERSION='2026.11.15.3';
 function _verNum(v){ return String(v||'').split(/[.\-]/).slice(0,4).map(n=>parseInt(n,10)||0).reduce((a,n)=>a*1000+n,0); }
 function verLabel(v){ const p=String(v||'').split('.'); return p.length>=3?(p[2]+'.'+p[1]+'.'+p[0]+(p[3]&&p[3]!=='1'?' ('+p[3]+')':'')):String(v); }
 let _updLast=0, _updInfo=null;
