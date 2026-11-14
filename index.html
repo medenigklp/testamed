@@ -1345,6 +1345,48 @@ body.qfocus #pbar #b-omr{display:none!important}
 #updbar .ub-x{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.12);color:#fff}
 .appver{display:block;margin:14px auto 4px;background:none;border:0;color:var(--soft);font:600 12px var(--body);text-align:center;padding:8px}
 .appver u{text-decoration:underline;text-underline-offset:2px}
+/* ═══ Kullanım kılavuzu ═══ */
+.tbtn.tq{flex:0 0 auto;width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;font:800 17px var(--disp)}
+.hint .howto-btns{display:flex;gap:8px;margin:10px 0 4px;flex-wrap:wrap}
+.hint .howto-btns button{flex:1 1 140px;padding:12px 10px;border-radius:12px;border:1.5px solid var(--or);background:var(--tint);color:var(--or);font:800 13.5px var(--body)}
+.hint .howto-btns button.snd{background:var(--or);color:#fff}
+.gd-ov{position:fixed;inset:0;z-index:9995;background:var(--bg);display:none;flex-direction:column}
+.gd-ov.on{display:flex}
+.gd-top{display:flex;align-items:center;gap:10px;padding:max(10px,env(safe-area-inset-top)) 14px 10px;background:var(--w);border-bottom:1px solid var(--line)}
+.gd-top b{flex:1;font:700 16px var(--disp)}
+.gd-x{padding:9px 14px;border-radius:10px;background:var(--bg);border:1.5px solid var(--line);font:700 13.5px var(--body)}
+.gd-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 14px calc(24px + var(--safe));display:flex;flex-direction:column;gap:10px}
+.gd-player{position:sticky;top:0;z-index:2;margin:0 -14px;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:7px}
+.gd-pr{display:flex;gap:8px}
+.gd-play{flex:1;padding:14px 10px;border-radius:13px;background:var(--or);color:#fff;font:800 15px var(--body)}
+.gd-stop{flex:0 0 52px;border-radius:13px;background:var(--w);border:1.5px solid var(--line);font-size:18px}
+.gd-stop:disabled{opacity:.4}
+.gd-pr2{display:flex;align-items:center;gap:8px}
+.gd-pr2 #gd-now{flex:1;min-width:0;font-size:12px;color:var(--soft);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gd-rate{display:flex;gap:4px;flex:0 0 auto}
+.gd-rate button{padding:6px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--w);font:700 11.5px var(--body);color:var(--ink2)}
+.gd-rate button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.gd-novoice{font-size:12px;line-height:1.45;color:#8A4B08;background:#FFF4E5;border:1px solid #F8D19B;border-radius:10px;padding:9px 10px}
+.gd-search{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font:500 15px var(--body);background:var(--w);margin-top:4px}
+.gd-toc{display:flex;flex-wrap:wrap;gap:6px}
+.gd-toc button{padding:8px 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--w);font:700 12px var(--body);color:var(--ink2)}
+.gd-sec{background:var(--w);border:1px solid var(--line);border-radius:16px;padding:12px 14px;scroll-margin-top:130px}
+.gd-sh{display:flex;align-items:center;gap:9px;border-radius:10px;padding:2px 0}
+.gd-ic{font-size:20px;line-height:1}
+.gd-sh h3{flex:1;margin:0;font:700 16px var(--disp);color:var(--ink)}
+.gd-say{flex:0 0 auto;width:38px;height:38px;border-radius:11px;background:var(--tint);color:var(--or);font-size:16px}
+.gd-sec p{margin:8px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink2)}
+.gd-sec ul{margin:8px 0 0;padding-left:19px;display:flex;flex-direction:column;gap:6px}
+.gd-sec li{font-size:13.5px;line-height:1.5;color:var(--ink2)}
+.gd-k,.gd-sh{transition:background .2s}
+.gd-k.spk,.gd-sh.spk{background:#FFF7D6;border-radius:8px;box-shadow:0 0 0 4px #FFF7D6;color:var(--ink)}
+.gd-empty{text-align:center;font-size:13px;color:var(--soft);padding:16px}
+.gd-foot{font-size:12px;color:var(--soft);text-align:center;margin:6px 0 0}
+#gpill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + var(--safe));z-index:9994;display:flex;align-items:center;gap:6px;
+  background:#0E1A17;color:#fff;border-radius:999px;padding:6px 6px 6px 14px;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:calc(100vw - 24px)}
+#gpill .gp-t{background:none;color:#fff;font:700 13px var(--body);display:flex;gap:6px;align-items:center;min-width:0}
+#gpill .gp-t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
+#gpill .gp-b{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:14px;flex:0 0 auto}
 </style>
 <base target="_blank">
 </head>
@@ -1355,6 +1397,7 @@ body.qfocus #pbar #b-omr{display:none!important}
     <div class="tbar">
       <div class="brand-badge" id="brandLogo"></div>
       <h1>testamed</h1>
+      <button class="tbtn tq" id="t-help" onclick="openGuide()" aria-label="Kullanım kılavuzu" title="Kullanım kılavuzu">?</button>
       <button class="tbtn" id="t-lib" onclick="go('lib')">Kitaplık</button>
       <button class="tbtn" id="t-back" onclick="back()" style="display:none">Geri</button>
       <button class="tbtn go" id="t-next" onclick="next()" style="display:none">İleri</button>
@@ -1404,6 +1447,7 @@ body.qfocus #pbar #b-omr{display:none!important}
           <li>Sırala, puanla, cevap anahtarını al</li>
           <li>A4 test olarak yazdır veya PDF kaydet</li>
         </ol>
+        <div class="howto-btns"><button type="button" onclick="openGuide('genel')">📖 Ayrıntılı kullanım kılavuzu</button><button type="button" class="snd" onclick="openGuide('genel',true)">🔊 Sesli anlatım</button></div>
         <div id="engine">PDF motoru yükleniyor…</div>
       </div>
       <button type="button" class="appver" id="appver" onclick="checkUpdate(true)">testamed</button>
@@ -6392,7 +6436,7 @@ function qtOC(){ const q=_selQ(); openOC(q&&q.id); }
 /* ════════ Sürüm ve güncelleme ════════
    Ana ekrana eklenen uygulamada yenile düğmesi yok: açılışta ve uygulamaya geri dönüldüğünde
    sitedeki version.json okunur; daha yeni sürüm varsa üstte "Güncelle" şeridi çıkar. */
-const APP_VERSION='2026.11.15.3';
+const APP_VERSION='2026.11.15.4';
 function _verNum(v){ return String(v||'').split(/[.\-]/).slice(0,4).map(n=>parseInt(n,10)||0).reduce((a,n)=>a*1000+n,0); }
 function verLabel(v){ const p=String(v||'').split('.'); return p.length>=3?(p[2]+'.'+p[1]+'.'+p[0]+(p[3]&&p[3]!=='1'?' ('+p[3]+')':'')):String(v); }
 let _updLast=0, _updInfo=null;
@@ -6431,6 +6475,277 @@ function applyUpdate(force){
   const done=()=>{ try{ location.reload(); }catch(_){ location.href=location.pathname; } };
   try{ fetch(location.pathname+(location.search||''),{cache:'reload'}).then(done,done); }catch(_){ done(); }
   setTimeout(done,6000);
+}
+/* ════════ Kullanım kılavuzu + sesli anlatım ════════ */
+const GUIDE=[
+ {id:'genel', ic:'🧭', t:'Testamed nedir?', s:'Genel bakış',
+  p:'testamed; kitaptan, PDF\'ten ya da fotoğraftan soru kırpıp A4 test, yazılı ve konu anlatım föyü hazırlamanı sağlar. Hazırladığın her şey bu cihazda saklanır.',
+  li:['Üstteki dört adım işin sırasını gösterir: Kaynak, Sorular, Düzen ve Çıktı.',
+      'Kaynak: PDF ya da fotoğraf açar, soruları kırparsın.',
+      'Sorular: kırptığın soruları görür, doğru cevaplarını işaretlersin.',
+      'Düzen: antet, renk, sütun, kitapçık gibi bütün ayarları yaparsın.',
+      'Çıktı: sayfaları önizler, düzeltir ve PDF olarak alırsın.',
+      {t:'Sağ üstteki ? düğmesi bu kılavuzu her ekrandan, o ekranın bölümünde açar.', s:'Sağ üstteki soru işareti düğmesi bu kılavuzu her ekrandan, o ekranın bölümünde açar.'}]},
+ {id:'ekle', ic:'✂️', t:'Soru ekleme', s:'Soru ekleme',
+  p:'Soruları üç yoldan eklersin: PDF ya da fotoğraftan kırparak, yapay zekaya yazdırarak ya da soru bankandan seçerek.',
+  li:['PDF aç ile kitap, föy ya da deneme PDF\'ini; Fotoğraf aç ile tahtanın, defterin ya da kitabın fotoğrafını seç.',
+      'Sayfayı iki parmakla büyüt, sonra parmağınla sorunun etrafına kutu çiz.',
+      {t:'Açılan küçük çubuktan doğru şıkkı (A–E) seç ve ✓ işaretine dokun; soru teste eklenir. ✕ kutuyu iptal eder.', s:'Açılan küçük çubuktan doğru şıkkı seç ve onay işaretine dokun; soru teste eklenir. Çarpı, kutuyu iptal eder.'},
+      'Yazıya çevir, kutudaki soruyu metne dönüştürür; soru kökünü ve şıkları düzeltip yazı ya da resim olarak ekleyebilirsin.',
+      'Döndür yan duran sayfayı çevirir; Düzelt eğik çekilmiş sayfayı doğrultur; Temizle kirli görüntüyü açar (normal ve güçlü).',
+      'Sayfalar arasında oklarla geçer, artı ve eksi ile yaklaşırsın.',
+      'Yapay zekaya yazdır: ders, konu ve öğrenme çıktısını yaz. Hazır metni kopyalayıp istediğin yapay zekaya yapıştır; gelen cevabı geri yapıştırınca sorular listeye gelir. API anahtarın varsa otomatik de üretebilirsin.',
+      'Kitaplık\'taki soru bankandan da soru ekleyebilirsin.']},
+ {id:'sorular', ic:'📝', t:'Sorular sekmesi', s:'Sorular sekmesi',
+  p:'Düzen ekranındaki Sorular sekmesinde bütün sorular sıralıdır.',
+  li:[{t:'A–E düğmeleriyle her sorunun doğru cevabını işaretle; cevap anahtarı ve optik okuma bunu kullanır.', s:'A, B, C, D, E düğmeleriyle her sorunun doğru cevabını işaretle; cevap anahtarı ve optik okuma bunu kullanır.'},
+      'Toplam puanı yazarsan puan sorulara kendiliğinden dağıtılır; istersen soru başına puan da girebilirsin.',
+      'Oklarla sırayı değiştirir, çarpıyla soruyu silersin.',
+      'Çerçeve düğmesi o soruya özel çerçeve seçer; not düğmesi sorunun üstüne uyarı ya da bilgi kutusu ekler.',
+      {t:'⋯ düğmesi: üzerine işaretle, çözüm QR\'ı, öğrenme çıktısı ve filigran temizleme.', s:'Üç nokta düğmesi: üzerine işaretleme, çözüm kare kodu, öğrenme çıktısı ve filigran temizleme.'},
+      'Bilgi Kutusu ile sorular arasına uyarı, hatırlatma ya da formül kutusu koyabilirsin.',
+      'Soruları bankaya kaydet, soruları sonraki testlerde kullanmak üzere saklar.']},
+ {id:'temizle', ic:'🧽', t:'Görseli temizleme', s:'Görseli temizleme',
+  p:'Soruda kalan filigran, logo artığı ya da leke için. Sorunun ⋯ menüsünden Filigran / leke temizle\'yi ya da önizlemede Temizle\'yi seç.',
+  sp:'Soruda kalan filigran, logo artığı ya da leke için. Sorunun üç nokta menüsünden filigran, leke temizle seçeneğini ya da önizlemede Temizle düğmesini seç.',
+  li:['Dokun-sil: renkli lekenin ya da logo parçasının üstüne bir kez dokun; o iz silinir, yazıya dokunulmaz. Kalan parça olursa üstüne yine dokun.',
+      'Dokun-sil gücü kaydırıcısıyla az ya da fazla silmesini ayarlarsın.',
+      'Silgi ile parmağınla boyayarak, Alan ile kutu içine alarak silersin; Kaydır ile resmi kaydırırsın.',
+      'İki parmakla resmi büyütüp kaydırabilirsin; sağ üstteki artı, eksi ve sığdır düğmeleri de büyütür.',
+      'Netleştir, soluk ve gri kalmış yazıyı koyulaştırır, kenarları keskinleştirir.',
+      'Açık renkli filigranı sil bütün resimdeki açık renkleri beyazlatır; Filigranın rengine dokun seçtiğin rengi her yerden siler.',
+      'Siyah-beyaz yap ile renkleri kaldırırsın.',
+      'Önce / Sonra düğmesine basılı tutunca orijinali görürsün; Geri al son işlemi, Orijinal hepsini kaldırır.',
+      'Bu ayarları bütün sorulara uygula aynı temizliği tüm sorulara; otomatik uygula ise bundan sonra kırptığın sorulara uygular.',
+      'Değişiklikler Kaydet\'e basınca uygulanır; orijinal görsel her zaman saklanır.']},
+ {id:'isaret', ic:'✏️', t:'Soruyu işaretleme', s:'Soruyu işaretleme',
+  p:'Sorunun ⋯ menüsünden Üzerine işaretle\'yi seç.',
+  sp:'Sorunun üç nokta menüsünden Üzerine işaretle seçeneğini seç.',
+  li:['Kalem ile serbest çizer, Vurgu ile fosforlu kalem gibi üstünü boyarsın.',
+      'Ok, Kutu ve Daire ile önemli yeri gösterir; Yazı ile istediğin yere not yazarsın.',
+      'Rengi ve kalınlığı alttan seç; Geri al son işareti, çöp kutusu hepsini siler.',
+      'İşaretler soruya işlenir ama orijinal saklanır; hepsini silip kaydedersen soru eski hâline döner.']},
+ {id:'sablon', ic:'🎨', t:'Şablon ve renk', s:'Şablon ve renk',
+  p:'Düzen ekranındaki Şablon & Renk sekmesi testin görünüşünü belirler. Üstteki antet önizlemesi her değişikliği hemen gösterir.',
+  sp:'Düzen ekranındaki Şablon ve Renk sekmesi testin görünüşünü belirler. Üstteki antet önizlemesi her değişikliği hemen gösterir.',
+  li:['Başlık Şablonu antet tasarımıdır; Şablonları resimli gör ile 71 şablonun hepsini görerek seçersin.',
+      'Antetli Kağıda Bas şablonu, matbaadan aldığın antetli kâğıt için üst kısmı boş bırakır.',
+      'Antet Rengi: 71 hazır renk. Renk düğmelerinden seçilir, artı ile hepsi açılır. Kendi rengin düğmesiyle istediğin rengi seçersen bütün tonlar ondan üretilir.',
+      'Koyu blok rengi, antetteki koyu alanların rengidir; 20 renk ya da kendi rengin.',
+      {t:'Soru Numaralandırma: 1.  1)  (1)  01.  I.  Soru 1 gibi 17 biçim.', s:'Soru numaralandırmada nokta, parantez, iki basamak, Roma rakamı ve Soru bir gibi on yedi biçim var.'},
+      'Soru numarası stili: daire, kare, çerçeve, ok etiketi, altı çizili gibi 12 stil; seçince altında örneği görünür.',
+      'Sütun ve ayraç çizgilerinin rengini ve sayfa altındaki sayfa numarası biçimini de buradan seçersin.',
+      'Antet Yazısı bölümünde yazı karakterini; test adı, ders, konu ve öğretmen yazılarının büyüklüğünü ve kalınlığını ayarlarsın.']},
+ {id:'kunye', ic:'🏫', t:'Künye, kenar boşluğu, gerekli bilgiler', s:'Künye ve gerekli bilgiler',
+  li:['Künye sekmesine okul, ders, test adı, konu, öğretmen, sınıf ve tarihi yaz; antete bunlar yazılır.',
+      'Kenar Boşluk sekmesinde sayfanın dört kenar boşluğunu milimetre olarak değiştirirsin.',
+      'Gerekli bilgiler şeridi: Künye sekmesinde aç, elementlere dokunarak seç. Atom kütlesi, atom numarası ya da ikisi birden yazabilir.',
+      'Ek bilgi satırına Avogadro sayısı ya da molar hacim gibi değerleri yazabilirsin. Şerit ilk sayfada antetin altına basılır.']},
+ {id:'logo', ic:'🖼️', t:'Logo ve filigran', s:'Logo ve filigran',
+  li:['Logo & Filigran sekmesinden logonu yükle; antete kendiliğinden yerleşir ve bu cihazda saklanır.',
+      'Logonun boyutunu ve opaklığını kaydırıcılarla ayarlarsın.',
+      'Logo konumu ile sola, ortaya ya da sağa alırsın; antet önizlemesinde logoya dokunup sürükleyerek de taşıyabilirsin.',
+      'Logonun arkasına beyaz kutu ya da beyaz daire koyabilirsin.',
+      'Filigran olarak bir yazı ya da resim ekler; opaklığını, boyutunu, yerini ve açısını ayarlarsın. Logoyu filigran olarak da kullanabilirsin.']},
+ {id:'duzen', ic:'📐', t:'Sayfa düzeni', s:'Sayfa düzeni',
+  li:['Yazı tipi ve boyutu, metin olarak eklenen sorular içindir.',
+      'Sayfa yönü dikey ya da yatay olur; sütun sayısı birden altıya kadar çıkar.',
+      'Yerleşim: Dengeli soruları sayfalara eşit dağıtır, Sıkı sayfayı sonuna kadar doldurur.',
+      'Çözüm alanı kareli, çizgili ya da boş olur; varsayılan çözüm boşluğunu da seçersin.',
+      'Sorular ve sütunlar arasına noktalı ya da düz çizgi koyabilir, sütun arasına yazı ekleyebilirsin.',
+      'Yazılı sınav modu puan kutuları, Ad-Soyad hanesi ve çizgili cevap alanı ekler.',
+      'Öğrenci bilgi kutusu, ikinci sayfadan itibaren üst bilgi çubuğu, her soruda puan ve cevap anahtarı buradan açılır.',
+      'Cevap anahtarı son sayfada, her sayfanın altında ya da her sorunun yanında olabilir; sonuncusu öğretmen nüshası içindir.',
+      'Soru çerçevesi ile bütün sorulara aynı çerçeveyi verirsin.']},
+ {id:'kitapcik', ic:'📚', t:'Kitapçık, kapak ve öğrenciye özel kopyalar', s:'Kitapçık ve isimli kopyalar',
+  li:['Kaç kitapçık: tek, A ve B ya da dört kitapçığa kadar; diğer kitapçıklarda sorular karışık sıralanır.',
+      'Optik cevap kâğıdı ekle: her kitapçığın sonuna telefonla okunabilen optik form eklenir.',
+      {t:'Cevap anahtarı QR kodu: öğrenci son sayfadaki kodu okutup cevaplarını kontrol eder.', s:'Cevap anahtarı kare kodu: öğrenci son sayfadaki kodu okutup cevaplarını kontrol eder.'},
+      'Öğrenciye özel kopyalar: sınıf listesini her satıra numara ve ad soyad olacak şekilde yapıştır. Her kâğıtta öğrencinin adı ve numarası yazar.',
+      'İstersen soru sırası her öğrencide farklı olur; sonda öğretmen için cevap listesi çıkar.',
+      'Kapak sayfası ekle: öğrenci bilgileri ve sınav açıklamalarının olduğu kapak; sınav süresini ve ek açıklamayı da yazabilirsin.']},
+ {id:'onizleme', ic:'👀', t:'Önizleme', s:'Önizleme',
+  p:'Testi oluştur\'a basınca sayfalar önizlemede görünür; burada her şeyi elle düzeltebilirsin.',
+  sp:'Testi oluştur düğmesine basınca sayfalar önizlemede görünür; burada her şeyi elle düzeltebilirsin.',
+  li:['Bir soruya dokununca seçilir ve altta küçük bir çubuk açılır; eksi ve artı ile soruyu küçültüp büyütürsün.',
+      'Uzun bir soru ekrana sığmazsa sayfa kendiliğinden küçülür; büyüteç düğmesi sayfanın tamamını gösterir ya da normal boyuta döner.',
+      'Seçili soruyu sürükleyerek taşırsın; başka bir sorunun üstüne bırakırsan sıraları yer değiştirir.',
+      'Köşedeki kare tutamakla boyutlandırır, alttaki tutamakla çözüm boşluğunu değiştirirsin.',
+      {t:'⋯ düğmesi: boşluk, çerçeve, işaretleme, çözüm QR\'ı, öğrenme çıktısı, öne ya da sona alma, temizleme, sıfırlama ve silme. Bitti seçimi kapatır.', s:'Üç nokta düğmesinde boşluk, çerçeve, işaretleme, çözüm kare kodu, öğrenme çıktısı, öne ya da sona alma, temizleme, sıfırlama ve silme var. Bitti, seçimi kapatır.'},
+      'Üstteki Sayfa Başı her sayfadaki soru sayısını, Aralık sorular arası boşluğu değiştirir; Otomatik dağıt sayfaları yeniden dengeler.',
+      'Sunum, soruları tahtada ya da projeksiyonda tek tek büyük gösterir; cevabı da açabilirsin.']},
+ {id:'pdf', ic:'📄', t:'PDF, paylaşma ve kaydetme', s:'PDF ve paylaşma',
+  li:['PDF oluştur dosyayı hazırlar; PDF\'i kaydet ile indirir ya da yeni sekmede açarsın.',
+      'Paylaş, PDF\'i doğrudan WhatsApp\'a, Mail\'e ya da Dosyalar\'a gönderir.',
+      'Kaydet, testi Kitaplık\'taki Testlerim\'e saklar; sonra açıp düzenleyebilirsin.']},
+ {id:'optik', ic:'📷', t:'Optik okuma', s:'Optik okuma',
+  p:'Optik form, köşelerindeki dört siyah kare ve sağ üstteki form kodu sayesinde telefonla okunur.',
+  li:['Öğrenciler balonları kurşun kalemle tamamen doldurur.',
+      'Önizlemedeki Optik düğmesine ya da Kitapçık & Optik sekmesindeki düğmeye dokun.',
+      'Fotoğraf çek ile formu çek; dört köşe kadrajda olsun, gölge düşmesin. Galeriden seç ile birden çok fotoğrafı birlikte okutabilirsin.',
+      'Sonuç hemen çıkar: doğru, yanlış, boş, net ve puan. Yanlış okunan bir cevabı kutusuna dokunarak düzeltebilirsin.',
+      'Sınıf listesi girdiysen öğrencinin adı kendiliğinden gelir; girmediysen adı sen yazarsın.',
+      'Sonuçlar sekmesinde bütün öğrenciler; Madde analizi sekmesinde her sorunun yüzde kaç doğru yapıldığı ve şıkların dağılımı görünür.',
+      'Sonuçları paylaş, listeyi Excel\'de açılan bir dosya olarak gönderir.',
+      'Formları yazdırdıktan sonra soruların sırasını değiştirme; okuma o sıraya göre yapılır.']},
+ {id:'cikti', ic:'🎯', t:'Öğrenme çıktıları tablosu', s:'Öğrenme çıktıları tablosu',
+  li:['Sorular sekmesindeki Öğrenme çıktılarını eşleştir düğmesine dokun.',
+      'Önce öğrenme çıktılarını yaz; daha önce yazdıkların alttan tek dokunuşla eklenir.',
+      'Her sorunun yanındaki listeden ölçtüğü çıktıyı seç.',
+      'Tabloyu PDF yap ile soru numaraları, soru sayısı, puan ve oranın olduğu soru dağılım tablosunu alırsın; istersen teste son sayfa olarak da eklenir.']},
+ {id:'qr', ic:'🔗', t:'Çözüm QR\'ı', s:'Çözüm kare kodu',
+  li:[{t:'Sorunun ⋯ menüsünden Çözüm linki\'ne dokun ve çözüm videosunun adresini yapıştır.', s:'Sorunun üç nokta menüsünden Çözüm linki seçeneğine dokun ve çözüm videosunun adresini yapıştır.'},
+      {t:'Sorunun çözüm alanının köşesine küçük bir QR basılır; öğrenci okutup çözümü açar.', s:'Sorunun çözüm alanının köşesine küçük bir kare kod basılır; öğrenci okutup çözümü açar.'},
+      {t:'Kitapçık & Optik sekmesindeki kutuyla bütün çözüm QR\'larını gizleyebilirsin.', s:'Kitapçık ve Optik sekmesindeki kutuyla bütün çözüm kare kodlarını gizleyebilirsin.'}]},
+ {id:'foy', ic:'📘', t:'Konu anlatım föyü', s:'Konu anlatım föyü',
+  p:'Ana ekrandaki Konu Anlatım Föyü ile bloklardan oluşan çalışma kâğıdı hazırlarsın.',
+  li:['+ Blok ile başlık, metin, uyarı kutusu, kavram kutusu, formül listesi, tepkime, grafik, tablo, soru, etkinlik, eşleştirme, sıralama, boşluk doldurma ya da resim eklersin.',
+      'Grafik bloğunda enerji, ısınma ve soğuma eğrilerinin yanında kendi verinle çizgi ve sütun grafik çizebilirsin.',
+      'Blokları sürükleyerek sıralar, dokunarak düzenlersin.',
+      'Üstteki ayarlardan antet şablonu, föy rengi, tek ya da iki sütun ve sayfa çerçevesi seçilir.',
+      'Önizle ile sayfaları görür, Oluştur ile PDF alırsın; Kaydet föyünü saklar.']},
+ {id:'kitaplik', ic:'🗂️', t:'Kitaplık, panel ve yedek', s:'Kitaplık ve yedek',
+  li:['Kitaplık\'ta Bankam soru bankandır, Testlerim kaydettiğin testlerdir.',
+      'Yedek sekmesinde Yedek dosyası oluştur ile bütün soru ve testlerini tek dosyaya kaydedersin; başka cihazda Yedekten geri yükle ile açarsın.',
+      'Ana ekrana eklenen uygulamanın kayıtları yalnızca o simgeye aittir; simgeyi silmeden önce mutlaka yedek al.',
+      'Panel ekranında öğretmen profilin, aylık test hedefin, sınav takvimin ve son altı ayın sayıları görünür.']},
+ {id:'guncel', ic:'🔄', t:'Güncellemeler', s:'Güncellemeler',
+  li:['Yeni sürüm çıkınca üstte Yeni sürüm hazır şeridi görünür; Güncelle\'ye dokunman yeterli.',
+      'Güncellemeden önce kaydetmediğin soruları kaydet.',
+      'Ana ekranın en altında sürüm numarası yazar; ona dokunarak güncellemeleri elle denetleyebilirsin.']}
+];
+const _GSCR={home:'genel',view:'ekle',ai:'ekle',prev:'onizleme',lib:'kitaplik',panel:'kitaplik',foy:'foy'};
+const _GTAB={p1:'sablon',p2:'kunye',p3:'kunye',p4:'logo',p5:'duzen',p6:'kitapcik',p7:'sorular'};
+let GD={on:false,paused:false,q:[],i:0,rate:1,voice:null};
+const _gTxt=x=>typeof x==='string'?x:x.t, _gSay=x=>typeof x==='string'?x:(x.s||x.t);
+function _gClean(t){
+  return String(t||'').replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}⤢▦▭✓✕↶⟲⋯]/gu,' ')
+    .replace(/\s*·\s*/g,', ').replace(/&/g,' ve ').replace(/\s*\/\s*/g,', ').replace(/\s+/g,' ').trim();
+}
+function _gChunks(t){
+  const out=[]; String(t).replace(/([.!?…;])\s+/g,'$1\n').split('\n').forEach(s=>{ s=s.trim(); if(!s) return;
+    while(s.length>230){ let k=s.lastIndexOf(', ',220); if(k<80) k=220; out.push(s.slice(0,k+1)); s=s.slice(k+1).trim(); }
+    if(s) out.push(s); });
+  return out;
+}
+function guideVoiceOk(){ return typeof window.speechSynthesis!=='undefined' && typeof window.SpeechSynthesisUtterance!=='undefined'; }
+function _gVoice(){
+  try{ const vs=speechSynthesis.getVoices()||[], tr=vs.filter(v=>/^tr([-_]|$)/i.test(v.lang||''));
+    return tr.find(v=>/premium|enhanced|gelişmiş/i.test(v.name))||tr.find(v=>v.localService)||tr[0]||null; }catch(_){ return null; }
+}
+function _gEnsureUI(){
+  let ov=$('guide'); if(ov) return ov;
+  ov=document.createElement('div'); ov.id='guide'; ov.className='gd-ov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-label','Kullanım kılavuzu');
+  let k=0;
+  const secs=GUIDE.map((g,si)=>'<section class="gd-sec" id="gd-'+g.id+'" data-si="'+si+'"><div class="gd-sh"><span class="gd-ic">'+g.ic+'</span><h3>'+esc(g.t)+'</h3>'+
+      '<button type="button" class="gd-say" data-si="'+si+'" aria-label="Bu bölümü sesli dinle">🔊</button></div>'+
+      (g.p?'<p class="gd-k" data-k="'+(k++)+'">'+esc(g.p)+'</p>':'')+
+      '<ul>'+g.li.map(x=>'<li class="gd-k" data-k="'+(k++)+'">'+esc(_gTxt(x))+'</li>').join('')+'</ul></section>').join('');
+  ov.innerHTML='<div class="gd-top"><b>📖 Kullanım Kılavuzu</b><button type="button" class="gd-x" onclick="closeGuide()">Kapat</button></div>'+
+    '<div class="gd-body" id="gd-body">'+
+      '<div class="gd-player" id="gd-player">'+
+        '<div class="gd-pr"><button type="button" class="gd-play" id="gd-play">🔊 Baştan sesli dinle</button><button type="button" class="gd-stop" id="gd-stop" aria-label="Durdur">⏹</button></div>'+
+        '<div class="gd-pr2"><span id="gd-now">Bütün özellikleri sırayla anlatır · yaklaşık 13 dakika</span><span class="gd-rate" id="gd-rate"><button type="button" data-r="0.85">0,85×</button><button type="button" data-r="1">1×</button><button type="button" data-r="1.2">1,2×</button></span></div>'+
+        '<div class="gd-novoice" id="gd-novoice" hidden></div>'+
+      '</div>'+
+      '<input class="gd-search" id="gd-search" type="search" placeholder="Ara: örn. optik, logo, filigran" aria-label="Kılavuzda ara"/>'+
+      '<div class="gd-toc" id="gd-toc">'+GUIDE.map(g=>'<button type="button" data-id="'+g.id+'">'+g.ic+' '+esc(g.s)+'</button>').join('')+'</div>'+
+      secs+'<div class="gd-empty" id="gd-empty" hidden>Aradığın kelime kılavuzda yok.</div>'+
+      '<p class="gd-foot">Sorun yaşarsan önce uygulamayı kapatıp aç; yeni sürüm varsa üstteki şeritten güncelle.</p>'+
+    '</div>';
+  document.body.appendChild(ov);
+  ov.querySelector('#gd-play').onclick=()=>{ if(GD.on && !GD.paused){ guidePause(); } else if(GD.on && GD.paused){ guideResume(); } else guideSpeak(0,false); };
+  ov.querySelector('#gd-stop').onclick=()=>guideStop();
+  ov.querySelector('#gd-rate').addEventListener('click',e=>{ const b=e.target.closest('button[data-r]'); if(!b) return; GD.rate=+b.dataset.r; try{ localStorage.setItem('testamed_grate',String(GD.rate)); }catch(_){} _gSync(); if(GD.on && !GD.paused){ speechSynthesis.cancel(); setTimeout(_gNext,80); } });
+  ov.querySelector('#gd-toc').addEventListener('click',e=>{ const b=e.target.closest('button[data-id]'); if(!b) return; const s=$('gd-'+b.dataset.id); if(s) s.scrollIntoView({block:'start',behavior:'smooth'}); });
+  ov.addEventListener('click',e=>{ const b=e.target.closest('.gd-say'); if(b) guideSpeak(+b.dataset.si,true); });
+  ov.querySelector('#gd-search').addEventListener('input',e=>{
+    const q=e.target.value.trim().toLocaleLowerCase('tr-TR'); let any=false;
+    ov.querySelectorAll('.gd-sec').forEach(s=>{ let hit=false;
+      s.querySelectorAll('.gd-k').forEach(el=>{ const m=!q || el.textContent.toLocaleLowerCase('tr-TR').includes(q) || s.querySelector('h3').textContent.toLocaleLowerCase('tr-TR').includes(q); el.hidden=!m; if(m) hit=true; });
+      s.hidden=!hit; if(hit) any=true; });
+    ov.querySelector('#gd-toc').hidden=!!q; ov.querySelector('#gd-empty').hidden=any; });
+  try{ const r=+localStorage.getItem('testamed_grate'); if(r) GD.rate=r; }catch(_){}
+  if(guideVoiceOk()){ try{ speechSynthesis.addEventListener('voiceschanged',_gSync); }catch(_){} }
+  return ov;
+}
+function openGuide(sec,speak){
+  const ov=_gEnsureUI(); ov.classList.add('on'); document.body.classList.add('showing');
+  const p=$('gpill'); if(p) p.remove();
+  if(!sec){ sec=_GSCR[typeof screen==='string'?screen:'home']||'genel';
+    if(screen==='set'){ const t=document.querySelector('.set-tab.on'); if(t && _GTAB[t.dataset.pane]) sec=_GTAB[t.dataset.pane]; } }
+  _gSync();
+  const s=$('gd-'+sec), body=$('gd-body');
+  if(speak){ body.scrollTop=0; guideSpeak(0,false); }
+  else if(s && sec!=='genel') setTimeout(()=>{ try{ s.scrollIntoView({block:'start'}); }catch(_){} },30);
+  else body.scrollTop=0;
+}
+function closeGuide(){
+  const ov=$('guide'); if(ov) ov.classList.remove('on'); document.body.classList.remove('showing');
+  if(GD.on) _gPill();
+}
+function _gPill(){
+  let p=$('gpill'); if(!p){ p=document.createElement('div'); p.id='gpill'; document.body.appendChild(p); }
+  p.innerHTML='<button type="button" class="gp-t" onclick="openGuide(GD.curSec)">🔊 <span>'+esc(GD.label||'Kılavuz okunuyor')+'</span></button>'+
+    '<button type="button" class="gp-b" onclick="'+(GD.paused?'guideResume()':'guidePause()')+'" aria-label="'+(GD.paused?'Devam et':'Duraklat')+'">'+(GD.paused?'▶':'⏸')+'</button>'+
+    '<button type="button" class="gp-b" onclick="guideStop()" aria-label="Durdur">✕</button>';
+}
+function _gSync(){
+  const ov=$('guide');
+  if(ov){
+    const pl=$('gd-play'); if(pl) pl.textContent=!GD.on?'🔊 Baştan sesli dinle':(GD.paused?'▶ Devam et':'⏸ Duraklat');
+    const st=$('gd-stop'); if(st) st.disabled=!GD.on;
+    ov.querySelectorAll('#gd-rate button').forEach(b=>b.classList.toggle('on',+b.dataset.r===GD.rate));
+    const nv=$('gd-novoice');
+    if(nv){ if(!guideVoiceOk()){ nv.hidden=false; nv.textContent='Bu tarayıcı sesli okumayı desteklemiyor; kılavuzu okuyarak kullanabilirsin.'; }
+      else { const v=_gVoice(), vs=(speechSynthesis.getVoices()||[]); nv.hidden=!(vs.length && !v);
+        nv.textContent='Telefonunda Türkçe ses yok gibi görünüyor. iPhone\'da Ayarlar → Erişilebilirlik → Seslendirilen İçerik → Sesler → Türkçe\'den bir ses indirebilirsin.'; } }
+  }
+  if($('gpill')) _gPill();
+}
+function _gMark(el){
+  document.querySelectorAll('#guide .spk').forEach(x=>x.classList.remove('spk'));
+  if(!el) return; el.classList.add('spk');
+  const ov=$('guide'); if(ov && ov.classList.contains('on')){ try{ el.scrollIntoView({block:'center',behavior:'smooth'}); }catch(_){} }
+}
+function guideSpeak(si,only){
+  if(!guideVoiceOk()){ toast('Bu tarayıcı sesli okumayı desteklemiyor',true); return; }
+  _gEnsureUI();
+  try{ speechSynthesis.cancel(); }catch(_){}
+  const q=[];
+  GUIDE.forEach((g,i)=>{ if(i<si || (only && i!==si)) return;
+    const sec=$('gd-'+g.id), ks=sec?[...sec.querySelectorAll('.gd-k')]:[];
+    const head=sec?sec.querySelector('h3'):null;
+    q.push({el:head, t:_gClean(g.t)+'.', si:i});
+    let n=0;
+    if(g.p){ _gChunks(_gClean(g.sp||g.p)).forEach(c=>q.push({el:ks[n],t:c,si:i})); n++; }
+    g.li.forEach(x=>{ _gChunks(_gClean(_gSay(x))).forEach(c=>q.push({el:ks[n],t:c,si:i})); n++; });
+  });
+  GD.on=true; GD.paused=false; GD.q=q; GD.i=0; GD.only=only; GD.voice=_gVoice();
+  _gNext();
+}
+function _gNext(){
+  if(!GD.on || GD.paused) return;
+  const it=GD.q[GD.i];
+  if(!it){ guideStop(true); return; }
+  const g=GUIDE[it.si]; GD.curSec=g.id; GD.label=g.s+' · '+(it.si+1)+'/'+GUIDE.length;
+  const nw=$('gd-now'); if(nw) nw.textContent='Şimdi: '+GD.label;
+  _gMark(it.el && it.el.tagName==='H3'?it.el.closest('.gd-sec').querySelector('.gd-sh'):it.el);
+  if($('gpill')) _gPill();
+  const u=new SpeechSynthesisUtterance(it.t); u.lang='tr-TR'; if(GD.voice){ try{ u.voice=GD.voice; }catch(_){} } u.rate=GD.rate; u.pitch=1;
+  const my=GD.i;
+  u.onend=()=>{ if(!GD.on || GD.paused || GD.i!==my) return; GD.i++; _gNext(); };
+  u.onerror=e=>{ if(!GD.on || GD.paused || GD.i!==my) return; if(e && (e.error==='interrupted'||e.error==='canceled')) return; GD.i++; setTimeout(_gNext,30); };
+  try{ speechSynthesis.speak(u); }catch(_){ guideStop(); }
+  _gSync();
+}
+function guidePause(){ if(!GD.on) return; GD.paused=true; try{ speechSynthesis.cancel(); }catch(_){} _gSync(); }
+function guideResume(){ if(!GD.on) return; GD.paused=false; try{ speechSynthesis.cancel(); }catch(_){} setTimeout(_gNext,60); _gSync(); }
+function guideStop(done){
+  GD.on=false; GD.paused=false; try{ speechSynthesis.cancel(); }catch(_){}
+  _gMark(null); const p=$('gpill'); if(p) p.remove();
+  const nw=$('gd-now'); if(nw) nw.textContent=done?'Anlatım bitti · istediğin bölümün yanındaki 🔊 ile yeniden dinleyebilirsin':'Bütün özellikleri sırayla anlatır · yaklaşık 13 dakika';
+  _gSync();
 }
 function appVerUI(){ const e=document.getElementById('appver'); if(e) e.innerHTML='testamed · sürüm '+esc(verLabel(APP_VERSION))+' · <u>güncellemeleri denetle</u>'; }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') checkUpdate(false); });
