@@ -1329,6 +1329,15 @@ body.qfocus #pbar #b-omr{display:none!important}
 .qact button{display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:700 14px var(--body);color:var(--ink);text-align:left}
 .qact button small{margin-left:auto;font-size:11.5px;color:var(--soft);font-weight:600;max-width:46%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+#updbar{position:fixed;left:10px;right:10px;top:calc(8px + env(safe-area-inset-top));z-index:10000;display:flex;align-items:center;gap:8px;
+  background:#0E1A17;color:#fff;border-radius:14px;padding:10px 10px 10px 14px;box-shadow:0 10px 30px rgba(0,0,0,.3);animation:rise .25s}
+@media(min-width:560px){#updbar{left:50%;right:auto;transform:translateX(-50%);width:440px}}
+#updbar .ub-t{flex:1;min-width:0;display:flex;flex-direction:column;font:700 14px var(--body)}
+#updbar small{font-weight:500;font-size:12px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#updbar .ub-go{flex:0 0 auto;padding:10px 14px;border-radius:10px;background:#16A34A;color:#fff;font:800 13.5px var(--body)}
+#updbar .ub-x{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.12);color:#fff}
+.appver{display:block;margin:14px auto 4px;background:none;border:0;color:var(--soft);font:600 12px var(--body);text-align:center;padding:8px}
+.appver u{text-decoration:underline;text-underline-offset:2px}
 </style>
 <base target="_blank">
 </head>
@@ -1390,6 +1399,7 @@ body.qfocus #pbar #b-omr{display:none!important}
         </ol>
         <div id="engine">PDF motoru yükleniyor…</div>
       </div>
+      <button type="button" class="appver" id="appver" onclick="checkUpdate(true)">testamed</button>
     </div>
 
     <!-- 2. Ekran: Görüntüleyici & Tuval -->
@@ -6236,6 +6246,52 @@ function openQActions(q){
 function qtAnnot(){ const q=_selQ(); if(q) openAnnot(q); }
 function qtLink(){ const q=_selQ(); if(q) openLinkDialog(q); }
 function qtOC(){ const q=_selQ(); openOC(q&&q.id); }
+/* ════════ Sürüm ve güncelleme ════════
+   Ana ekrana eklenen uygulamada yenile düğmesi yok: açılışta ve uygulamaya geri dönüldüğünde
+   sitedeki version.json okunur; daha yeni sürüm varsa üstte "Güncelle" şeridi çıkar. */
+const APP_VERSION='2026.11.15.2';
+function _verNum(v){ return String(v||'').split(/[.\-]/).slice(0,4).map(n=>parseInt(n,10)||0).reduce((a,n)=>a*1000+n,0); }
+function verLabel(v){ const p=String(v||'').split('.'); return p.length>=3?(p[2]+'.'+p[1]+'.'+p[0]+(p[3]&&p[3]!=='1'?' ('+p[3]+')':'')):String(v); }
+let _updLast=0, _updInfo=null;
+async function checkUpdate(manual){
+  if(!/^https?:$/.test(location.protocol)){ if(manual) toast('Güncelleme denetimi yalnızca internet sitesinde çalışır'); return; }
+  if(!manual && Date.now()-_updLast<15*60*1000) return;
+  _updLast=Date.now();
+  try{
+    const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error(r.status);
+    const j=await r.json();
+    if(j && _verNum(j.v)>_verNum(APP_VERSION)){ _updInfo=j; showUpdateBar(j); }
+    else if(manual) toast('En güncel sürümü kullanıyorsun · '+verLabel(APP_VERSION));
+  }catch(e){ if(manual) toast('Güncelleme denetlenemedi — internet bağlantını kontrol et',true); }
+}
+function showUpdateBar(j){
+  let b=document.getElementById('updbar');
+  if(!b){ b=document.createElement('div'); b.id='updbar'; b.setAttribute('role','status'); document.body.appendChild(b); }
+  b.innerHTML='<span class="ub-t"><b>Yeni sürüm hazır</b>'+(j.notes?'<small>'+esc(j.notes)+'</small>':'')+'</span>'+
+    '<button type="button" class="ub-go" onclick="applyUpdate()">Güncelle</button><button type="button" class="ub-x" onclick="this.parentNode.remove()" aria-label="Şimdilik kapat">✕</button>';
+}
+function applyUpdate(force){
+  const busy=(typeof qs!=='undefined' && qs.length) || (typeof foyBlocks!=='undefined' && foyBlocks.length>1);
+  if(busy && !force){
+    closeTmDlg();
+    const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg'; ov.style.zIndex='10002';
+    ov.innerHTML='<div class="tm-dlg" role="dialog" aria-label="Güncelleme"><h3>Güncellemeden önce</h3>'+
+      '<p class="tm-p">Uygulama yeniden açılacak. Kaydetmediğin sorular bu oturumla birlikte silinir; kitaplıktaki testlerin, ayarların ve föyün yerinde kalır.</p>'+
+      '<div class="tm-btns"><button type="button" id="ug-no">Sonra</button><button type="button" class="tm-pri" id="ug-ok">Güncelle</button></div></div>';
+    document.body.appendChild(ov);
+    ov.querySelector('#ug-no').onclick=closeTmDlg;
+    ov.querySelector('#ug-ok').onclick=()=>{ closeTmDlg(); applyUpdate(true); };
+    return;
+  }
+  const b=document.getElementById('updbar'); if(b){ const g=b.querySelector('.ub-go'); if(g){ g.textContent='Yükleniyor…'; g.disabled=true; } }
+  const done=()=>{ try{ location.reload(); }catch(_){ location.href=location.pathname; } };
+  try{ fetch(location.pathname+(location.search||''),{cache:'reload'}).then(done,done); }catch(_){ done(); }
+  setTimeout(done,6000);
+}
+function appVerUI(){ const e=document.getElementById('appver'); if(e) e.innerHTML='testamed · sürüm '+esc(verLabel(APP_VERSION))+' · <u>güncellemeleri denetle</u>'; }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') checkUpdate(false); });
+window.addEventListener('load',()=>{ appVerUI(); setTimeout(()=>checkUpdate(false),2500); });
 
 /* Başlık Çizim Motoru (5 Renk, ÖSYM Şablonu & Yazı Görünürlük Düzeltmesi) */
 function headerImage(cfg){
