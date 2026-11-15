@@ -1387,6 +1387,88 @@ body.qfocus #pbar #b-omr{display:none!important}
 #gpill .gp-t{background:none;color:#fff;font:700 13px var(--body);display:flex;gap:6px;align-items:center;min-width:0}
 #gpill .gp-t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
 #gpill .gp-b{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:14px;flex:0 0 auto}
+/* ── ana ekran kartları: yarım kalan test, yedek hatırlatma ── */
+#homecards:empty{display:none}
+#s-home>*{flex-shrink:0}   /* kartlar ekrana sığmak için ezilmesin; sayfa kaysın */
+.hcard{background:var(--w);border:1.5px solid var(--line);border-radius:16px;padding:13px 13px 12px 14px;margin-bottom:11px;
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;box-shadow:0 1px 2px rgba(14,26,23,.04);animation:rise .26s cubic-bezier(.2,.9,.3,1)}
+.hcard .hc-ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;background:var(--tint)}
+.hcard .hc-tx{flex:1;min-width:150px}
+.hcard .hc-tx b{display:block;font:700 15px var(--disp);color:var(--ink);letter-spacing:-.01em}
+.hcard .hc-tx small{display:block;font-size:12.5px;color:var(--ink2);line-height:1.4;margin-top:2px}
+.hcard .hc-btns{display:flex;gap:8px;width:100%}
+.hcard .hc-btns button{flex:1;padding:11px 10px;border-radius:11px;font:700 13.5px var(--body);border:1.5px solid var(--line);background:var(--w);color:var(--ink2)}
+.hcard .hc-btns .hc-go{background:var(--or);border-color:var(--or);color:#fff;flex:1.5}
+.hcard .hc-btns .hc-del{background:#FDECEA;border-color:#F5C2BE;color:#B42318}
+.hcard.draft{border-color:#EBC47A;background:#FFFBF1}
+.hcard.draft .hc-ic{background:#FCEFD3}
+.hcard.bk{border-color:#B9D4F1;background:#F4F9FF}
+.hcard.bk .hc-ic{background:#E1EEFC}
+.hcard.bk .hc-btns .hc-go{background:#1D5FA8;border-color:#1D5FA8}
+.appver .offok{color:var(--gr);font-weight:700}
+
+/* ── geri al düğmesi ve silme bildirimi ── */
+#urfab{position:fixed;left:12px;bottom:calc(14px + var(--safe));z-index:890;display:none;gap:6px;align-items:center}
+#urfab.on{display:flex}
+#urfab button{display:flex;align-items:center;gap:6px;padding:10px 15px 10px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+  background:#16211E;color:#fff;font:700 13.5px var(--body);box-shadow:0 6px 18px rgba(0,0,0,.24);-webkit-tap-highlight-color:transparent}
+#urfab button:active{transform:scale(.96)}
+#urfab #ur-r{padding:10px 12px}
+#urfab button:disabled{display:none}
+#urfab .ur-i{font-size:18px;line-height:1;margin-top:-2px}
+body.showing #urfab,body.showing #snack{display:none}
+#snack{position:fixed;left:50%;bottom:calc(16px + var(--safe));z-index:905;transform:translate(-50%,16px);opacity:0;pointer-events:none;
+  transition:opacity .18s,transform .22s cubic-bezier(.2,.9,.3,1);display:flex;align-items:center;gap:14px;background:#16211E;color:#fff;
+  padding:9px 9px 9px 16px;border-radius:14px;font:600 14px var(--body);box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:calc(100vw - 28px);white-space:nowrap}
+#snack.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#snack button{background:#2F8F5B;border:none;color:#fff;font:800 14px var(--body);padding:9px 14px;border-radius:10px;white-space:nowrap}
+body.snackon #toast,body.uron-low #toast{bottom:calc(72px + var(--safe))}
+
+/* ── kayıtlı ayarlar (Şablon & Renk sekmesinin başı) ── */
+.preset-box{background:var(--w);border:1.5px solid var(--line);border-radius:14px;padding:11px 12px 12px;margin:2px 0 14px}
+.preset-box:empty{display:none}
+.preset-box .pb-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.preset-box .pb-h b{font:700 14px var(--disp);color:var(--ink)}
+.preset-box .pb-h button{background:none;border:none;color:var(--or);font:700 12.5px var(--body);padding:4px 2px}
+.pb-chips{display:flex;flex-wrap:wrap;gap:7px}
+.pb-chip{padding:9px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);font:700 13px var(--body);color:var(--ink);
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-chip:active{transform:scale(.97)}
+.pb-chip.add{border-style:dashed;border-color:var(--or);color:var(--or);background:var(--w)}
+.pb-chip.prev{border-color:#E5C07B;background:#FFF8E8;color:#8A5A00}
+.pb-hint{font-size:12px;color:var(--soft);margin-top:8px;line-height:1.45}
+.ps-list{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow:auto}
+.ps-row{display:flex;gap:6px;align-items:center}
+.ps-row input{flex:1;min-width:0}
+.tm-dlg .ps-row button{flex:0 0 auto;padding:10px 11px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font:700 12.5px var(--body);color:var(--ink)}
+.tm-dlg .ps-row .tm-del{background:#FDECEA;border-color:#F5C2BE;color:#B42318}
+
+/* ── yedek ── */
+.bklast{font-size:13px;font-weight:700;color:var(--ink2);background:var(--tint);border-radius:10px;padding:9px 11px;margin:0 0 10px}
+.bklast.due{background:#FFF3E0;color:#8A4B00}
+.bkres{display:flex;flex-direction:column;gap:8px;margin:0 0 12px}
+.bkres .bk-f{font-size:12.5px;color:var(--ink2);font-weight:600;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;line-height:1.45;word-break:break-word}
+.bkres .bk-share{margin:0!important;background:#1D5FA8!important}
+.bkres .da{text-align:center}
+.bkhow{font-size:12.5px;color:var(--ink2);line-height:1.5;background:var(--w);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-top:12px}
+.bkhow b{display:block;margin-bottom:2px;font:700 13px var(--disp);color:var(--ink)}
+.bkhow ol{margin:4px 0 6px 18px;padding:0}
+.bk-btns{flex-wrap:wrap}
+.bk-btns button{flex:1 1 40%}
+
+/* ── baskı öncesi kontrol ── */
+.pc-list{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto;margin:2px 0}
+.pc-it{display:flex;gap:10px;align-items:flex-start;padding:10px 10px 10px 11px;border-radius:12px;background:#FFF6E3;border:1px solid #F0D49B}
+.pc-it.info{background:#F1F6FC;border-color:#CCDDF0}
+.pc-it .pc-ic{font-size:17px;line-height:1.25;flex-shrink:0}
+.pc-it .pc-tx{flex:1;min-width:0}
+.pc-it .pc-tx b{display:block;font:700 13.5px var(--body);color:var(--ink)}
+.pc-it .pc-tx small{display:block;font-size:12px;color:var(--ink2);line-height:1.4;margin-top:2px}
+.tm-dlg .pc-fix{flex-shrink:0;align-self:center;padding:8px 11px;border-radius:10px;border:1.5px solid var(--or);background:var(--w);color:var(--or);font:700 12.5px var(--body)}
+.pc-skip{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink2);margin:2px 0 0;cursor:pointer}
+.tm-dlg .pc-skip input{width:18px;height:18px;padding:0;margin:0;flex:0 0 auto;accent-color:var(--or)}
+.qrow.flash{animation:qflash 1.4s ease 2}
+@keyframes qflash{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}35%{box-shadow:0 0 0 3px #F59E0B}}
 </style>
 <base target="_blank">
 </head>
@@ -1414,6 +1496,7 @@ body.qfocus #pbar #b-omr{display:none!important}
 
     <!-- 1. Ekran: Kaynak -->
     <div class="scr on" id="s-home">
+      <div id="homecards"></div>
       <div class="card" onclick="pick('pdf')">
         <div class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></div>
         <div class="tx"><h2>PDF aç</h2><p>Kitap, föy veya deneme sınavı</p></div>
@@ -1702,6 +1785,7 @@ body.qfocus #pbar #b-omr{display:none!important}
 
     <!-- P1: Şablon & Renk -->
     <div class="set-pane on" id="p1">
+      <div id="presetbox" class="preset-box"></div>
       <div class="sec">Şablon & Renk Stili</div>
       <div class="r3">
         <div class="f">
@@ -2328,8 +2412,8 @@ body.qfocus #pbar #b-omr{display:none!important}
         <button id="b-omr" onclick="omrOpen()" title="Doldurulmuş optik formları telefon kamerasıyla oku">📷 Optik</button>
 
         <span class="pb-br"></span>
-        <button id="b-print" onclick="makeFile()">PDF oluştur</button>
-        <button id="b-share" onclick="sharePdf()">Paylaş</button>
+        <button id="b-print" onclick="pdfGo(false)">PDF oluştur</button>
+        <button id="b-share" onclick="pdfGo(true)">Paylaş</button>
         <button id="b-savetest" onclick="saveTestDialog()">Kaydet</button>
       </div>
       <div id="bookpick"></div>
@@ -3759,8 +3843,10 @@ function fillSettings(){
 function spread(){
   const total=parseInt($('f-total') && $('f-total').value)||100;
   const each=parseInt($('f-each') && $('f-each').value);
-  const n=Math.max(qs.length,1);
-  qs.forEach(q=>{ q.pt = each>0 ? each : Math.round(total/n); });
+  const real=qs.filter(q=>q.type!=='note'), n=Math.max(real.length,1);
+  const base=Math.floor(total/n), extra=total-base*n;
+  real.forEach((q,i)=>{ q.pt = each>0 ? each : base+(i>=n-extra?1:0); });
+  qs.forEach(q=>{ if(q.type==='note') q.pt=0; });
   drawRows();
   preview();
   drawEditBar();
@@ -4624,21 +4710,7 @@ const DB={
   }
 };
 
-/* Yedekleme */
-async function exportBackup(){
-  try{
-    const bank=await DB.all('bank'), tests=await DB.all('tests');
-    const data={app:'testamed',version:2,date:new Date().toISOString(),
-      bank,tests,profile:getProfile(),plans:getPlans()};
-    const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const name='testamed-yedek-'+new Date().toISOString().slice(0,10)+'.tmd';
-    const box=$('bkdl');
-    box.innerHTML='<a class="da" download="'+name+'" href="'+url+'" target="_blank">'+name+'</a>'+
-      '<div class="bkwarn">Dosyayı İndirilenler\'e veya Bulut hesabınıza kaydedebilirsiniz.</div>';
-    toast(bank.length+' soru · '+tests.length+' test yedeklendi');
-  }catch(e){ toast('Yedek oluşturulamadı: '+e.message,true); }
-}
+/* Yedekleme → exportBackup, drawBackup, importBackupFile: güvenlik modülünde (dosyanın sonuna yakın) */
 
 $('in-pic').onchange=async e=>{
   const f=e.target.files[0]; e.target.value='';
@@ -4664,22 +4736,7 @@ $('in-pic').onchange=async e=>{
   }catch(err){ toast('Görsel eklenemedi',true); }
 };
 
-$('in-backup').onchange=async e=>{
-  const f=e.target.files[0]; if(!f) return;
-  try{
-    const txt=await f.text();
-    const data=JSON.parse(txt);
-    if((data.app!=='testamed' && data.app!=='kimyamed') || !data.bank) throw new Error('Geçersiz yedek dosyası');
-    let nb=0,nt=0;
-    for(const q of (data.bank||[])){ await DB.put('bank',q); nb++; }
-    for(const t of (data.tests||[])){ await DB.put('tests',t); nt++; }
-    if(data.profile) setProfile(data.profile);
-    if(data.plans) setPlans(data.plans);
-    await refreshLib(); drawLib();
-    toast(nb+' soru · '+nt+' test geri yüklendi');
-  }catch(err){ toast('Geri yükleme başarısız: '+err.message,true); }
-  e.target.value='';
-};
+$('in-backup').onchange=e=>importBackupFile(e);
 
 /* Modal */
 let modalCb=null;
@@ -4712,7 +4769,7 @@ async function saveBank(){
       let n=0;
       for(const q of qs){
         await DB.put('bank',{id:'q_'+Date.now()+'_'+(n++)+Math.random().toString(36).slice(2,6),
-          img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,lesson:ders,topic:konu,tags,ts:Date.now()});
+          img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,link:q.link||null,oc:q.oc||null,lesson:ders,topic:konu,tags,ts:Date.now()});
       }
       closeModal(); toast(qs.length+' soru "'+ders+' · '+konu+'" olarak kaydedildi');
     });
@@ -4764,20 +4821,6 @@ function drawLib(){
   }
   if(libMode==='yedek'){ drawBackup(); return; }
   drawTestBody(); return;
-}
-
-function drawBackup(){
-  const filt=$('lfilter'), body=$('lbody'), foot=$('lfoot');
-  filt.style.display='none'; foot.style.display='none';
-  const nb=bankItems.length, nt=testItems.length;
-  body.innerHTML=
-    '<div class="bkinfo">Cihazınızda <b>'+nb+' soru</b> ve <b>'+nt+' test</b> kayıtlı.'+
-    ' Bunları tek dosyada yedekleyebilir; başka cihazda geri yükleyebilirsiniz.</div>'+
-    '<button class="big" style="margin:0 0 10px" onclick="exportBackup()">Yedek dosyası oluştur</button>'+
-    '<div id="bkdl"></div>'+
-    '<button class="ghost" id="bk-restore">↥ Yedekten geri yükle</button>';
-  const rb=document.getElementById('bk-restore');
-  if(rb) rb.onclick=()=>$('in-backup').click();
 }
 
 function drawLibBody(){
@@ -4843,7 +4886,7 @@ function selAllBank(){
 
 function useBank(){
   const chosen=bankItems.filter(q=>bankSel.has(q.id));
-  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',sol:null,pageBreak:false,tags:q.tags||[]}));
+  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',sol:null,pageBreak:false,tags:q.tags||[],...(q.link?{link:q.link}:{}),...(q.oc?{oc:q.oc}:{})}));
   bankSel.clear();
   drawTray();
   toast(chosen.length+' soru teste eklendi');
@@ -4858,17 +4901,21 @@ function saveTestDialog(){
   const title=editingTest?'Değişiklikleri kaydet':'Testi kaydet';
   openModal(title,[{ph:'Test adı',val:base}],async v=>{
     const name=v[0]||'Test';
-    await DB.put('tests',{id:(editingTest?editingTest.id:'t_'+Date.now()),name,
+    const rec={id:(editingTest?editingTest.id:'t_'+Date.now()),name,
       lesson:$('f-lesson').value.trim(),date:new Date().toLocaleDateString('tr-TR'),
-      ts:Date.now(),qs:qs.map(q=>({id:q.id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null,noteOn:q.noteOn||false,offX:q.offX||0,offY:q.offY||0,zoom:q.zoom||1})),
-      cfg:cfgNow()});
-    if(editingTest) editingTest.name=name;
+      ts:Date.now(),qs:qs.map(qToRec),cfg:cfgNow()};
+    try{ await DB.put('tests',rec); }
+    catch(e){ toast('Kaydedilemedi: '+((e&&e.message)||'cihazda yer kalmamış olabilir'),true); return; }
+    if(editingTest) editingTest.name=name; else editingTest=rec;   // sonraki "Kaydet" aynı testi günceller
+    try{ drawEditBar(); }catch(_){}
     closeModal(); toast('“'+name+'” kaydedildi');
+    try{ draftMarkSaved(); }catch(_){}
   });
 }
 
-function openTest(t,edit){
-  qs=t.qs.map(q=>({id:q.id||('t_'+Math.random().toString(36).slice(2,6)),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:q.pt||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,frame:q.frame||null,frameLabel:q.frameLabel||null,type:q.type||null,kind:q.kind||null,text:q.text||null,half:q.half||false,note:q.note||null,noteKind:q.noteKind||null,noteOn:q.noteOn||false,offX:q.offX||0,offY:q.offY||0,zoom:q.zoom||1}));
+/* kayıtlı testi (ya da taslağı) oturuma yükle: sorular, logo, filigran ve bütün ayarlar */
+function applyTestRecord(t){
+  qs=(t.qs||[]).map(recToQ);
   if(t.cfg && t.cfg.logo){
     window._logoData=t.cfg.logo;
     const img=new Image(); img.onload=()=>{window._logoImg=img;}; img.src=t.cfg.logo.url;
@@ -4923,8 +4970,14 @@ function openTest(t,edit){
     set('f-qgap',c.qgap!=null?c.qgap:4); if($('qgap-val')&&$('f-qgap')) $('qgap-val').textContent=$('f-qgap').value;
     if($('f-cover')) $('f-cover').checked=!!c.cover; set('f-cover-time',c.coverTime||''); set('f-cover-note',c.coverNote||'');
     try{ fillThemeSwatches(); }catch(_){}
-    if(c.customPagePlan) customPageDistribution = c.customPagePlan.slice();
   }
+  customPageDistribution=(t.cfg && Array.isArray(t.cfg.customPagePlan) && t.cfg.customPagePlan.length) ? t.cfg.customPagePlan.slice() : null;
+  try{ applyCfgExtra(t.cfg); }catch(_){}
+  try{ saveTmpl(); }catch(_){}      // Düzen ekranı açılınca bu testin ayarları görünsün (eskiden son ayarlar geri gelirdi)
+  try{ undoReset(); }catch(_){}
+}
+function openTest(t,edit){
+  applyTestRecord(t);
   editingTest = t;
   drawTray();
   if(edit){ go('set'); toast('“'+t.name+'” düzenleniyor'); }
@@ -6436,7 +6489,7 @@ function qtOC(){ const q=_selQ(); openOC(q&&q.id); }
 /* ════════ Sürüm ve güncelleme ════════
    Ana ekrana eklenen uygulamada yenile düğmesi yok: açılışta ve uygulamaya geri dönüldüğünde
    sitedeki version.json okunur; daha yeni sürüm varsa üstte "Güncelle" şeridi çıkar. */
-const APP_VERSION='2026.11.15.4';
+const APP_VERSION='2026.11.15.5';
 function _verNum(v){ return String(v||'').split(/[.\-]/).slice(0,4).map(n=>parseInt(n,10)||0).reduce((a,n)=>a*1000+n,0); }
 function verLabel(v){ const p=String(v||'').split('.'); return p.length>=3?(p[2]+'.'+p[1]+'.'+p[0]+(p[3]&&p[3]!=='1'?' ('+p[3]+')':'')):String(v); }
 let _updLast=0, _updInfo=null;
@@ -6458,22 +6511,12 @@ function showUpdateBar(j){
   b.innerHTML='<span class="ub-t"><b>Yeni sürüm hazır</b>'+(j.notes?'<small>'+esc(j.notes)+'</small>':'')+'</span>'+
     '<button type="button" class="ub-go" onclick="applyUpdate()">Güncelle</button><button type="button" class="ub-x" onclick="this.parentNode.remove()" aria-label="Şimdilik kapat">✕</button>';
 }
-function applyUpdate(force){
-  const busy=(typeof qs!=='undefined' && qs.length) || (typeof foyBlocks!=='undefined' && foyBlocks.length>1);
-  if(busy && !force){
-    closeTmDlg();
-    const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg'; ov.style.zIndex='10002';
-    ov.innerHTML='<div class="tm-dlg" role="dialog" aria-label="Güncelleme"><h3>Güncellemeden önce</h3>'+
-      '<p class="tm-p">Uygulama yeniden açılacak. Kaydetmediğin sorular bu oturumla birlikte silinir; kitaplıktaki testlerin, ayarların ve föyün yerinde kalır.</p>'+
-      '<div class="tm-btns"><button type="button" id="ug-no">Sonra</button><button type="button" class="tm-pri" id="ug-ok">Güncelle</button></div></div>';
-    document.body.appendChild(ov);
-    ov.querySelector('#ug-no').onclick=closeTmDlg;
-    ov.querySelector('#ug-ok').onclick=()=>{ closeTmDlg(); applyUpdate(true); };
-    return;
-  }
+function applyUpdate(){
   const b=document.getElementById('updbar'); if(b){ const g=b.querySelector('.ub-go'); if(g){ g.textContent='Yükleniyor…'; g.disabled=true; } }
   const done=()=>{ try{ location.reload(); }catch(_){ location.href=location.pathname; } };
-  try{ fetch(location.pathname+(location.search||''),{cache:'reload'}).then(done,done); }catch(_){ done(); }
+  try{ foyAutoSave(); }catch(_){}
+  const pre=(typeof draftSave==='function')?Promise.resolve(draftSave(true)).catch(()=>{}):Promise.resolve();
+  pre.then(()=>fetch(location.pathname+(location.search||''),{cache:'reload'})).then(done,done);
   setTimeout(done,6000);
 }
 /* ════════ Kullanım kılavuzu + sesli anlatım ════════ */
@@ -6499,7 +6542,7 @@ const GUIDE=[
  {id:'sorular', ic:'📝', t:'Sorular sekmesi', s:'Sorular sekmesi',
   p:'Düzen ekranındaki Sorular sekmesinde bütün sorular sıralıdır.',
   li:[{t:'A–E düğmeleriyle her sorunun doğru cevabını işaretle; cevap anahtarı ve optik okuma bunu kullanır.', s:'A, B, C, D, E düğmeleriyle her sorunun doğru cevabını işaretle; cevap anahtarı ve optik okuma bunu kullanır.'},
-      'Toplam puanı yazarsan puan sorulara kendiliğinden dağıtılır; istersen soru başına puan da girebilirsin.',
+      'Toplam puanı yazarsan puan sorulara kendiliğinden dağıtılır; toplam her zaman tam tutar, bilgi kutuları puan almaz. İstersen soru başına puan da girebilirsin.',
       'Oklarla sırayı değiştirir, çarpıyla soruyu silersin.',
       'Çerçeve düğmesi o soruya özel çerçeve seçer; not düğmesi sorunun üstüne uyarı ya da bilgi kutusu ekler.',
       {t:'⋯ düğmesi: üzerine işaretle, çözüm QR\'ı, öğrenme çıktısı ve filigran temizleme.', s:'Üç nokta düğmesi: üzerine işaretleme, çözüm kare kodu, öğrenme çıktısı ve filigran temizleme.'},
@@ -6528,7 +6571,9 @@ const GUIDE=[
  {id:'sablon', ic:'🎨', t:'Şablon ve renk', s:'Şablon ve renk',
   p:'Düzen ekranındaki Şablon & Renk sekmesi testin görünüşünü belirler. Üstteki antet önizlemesi her değişikliği hemen gösterir.',
   sp:'Düzen ekranındaki Şablon ve Renk sekmesi testin görünüşünü belirler. Üstteki antet önizlemesi her değişikliği hemen gösterir.',
-  li:['Başlık Şablonu antet tasarımıdır; Şablonları resimli gör ile 71 şablonun hepsini görerek seçersin.',
+  li:[{t:'⭐ Kayıtlı ayarlarım: Düzen ekranındaki bütün ayarları (antet, renk, logo, künye, sayfa düzeni, kitapçık…) bir adla kaydet; sonra tek dokunuşla uygula. Yanlışlıkla uyguladıysan ↩ Önceki ayarlar geri getirir; Düzenle ile adını değiştirir, günceller ya da silersin.',
+        s:'Kayıtlı ayarlarım bölümünde Düzen ekranındaki bütün ayarları, yani antet, renk, logo, künye, sayfa düzeni ve kitapçık ayarlarını bir adla kaydedersin; sonra tek dokunuşla uygularsın. Yanlışlıkla uyguladıysan Önceki ayarlar düğmesi geri getirir.'},
+      'Başlık Şablonu antet tasarımıdır; Şablonları resimli gör ile 71 şablonun hepsini görerek seçersin.',
       'Antetli Kağıda Bas şablonu, matbaadan aldığın antetli kâğıt için üst kısmı boş bırakır.',
       'Antet Rengi: 71 hazır renk. Renk düğmelerinden seçilir, artı ile hepsi açılır. Kendi rengin düğmesiyle istediğin rengi seçersen bütün tonlar ondan üretilir.',
       'Koyu blok rengi, antetteki koyu alanların rengidir; 20 renk ya da kendi rengin.',
@@ -6573,11 +6618,14 @@ const GUIDE=[
       'Köşedeki kare tutamakla boyutlandırır, alttaki tutamakla çözüm boşluğunu değiştirirsin.',
       {t:'⋯ düğmesi: boşluk, çerçeve, işaretleme, çözüm QR\'ı, öğrenme çıktısı, öne ya da sona alma, temizleme, sıfırlama ve silme. Bitti seçimi kapatır.', s:'Üç nokta düğmesinde boşluk, çerçeve, işaretleme, çözüm kare kodu, öğrenme çıktısı, öne ya da sona alma, temizleme, sıfırlama ve silme var. Bitti, seçimi kapatır.'},
       'Üstteki Sayfa Başı her sayfadaki soru sayısını, Aralık sorular arası boşluğu değiştirir; Otomatik dağıt sayfaları yeniden dengeler.',
-      'Sunum, soruları tahtada ya da projeksiyonda tek tek büyük gösterir; cevabı da açabilirsin.']},
+      'Sunum, soruları tahtada ya da projeksiyonda tek tek büyük gösterir; cevabı da açabilirsin.',
+      {t:'Yanlışlıkla bir soruyu sildin, taşıdın ya da büyüttün mü? Sol alttaki ↶ Geri al son işlemi geri alır, ↷ yineler. Soru silinince altta çıkan Geri al da aynı işi yapar.', s:'Yanlışlıkla bir soruyu sildin, taşıdın ya da büyüttün mü? Sol alttaki Geri al düğmesi son işlemi geri alır, yanındaki ok yineler. Soru silinince altta çıkan Geri al da aynı işi yapar.'}]},
  {id:'pdf', ic:'📄', t:'PDF, paylaşma ve kaydetme', s:'PDF ve paylaşma',
   li:['PDF oluştur dosyayı hazırlar; PDF\'i kaydet ile indirir ya da yeni sekmede açarsın.',
       'Paylaş, PDF\'i doğrudan WhatsApp\'a, Mail\'e ya da Dosyalar\'a gönderir.',
-      'Kaydet, testi Kitaplık\'taki Testlerim\'e saklar; sonra açıp düzenleyebilirsin.']},
+      'Kaydet, testi Kitaplık\'taki Testlerim\'e saklar; sonra açıp düzenleyebilirsin. Bir kez kaydettikten sonra Kaydet aynı testi günceller.',
+      'PDF oluştur ve Paylaş önce testi kontrol eder: cevabı işaretlenmemiş soru, 100 etmeyen puan, bulanık basılacak görsel, iki kez eklenmiş soru ya da boş bilgi kutusu varsa söyler.',
+      'Düzelt seni sorunun olduğu yere götürür; Yine de PDF oluştur ile olduğu gibi devam edersin. Bu uyarıları bu test için bir daha gösterme kutusunu işaretlersen aynı uyarı tekrar çıkmaz.']},
  {id:'optik', ic:'📷', t:'Optik okuma', s:'Optik okuma',
   p:'Optik form, köşelerindeki dört siyah kare ve sağ üstteki form kodu sayesinde telefonla okunur.',
   li:['Öğrenciler balonları kurşun kalemle tamamen doldurur.',
@@ -6606,12 +6654,23 @@ const GUIDE=[
       'Önizle ile sayfaları görür, Oluştur ile PDF alırsın; Kaydet föyünü saklar.']},
  {id:'kitaplik', ic:'🗂️', t:'Kitaplık, panel ve yedek', s:'Kitaplık ve yedek',
   li:['Kitaplık\'ta Bankam soru bankandır, Testlerim kaydettiğin testlerdir.',
-      'Yedek sekmesinde Yedek dosyası oluştur ile bütün soru ve testlerini tek dosyaya kaydedersin; başka cihazda Yedekten geri yükle ile açarsın.',
+      'Yedek sekmesindeki Yedek dosyası oluştur; bütün soru ve testlerini, ayarlarını, logonu, föyünü, kayıtlı ayarlarını ve optik sonuçlarını tek dosyada toplar.',
+      {t:'iPhone\'da 📤 Dosyalar\'a / iCloud\'a kaydet düğmesine dokun, açılan menüde Dosyalar\'a Kaydet\'i seç ve iCloud Drive\'da bir klasöre kaydet.', s:'iPhone\'da Dosyalar\'a ya da iCloud\'a kaydet düğmesine dokun, açılan menüde Dosyalar\'a Kaydet\'i seç ve iCloud Drive\'da bir klasöre kaydet.'},
+      'Yeni telefonda Yedekten geri yükle ile dosyayı seç. Soru ve testleri ekle yalnızca soruları ve testleri ekler; Her şeyi geri yükle ayarları da getirir. Hiçbir seçenek mevcut sorularını silmez.',
+      'Bir haftadır yedek almadıysan ana ekranda hatırlatma çıkar; Şimdi yedekle seni doğrudan yedeğe götürür. Yapay zeka API anahtarların güvenlik için yedeğe girmez.',
       'Ana ekrana eklenen uygulamanın kayıtları yalnızca o simgeye aittir; simgeyi silmeden önce mutlaka yedek al.',
       'Panel ekranında öğretmen profilin, aylık test hedefin, sınav takvimin ve son altı ayın sayıları görünür.']},
+ {id:'guvence', ic:'🛟', t:'Otomatik kayıt, geri al, internetsiz', s:'Otomatik kayıt, geri al ve internetsiz çalışma',
+  p:'testamed çalışmanı kendiliğinden korur.',
+  li:['Hazırladığın test birkaç saniyede bir telefona kendiliğinden kaydedilir; uygulama kapansa, telefon kilitlense ya da güncelleme gelse bile kaybolmaz.',
+      'Uygulamayı yeniden açınca ana ekranda Yarım kalan testin var kartı çıkar; Devam et ile kaldığın yerden sürersin, Sil ile atarsın.',
+      'Kartı açmadan yeni bir teste başlarsan önceki yarım test kaybolmaz; Kitaplık\'ta Testlerim\'e taslak adıyla kaydedilir.',
+      'Konu anlatım föyün de kendiliğinden kaydedilir.',
+      {t:'Önizlemede ve Sorular sekmesinde sol alttaki ↶ Geri al son işlemi geri alır: silme, taşıma, sıralama, boyut, boşluk, çerçeve, cevap. ↷ yineler. Bilgisayarda Ctrl+Z de çalışır.', s:'Önizlemede ve Sorular sekmesinde sol alttaki Geri al düğmesi son işlemi geri alır: silme, taşıma, sıralama, boyut, boşluk, çerçeve ve cevap. Yanındaki ok yineler.'},
+      'Uygulamayı internet varken bir kez açtıktan sonra internetsiz de çalışır; ana ekranın en altında internetsiz çalışır yazar. Güncelleme denetimi ve yapay zeka için internet gerekir.']},
  {id:'guncel', ic:'🔄', t:'Güncellemeler', s:'Güncellemeler',
   li:['Yeni sürüm çıkınca üstte Yeni sürüm hazır şeridi görünür; Güncelle\'ye dokunman yeterli.',
-      'Güncellemeden önce kaydetmediğin soruları kaydet.',
+      'Güncellemeden önce bir şey yapmana gerek yok; yarım kalan testin saklanır ve açılışta Devam et ile geri gelir.',
       'Ana ekranın en altında sürüm numarası yazar; ona dokunarak güncellemeleri elle denetleyebilirsin.']}
 ];
 const _GSCR={home:'genel',view:'ekle',ai:'ekle',prev:'onizleme',lib:'kitaplik',panel:'kitaplik',foy:'foy'};
@@ -6747,7 +6806,7 @@ function guideStop(done){
   const nw=$('gd-now'); if(nw) nw.textContent=done?'Anlatım bitti · istediğin bölümün yanındaki 🔊 ile yeniden dinleyebilirsin':'Bütün özellikleri sırayla anlatır · yaklaşık 13 dakika';
   _gSync();
 }
-function appVerUI(){ const e=document.getElementById('appver'); if(e) e.innerHTML='testamed · sürüm '+esc(verLabel(APP_VERSION))+' · <u>güncellemeleri denetle</u>'; }
+function appVerUI(){ const e=document.getElementById('appver'); if(e) e.innerHTML='testamed · sürüm '+esc(verLabel(APP_VERSION))+(window._offOK?' · <span class="offok">internetsiz çalışır ✓</span>':'')+' · <u>güncellemeleri denetle</u>'; }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') checkUpdate(false); });
 window.addEventListener('load',()=>{ appVerUI(); setTimeout(()=>checkUpdate(false),2500); });
 
@@ -9306,17 +9365,14 @@ function adjustQuestionSpace(qId, deltaMm){
 }
 
 function removeQuestionFromPreview(qId){
-  if(confirm('Bu soru testten çıkarılsın mı?')){
-    qs = qs.filter(item => item.id !== qId);
-    if(BOOKS.length && BOOKS[currentBookIdx]){
-      BOOKS[currentBookIdx].list = BOOKS[currentBookIdx].list.filter(item => item.id !== qId);
-    }
-    if(SEL===qId) SEL=null;
-    drawTray();
-    drawRows();
-    recalcAndRedrawPages();
-    toast('Soru çıkarıldı');
-  }
+  qs = qs.filter(item => item.id !== qId);
+  BOOKS.forEach(b=>{ b.list = b.list.filter(item => item.id !== qId); });
+  if(SEL===qId) SEL=null;
+  drawTray();
+  drawRows();
+  recalcAndRedrawPages();
+  try{ updateQTool(); }catch(_){}
+  toast('Soru çıkarıldı');
 }
 
 /* ═══ Önizlemede soru seçimi: dokun → çerçeve, köşe tutamağı (boyut), alt tutamak (boşluk) ═══ */
@@ -13135,6 +13191,682 @@ function imgDim(url){
   return new Promise(res=>{ const im=new Image();
     im.onload=()=>res({w:im.width,h:im.height}); im.onerror=()=>res({w:1,h:1}); im.src=url; });
 }
+/* ════════ Güvenlik ağı: otomatik taslak · tam yedek · internetsiz çalışma · kayıtlı ayarlar · geri al · baskı öncesi kontrol ════════ */
+
+/* ── küçük anahtar-değer deposu (IndexedDB): taslak ve kayıtlı ayarlar burada durur ── */
+const KV={name:'testamed_kv',_db:null,
+  open(){
+    if(this._db) return Promise.resolve(this._db);
+    return new Promise((res,rej)=>{
+      let r; try{ r=indexedDB.open(this.name,1); }catch(e){ rej(e); return; }
+      r.onupgradeneeded=e=>{ const db=e.target.result; if(!db.objectStoreNames.contains('kv')) db.createObjectStore('kv'); };
+      r.onsuccess=e=>{ const db=e.target.result; db.onversionchange=()=>{ try{ db.close(); }catch(_){} KV._db=null; }; KV._db=db; res(db); };
+      r.onerror=e=>rej(e.target.error); r.onblocked=()=>rej(new Error('blocked'));
+    });
+  },
+  async get(k){ const db=await this.open(); return new Promise((res,rej)=>{ const r=db.transaction('kv','readonly').objectStore('kv').get(k); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); },
+  async set(k,v){ const db=await this.open(); return new Promise((res,rej)=>{ const tx=db.transaction('kv','readwrite'); tx.objectStore('kv').put(v,k);
+    tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); tx.onabort=()=>rej(tx.error||new Error('abort')); }); },
+  async del(k){ const db=await this.open(); return new Promise((res,rej)=>{ const tx=db.transaction('kv','readwrite'); tx.objectStore('kv').delete(k);
+    tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); }); }
+};
+async function _dbCount(store){
+  try{ const db=await DB.open();
+    return await new Promise(res=>{ const r=db.transaction(store,'readonly').objectStore(store).count(); r.onsuccess=()=>res(r.result||0); r.onerror=()=>res(0); });
+  }catch(_){ return 0; }
+}
+function _h(s){ s=String(s||''); let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0; return (h>>>0).toString(36); }
+function _lsJSON(k,d){ try{ const v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(_){ return d; } }
+
+/* ── soru kaydı: kitaplığa, taslağa ve yedeğe giden alanlar tek yerde ── */
+const Q_FIELDS=['id','img','w','h','src','cw','pt','ans','sol','pageBreak','frame','frameLabel','type','kind','text','half',
+  'note','noteKind','noteOn','offX','offY','zoom','link','oc','img0','qc','ann','annBase','tags','crop'];
+function qToRec(q){
+  const r={};
+  Q_FIELDS.forEach(k=>{ const v=q[k]; if(v!==undefined && v!==null && v!=='') r[k]=v; });
+  r.cw=q.cw||0; r.pt=q.pt||0; r.ans=q.ans||''; r.sol=(q.sol==null?null:q.sol); r.pageBreak=!!q.pageBreak;
+  r.offX=q.offX||0; r.offY=q.offY||0; r.zoom=q.zoom||1;
+  return r;
+}
+function recToQ(r){
+  const q={};
+  Q_FIELDS.forEach(k=>{ const v=r[k]; if(v!==undefined && v!==null) q[k]=v; });
+  q.id=r.id||('t_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6));
+  q.cw=r.cw||0; q.pt=r.pt||0; q.ans=r.ans||''; q.sol=(r.sol==null?null:r.sol); q.pageBreak=!!r.pageBreak;
+  q.frame=r.frame||null; q.frameLabel=r.frameLabel||null; q.type=r.type||null; q.kind=r.kind||null; q.text=r.text||null;
+  q.half=!!r.half; q.note=r.note||null; q.noteKind=r.noteKind||null; q.noteOn=!!r.noteOn;
+  q.offX=r.offX||0; q.offY=r.offY||0; q.zoom=r.zoom||1;
+  return q;
+}
+/* openTest'in eskiden geri yüklemediği ayarlar (sonradan eklenen özellikler) */
+function applyCfgExtra(c){
+  if(!c) return;
+  const set=(id,v)=>{ const e=$(id); if(e && v!=null) e.value=v; };
+  const chk=(id,v)=>{ const e=$(id); if(e && v!=null) e.checked=!!v; };
+  /* tarih geri yüklenmez: eski test bugün basılınca bugünün tarihi kalsın */
+  chk('f-conthdr',c.contHeader); chk('f-yazili',c.yazili); chk('f-framenosol',c.frameNoSol);
+  set('f-lhgap',c.lhGap); chk('f-lhbar',c.lhBar); set('f-watermark',c.watermark); set('f-max',c.max);
+  if(c.hfont) set('f-hfont',c.hfont);
+  if(c.hsize && typeof c.hsize==='object') Object.keys(c.hsize).forEach(r=>set('hz-'+r,c.hsize[r]));
+  if(c.hweight && typeof c.hweight==='object') Object.keys(c.hweight).forEach(r=>set('hw-'+r,c.hweight[r]));
+  chk('f-chem-on',c.chemOn); if(Array.isArray(c.chemEls)) set('f-chem-els',c.chemEls.join(','));
+  set('f-chem-mode',c.chemMode); set('f-chem-extra',c.chemExtra);
+  chk('f-lqr',c.lqr); chk('f-octable',c.ocTable);
+  chk('f-stu-on',c.stuOn); chk('f-stu-shuffle',c.stuShuffle);
+  if(Array.isArray(c.stuList)) set('f-stu-list',c.stuList.map(s=>[s.no,s.name].filter(Boolean).join(' ')).join('\n'));
+  if($('lh-val') && $('f-lhgap')) $('lh-val').textContent=$('f-lhgap').value;
+  try{ ['all'].concat(HROLES).forEach(hzLabel); }catch(_){}
+  try{ if(c.hfont) ensureHFont(c.hfont); }catch(_){}
+  ['chemSync','stuSync','fillBlockSwatches','updateQnDemo'].forEach(fn=>{ try{ if(typeof window[fn]==='function') window[fn](); }catch(_){} });
+}
+
+/* ════════ 1. Otomatik taslak: yarım kalan test kaybolmaz ════════ */
+const DRAFT={sig:'',savedSig:null,pend:null,ready:false,busy:false};
+function _draftSig(){
+  if(!qs.length) return '';
+  const parts=[qs.length,(editingTest&&editingTest.id)||''];
+  for(const q of qs){
+    parts.push([q.id,q.img?q.img.length+'.'+q.img.slice(-24):'',q.ans||'',q.pt||0,q.sol==null?'':q.sol,q.zoom||1,q.offX||0,q.offY||0,
+      q.frame||'',q.frameLabel||'',q.noteOn?1:0,q.noteKind||'',_h(q.note),q.type||'',q.kind||'',_h(q.text),q.half?1:0,q.link||'',q.oc||'',
+      q.pageBreak?1:0,q.ann?q.ann.length:0,q.src?_h(JSON.stringify(q.src)):''].join(':'));
+  }
+  try{ const c=cfgNow(); delete c.logo; delete c.wmImg; parts.push(_h(JSON.stringify(c))); }catch(_){}
+  return parts.join('|');
+}
+function _draftName(){
+  if(editingTest && editingTest.name) return editingTest.name;
+  try{ return [$('f-kind').value,$('f-lesson').value.trim(),$('f-topic').value.trim()].filter(Boolean).join(' · '); }catch(_){ return ''; }
+}
+async function draftSave(force){
+  if(!DRAFT.ready || DRAFT.busy) return;
+  // büyük testlerde (çok görsel) en fazla 12 saniyede bir yazılır; uygulamadan çıkarken her zaman yazılır
+  if(!force && DRAFT.big && Date.now()-(DRAFT.last||0)<12000) return;
+  let sig; try{ sig=_draftSig(); }catch(_){ return; }
+  if(force!==true && sig===DRAFT.sig) return;
+  DRAFT.busy=true; DRAFT.last=Date.now();
+  DRAFT.big=qs.reduce((a,q)=>a+(q.img?q.img.length:0)+(q.img0?q.img0.length:0)+(q.annBase?q.annBase.length:0),0)>6e6;
+  try{
+    if(!sig){ if(DRAFT.pend) return; await KV.del('draft'); DRAFT.sig=''; return; }   // açılışta bekleyen taslağa dokunma
+    // açılışta bekleyen eski taslağın üstüne yazmadan önce onu kitaplığa koy (hiçbir şey kaybolmasın)
+    if(DRAFT.pend){ const p=DRAFT.pend; DRAFT.pend=null; await draftArchive(p); homeCards(); }
+    const rec={v:1,t:Date.now(),n:qs.filter(q=>q.type!=='note').length,screen:(screen==='prev'?'prev':'set'),
+      editing:editingTest?{id:editingTest.id,name:editingTest.name||''}:null,name:_draftName(),
+      qs:qs.map(qToRec),cfg:cfgNow(),saved:(DRAFT.savedSig!=null && DRAFT.savedSig===sig)};    await KV.set('draft',rec);
+    DRAFT.sig=sig;
+  }catch(_){ /* yer yoksa sessiz geç; bir sonraki turda yeniden dener */ }
+  finally{ DRAFT.busy=false; }
+}
+function draftMarkSaved(){ try{ DRAFT.savedSig=_draftSig(); }catch(_){ DRAFT.savedSig=null; } draftSave(true); }
+async function draftArchive(p){
+  if(!p || !p.qs || !p.qs.length) return;
+  const when=new Date(p.t||Date.now());
+  const stamp=when.toLocaleDateString('tr-TR')+' '+when.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+  try{
+    await DB.put('tests',{id:'t_d'+(p.t||Date.now()),name:(p.name?p.name+' · ':'')+'taslak '+stamp,lesson:(p.cfg&&p.cfg.lesson)||'',
+      date:when.toLocaleDateString('tr-TR'),ts:p.t||Date.now(),qs:p.qs,cfg:p.cfg||null,draft:true});
+    toast('Önceki yarım kalan test Kitaplık → Testlerim\'e “taslak” olarak kaydedildi');
+  }catch(_){}
+}
+async function draftCheck(){
+  try{
+    const d=await KV.get('draft');
+    if(d && d.qs && d.qs.length && !d.saved && !qs.length) DRAFT.pend=d;
+  }catch(_){}
+  DRAFT.ready=true;
+  homeCards();
+}
+async function draftRestore(){
+  const d=DRAFT.pend; if(!d) return;
+  DRAFT.pend=null;
+  let ed=null;
+  if(d.editing && d.editing.id){ try{ ed=(await DB.all('tests')).find(t=>t.id===d.editing.id)||null; }catch(_){} }
+  applyTestRecord({qs:d.qs,cfg:d.cfg});
+  editingTest=ed;
+  drawTray();
+  try{ drawEditBar(); }catch(_){}
+  DRAFT.sig=_draftSig();
+  homeCards();
+  if(d.screen==='prev'){ await build(); }
+  else { go('set'); try{ switchSetTab('p7'); }catch(_){} }
+  toast('Yarım kalan test geri geldi · '+(d.n||qs.length)+' soru');
+}
+async function draftDiscard(){
+  DRAFT.pend=null; DRAFT.sig='';
+  try{ await KV.del('draft'); }catch(_){}
+  homeCards(); toast('Yarım kalan test silindi');
+}
+
+/* föy de kendiliğinden kaydedilir (eskiden yalnızca "Kaydet" ile) */
+let _foySig=null;
+function foyAutoSave(){
+  if(typeof foyBlocks==='undefined') return;
+  let sig; try{ sig=_h(JSON.stringify({t:(($('foy-title')||{}).value)||'',b:foyBlocks,f:(($('foy-frame')||{}).value)||'none'})); }catch(_){ return; }
+  if(_foySig===null){ _foySig=sig; return; }
+  if(sig===_foySig) return;
+  _foySig=sig;
+  try{ localStorage.setItem('testamed_foy',JSON.stringify({title:($('foy-title')&&$('foy-title').value)||'Föy',blocks:foyBlocks,theme:foyTheme,
+    frame:(($('foy-frame')&&$('foy-frame').value)||'none')})); }catch(_){}
+}
+
+/* ════════ 2. Tam yedek (soru, test, ayar, logo, föy…) + haftalık hatırlatma ════════ */
+const BK_LAST='testamed_lastbk', BK_SNOOZE='testamed_bksnooze', BK_SKIP=['testamed_keys',BK_LAST,BK_SNOOZE];
+let _bk=null;
+function _fmtSize(n){ return n>=1048576?(n/1048576).toFixed(1).replace('.',',')+' MB':Math.max(1,Math.round(n/1024))+' KB'; }
+function _agoTxt(t){ const d=Math.floor((Date.now()-t)/86400000); return d<=0?'bugün':(d===1?'dün':d+' gün önce'); }
+async function exportBackup(){
+  const box=$('bkdl');
+  if(box) box.innerHTML='<div class="bkwarn">Yedek hazırlanıyor…</div>';
+  try{
+    const bank=await DB.all('bank'), tests=await DB.all('tests');
+    const ls={};
+    for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.indexOf('testamed_')===0 && BK_SKIP.indexOf(k)<0) ls[k]=localStorage.getItem(k); }
+    let presets=[]; try{ presets=(await KV.get('presets'))||[]; }catch(_){}
+    const now=new Date(), p2=n=>String(n).padStart(2,'0');
+    const data={app:'testamed',version:3,date:now.toISOString(),appVersion:(typeof APP_VERSION!=='undefined'?APP_VERSION:''),
+      bank,tests,profile:_lsJSON('testamed_profile',{}),plans:_lsJSON('testamed_plans',[]),ls,presets};
+    const name='testamed-yedek-'+now.getFullYear()+'-'+p2(now.getMonth()+1)+'-'+p2(now.getDate())+'-'+p2(now.getHours())+p2(now.getMinutes())+'.tmd';
+    const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+    let file=null; try{ file=new File([blob],name,{type:'application/json'}); }catch(_){}
+    if(_bk && _bk.url){ try{ URL.revokeObjectURL(_bk.url); }catch(_){} }
+    _bk={name,blob,file,url:URL.createObjectURL(blob),nb:bank.length,nt:tests.length,ns:Object.keys(ls).length+presets.length};
+    _bkRender();
+    toast(bank.length+' soru · '+tests.length+' test yedeğe hazır');
+  }catch(e){ if(box) box.innerHTML=''; toast('Yedek oluşturulamadı: '+((e&&e.message)||e),true); }
+}
+function _bkCanShare(){ try{ return !!(_bk && _bk.file && navigator.share && navigator.canShare && navigator.canShare({files:[_bk.file]})); }catch(_){ return false; } }
+function _bkRender(){
+  const box=$('bkdl'); if(!box||!_bk) return;
+  const share=_bkCanShare();
+  box.innerHTML='<div class="bkres">'+
+    '<div class="bk-f">📦 '+esc(_bk.name)+' · '+_fmtSize(_bk.blob.size)+'<br>'+_bk.nb+' soru · '+_bk.nt+' test'+(_bk.ns?' · ayarlar, logo, föy ve kayıtlı ayarlar':'')+'</div>'+
+    (share?'<button type="button" class="big bk-share" id="bk-share">📤 Dosyalar\'a / iCloud\'a kaydet</button>':'')+
+    '<a class="da" id="bk-dl" download="'+esc(_bk.name)+'" href="'+_bk.url+'" target="_blank">⬇︎ '+(share?'Ya da indir':'Yedeği indir')+'</a>'+
+    '<div class="bkwarn">'+(share?'Açılan menüde <b>Dosyalar\'a Kaydet</b>\'i seç ve <b>iCloud Drive</b>\'da bir klasöre kaydet. ':'Dosyayı İndirilenler\'e ya da bulut hesabına kaydet. ')+
+    'Yapay zeka API anahtarların güvenlik için yedeğe girmez.</div></div>';
+  const sb=$('bk-share');
+  if(sb) sb.onclick=()=>{
+    navigator.share({files:[_bk.file],title:'testamed yedeği'})
+      .then(()=>{ _bkMark(); toast('Yedek kaydedildi ✓'); })
+      .catch(e=>{ if(!e || e.name!=='AbortError') toast('Paylaşılamadı — “Ya da indir”i dene',true); });
+  };
+  const dl=$('bk-dl'); if(dl) dl.addEventListener('click',()=>setTimeout(_bkMark,400));
+}
+function _bkMark(){
+  try{ localStorage.setItem(BK_LAST,String(Date.now())); localStorage.removeItem(BK_SNOOZE); }catch(_){}
+  const el=document.querySelector('.bklast'); if(el){ el.className='bklast'; el.textContent='Son yedek: bugün ✓'; }
+  homeCards();
+}
+function drawBackup(){
+  const filt=$('lfilter'), body=$('lbody'), foot=$('lfoot');
+  filt.style.display='none'; foot.style.display='none';
+  const nb=bankItems.length, nt=testItems.length;
+  let last=0; try{ last=+localStorage.getItem(BK_LAST)||0; }catch(_){}
+  const due=!last || Date.now()-last>7*86400000;
+  body.innerHTML=
+    '<div class="bkinfo">Bu cihazda <b>'+nb+' soru</b> ve <b>'+nt+' test</b> kayıtlı. Yedek dosyasına bunlarla birlikte ayarların, logon, filigranın, föyün, öğrenme çıktıların, kayıtlı ayarların ve optik sonuçların da girer.</div>'+
+    '<div class="bklast'+(due?' due':'')+'">'+(last?'Son yedek: '+new Date(last).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})+' ('+_agoTxt(last)+')':'Henüz hiç yedek almadın')+'</div>'+
+    '<button class="big" style="margin:0 0 10px" onclick="exportBackup()">Yedek dosyası oluştur</button>'+
+    '<div id="bkdl"></div>'+
+    '<button class="ghost" id="bk-restore">↥ Yedekten geri yükle</button>'+
+    '<div class="bkhow"><b>iPhone\'da iCloud\'a yedek</b><ol>'+
+      '<li>Yedek dosyası oluştur\'a dokun.</li>'+
+      '<li>Dosyalar\'a / iCloud\'a kaydet\'e dokun; açılan menüde Dosyalar\'a Kaydet\'i seç.</li>'+
+      '<li>iCloud Drive\'da bir klasör seç (ör. testamed) ve Kaydet\'e dokun.</li></ol>'+
+      'Yeni telefonda: Kitaplık → Yedek → Yedekten geri yükle → dosyayı iCloud Drive\'dan seç.</div>';
+  const rb=$('bk-restore'); if(rb) rb.onclick=()=>$('in-backup').click();
+}
+function importBackupFile(e){
+  const f=e.target.files && e.target.files[0]; e.target.value=''; if(!f) return;
+  f.text().then(txt=>{
+    let data; try{ data=JSON.parse(txt); }catch(_){ throw new Error('dosya okunamadı — testamed yedeği mi?'); }
+    if(!data || (data.app!=='testamed' && data.app!=='kimyamed') || !Array.isArray(data.bank)) throw new Error('bu dosya testamed yedeği değil');
+    _bkAsk(data);
+  }).catch(err=>toast('Geri yükleme başarısız: '+err.message,true));
+}
+function _bkAsk(data){
+  closeTmDlg();
+  const nb=data.bank.length, nt=(data.tests||[]).length, nls=Object.keys(data.ls||{}).length, np=(data.presets||[]).length;
+  const hasSet=nls>0 || np>0;
+  let when=''; try{ if(data.date) when=new Date(data.date).toLocaleString('tr-TR',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(_){}
+  const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg'; ov.style.zIndex='10001';
+  ov.innerHTML='<div class="tm-dlg" role="dialog" aria-label="Yedekten geri yükle"><h3>Yedekten geri yükle</h3>'+
+    '<p class="tm-p">'+(when?esc(when)+' tarihli yedek: ':'Yedekte ')+'<b>'+nb+' soru</b> ve <b>'+nt+' test</b>'+(hasSet?' ile ayarlar (antet, logo, föy, kayıtlı ayarlar…)':'')+' var.</p>'+
+    '<p class="tm-p">Sorular ve testler bu cihazdakilere eklenir; hiçbiri silinmez.'+(hasSet?' <b>Her şeyi geri yükle</b>, bu cihazdaki ayarların yerine yedektekileri koyar.':'')+'</p>'+
+    '<div class="tm-btns bk-btns"><button type="button" id="bi-no">Vazgeç</button>'+
+    '<button type="button" '+(hasSet?'':'class="tm-pri" ')+'id="bi-q">Soru ve testleri ekle</button>'+
+    (hasSet?'<button type="button" class="tm-pri" id="bi-all">Her şeyi geri yükle</button>':'')+'</div></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click',ev=>{ if(ev.target===ov) closeTmDlg(); });
+  ov.querySelector('#bi-no').onclick=closeTmDlg;
+  ov.querySelector('#bi-q').onclick=()=>{ closeTmDlg(); _bkRestore(data,false); };
+  const a=ov.querySelector('#bi-all'); if(a) a.onclick=()=>{ closeTmDlg(); _bkRestore(data,true); };
+}
+async function _bkRestore(data,all){
+  let nb=0, nt=0;
+  try{
+    for(const q of data.bank){ if(q && q.id){ await DB.put('bank',q); nb++; } }
+    for(const t of (data.tests||[])){ if(t && t.id){ await DB.put('tests',t); nt++; } }
+  }catch(e){ toast('Geri yükleme yarıda kaldı ('+nb+' soru, '+nt+' test): '+((e&&e.message)||'cihazda yer kalmamış olabilir'),true); return; }
+  const ls=data.ls||{};
+  if(all){
+    Object.keys(ls).forEach(k=>{ if(k.indexOf('testamed_')===0 && BK_SKIP.indexOf(k)<0){ try{ localStorage.setItem(k,ls[k]); }catch(_){} } });
+    if(Array.isArray(data.presets) && data.presets.length){
+      try{ const cur=(await KV.get('presets'))||[];
+        data.presets.forEach(p=>{ if(!p||!p.id) return; const i=cur.findIndex(x=>x.id===p.id); if(i>=0) cur[i]=p; else cur.push(p); });
+        await KV.set('presets',cur); }catch(_){}
+    }
+  }
+  // profil ve sınav takvimi eski yedeklerde de vardı: bu cihazda yoksa ya da “her şey” seçildiyse gelir
+  const setIf=(k,v)=>{ if(v==null) return; try{ if(all ? !ls[k] : !localStorage.getItem(k)) localStorage.setItem(k,JSON.stringify(v)); }catch(_){} };
+  setIf('testamed_profile',data.profile); setIf('testamed_plans',data.plans);
+  try{ await refreshLib(); if(screen==='lib') drawLib(); }catch(_){}
+  if(all){
+    toast(nb+' soru · '+nt+' test ve ayarlar geri yüklendi · uygulama yeniden açılıyor…');
+    try{ await draftSave(true); }catch(_){}
+    setTimeout(()=>{ try{ location.reload(); }catch(_){} },1600);
+  } else toast(nb+' soru · '+nt+' test geri yüklendi');
+}
+async function _bkDue(){
+  let last=0, snooze=0; try{ last=+localStorage.getItem(BK_LAST)||0; snooze=+localStorage.getItem(BK_SNOOZE)||0; }catch(_){}
+  if(Date.now()<snooze) return null;
+  if(last && Date.now()-last<7*86400000) return null;
+  const nb=await _dbCount('bank'), nt=await _dbCount('tests');
+  if(nt<1 && nb<10) return null;
+  return {last,nb,nt};
+}
+
+/* ── ana ekran kartları: yarım kalan test + yedek hatırlatma ── */
+let _hcN=0;
+async function homeCards(){
+  const box=$('homecards'); if(!box) return;
+  const my=++_hcN, parts=[];
+  if(DRAFT.pend && !qs.length){
+    const d=DRAFT.pend, when=new Date(d.t||Date.now()), today=new Date().toDateString()===when.toDateString();
+    const tm=(today?'bugün ':when.toLocaleDateString('tr-TR',{day:'numeric',month:'long'})+' ')+when.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    parts.push('<div class="hcard draft" id="hc-draft"><div class="hc-ic">📝</div><div class="hc-tx"><b>Yarım kalan testin var</b><small>'+
+      esc([d.name,(d.n||d.qs.length)+' soru',tm].filter(Boolean).join(' · '))+'</small></div>'+
+      '<div class="hc-btns"><button type="button" class="hc-x" data-a="dx">Sil</button><button type="button" class="hc-go" data-a="dr">Devam et →</button></div></div>');
+  }
+  let bk=null; try{ bk=await _bkDue(); }catch(_){}
+  if(my!==_hcN) return;
+  if(bk){
+    parts.push('<div class="hcard bk" id="hc-bk"><div class="hc-ic">💾</div><div class="hc-tx"><b>'+(bk.last?'Yedek alma zamanı':'Henüz yedek almadın')+'</b><small>'+
+      (bk.last?'Son yedek '+_agoTxt(bk.last)+'. ':'')+[bk.nb?bk.nb+' soru':'',bk.nt?bk.nt+' test':''].filter(Boolean).join(' ve ')+' yalnızca bu telefonda duruyor; iCloud\'a yedekle.</small></div>'+
+      '<div class="hc-btns"><button type="button" class="hc-x" data-a="bs">Sonra</button><button type="button" class="hc-go" data-a="bk">Şimdi yedekle</button></div></div>');
+  }
+  box.innerHTML=parts.join('');
+}
+function _hcClick(e){
+  const b=e.target.closest('button[data-a]'); if(!b) return;
+  const a=b.dataset.a;
+  if(a==='dr') draftRestore();
+  else if(a==='dx'){
+    const c=$('hc-draft'); if(!c) return;
+    if(!c.classList.contains('ask')){
+      c.classList.add('ask'); c.querySelector('.hc-tx b').textContent='Silinsin mi?';
+      c.querySelector('.hc-tx small').textContent='Bu yarım test kalıcı olarak silinir.';
+      b.textContent='Evet, sil'; b.classList.add('hc-del');
+      const g=c.querySelector('.hc-go'); g.textContent='Vazgeç'; g.dataset.a='dn';
+    } else draftDiscard();
+  }
+  else if(a==='dn') homeCards();
+  else if(a==='bk'){ window._libWant='yedek'; window._bkAuto=true; go('lib'); }
+  else if(a==='bs'){ try{ localStorage.setItem(BK_SNOOZE,String(Date.now()+3*86400000)); }catch(_){} homeCards(); toast('3 gün sonra yeniden hatırlatırım'); }
+}
+
+/* ════════ 3. İnternetsiz çalışma: sw.js uygulamayı ve kütüphaneleri cihaza kaydeder ════════ */
+function swInit(){
+  try{
+    if(!('serviceWorker' in navigator)) return;
+    const h=location.hostname, ok=location.protocol==='https:' || h==='localhost' || h==='127.0.0.1';
+    if(!ok) return;
+    navigator.serviceWorker.register('sw.js').then(reg=>{ try{ reg.update(); }catch(_){} }).catch(()=>{});
+    navigator.serviceWorker.ready.then(()=>{ setTimeout(offlineStatus,1500); setTimeout(offlineStatus,8000); }).catch(()=>{});
+  }catch(_){}
+}
+async function offlineStatus(){
+  try{
+    if(!window.caches) return;
+    const c=await caches.open('testamed-v1');
+    const shell=await c.match(new URL('./',location.href).href);
+    const lib=(await c.match(JSPDF)) && (await c.match(PDFJS));
+    window._offOK=!!(shell && lib);
+    appVerUI();
+  }catch(_){}
+}
+
+/* ════════ 4. Kayıtlı ayarlar: Düzen ekranının bütün ayarları bir adla ════════ */
+const PRESET_EXTRA=['f-info','f-kind','f-max','f-total'];
+let _psPrev=null;
+async function presetsGet(){ try{ const a=await KV.get('presets'); return Array.isArray(a)?a:[]; }catch(_){ return []; } }
+function presetCollect(name){
+  const v={};
+  TMPL_FIELDS.concat(PRESET_EXTRA).forEach(id=>{ const e=$(id); if(e && e.type!=='file') v[id]=(e.type==='checkbox')?e.checked:e.value; });
+  return {id:'ps_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name:name||'Ayarlarım',t:Date.now(),v,
+    logo:window._logoData||null,wmImg:window._wmImgData||null};
+}
+function presetApply(p){
+  if(!p || !p.v) return;
+  Object.keys(p.v).forEach(id=>{ const e=$(id); if(!e || e.type==='file') return; if(e.type==='checkbox') e.checked=!!p.v[id]; else e.value=p.v[id]; });
+  if('logo' in p){
+    const l=p.logo; window._logoData=(l&&l.url)?l:null; window._logoImg=null;
+    if(window._logoData){ const im=new Image(); im.onload=()=>{ window._logoImg=im; try{ drawImgPrev(); hdrPreview(); }catch(_){} }; im.src=l.url; }
+    _storeImg(LOGO_KEY,window._logoData);
+  }
+  if('wmImg' in p){
+    const w=p.wmImg; window._wmImgData=(w&&w.url)?w:null; window._wmImg=null;
+    if(window._wmImgData){ const im=new Image(); im.onload=()=>{ window._wmImg=im; try{ drawImgPrev(); }catch(_){} }; im.src=w.url; }
+    _storeImg(WMIMG_KEY,window._wmImgData);
+  }
+  try{ saveTmpl(); }catch(_){}
+  try{ loadTmpl(); }catch(_){}
+  ['chemSync','stuSync','drawImgPrev','fillBlockSwatches','updateQnDemo','logoPosUI'].forEach(fn=>{ try{ if(typeof window[fn]==='function') window[fn](); }catch(_){} });
+  try{ const hf=$('f-hfont'); if(hf) ensureHFont(hf.value).then(()=>preview(),()=>{}); }catch(_){}
+  try{ spread(); }catch(_){}
+  try{ preview(); }catch(_){}
+}
+async function presetsRender(){
+  const box=$('presetbox'); if(!box) return;
+  const list=await presetsGet();
+  let h='<div class="pb-h"><b>⭐ Kayıtlı ayarlarım</b>'+(list.length?'<button type="button" data-a="man">Düzenle</button>':'')+'</div><div class="pb-chips">';
+  list.forEach(p=>{ h+='<button type="button" class="pb-chip" data-a="ap" data-id="'+esc(p.id)+'">'+esc(p.name)+'</button>'; });
+  if(_psPrev) h+='<button type="button" class="pb-chip prev" data-a="undo">↩ Önceki ayarlar</button>';
+  h+='<button type="button" class="pb-chip add" data-a="add">+ Bu ayarları kaydet</button></div>';
+  if(!list.length) h+='<div class="pb-hint">Antet, renk, logo, künye, sayfa düzeni, kitapçık… Bu ekrandaki bütün ayarları bir adla kaydet, sonra tek dokunuşla geri getir. Örneğin “10. sınıf test”, “Yazılı”.</div>';
+  box.innerHTML=h;
+}
+async function _psClick(e){
+  const b=e.target.closest('button[data-a]'); if(!b) return;
+  const a=b.dataset.a;
+  if(a==='add') return presetAddDialog();
+  if(a==='man') return presetManage();
+  if(a==='undo'){ const p=_psPrev; _psPrev=null; presetApply(p); presetsRender(); toast('Önceki ayarlara dönüldü'); return; }
+  if(a==='ap'){
+    const p=(await presetsGet()).find(x=>x.id===b.dataset.id); if(!p) return;
+    _psPrev=presetCollect('Önceki ayarlar'); presetApply(p); presetsRender();
+    toast('“'+p.name+'” ayarları uygulandı');
+  }
+}
+function presetAddDialog(){
+  const sug=[($('f-lesson')||{}).value,($('f-kind')||{}).value].map(x=>String(x||'').trim()).filter(Boolean).join(' · ');
+  openModal('Bu ayarları kaydet',[{ph:'Ad (ör. 10. sınıf yazılı)',val:sug}],async v=>{
+    const name=(v[0]||'').trim()||'Ayarlarım';
+    const list=await presetsGet(), p=presetCollect(name), i=list.findIndex(x=>x.name.toLocaleLowerCase('tr')===name.toLocaleLowerCase('tr'));
+    if(i>=0){ p.id=list[i].id; list[i]=p; } else list.push(p);
+    try{ await KV.set('presets',list); }catch(e){ toast('Kaydedilemedi: '+((e&&e.message)||'cihazda yer yok'),true); return; }
+    closeModal(); presetsRender(); toast('“'+name+'” kaydedildi · bir dahaki sefere tek dokunuşla uygula');
+  });
+}
+async function presetManage(){
+  const list=await presetsGet();
+  closeTmDlg();
+  const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg';
+  const rows=list.map(p=>'<div class="ps-row" data-id="'+esc(p.id)+'"><input value="'+esc(p.name)+'" aria-label="Ayarın adı" maxlength="40"/>'+
+    '<button type="button" data-a="up">Güncelle</button><button type="button" class="tm-del" data-a="del">Sil</button></div>').join('');
+  ov.innerHTML='<div class="tm-dlg" role="dialog" aria-label="Kayıtlı ayarlarım"><h3>Kayıtlı ayarlarım</h3>'+
+    '<p class="tm-p">Adını değiştirmek için üstüne yazman yeter. <b>Güncelle</b>, o kaydı şu anki ayarlarla değiştirir.</p>'+
+    '<div class="ps-list">'+(rows||'<p class="tm-p">Henüz kayıt yok.</p>')+'</div>'+
+    '<div class="tm-btns"><button type="button" class="tm-pri" id="ps-ok">Tamam</button></div></div>';
+  document.body.appendChild(ov);
+  const save=async()=>{ try{ await KV.set('presets',list); }catch(_){ toast('Kaydedilemedi',true); } };
+  ov.querySelectorAll('.ps-row input').forEach(inp=>inp.addEventListener('change',async()=>{
+    const p=list.find(x=>x.id===inp.closest('.ps-row').dataset.id); if(!p) return;
+    p.name=inp.value.trim()||p.name; inp.value=p.name; await save(); }));
+  ov.addEventListener('click',async e=>{
+    if(e.target===ov){ closeTmDlg(); presetsRender(); return; }
+    const b=e.target.closest('button[data-a]'); if(!b) return;
+    const row=b.closest('.ps-row'), i=list.findIndex(x=>x.id===row.dataset.id); if(i<0) return;
+    if(b.dataset.a==='up'){ const p=presetCollect(list[i].name); p.id=list[i].id; list[i]=p; await save(); b.textContent='✓ Güncellendi'; }
+    else if(b.dataset.a==='del'){
+      if(!b.classList.contains('sure')){ b.classList.add('sure'); b.textContent='Emin misin?'; return; }
+      list.splice(i,1); await save(); row.remove();
+      if(!list.length) ov.querySelector('.ps-list').innerHTML='<p class="tm-p">Henüz kayıt yok.</p>';
+    }
+  });
+  ov.querySelector('#ps-ok').onclick=()=>{ closeTmDlg(); presetsRender(); };
+}
+
+/* ════════ 5. Geri al / yinele: silme, sıralama, boyut, boşluk, cevap… ════════ */
+const UNDO={st:[],re:[],cur:null,t:0,lock:0,max:60};
+// puan (pt) yok: Düzen ekranına her girişte toplam puandan yeniden dağıtılıyor
+const U_KEYS=['img','img0','qc','w','h','zoom','offX','offY','sol','frame','frameLabel','noteOn','noteKind','note','pageBreak',
+  'link','ans','half','text','kind','oc','ann','annBase'];
+const U_DERIVED={img:1,w:1,h:1};   // yazıyla oluşturulan sorularda görsel ayarlardan yeniden çizilir
+function _uSnap(){
+  const lists=BOOKS.length?BOOKS.map(b=>b.list.slice()):null;
+  const all=new Set(qs); if(lists) lists.forEach(l=>l.forEach(q=>all.add(q)));
+  const props=new Map();
+  all.forEach(q=>{ const p={}; U_KEYS.forEach(k=>{ if(!(q.src && U_DERIVED[k])) p[k]=q[k]; }); props.set(q,p); });
+  return {qs:qs.slice(),lists,props,cpd:customPageDistribution?customPageDistribution.slice():null,
+    max:CFG?CFG.max:null,qgap:CFG?CFG.qgap:null};
+}
+function _uSameArr(a,b){ if(a.length!==b.length) return false; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false; return true; }
+function _uSame(a,b){
+  if(!_uSameArr(a.qs,b.qs)) return false;
+  if(!!a.lists!==!!b.lists) return false;
+  if(a.lists){ if(a.lists.length!==b.lists.length) return false; for(let i=0;i<a.lists.length;i++) if(!_uSameArr(a.lists[i],b.lists[i])) return false; }
+  if(String(a.cpd)!==String(b.cpd)) return false;
+  if(a.max!=null && b.max!=null && a.max!==b.max) return false;      // test ilk kez oluşturulunca boştan dolu olması değişiklik sayılmaz
+  if(a.qgap!=null && b.qgap!=null && a.qgap!==b.qgap) return false;
+  for(const [q,p] of a.props){ const r=b.props.get(q); if(!r) return false; for(const k in p) if(p[k]!==r[k]) return false; }
+  return true;
+}
+function _uCount(s){ return s.qs.filter(q=>q.type!=='note').length; }
+function undoSoon(){ if(UNDO.lock) return; clearTimeout(UNDO.t); UNDO.t=setTimeout(undoCommit,350); }
+function undoCommit(){
+  clearTimeout(UNDO.t); UNDO.t=0;
+  if(UNDO.lock) return;
+  const s=_uSnap();
+  if(!UNDO.cur){ UNDO.cur=s; undoUI(); return; }
+  if(_uSame(UNDO.cur,s)) return;
+  const prev=UNDO.cur;
+  UNDO.st.push(prev); if(UNDO.st.length>UNDO.max) UNDO.st.shift();
+  UNDO.re.length=0; UNDO.cur=s; undoUI();
+  const d=_uCount(prev)-_uCount(s), dn=prev.qs.length-s.qs.length;
+  if(d>0) undoSnack(d===1?'Soru silindi':d+' soru silindi');
+  else if(dn>0) undoSnack('Bilgi kutusu silindi');
+}
+function undoReset(){ clearTimeout(UNDO.t); UNDO.st=[]; UNDO.re=[]; UNDO.cur=null; undoSoon(); undoUI(); }
+function _uApply(s){
+  UNDO.lock++;
+  try{
+    s.props.forEach((p,q)=>{ for(const k in p){ if(p[k]===undefined) delete q[k]; else q[k]=p[k]; } });
+    qs=s.qs.slice();
+    if(BOOKS.length){
+      if(s.lists && s.lists.length===BOOKS.length) BOOKS.forEach((b,i)=>{ b.list=s.lists[i].slice(); });
+      else BOOKS.forEach((b,i)=>{ b.list=i===0?qs.slice():shuffleSeeded(qs,97*(i+1)+qs.length); });
+      if(currentBookIdx>=BOOKS.length) currentBookIdx=0;
+    }
+    customPageDistribution=s.cpd?s.cpd.slice():null;
+    if(CFG){ CFG.customPagePlan=customPageDistribution; if(s.max!=null) CFG.max=s.max; if(s.qgap!=null) CFG.qgap=s.qgap; }
+    if(s.max!=null){ const fm=$('f-max'); if(fm) fm.value=s.max; const qm=$('quickMaxPerPage'); if(qm){ qm.value=String(s.max||0); if(qm.value!==String(s.max||0)) qm.value='0'; } }
+    if(s.qgap!=null){ const g=$('f-qgap'); if(g) g.value=s.qgap; ['qgap-val','qgap-q'].forEach(id=>{ const e=$(id); if(e) e.textContent=s.qgap; }); }
+    try{ drawTray(); }catch(_){}
+    try{ drawRows(); }catch(_){}
+    if(BOOKS.length && screen==='prev'){ try{ recalcAndRedrawPages(); }catch(_){} }
+    if(screen==='set'){ try{ preview(); }catch(_){} }
+    try{ if(SEL && !_curList().some(q=>q.id===SEL)) SEL=null; updateQTool(); }catch(_){}
+  } finally { UNDO.lock--; }
+  clearTimeout(UNDO.t);
+  UNDO.cur=_uSnap();
+  undoUI();
+}
+function undo(){
+  undoCommit();
+  const s=UNDO.st.pop();
+  if(!s){ toast('Geri alınacak bir şey yok'); return; }
+  UNDO.re.push(UNDO.cur); _uApply(s); snackHide();
+  toast('Geri alındı');
+}
+function redo(){
+  undoCommit();
+  const s=UNDO.re.pop();
+  if(!s){ toast('Yinelenecek bir şey yok'); return; }
+  UNDO.st.push(UNDO.cur); _uApply(s); snackHide();
+  toast('Yinelendi');
+}
+function _urWhere(){
+  if(screen==='prev') return 'prev';
+  if(screen==='set'){ const t=document.querySelector('.set-tab.on'); if(t && t.dataset.pane==='p7') return 'set'; }
+  return '';
+}
+function undoUI(){
+  const f=$('urfab'); if(!f) return;
+  const w=_urWhere(), on=!!w && (UNDO.st.length>0 || UNDO.re.length>0) && !document.body.classList.contains('snackon');
+  f.classList.toggle('on',on);
+  const u=$('ur-u'), r=$('ur-r');
+  if(u) u.disabled=!UNDO.st.length;
+  if(r) r.disabled=!UNDO.re.length;
+  const low=on && urPos()<=14;
+  document.body.classList.toggle('uron-low',low);   // altta çubuk yoksa bildirimler düğmenin üstünde çıksın
+}
+function urPos(){
+  const f=$('urfab'); if(!f) return;
+  let b=14;
+  try{
+    const H=window.innerHeight;
+    if(screen==='prev'){ const qt=$('qtool'); if(qt && qt.classList.contains('on')){ const r=qt.getBoundingClientRect(); if(r.height) b=Math.max(b,H-r.top+8); } }
+    else if(screen==='set'){ const sb=$('setbar'); if(sb){ const r=sb.getBoundingClientRect(); if(r.height) b=Math.max(b,H-r.top+8); } }
+  }catch(_){}
+  f.style.bottom=b+'px';
+  const sn=$('snack'); if(sn) sn.style.bottom=b+'px';
+  return b;
+}
+let _snT=0;
+function undoSnack(msg){
+  const sn=$('snack'); if(!sn) return;
+  const t=$('toast'); if(t) t.style.display='none';
+  sn.querySelector('span').textContent=msg;
+  urPos();
+  sn.classList.add('on'); document.body.classList.add('snackon'); undoUI();
+  clearTimeout(_snT); _snT=setTimeout(snackHide,6000);
+}
+function snackHide(){
+  clearTimeout(_snT);
+  const sn=$('snack'); if(sn) sn.classList.remove('on');
+  document.body.classList.remove('snackon'); undoUI();
+}
+
+/* ════════ 8. Baskı öncesi kontrol ════════ */
+const _pcSkip=new Set();
+function pdfChecks(){
+  const cfg=CFG||cfgNow(), out=[];
+  const real=qs.filter(q=>q.type!=='note');
+  if(cfg.key || cfg.optic || cfg.qr){
+    const miss=real.filter(q=>!String(q.ans||'').trim());
+    if(miss.length) out.push({k:'ans:'+miss.map(q=>q.id).join(','),lv:'warn',ic:'🅰️',t:miss.length+' sorunun doğru cevabı işaretli değil',
+      d:'Cevap anahtarında'+(cfg.optic?' ve optik okumada':'')+' bu sorular boş kalır.',fix:'ans',ids:miss.map(q=>q.id)});
+  }
+  if((cfg.pts || cfg.yazili) && real.length){
+    const tot=real.reduce((a,q)=>a+(+q.pt||0),0);
+    if(tot!==100) out.push({k:'pt:'+tot,lv:'warn',ic:'💯',t:'Puanların toplamı '+tot,
+      d:'Toplam 100 olmalıysa Sorular sekmesinde “Toplam puan”ı yeniden yaz; puan sorulara kendiliğinden dağılır.',fix:'pts'});
+  }
+  const low=[];
+  (PAGES||[]).forEach(pg=>(pg.items||[]).forEach(it=>{ const q=it.q; if(!q || q.type==='note' || q.src || !q.w || !it.w) return; if(q.w/it.w<3) low.push({id:q.id,num:it.num}); }));
+  if(low.length) out.push({k:'low:'+low.map(x=>x.id).join(','),lv:'warn',ic:'🔍',t:low.length+' soru bulanık basılabilir',
+    d:'Görüntü çözünürlüğü düşük ('+low.slice(0,8).map(x=>x.num+'.').join(' ')+(low.length>8?' …':'')+' soru). Soruyu küçültmek ya da sayfayı büyütüp daha yakından kırpmak netleştirir.',fix:'sel',ids:low.map(x=>x.id)});
+  const seen=new Map(), dup=[];
+  real.forEach(q=>{ if(!q.img) return; const k=q.img.length+':'+q.img.slice(-48); const o=seen.get(k);
+    if(o && o.img===q.img) dup.push(q.id); else if(!o) seen.set(k,q); });
+  if(dup.length) out.push({k:'dup:'+dup.join(','),lv:'warn',ic:'📑',t:dup.length===1?'Bir soru iki kez eklenmiş':dup.length+' soru iki kez eklenmiş',
+    d:'Aynı görüntü testte birden fazla yer alıyor.',fix:'sel',ids:dup});
+  const emptyN=qs.filter(q=>q.type==='note' && !String(q.text||'').trim());
+  if(emptyN.length) out.push({k:'note:'+emptyN.length,lv:'warn',ic:'🗒️',t:emptyN.length===1?'Bir bilgi kutusu boş':emptyN.length+' bilgi kutusu boş',
+    d:'Boş kutu kâğıtta boş bir çerçeve olarak basılır.',fix:'note',ids:emptyN.map(q=>q.id)});
+  if(cfg.stuOn && !(cfg.stuList && cfg.stuList.length)) out.push({k:'stu',lv:'warn',ic:'👥',t:'Öğrenci listesi boş',
+    d:'Öğrenciye özel kopya açık ama listede kimse yok; tek kopya basılır.',fix:'stu'});
+  if(PAGES && PAGES.length>1){
+    const last=PAGES[PAGES.length-1], n=(last.items||[]).filter(it=>it.q && it.q.type!=='note').length;
+    if(n===1) out.push({k:'last',lv:'info',ic:'📄',t:'Son sayfada tek soru var',d:'Üstteki “Otomatik dağıt” ya da Sayfa Başı ile kâğıttan tasarruf edebilirsin.'});
+  }
+  return out;
+}
+function pdfGo(share){
+  let all=[]; try{ all=pdfChecks(); }catch(_){ all=[]; }
+  const warn=all.filter(x=>x.lv==='warn' && !_pcSkip.has(x.k));
+  if(!warn.length) return share?sharePdf():makeFile();
+  closeTmDlg();
+  const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg';
+  const items=all.filter(x=>!_pcSkip.has(x.k));
+  ov.innerHTML='<div class="tm-dlg" role="dialog" aria-label="Yazdırmadan önce"><h3>Yazdırmadan önce bir bak</h3>'+
+    '<div class="pc-list">'+items.map((x,i)=>'<div class="pc-it'+(x.lv==='info'?' info':'')+'"><span class="pc-ic">'+x.ic+'</span><div class="pc-tx"><b>'+esc(x.t)+'</b><small>'+esc(x.d)+'</small></div>'+
+      (x.fix?'<button type="button" class="pc-fix" data-i="'+i+'">Düzelt</button>':'')+'</div>').join('')+'</div>'+
+    '<label class="pc-skip"><input type="checkbox" id="pc-skip"/> Bu uyarıları bu test için bir daha gösterme</label>'+
+    '<div class="tm-btns"><button type="button" id="pc-no">Geri dön</button><button type="button" class="tm-pri" id="pc-go">'+(share?'Yine de paylaş':'Yine de PDF oluştur')+'</button></div></div>';
+  document.body.appendChild(ov);
+  const remember=()=>{ if(ov.querySelector('#pc-skip').checked) items.forEach(x=>_pcSkip.add(x.k)); };
+  ov.addEventListener('click',e=>{
+    if(e.target===ov){ closeTmDlg(); return; }
+    const b=e.target.closest('.pc-fix'); if(!b) return;
+    const x=items[+b.dataset.i]; closeTmDlg(); _pcFix(x);
+  });
+  ov.querySelector('#pc-no').onclick=()=>{ remember(); closeTmDlg(); };
+  ov.querySelector('#pc-go').onclick=()=>{ remember(); closeTmDlg(); share?sharePdf():makeFile(); };
+}
+function _pcFix(x){
+  if(!x) return;
+  if(x.fix==='sel'){
+    const id=(x.ids||[])[0]; if(!id) return;
+    try{ if(!_curList().some(q=>q.id===id) && BOOKS.length>1){ currentBookIdx=0; PAGES=BOOKS[0].pages; drawPages(); drawBookPick(0); } }catch(_){}
+    setTimeout(()=>{ try{ _revealQ(id); selectQ(id); }catch(_){} },60);
+    return;
+  }
+  if(x.fix==='stu'){ go('set'); try{ switchSetTab('p6'); }catch(_){} return; }
+  go('set'); try{ switchSetTab('p7'); }catch(_){}
+  setTimeout(()=>{
+    if(x.fix==='pts'){ const t=$('f-total'); if(t){ t.scrollIntoView({block:'center'}); try{ t.focus(); t.select(); }catch(_){} } return; }
+    const id=(x.ids||[])[0], i=qs.findIndex(q=>q.id===id);
+    const row=document.querySelectorAll('#qrows .qrow')[i];
+    if(row){ row.scrollIntoView({block:'center',behavior:'smooth'}); row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash'); }
+  },120);
+}
+
+/* ════════ kurulum ════════ */
+function _wrapAfter(name,after){
+  const f=window[name]; if(typeof f!=='function' || f._wr) return;
+  const g=function(){ const r=f.apply(this,arguments); try{ after.apply(this,arguments); }catch(_){} return r; };
+  g._wr=1; window[name]=g;
+}
+function _safeStart(){
+  _wrapAfter('drawRows',undoSoon); _wrapAfter('drawTray',undoSoon); _wrapAfter('drawPages',undoSoon);
+  _wrapAfter('go',s=>{ if(s==='home') homeCards(); if(s==='set') presetsRender(); if(s!=='foy') foyAutoSave(); undoUI(); });
+  _wrapAfter('switchSetTab',()=>undoUI());
+  _wrapAfter('updateQTool',()=>undoUI());
+  // Kitaplık'ı belirli bir sekmede açmak (ör. hatırlatmadan Yedek'e)
+  const el0=window.enterLib;
+  if(typeof el0==='function' && !el0._wr){
+    const g=async function(){ const r=await el0.apply(this,arguments);
+      if(window._libWant){ const w=window._libWant; window._libWant=null; libTab(w);
+        if(w==='yedek' && window._bkAuto){ window._bkAuto=false; exportBackup(); } }
+      return r; };
+    g._wr=1; window.enterLib=g;
+  }
+  const hc=$('homecards'); if(hc) hc.addEventListener('click',_hcClick);
+  const pb=$('presetbox'); if(pb) pb.addEventListener('click',_psClick);
+  const fab=document.createElement('div'); fab.id='urfab';
+  fab.innerHTML='<button type="button" id="ur-u" onclick="undo()" aria-label="Geri al"><span class="ur-i">↶</span>Geri al</button><button type="button" id="ur-r" onclick="redo()" aria-label="Yinele" title="Yinele"><span class="ur-i">↷</span></button>';
+  document.body.appendChild(fab);
+  const sn=document.createElement('div'); sn.id='snack'; sn.setAttribute('role','status');
+  sn.innerHTML='<span></span><button type="button" onclick="undo()">↶ Geri al</button>';
+  document.body.appendChild(sn);
+  window.addEventListener('resize',()=>undoUI());
+  document.addEventListener('keydown',e=>{
+    if(!(e.metaKey||e.ctrlKey) || e.altKey) return;
+    const k=(e.key||'').toLowerCase(); if(k!=='z' && k!=='y') return;
+    const t=e.target; if(t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if(!_urWhere() && screen!=='view') return;
+    e.preventDefault(); if(k==='y' || e.shiftKey) redo(); else undo();
+  });
+  undoReset();
+  draftCheck();
+  setTimeout(foyAutoSave,1500);   // föyün açılıştaki hâli (karşılaştırma için)
+  setInterval(()=>{ if(document.visibilityState==='hidden') return; draftSave(); if(screen==='foy') foyAutoSave(); },4000);
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden'){ draftSave('hide'); foyAutoSave(); } else if(screen==='home') homeCards(); });
+  window.addEventListener('pagehide',()=>{ draftSave('hide'); foyAutoSave(); });
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',_safeStart); else _safeStart();
+window.addEventListener('load',()=>setTimeout(swInit,1200));
 </script>
 
 <!-- ════════ Öğretmen Paneli & İstatistik Modülü ════════ -->
