@@ -1469,6 +1469,120 @@ body.snackon #toast,body.uron-low #toast{bottom:calc(72px + var(--safe))}
 .tm-dlg .pc-skip input{width:18px;height:18px;padding:0;margin:0;flex:0 0 auto;accent-color:var(--or)}
 .qrow.flash{animation:qflash 1.4s ease 2}
 @keyframes qflash{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}35%{box-shadow:0 0 0 3px #F59E0B}}
+/* ── akıllı soru bankası ── */
+.lfilter .lf-br{flex-basis:100%;height:0}
+.fc.df-k.on{background:#15803D;border-color:#15803D;color:#fff}
+.fc.df-o.on{background:#A15C07;border-color:#A15C07;color:#fff}
+.fc.df-z.on{background:#B42318;border-color:#B42318;color:#fff}
+.fc.df-k{color:#15803D}.fc.df-o{color:#A15C07}.fc.df-z{color:#B42318}
+.bk-tools{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
+.bk-tools .bk-auto{flex:1;padding:13px 12px;border-radius:13px;background:var(--ink);color:#fff;font:700 14px var(--body);border:none;box-shadow:0 2px 8px rgba(14,26,23,.16)}
+.bk-tools span{font-size:12.5px;font-weight:700;color:var(--soft);white-space:nowrap}
+.bq .bq-ans{position:absolute;top:5px;left:5px;min-width:22px;height:22px;padding:0 6px;border-radius:7px;background:var(--gr);color:#fff;font:800 12px var(--body);display:flex;align-items:center;justify-content:center}
+.bq.sel .bq-ans{display:none}
+.bq .bq-ed{position:absolute;top:4px;right:4px;width:30px;height:30px;border-radius:9px;border:none;background:rgba(14,26,23,.72);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;padding:0}
+.bq .bq-df{position:absolute;left:5px;bottom:4px;max-width:calc(100% - 40px);padding:2px 6px;border-radius:6px;font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bq .bq-us{position:absolute;right:5px;bottom:4px;padding:2px 6px;border-radius:6px;background:#EEF2F7;color:#334155;font-size:10px;font-weight:800}
+.selbar .bk-more{padding:14px 15px;font-size:16px;line-height:1}
+.bk-l{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:var(--soft)}
+.bk-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bk-ed .bk-img{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;justify-content:center;max-height:34vh;overflow:hidden}
+.bk-ed .bk-img img{max-width:100%;max-height:calc(34vh - 16px);object-fit:contain}
+.bk-meta{margin:0;padding:0 0 0 18px;font-size:12.5px;line-height:1.55;color:var(--ink2)}
+.tm-foot .bk-fb{padding:12px 13px;border-radius:11px;border:1.5px solid var(--line);background:var(--bg);font:700 14px var(--body);color:var(--ink);white-space:nowrap}
+.tm-foot .bk-fb.tm-del{background:#FDECEA;border-color:#F5C2BE;color:#B42318}
+.bk-ed .tm-foot .tm-pri{flex:1}
+.ba-cs{display:flex;flex-wrap:wrap;gap:6px}
+.ba-c{padding:8px 12px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font:700 13px var(--body);color:var(--ink2)}
+.ba-c small{font-weight:600;color:var(--soft);margin-left:2px}
+.ba-c.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.ba-c.on small{color:rgba(255,255,255,.75)}
+.ba-n{display:flex;align-items:center;gap:10px}
+.ba-n button{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:700 20px var(--body);color:var(--ink)}
+.ba-n b{min-width:34px;text-align:center;font:800 20px var(--disp);color:var(--ink)}
+.ba-n span{font-size:12px;font-weight:600;color:var(--soft)}
+.ba-mix{flex-wrap:wrap}
+.ba-mix button{flex:1 1 40%}
+.ba-dc{font-size:11.5px;font-weight:600;color:var(--soft);line-height:1.4}
+.ba-ck{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.35}
+.tm-dlg .ba-ck input{width:20px;height:20px;padding:0;margin:0;flex:0 0 auto;accent-color:var(--or)}
+.ba-ck small{color:var(--soft);font-weight:600}
+.ba-info{flex:1;font-size:12.5px;font-weight:700;color:var(--soft)}
+.ba-dlg .tm-pri:disabled{opacity:.45}
+
+/* ── yazılı not girişi ── */
+#pbar #b-ng{order:9;flex:0 0 auto;min-width:0;padding:9px 12px;background:#FFF4E5;color:#9A3412;border:1.5px solid #F59E0B;display:none}
+body.ng-mode #pbar #b-ng{display:block}
+body.ng-mode:not(.ng-optic) #pbar #b-omr{display:none}
+body.qfocus #pbar #b-ng{display:none!important}
+.trow .tb-ng{background:#FFF4E5;color:#9A3412;padding:9px 10px}
+.ng-card{gap:12px}
+.ng-ch{display:flex;align-items:baseline;gap:10px}
+.ng-ch b{flex:1;font:700 16px var(--disp);color:var(--ink)}
+.ng-tot{font:800 17px var(--disp);color:var(--or);font-variant-numeric:tabular-nums}
+.ng-abs{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink2)}
+.ng-abs input{width:19px;height:19px;accent-color:var(--or)}
+.ng-qs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ng-qs.off{opacity:.4;pointer-events:none}
+.ng-q{background:var(--bg);border-radius:11px;padding:8px 8px 8px 10px;display:flex;flex-direction:column;gap:6px}
+.ng-qn{font:700 13px var(--body);color:var(--ink);display:flex;justify-content:space-between;align-items:baseline}
+.ng-qn small{font-size:11.5px;color:var(--soft);font-weight:700}
+.ng-qi{display:flex;gap:5px}
+.ng-qi input{flex:1;min-width:0;width:100%;padding:10px 8px;border-radius:9px;border:1.5px solid var(--line);background:#fff;font:700 17px var(--body);text-align:center;color:var(--ink);-webkit-appearance:none;font-variant-numeric:tabular-nums}
+.ng-qi input:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rgba(30,122,60,.15)}
+.ng-qi input.bad{border-color:#DC2626;background:#FEF2F2;color:#B42318}
+.ng-qi button{flex:0 0 auto;padding:0 9px;border-radius:9px;border:1.5px solid var(--line);background:#fff;font:700 12.5px var(--body);color:var(--ink2)}
+.ng-nav{display:flex;gap:8px}
+.ng-nav button{flex:1;padding:13px 10px;border-radius:12px;border:1.5px solid var(--line);background:var(--w);font:700 14px var(--body);color:var(--ink)}
+.ng-nav button.pri{background:var(--or);border-color:var(--or);color:#fff;flex:1.6}
+.ng-nav button:disabled{opacity:.4}
+.ng-setup b{font:700 15px var(--disp)}
+.ng-setup textarea{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:11px;padding:11px 12px;font:500 15px var(--body);resize:vertical;min-height:140px}
+.ng-setup .omr-btn{flex:0 0 auto}
+.ng-row{display:grid;grid-template-columns:1fr 54px 64px;gap:4px;align-items:center;padding:11px 10px;border-top:1px solid var(--line);font-size:13.5px;cursor:pointer}
+.ng-row span:not(:first-child){text-align:center;font-variant-numeric:tabular-nums}
+.ng-row span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.ng-row span:last-child{font-weight:800}
+.ng-row .ok{color:#15803D;font-weight:800}
+.ng-row.hd{border-top:0;background:var(--bg);font-size:11px;font-weight:800;color:var(--soft);cursor:default}
+.ng-row.hd span:last-child{font-weight:800}
+.ng-row.on{background:var(--tint)}
+.ng-row.abs span{color:var(--soft)}
+.ng-add{display:flex;gap:8px}
+.ng-add input{flex:1;min-width:0;padding:11px 12px;border-radius:11px;border:1.5px solid var(--line);background:var(--w);font:500 15px var(--body)}
+.ng-add button{padding:0 16px;border-radius:11px;border:1.5px solid var(--or);background:var(--w);color:var(--or);font:700 14px var(--body)}
+.ng-link{align-self:flex-start;background:none;border:none;padding:4px 2px;color:var(--or);font:700 13px var(--body);text-decoration:underline}
+.ng-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ng-stats div{display:flex;flex-direction:column;align-items:center;background:var(--w);border:1px solid var(--line);border-radius:12px;padding:9px 2px;font-size:10.5px;color:var(--soft);font-weight:700;text-align:center}
+.ng-stats b{font:800 18px var(--disp);color:var(--ink)}
+.ng-stats .pu{background:var(--tint)}
+.ng-stats .pu b{color:var(--or)}
+.ng-h{font:700 14px var(--disp);color:var(--ink);margin:6px 2px 0}
+.ng-dist{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:var(--w);border:1px solid var(--line);border-radius:12px;padding:12px 8px 8px}
+.ng-dist div{height:118px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px}
+.ng-dist i{display:block;width:70%;max-width:40px;min-height:3px;border-radius:5px 5px 0 0}
+.ng-dist b{font-size:13px;color:var(--ink)}
+.ng-dist span{font-size:11px;font-weight:700;color:var(--ink2);text-align:center;line-height:1.15}
+.ng-dist small{display:block;font-size:9.5px;color:var(--soft);font-weight:600}
+.ng-items{display:flex;flex-direction:column;gap:7px;background:var(--w);border:1px solid var(--line);border-radius:12px;padding:12px}
+.ng-it{display:grid;grid-template-columns:28px 1fr 48px;grid-template-rows:auto auto;column-gap:8px;align-items:center}
+.ng-it .ng-in{font-weight:800;font-size:13px;color:var(--ink)}
+.ng-bar{height:10px;border-radius:6px;background:#EEF1EC;overflow:hidden}
+.ng-bar i{display:block;height:100%;border-radius:6px}
+.ng-bar i.kolay{background:#16A34A}.ng-bar i.orta{background:#D97706}.ng-bar i.zor{background:#DC2626}
+.ng-ip{font-size:12px;font-weight:800;text-align:center;padding:2px 0;border-radius:7px}
+.ng-it small{grid-column:2/4;font-size:11px;color:var(--soft);font-weight:600}
+.ng-ocs{display:flex;flex-direction:column;gap:6px}
+.ng-oc{display:flex;align-items:center;gap:10px;background:var(--w);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.ng-oc div{flex:1;min-width:0}
+.ng-oc b{display:block;font-size:13px;line-height:1.35;color:var(--ink)}
+.ng-oc small{font-size:11.5px;color:var(--soft);font-weight:600}
+.ng-oc .lv{font-weight:800;font-size:13px;padding:3px 8px;border-radius:8px}
+.ng-note{background:#FFF7E6;border:1px solid #F3D9A4;border-radius:12px;padding:11px 12px;font-size:13px;line-height:1.45;color:#7A4A06}
+.ng-note.ok{background:#ECFDF3;border-color:#B7E4C7;color:#14532D}
+.ng-clear{align-self:center;margin-top:6px;background:none;border:none;color:#B42318;font:700 12.5px var(--body);padding:8px;text-decoration:underline}
+.ng-clear.sure{background:#FDECEA;border-radius:10px;text-decoration:none}
+.omr-link{align-self:center;background:none;border:none;color:var(--or);font:700 13px var(--body);text-decoration:underline;padding:6px}
 </style>
 <base target="_blank">
 </head>
@@ -2410,6 +2524,7 @@ body.snackon #toast,body.uron-low #toast{bottom:calc(72px + var(--safe))}
         </div>
         <button id="b-show" onclick="showStart()" title="Soruları tek tek tam ekranda göster">▶ Sunum</button>
         <button id="b-omr" onclick="omrOpen()" title="Doldurulmuş optik formları telefon kamerasıyla oku">📷 Optik</button>
+        <button id="b-ng" onclick="ngOpen()" title="Öğrencilerin soru puanlarını gir, sınav analizini al">✍️ Not gir</button>
 
         <span class="pb-br"></span>
         <button id="b-print" onclick="pdfGo(false)">PDF oluştur</button>
@@ -4756,25 +4871,7 @@ function modalOk(){
   if(modalCb) modalCb(v);
 }
 
-/* Soru Bankası Yönetimi */
-async function saveBank(){
-  if(!qs.length) return toast('Kaydedilecek soru yok',true);
-  const lesson=$('f-lesson').value.trim()||'Genel';
-  const topic=$('f-topic').value.trim()||'Genel';
-  openModal('Bankaya kaydet · '+qs.length+' soru',
-    [{ph:'Ders',val:lesson},{ph:'Konu',val:topic},{ph:'Etiket (kolay, zor, çıkmış…)',val:''}],
-    async v=>{
-      const ders=v[0]||'Genel', konu=v[1]||'Genel';
-      const tags=(v[2]||'').split(',').map(x=>x.trim()).filter(Boolean);
-      let n=0;
-      for(const q of qs){
-        await DB.put('bank',{id:'q_'+Date.now()+'_'+(n++)+Math.random().toString(36).slice(2,6),
-          img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,link:q.link||null,oc:q.oc||null,lesson:ders,topic:konu,tags,ts:Date.now()});
-      }
-      closeModal(); toast(qs.length+' soru "'+ders+' · '+konu+'" olarak kaydedildi');
-    });
-}
-
+/* Soru Bankası Yönetimi → saveBank: akıllı banka modülünde (dosyanın sonuna yakın) */
 let bankItems=[], testItems=[], libMode='bank', libFilter='', libQuery='', bankSel=new Set(), shownIds=[];
 
 async function refreshLib(){
@@ -4794,104 +4891,7 @@ async function enterLib(){
   drawLib();
 }
 
-function drawLib(){
-  const filt=$('lfilter'), body=$('lbody'), foot=$('lfoot');
-  if(libMode==='bank'){
-    const lessons=[...new Set(bankItems.map(q=>q.lesson))].sort();
-    filt.innerHTML='';
-    const box=document.createElement('input');
-    box.className='lsearch'; box.placeholder='Ders veya konu ara…'; box.value=libQuery;
-    box.oninput=()=>{ libQuery=box.value; drawLibBody(); };
-    filt.appendChild(box);
-    const mk=(txt,val)=>{
-      const b=document.createElement('button');
-      b.className='fc'+(libFilter===val?' on':''); b.textContent=txt;
-      b.onclick=()=>{libFilter=libFilter===val?'':val;drawLib();}; return b;
-    };
-    if(lessons.length){ filt.appendChild(mk('Tümü','')); lessons.forEach(l=>filt.appendChild(mk(l,l))); }
-    const tags=[...new Set(bankItems.flatMap(q=>q.tags||[]))].sort();
-    tags.slice(0,8).forEach(t=>{
-      const b=document.createElement('button');
-      b.className='fc tag'+(libQuery===t?' on':''); b.textContent='#'+t;
-      b.onclick=()=>{ libQuery=libQuery===t?'':t; drawLib(); };
-      filt.appendChild(b);
-    });
-    filt.style.display='flex';
-    drawLibBody(); return;
-  }
-  if(libMode==='yedek'){ drawBackup(); return; }
-  drawTestBody(); return;
-}
-
-function drawLibBody(){
-  const body=$('lbody'), foot=$('lfoot');
-  const q=libQuery.trim().toLowerCase();
-  const shown=bankItems.filter(x=>
-    (!libFilter||x.lesson===libFilter) &&
-    (!q || (x.lesson+' '+x.topic+' '+((x.tags||[]).join(' '))).toLowerCase().includes(q)));
-  shownIds=shown.map(x=>x.id);
-  if(!shown.length){ body.innerHTML='<div class="lempty">Henüz kayıtlı soru yok.</div>'; foot.style.display='none'; return; }
-  const groups={};
-  shown.forEach(q=>{const k=q.lesson+' · '+q.topic;(groups[k]=groups[k]||[]).push(q);});
-  body.innerHTML='';
-  Object.keys(groups).sort().forEach(k=>{
-    const g=document.createElement('div'); g.className='grp';
-    g.innerHTML='<h4>'+esc(k)+' · '+groups[k].length+' soru</h4>';
-    const grid=document.createElement('div'); grid.className='gq';
-    groups[k].forEach(q=>{
-      const c=document.createElement('div'); c.className='bq'+(bankSel.has(q.id)?' sel':'');
-      c.innerHTML='<img src="'+q.img+'"/><span class="tick">✓</span>'+
-        (q.ans?'<span class="del" style="left:3px;right:auto;background:var(--gr)">'+q.ans+'</span>':'')+
-        ((q.tags&&q.tags.length)?'<span class="tg">'+esc(q.tags[0])+'</span>':'');
-      c.onclick=()=>{ bankSel.has(q.id)?bankSel.delete(q.id):bankSel.add(q.id); drawLib(); };
-      const del=document.createElement('span'); del.className='del'; del.textContent='Sil';
-      del.onclick=async e=>{ e.stopPropagation(); await DB.del('bank',q.id); await refreshLib(); drawLib(); };
-      c.appendChild(del); grid.appendChild(c);
-    });
-    g.appendChild(grid); body.appendChild(g);
-  });
-  if(bankSel.size){
-    foot.style.display='block';
-    foot.innerHTML='<div class="selbar"><button class="selall" onclick="selAllBank()">'+
-      (bankSel.size>=shownIds.length&&shownIds.length?'Seçimi kaldır':'Görünenleri seç')+'</button>'+
-      '<button class="big" style="margin:0;flex:1" onclick="useBank()">'+
-      bankSel.size+' soruyu teste ekle →</button></div>';
-  } else foot.style.display='none';
-}
-
-function drawTestBody(){
-  const filt=$('lfilter'), body=$('lbody'), foot=$('lfoot');
-  filt.style.display='none'; foot.style.display='none';
-  if(!testItems.length){ body.innerHTML='<div class="lempty">Henüz kayıtlı test yok.</div>'; return; }
-  body.innerHTML='';
-  testItems.sort((a,b)=>b.ts-a.ts).forEach(t=>{
-    const r=document.createElement('div'); r.className='trow';
-    r.innerHTML='<div class="ti"><div class="tn">'+esc(t.name)+'</div>'+
-      '<div class="tm">'+esc(t.lesson||'')+' · '+t.qs.length+' soru · '+t.date+'</div></div>';
-    const edit=document.createElement('button'); edit.className='tb-edit'; edit.textContent='Düzenle';
-    edit.onclick=()=>openTest(t,true);
-    const open=document.createElement('button'); open.className='tb-open'; open.textContent='PDF';
-    open.onclick=()=>openTest(t,false);
-    const del=document.createElement('button'); del.className='tb-del'; del.textContent='Sil';
-    del.onclick=async()=>{ if(confirm('“'+t.name+'” silinsin mi?')){ await DB.del('tests',t.id); await refreshLib(); drawLib(); } };
-    r.append(edit,open,del); body.appendChild(r);
-  });
-}
-
-function selAllBank(){
-  if(bankSel.size>=shownIds.length && shownIds.length){ bankSel.clear(); }
-  else shownIds.forEach(id=>bankSel.add(id));
-  drawLib();
-}
-
-function useBank(){
-  const chosen=bankItems.filter(q=>bankSel.has(q.id));
-  chosen.forEach(q=>qs.push({id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,pt:0,ans:q.ans||'',sol:null,pageBreak:false,tags:q.tags||[],...(q.link?{link:q.link}:{}),...(q.oc?{oc:q.oc}:{})}));
-  bankSel.clear();
-  drawTray();
-  toast(chosen.length+' soru teste eklendi');
-  go(editingTest ? 'set' : (docs.length?'view':'set'));
-}
+/* drawLib, drawLibBody, drawTestBody, selAllBank, useBank → akıllı banka ve not girişi modüllerinde */
 
 function saveTestDialog(){
   if(!qs.length) return;
@@ -6489,7 +6489,7 @@ function qtOC(){ const q=_selQ(); openOC(q&&q.id); }
 /* ════════ Sürüm ve güncelleme ════════
    Ana ekrana eklenen uygulamada yenile düğmesi yok: açılışta ve uygulamaya geri dönüldüğünde
    sitedeki version.json okunur; daha yeni sürüm varsa üstte "Güncelle" şeridi çıkar. */
-const APP_VERSION='2026.11.15.5';
+const APP_VERSION='2026.11.15.6';
 function _verNum(v){ return String(v||'').split(/[.\-]/).slice(0,4).map(n=>parseInt(n,10)||0).reduce((a,n)=>a*1000+n,0); }
 function verLabel(v){ const p=String(v||'').split('.'); return p.length>=3?(p[2]+'.'+p[1]+'.'+p[0]+(p[3]&&p[3]!=='1'?' ('+p[3]+')':'')):String(v); }
 let _updLast=0, _updInfo=null;
@@ -6635,7 +6635,18 @@ const GUIDE=[
       'Sınıf listesi girdiysen öğrencinin adı kendiliğinden gelir; girmediysen adı sen yazarsın.',
       'Sonuçlar sekmesinde bütün öğrenciler; Madde analizi sekmesinde her sorunun yüzde kaç doğru yapıldığı ve şıkların dağılımı görünür.',
       'Sonuçları paylaş, listeyi Excel\'de açılan bir dosya olarak gönderir.',
+      'Optik ekranını kapatınca, bankadan gelen soruların öğrenci başarısı bankaya işlenir; zorluğunu belirlemediğin sorular buna göre Kolay, Orta ya da Zor olur.',
       'Formları yazdırdıktan sonra soruların sırasını değiştirme; okuma o sıraya göre yapılır.']},
+
+ {id:'notgir', ic:'✍️', t:'Yazılı not girişi ve analiz', s:'Yazılı not girişi ve analiz',
+  p:'Yazılıyı okuduktan sonra her öğrencinin soru puanlarını girersin; testamed toplamı, ortalamayı ve sınav analizini çıkarır.',
+  li:[{t:'Yazılı sınav modu açıkken önizlemede ✍️ Not gir düğmesi çıkar. Kayıtlı yazılılarda Kitaplık → Testlerim\'deki ✍️ düğmesiyle de açılır.', s:'Yazılı sınav modu açıkken önizlemede Not gir düğmesi çıkar. Kayıtlı yazılılarda Kitaplık\'ta Testlerim\'deki yazan el düğmesiyle de açılır.'},
+      'İlk açılışta sınıf listesini yapıştır; her satıra bir öğrenci, numara başta olabilir. Öğrenciye özel kopya listesi varsa tek dokunuşla oradan alınır.',
+      'Öğrenciye dokun, her sorunun puanını yaz. 0 ve Tam düğmeleri tek dokunuşla doldurur; soru puanından büyük değer kabul edilmez.',
+      'Sonraki öğrenci ile listede ilerlersin. Sınava girmeyen öğrenciyi Sınava girmedi ile işaretle; ortalamaya katılmaz.',
+      'Analiz sekmesinde ortalama, en yüksek ve en düşük puan, başarı yüzdesi, puan dağılımı, her sorunun ve her öğrenme çıktısının başarısı görünür.',
+      'Excel düğmesi bütün notları soru soru bir tabloya, Analiz raporu düğmesi okul, ders ve sınıf bilgisiyle A4 bir rapora döker.',
+      'Notlar bu teste bağlı olarak telefonda saklanır ve yedeğe girer. Kapatınca, bankadan gelen soruların öğrenci başarısı bankaya işlenir.']},
  {id:'cikti', ic:'🎯', t:'Öğrenme çıktıları tablosu', s:'Öğrenme çıktıları tablosu',
   li:['Sorular sekmesindeki Öğrenme çıktılarını eşleştir düğmesine dokun.',
       'Önce öğrenme çıktılarını yaz; daha önce yazdıkların alttan tek dokunuşla eklenir.',
@@ -6654,6 +6665,11 @@ const GUIDE=[
       'Önizle ile sayfaları görür, Oluştur ile PDF alırsın; Kaydet föyünü saklar.']},
  {id:'kitaplik', ic:'🗂️', t:'Kitaplık, panel ve yedek', s:'Kitaplık ve yedek',
   li:['Kitaplık\'ta Bankam soru bankandır, Testlerim kaydettiğin testlerdir.',
+      'Soruları Düzen → Sorular\'daki Soruları bankaya kaydet ile eklerken ders, konu, zorluk ve etiket verirsin. Bankada zaten olan soru ikinci kez eklenmez.',
+      {t:'Her soru kartında doğru cevap, zorluk, öğrenci başarısı ve kaç testte kullanıldığı görünür. ✎ ile ders, konu, zorluk, cevap ve öğrenme çıktısını düzenlersin.', s:'Her soru kartında doğru cevap, zorluk, öğrenci başarısı ve kaç testte kullanıldığı görünür. Kalem düğmesiyle ders, konu, zorluk, cevap ve öğrenme çıktısını düzenlersin.'},
+      'Üstteki Kolay, Orta, Zor ve Hiç kullanılmamış düğmeleri bankayı süzer; arama kutusu ders, konu, etiket ve öğrenme çıktısında arar.',
+      {t:'🎲 Otomatik test oluştur: konuları, soru sayısını ve zorluk dengesini seç; testamed soruları konulara eşit dağıtarak seçer, istersen son 30 günde kullandığın soruları almaz ve kolaydan zora sıralar.', s:'Otomatik test oluştur düğmesiyle konuları, soru sayısını ve zorluk dengesini seçersin; testamed soruları konulara eşit dağıtarak seçer, istersen son otuz günde kullandığın soruları almaz ve kolaydan zora sıralar.'},
+      'Birden çok soruyu seçip ⋯ düğmesiyle zorluk atayabilir, ders ve konusunu değiştirebilir, etiket ekleyebilir ya da silebilirsin.',
       'Yedek sekmesindeki Yedek dosyası oluştur; bütün soru ve testlerini, ayarlarını, logonu, föyünü, kayıtlı ayarlarını ve optik sonuçlarını tek dosyada toplar.',
       {t:'iPhone\'da 📤 Dosyalar\'a / iCloud\'a kaydet düğmesine dokun, açılan menüde Dosyalar\'a Kaydet\'i seç ve iCloud Drive\'da bir klasöre kaydet.', s:'iPhone\'da Dosyalar\'a ya da iCloud\'a kaydet düğmesine dokun, açılan menüde Dosyalar\'a Kaydet\'i seç ve iCloud Drive\'da bir klasöre kaydet.'},
       'Yeni telefonda Yedekten geri yükle ile dosyayı seç. Soru ve testleri ekle yalnızca soruları ve testleri ekler; Her şeyi geri yükle ayarları da getirir. Hiçbir seçenek mevcut sorularını silmez.',
@@ -13220,7 +13236,7 @@ function _lsJSON(k,d){ try{ const v=JSON.parse(localStorage.getItem(k)); return 
 
 /* ── soru kaydı: kitaplığa, taslağa ve yedeğe giden alanlar tek yerde ── */
 const Q_FIELDS=['id','img','w','h','src','cw','pt','ans','sol','pageBreak','frame','frameLabel','type','kind','text','half',
-  'note','noteKind','noteOn','offX','offY','zoom','link','oc','img0','qc','ann','annBase','tags','crop'];
+  'note','noteKind','noteOn','offX','offY','zoom','link','oc','img0','qc','ann','annBase','tags','crop','bid'];
 function qToRec(q){
   const r={};
   Q_FIELDS.forEach(k=>{ const v=q[k]; if(v!==undefined && v!==null && v!=='') r[k]=v; });
@@ -13785,7 +13801,7 @@ function pdfChecks(){
 function pdfGo(share){
   let all=[]; try{ all=pdfChecks(); }catch(_){ all=[]; }
   const warn=all.filter(x=>x.lv==='warn' && !_pcSkip.has(x.k));
-  if(!warn.length) return share?sharePdf():makeFile();
+  if(!warn.length) return _pdfOut(share);
   closeTmDlg();
   const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg';
   const items=all.filter(x=>!_pcSkip.has(x.k));
@@ -13802,7 +13818,7 @@ function pdfGo(share){
     const x=items[+b.dataset.i]; closeTmDlg(); _pcFix(x);
   });
   ov.querySelector('#pc-no').onclick=()=>{ remember(); closeTmDlg(); };
-  ov.querySelector('#pc-go').onclick=()=>{ remember(); closeTmDlg(); share?sharePdf():makeFile(); };
+  ov.querySelector('#pc-go').onclick=()=>{ remember(); closeTmDlg(); _pdfOut(share); };
 }
 function _pcFix(x){
   if(!x) return;
@@ -13824,9 +13840,9 @@ function _pcFix(x){
 
 /* ════════ kurulum ════════ */
 function _wrapAfter(name,after){
-  const f=window[name]; if(typeof f!=='function' || f._wr) return;
+  const f=window[name]; if(typeof f!=='function' || (f._afters||[]).indexOf(after)>=0) return;
   const g=function(){ const r=f.apply(this,arguments); try{ after.apply(this,arguments); }catch(_){} return r; };
-  g._wr=1; window[name]=g;
+  g._afters=(f._afters||[]).concat([after]); g._wr=1; window[name]=g;
 }
 function _safeStart(){
   _wrapAfter('drawRows',undoSoon); _wrapAfter('drawTray',undoSoon); _wrapAfter('drawPages',undoSoon);
@@ -13867,6 +13883,781 @@ function _safeStart(){
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',_safeStart); else _safeStart();
 window.addEventListener('load',()=>setTimeout(swInit,1200));
+/* ════════ Akıllı soru bankası ════════
+   · zorluk (elle ya da öğrenci sonuçlarından öğrenilen), kullanım geçmişi, öğrenci başarı oranı
+   · bankaya kaydederken aynı soruyu ikinci kez eklemez
+   · konu ve zorluk dengesine göre otomatik test, soru başına düzenleme, toplu işlemler */
+const DIFF={k:{t:'Kolay',c:'#15803D',bg:'#E3F5E9'},o:{t:'Orta',c:'#A15C07',bg:'#FDF1DC'},z:{t:'Zor',c:'#B42318',bg:'#FDE8E6'}};
+let BKF={diff:'',unused:false};
+/* görüntü anahtarı: uzunluk + seyrek örnekler (hızlı); eşitlik her zaman tam karşılaştırmayla doğrulanır */
+function imgKey(img){
+  if(!img) return '';
+  const L=img.length, step=Math.max(1,Math.floor(L/97)); let s=L+':';
+  for(let i=Math.min(64,L-1);i<L;i+=step) s+=img.charCodeAt(i).toString(36);
+  return s+img.slice(-16);
+}
+function bankP(r){
+  const s=r && r.stat && r.stat.src; if(!s) return null;
+  let n=0, p=0; for(const k in s){ const o=s[k]; if(o && o.n>0){ n+=o.n; p+=o.n*o.p; } }
+  return n?{n,p:p/n}:null;
+}
+function bankDiff(r){ if(r.diff) return r.diff; const s=bankP(r); if(s && s.n>=5) return s.p>=.7?'k':(s.p>=.4?'o':'z'); return ''; }
+function bankUse(r){ const u=r && r.use; if(!u) return {n:0,t:0}; let t=0, n=0; for(const k in u){ n++; if(u[k]>t) t=u[k]; } return {n,t}; }
+function _bidSet(q,id){ q.bid=id; const o=qs.find(x=>x && x.id===q.id); if(o) o.bid=id; }
+async function _dbGet(store,id){
+  try{ const db=await DB.open();
+    return await new Promise(res=>{ const r=db.transaction(store,'readonly').objectStore(store).get(id); r.onsuccess=()=>res(r.result||null); r.onerror=()=>res(null); });
+  }catch(_){ return null; }
+}
+function _trLow(s){ return String(s||'').toLocaleLowerCase('tr'); }
+function _uniq(a){ return [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'tr')); }
+function _dt(t){ try{ return new Date(t).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}); }catch(_){ return ''; } }
+
+/* ── bankaya kaydet ── */
+function saveBank(){
+  const real=qs.filter(q=>q && q.type!=='note' && q.img);
+  if(!real.length) return toast('Kaydedilecek soru yok',true);
+  DB.all('bank').then(all=>_bankSaveDlg(real,all)).catch(()=>_bankSaveDlg(real,[]));
+}
+function _bankSaveDlg(real,all){
+  closeTmDlg();
+  const lessons=_uniq(all.map(r=>r.lesson)), topics=_uniq(all.map(r=>r.topic));
+  const L0=$('f-lesson').value.trim()||'Genel', T0=$('f-topic').value.trim()||'Genel';
+  const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg';
+  ov.innerHTML='<div class="tm-dlg" role="dialog" aria-label="Bankaya kaydet"><h3>Bankaya kaydet · '+real.length+' soru</h3>'+
+    '<label class="bk-l">Ders<input id="bs-l" list="bs-ll" value="'+esc(L0)+'" autocomplete="off"/></label><datalist id="bs-ll">'+lessons.map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist>'+
+    '<label class="bk-l">Konu<input id="bs-t" list="bs-tl" value="'+esc(T0)+'" autocomplete="off"/></label><datalist id="bs-tl">'+topics.map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist>'+
+    '<div class="bk-l">Zorluk<div class="tm-seg" id="bs-d"><button type="button" data-v="" class="on">Belirsiz</button><button type="button" data-v="k">Kolay</button><button type="button" data-v="o">Orta</button><button type="button" data-v="z">Zor</button></div></div>'+
+    '<label class="bk-l">Etiketler<input id="bs-g" placeholder="çıkmış, deneme… (virgülle ayır)" autocomplete="off"/></label>'+
+    '<p class="tm-p">Bankada zaten olan sorular ikinci kez eklenmez. Zorluğu boş bırakırsan optik okuma ya da not girişinden sonra öğrenci sonuçlarına göre kendiliğinden belirlenir.</p>'+
+    '<div class="tm-btns"><button type="button" id="bs-no">Vazgeç</button><button type="button" class="tm-pri" id="bs-ok">Kaydet</button></div></div>';
+  document.body.appendChild(ov);
+  let diff='';
+  ov.querySelector('#bs-d').addEventListener('click',e=>{ const b=e.target.closest('button[data-v]'); if(!b) return; diff=b.dataset.v;
+    ov.querySelectorAll('#bs-d button').forEach(x=>x.classList.toggle('on',x===b)); });
+  ov.addEventListener('click',e=>{ if(e.target===ov) closeTmDlg(); });
+  ov.querySelector('#bs-no').onclick=closeTmDlg;
+  ov.querySelector('#bs-ok').onclick=async()=>{
+    const ders=ov.querySelector('#bs-l').value.trim()||'Genel', konu=ov.querySelector('#bs-t').value.trim()||'Genel';
+    const tags=ov.querySelector('#bs-g').value.split(',').map(x=>x.trim()).filter(Boolean);
+    if(!diff){ const dt=tags.map(_trLow).find(t=>t==='kolay'||t==='orta'||t==='zor'); if(dt) diff=dt[0]; }
+    const byKey=new Map(); all.forEach(r=>{ const k=r.hash||imgKey(r.img); if(!byKey.has(k)) byKey.set(k,[]); byKey.get(k).push(r); });
+    let n=0, dup=0, i=0;
+    for(const q of real){
+      const key=imgKey(q.img), ex=(byKey.get(key)||[]).find(r=>r.img===q.img);
+      if(ex){ dup++; _bidSet(q,ex.id); continue; }
+      const id='q_'+Date.now()+'_'+(i++)+Math.random().toString(36).slice(2,6);
+      const rec={id,img:q.img,w:q.w,h:q.h,src:q.src||null,cw:q.cw||0,ans:q.ans||'',sol:q.sol,pageBreak:q.pageBreak||false,
+        link:q.link||null,oc:q.oc||null,lesson:ders,topic:konu,tags,ts:Date.now(),hash:key};
+      if(diff) rec.diff=diff;
+      try{ await DB.put('bank',rec); n++; byKey.set(key,[rec]); _bidSet(q,id); }
+      catch(e){ toast('Kaydedilemedi: '+((e&&e.message)||'cihazda yer kalmamış olabilir'),true); break; }
+    }
+    closeTmDlg();
+    toast((n?n+' soru “'+ders+' · '+konu+'” olarak kaydedildi':'Yeni soru yok')+(dup?' · '+dup+' soru zaten bankadaydı':''));
+  };
+  setTimeout(()=>{ try{ ov.querySelector('#bs-t').focus(); }catch(_){} },120);
+}
+
+/* ── kullanım ve öğrenci başarısı (yalnızca bankaya bağlı sorular: q.bid) ── */
+async function bankMarkUsed(){
+  const real=qs.filter(q=>q && q.type!=='note' && q.bid); if(!real.length) return;
+  const key='u'+omrHash(qs).toString(36), now=Date.now();
+  for(const q of real){
+    const r=await _dbGet('bank',q.bid); if(!r) continue;
+    r.use=r.use||{}; if(r.use[key]) continue;
+    r.use[key]=now;
+    const ks=Object.keys(r.use); if(ks.length>30) ks.sort((a,b)=>r.use[a]-r.use[b]).slice(0,ks.length-30).forEach(k=>delete r.use[k]);
+    try{ await DB.put('bank',r); const m=bankItems.find(x=>x.id===r.id); if(m) m.use=r.use; }catch(_){}
+  }
+}
+/* src: sonucun geldiği yer (aynı test yeniden okununca üstüne yazılır, iki kez sayılmaz); items: [{q,n,p}] */
+async function bankLearn(src,items){
+  let ch=0;
+  for(const it of items){
+    if(!it || !it.q || !it.q.bid || !(it.n>0)) continue;
+    const r=await _dbGet('bank',it.q.bid); if(!r) continue;
+    r.stat=r.stat||{}; r.stat.src=r.stat.src||{};
+    const p=Math.round(it.p*1000)/1000, o=r.stat.src[src];
+    if(o && o.n===it.n && o.p===p) continue;
+    r.stat.src[src]={n:it.n,p,t:Date.now()};
+    const ks=Object.keys(r.stat.src); if(ks.length>12) ks.sort((a,b)=>r.stat.src[a].t-r.stat.src[b].t).slice(0,ks.length-12).forEach(k=>delete r.stat.src[k]);
+    try{ await DB.put('bank',r); ch++; const m=bankItems.find(x=>x.id===r.id); if(m) m.stat=r.stat; }catch(_){}
+  }
+  return ch;
+}
+/* optik sonuçlarından soru başına doğru oranı */
+async function bankLearnOmr(){
+  try{
+    const L=omrResults(); if(!L.length) return 0;
+    const st={}; qs.filter(q=>q && q.type!=='note').forEach(q=>{ st[q.id]={q,n:0,d:0}; });
+    L.forEach(r=>(r.qids||[]).forEach((id,i)=>{ const o=st[id]; if(!o) return; const a=r.answers[i]==='*'?'':r.answers[i]; o.n++; if(a && a===r.key[i]) o.d++; }));
+    return await bankLearn('o'+omrHash(qs).toString(36),Object.values(st).map(o=>({q:o.q,n:o.n,p:o.n?o.d/o.n:0})));
+  }catch(_){ return 0; }
+}
+
+/* ── Kitaplık → Bankam ── */
+function drawLib(){
+  const filt=$('lfilter');
+  if(libMode==='yedek'){ drawBackup(); return; }
+  if(libMode!=='bank'){ drawTestBody(); return; }
+  const lessons=_uniq(bankItems.map(q=>q.lesson));
+  filt.innerHTML='';
+  const box=document.createElement('input');
+  box.className='lsearch'; box.type='search'; box.placeholder='Ders, konu, etiket ya da öğrenme çıktısı ara…'; box.value=libQuery;
+  box.oninput=()=>{ libQuery=box.value; drawLibBody(); };
+  filt.appendChild(box);
+  const mk=(txt,on,fn,cls)=>{ const b=document.createElement('button'); b.type='button'; b.className='fc'+(cls?' '+cls:'')+(on?' on':''); b.textContent=txt; b.onclick=fn; filt.appendChild(b); return b; };
+  if(lessons.length>1){ mk('Tümü',!libFilter,()=>{ libFilter=''; drawLib(); }); lessons.forEach(l=>mk(l,libFilter===l,()=>{ libFilter=libFilter===l?'':l; drawLib(); })); }
+  if(bankItems.length){
+    const br=document.createElement('span'); br.className='lf-br'; filt.appendChild(br);
+    ['k','o','z'].forEach(d=>mk(DIFF[d].t,BKF.diff===d,()=>{ BKF.diff=BKF.diff===d?'':d; drawLib(); },'df-'+d));
+    mk('Hiç kullanılmamış',BKF.unused,()=>{ BKF.unused=!BKF.unused; drawLib(); });
+    _uniq(bankItems.flatMap(q=>q.tags||[])).filter(t=>!/^(kolay|orta|zor)$/i.test(t)).slice(0,6)
+      .forEach(t=>mk('#'+t,libQuery===t,()=>{ libQuery=libQuery===t?'':t; drawLib(); },'tag'));
+  }
+  filt.style.display='flex';
+  drawLibBody();
+}
+function _bankShown(){
+  const q=_trLow(libQuery.trim());
+  return bankItems.filter(x=>
+    (!libFilter || x.lesson===libFilter) &&
+    (!BKF.diff || bankDiff(x)===BKF.diff) &&
+    (!BKF.unused || !bankUse(x).n) &&
+    (!q || _trLow([x.lesson,x.topic,(x.tags||[]).join(' '),x.oc||''].join(' ')).includes(q)));
+}
+function drawLibBody(){
+  const body=$('lbody'), foot=$('lfoot');
+  const shown=_bankShown();
+  shownIds=shown.map(x=>x.id);
+  body.innerHTML='';
+  if(!bankItems.length){
+    body.innerHTML='<div class="lempty">Henüz kayıtlı soru yok.<br>Testteki soruları <b>Düzen → Sorular → Soruları bankaya kaydet</b> ile buraya eklersin.</div>';
+    foot.style.display='none'; return;
+  }
+  const tools=document.createElement('div'); tools.className='bk-tools';
+  tools.innerHTML='<button type="button" class="bk-auto">🎲 Otomatik test oluştur</button><span>'+shown.length+(shown.length!==bankItems.length?' / '+bankItems.length:'')+' soru</span>';
+  tools.querySelector('.bk-auto').onclick=bankAuto;
+  body.appendChild(tools);
+  if(!shown.length){ const e=document.createElement('div'); e.className='lempty'; e.textContent='Bu filtreye uyan soru yok.'; body.appendChild(e); foot.style.display='none'; return; }
+  const groups={};
+  shown.forEach(q=>{ const k=(q.lesson||'Genel')+' · '+(q.topic||'Genel'); (groups[k]=groups[k]||[]).push(q); });
+  Object.keys(groups).sort((a,b)=>a.localeCompare(b,'tr')).forEach(k=>{
+    const g=document.createElement('div'); g.className='grp';
+    g.innerHTML='<h4>'+esc(k)+' · '+groups[k].length+' soru</h4>';
+    const grid=document.createElement('div'); grid.className='gq';
+    groups[k].sort((a,b)=>b.ts-a.ts).forEach(q=>{
+      const d=bankDiff(q), s=bankP(q), u=bankUse(q);
+      const c=document.createElement('div'); c.className='bq'+(bankSel.has(q.id)?' sel':''); c.dataset.id=q.id;
+      c.innerHTML='<img src="'+q.img+'" alt="" loading="lazy"/><span class="tick">✓</span>'+
+        (q.ans?'<span class="bq-ans">'+esc(q.ans)+'</span>':'')+
+        '<button type="button" class="bq-ed" aria-label="Soru bilgileri">✎</button>'+
+        (d?'<span class="bq-df" style="color:'+DIFF[d].c+';background:'+DIFF[d].bg+'">'+DIFF[d].t+(s&&s.n?' · %'+Math.round(s.p*100):'')+'</span>'
+          :((q.tags&&q.tags.length)?'<span class="tg">'+esc(q.tags[0])+'</span>':''))+
+        (u.n?'<span class="bq-us" title="Kullanıldığı test sayısı">'+u.n+'×</span>':'');
+      c.onclick=e=>{ if(e.target.closest('.bq-ed')){ e.stopPropagation(); bankEdit(q.id); return; }
+        bankSel.has(q.id)?bankSel.delete(q.id):bankSel.add(q.id); drawLibBody(); };
+      grid.appendChild(c);
+    });
+    g.appendChild(grid); body.appendChild(g);
+  });
+  if(bankSel.size){
+    foot.style.display='block';
+    foot.innerHTML='<div class="selbar"><button class="selall" onclick="selAllBank()">'+
+      (bankSel.size>=shownIds.length&&shownIds.length?'Seçimi kaldır':'Görünenleri seç')+'</button>'+
+      '<button class="selall bk-more" onclick="bankBulk()" aria-label="Seçilenlerle işlem">⋯</button>'+
+      '<button class="big" style="margin:0;flex:1" onclick="useBank()">'+bankSel.size+' soruyu teste ekle →</button></div>';
+  } else foot.style.display='none';
+}
+function selAllBank(){
+  if(bankSel.size>=shownIds.length && shownIds.length) bankSel.clear(); else shownIds.forEach(id=>bankSel.add(id));
+  drawLibBody();
+}
+function _bankToQ(r){
+  return {id:'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),bid:r.id,img:r.img,w:r.w,h:r.h,src:r.src||null,cw:r.cw||0,pt:0,
+    ans:r.ans||'',sol:null,pageBreak:false,tags:r.tags||[],...(r.link?{link:r.link}:{}),...(r.oc?{oc:r.oc}:{})};
+}
+function useBank(){
+  const chosen=bankItems.filter(q=>bankSel.has(q.id));
+  chosen.forEach(r=>qs.push(_bankToQ(r)));
+  bankSel.clear();
+  drawTray();
+  toast(chosen.length+' soru teste eklendi');
+  go(editingTest ? 'set' : (docs.length?'view':'set'));
+}
+
+/* ── tek soru: bilgiler ve düzenleme ── */
+function bankEdit(id){
+  const r=bankItems.find(x=>x.id===id); if(!r) return;
+  closeTmDlg();
+  const s=bankP(r), u=bankUse(r), d0=r.diff||'';
+  const lessons=_uniq(bankItems.map(x=>x.lesson)), topics=_uniq(bankItems.map(x=>x.topic));
+  let ocs=[]; try{ ocs=_uniq(ocLib().concat(bankItems.map(x=>x.oc))); }catch(_){}
+  const meta=['Bankaya eklendi: '+_dt(r.ts),
+    u.n?u.n+' testte kullanıldı · son: '+_dt(u.t):'Henüz bir testte kullanılmadı',
+    s?'Öğrenci başarısı: %'+Math.round(s.p*100)+' ('+s.n+' öğrenci)'+(!r.diff && s.n>=5?' → '+DIFF[bankDiff(r)].t:''):'Öğrenci başarısı optik okuma ya da not girişinden sonra burada görünür'];
+  const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg';
+  ov.innerHTML='<div class="tm-dlg tm-wide bk-ed" role="dialog" aria-label="Soru bilgileri">'+
+    '<div class="tm-head"><h3>Soru bilgileri</h3><button type="button" class="tm-x" data-a="x" aria-label="Kapat">✕</button></div>'+
+    '<div class="tm-body">'+
+      '<div class="bk-img"><img src="'+r.img+'" alt=""/></div>'+
+      '<ul class="bk-meta">'+meta.map(m=>'<li>'+esc(m)+'</li>').join('')+'</ul>'+
+      '<div class="bk-2"><label class="bk-l">Ders<input id="be-l" list="be-ll" value="'+esc(r.lesson||'')+'" autocomplete="off"/></label>'+
+      '<label class="bk-l">Konu<input id="be-t" list="be-tl" value="'+esc(r.topic||'')+'" autocomplete="off"/></label></div>'+
+      '<datalist id="be-ll">'+lessons.map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist><datalist id="be-tl">'+topics.map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist>'+
+      '<div class="bk-l">Zorluk<div class="tm-seg" id="be-d">'+[['','Belirsiz'],['k','Kolay'],['o','Orta'],['z','Zor']].map(([v,t])=>'<button type="button" data-v="'+v+'"'+(v===d0?' class="on"':'')+'>'+t+'</button>').join('')+'</div></div>'+
+      '<div class="bk-l">Doğru cevap<div class="tm-seg" id="be-a">'+['','A','B','C','D','E'].map(v=>'<button type="button" data-v="'+v+'"'+(v===(r.ans||'')?' class="on"':'')+'>'+(v||'–')+'</button>').join('')+'</div></div>'+
+      '<label class="bk-l">Etiketler<input id="be-g" value="'+esc((r.tags||[]).join(', '))+'" placeholder="çıkmış, deneme…" autocomplete="off"/></label>'+
+      '<label class="bk-l">Öğrenme çıktısı<input id="be-o" list="be-ol" value="'+esc(r.oc||'')+'" autocomplete="off"/></label>'+
+      '<datalist id="be-ol">'+ocs.map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist>'+
+    '</div>'+
+    '<div class="tm-foot"><button type="button" class="bk-fb tm-del" data-a="del">Sil</button><button type="button" class="bk-fb" data-a="use">Teste ekle</button><button type="button" class="tm-pri" data-a="ok">Kaydet</button></div></div>';
+  document.body.appendChild(ov);
+  const seg=(sel,cur)=>{ let v=cur; ov.querySelector(sel).addEventListener('click',e=>{ const b=e.target.closest('button[data-v]'); if(!b) return; v=b.dataset.v;
+    ov.querySelectorAll(sel+' button').forEach(x=>x.classList.toggle('on',x===b)); }); return ()=>v; };
+  const getD=seg('#be-d',d0), getA=seg('#be-a',r.ans||'');
+  ov.addEventListener('click',async e=>{
+    if(e.target===ov){ closeTmDlg(); return; }
+    const b=e.target.closest('button[data-a]'); if(!b) return;
+    const a=b.dataset.a;
+    if(a==='x'){ closeTmDlg(); return; }
+    if(a==='use'){ qs.push(_bankToQ(r)); drawTray(); closeTmDlg(); toast('Soru teste eklendi · '+qs.length+' soru'); return; }
+    if(a==='del'){
+      if(!b.classList.contains('sure')){ b.classList.add('sure'); b.textContent='Emin misin?'; return; }
+      await DB.del('bank',r.id); bankSel.delete(r.id); closeTmDlg(); await refreshLib(); drawLib(); toast('Soru bankadan silindi'); return;
+    }
+    if(a==='ok'){
+      r.lesson=ov.querySelector('#be-l').value.trim()||'Genel'; r.topic=ov.querySelector('#be-t').value.trim()||'Genel';
+      r.tags=ov.querySelector('#be-g').value.split(',').map(x=>x.trim()).filter(Boolean);
+      const dv=getD(); if(dv) r.diff=dv; else delete r.diff;
+      r.ans=getA(); const oc=ov.querySelector('#be-o').value.trim(); r.oc=oc||null;
+      try{ await DB.put('bank',r); if(oc) ocLibAdd([oc]); }catch(err){ toast('Kaydedilemedi',true); return; }
+      closeTmDlg(); drawLib(); toast('Soru bilgileri güncellendi');
+    }
+  });
+}
+
+/* ── seçilenlerle toplu işlem ── */
+function bankBulk(){
+  const sel=bankItems.filter(x=>bankSel.has(x.id)); if(!sel.length) return;
+  closeTmDlg();
+  const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg';
+  ov.innerHTML='<div class="tm-dlg" role="dialog" aria-label="Seçilen sorular"><h3>Seçilen '+sel.length+' soru</h3>'+
+    '<div class="bk-l">Zorluk ata<div class="tm-seg" id="bb-d"><button type="button" data-v="k">Kolay</button><button type="button" data-v="o">Orta</button><button type="button" data-v="z">Zor</button><button type="button" data-v="">Temizle</button></div></div>'+
+    '<div class="bk-2"><label class="bk-l">Ders<input id="bb-l" placeholder="değişmesin" list="bb-ll" autocomplete="off"/></label><label class="bk-l">Konu<input id="bb-t" placeholder="değişmesin" list="bb-tl" autocomplete="off"/></label></div>'+
+    '<datalist id="bb-ll">'+_uniq(bankItems.map(x=>x.lesson)).map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist><datalist id="bb-tl">'+_uniq(bankItems.map(x=>x.topic)).map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist>'+
+    '<label class="bk-l">Etiket ekle<input id="bb-g" placeholder="ör. çıkmış" autocomplete="off"/></label>'+
+    '<div class="tm-btns"><button type="button" class="tm-del" id="bb-del">Sil</button><button type="button" id="bb-no">Vazgeç</button><button type="button" class="tm-pri" id="bb-ok">Uygula</button></div></div>';
+  document.body.appendChild(ov);
+  let dv=null;
+  ov.querySelector('#bb-d').addEventListener('click',e=>{ const b=e.target.closest('button[data-v]'); if(!b) return;
+    dv=(dv===b.dataset.v)?null:b.dataset.v; ov.querySelectorAll('#bb-d button').forEach(x=>x.classList.toggle('on',dv!==null && x===b)); });
+  ov.addEventListener('click',e=>{ if(e.target===ov) closeTmDlg(); });
+  ov.querySelector('#bb-no').onclick=closeTmDlg;
+  ov.querySelector('#bb-del').onclick=async e=>{
+    const b=e.currentTarget; if(!b.classList.contains('sure')){ b.classList.add('sure'); b.textContent='Emin misin?'; return; }
+    for(const r of sel) await DB.del('bank',r.id);
+    bankSel.clear(); closeTmDlg(); await refreshLib(); drawLib(); toast(sel.length+' soru bankadan silindi');
+  };
+  ov.querySelector('#bb-ok').onclick=async()=>{
+    const L=ov.querySelector('#bb-l').value.trim(), T=ov.querySelector('#bb-t').value.trim(), G=ov.querySelector('#bb-g').value.split(',').map(x=>x.trim()).filter(Boolean);
+    if(dv===null && !L && !T && !G.length){ toast('Bir değişiklik seç',true); return; }
+    for(const r of sel){
+      if(dv!==null){ if(dv) r.diff=dv; else delete r.diff; }
+      if(L) r.lesson=L; if(T) r.topic=T;
+      if(G.length) r.tags=_uniq((r.tags||[]).concat(G));
+      try{ await DB.put('bank',r); }catch(_){}
+    }
+    closeTmDlg(); drawLib(); toast(sel.length+' soru güncellendi');
+  };
+}
+
+/* ── otomatik test: konu ve zorluk dengesiyle soru seç ── */
+const BA_MIX={mix:null,easy:{k:.5,o:.35,z:.15},bal:{k:.3,o:.4,z:.3},hard:{k:.15,o:.35,z:.5}};
+let BA={lesson:'',topics:null,n:10,mix:'bal',fresh:true,order:true,replace:false};
+function _baPool(all){
+  const T=BA.topics;
+  return (all||bankItems).filter(r=>(!BA.lesson || r.lesson===BA.lesson) && (!T || T.includes(r.topic||'Genel')));
+}
+function _baPick(pool,n){
+  const now=Date.now(), recent=r=>{ const u=bankUse(r); return u.t && now-u.t<30*86400000; };
+  let cand=pool.slice();
+  const shuffle=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  shuffle(cand);
+  let topUp=[];
+  if(BA.fresh){ topUp=cand.filter(recent).sort((a,b)=>bankUse(a).t-bankUse(b).t); cand=cand.filter(r=>!recent(r)); }
+  const mix=BA_MIX[BA.mix];
+  const quota={k:0,o:0,z:0};
+  if(mix){ quota.k=Math.round(n*mix.k); quota.z=Math.round(n*mix.z); quota.o=Math.max(0,n-quota.k-quota.z); }
+  const byT={}; cand.forEach(r=>{ const t=r.topic||'Genel'; (byT[t]=byT[t]||[]).push(r); });
+  const topics=Object.keys(byT); let ti=0;
+  const out=[], dOf=r=>bankDiff(r)||'o';
+  while(out.length<n && topics.some(t=>byT[t].length)){
+    const t=topics[ti++%topics.length], L=byT[t]; if(!L.length) continue;
+    let idx=0;
+    if(mix){ const need=['k','o','z'].filter(d=>quota[d]>0).sort((a,b)=>quota[b]-quota[a]);
+      idx=L.findIndex(r=>need.includes(dOf(r))); if(idx<0) idx=0; }
+    const r=L.splice(idx,1)[0]; out.push(r); if(mix && quota[dOf(r)]>0) quota[dOf(r)]--;
+  }
+  while(out.length<n && topUp.length) out.push(topUp.shift());
+  if(BA.order){ const rank={k:0,o:1,'':1,z:2}; const tOrder=topics.concat(_uniq(out.map(r=>r.topic||'Genel')));
+    out.sort((a,b)=>tOrder.indexOf(a.topic||'Genel')-tOrder.indexOf(b.topic||'Genel') || rank[bankDiff(a)]-rank[bankDiff(b)]); }
+  return out;
+}
+function bankAuto(){
+  if(!bankItems.length) return toast('Bankada soru yok',true);
+  closeTmDlg();
+  const lessons=_uniq(bankItems.map(r=>r.lesson));
+  if(!BA.lesson || !lessons.includes(BA.lesson)){
+    const cnt={}; bankItems.forEach(r=>{ cnt[r.lesson]=(cnt[r.lesson]||0)+1; });
+    BA.lesson=(libFilter && lessons.includes(libFilter))?libFilter:lessons.slice().sort((a,b)=>cnt[b]-cnt[a])[0];
+    BA.topics=null;
+  }
+  const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg';
+  ov.innerHTML='<div class="tm-dlg tm-wide ba-dlg" role="dialog" aria-label="Otomatik test"><div class="tm-head"><h3>🎲 Otomatik test</h3><button type="button" class="tm-x" data-a="x" aria-label="Kapat">✕</button></div><div class="tm-body" id="ba-body"></div>'+
+    '<div class="tm-foot"><span class="ba-info" id="ba-info"></span><button type="button" class="tm-pri" data-a="go" id="ba-go">Oluştur</button></div></div>';
+  document.body.appendChild(ov);
+  const render=()=>{
+    const inL=bankItems.filter(r=>r.lesson===BA.lesson), tcount={};
+    inL.forEach(r=>{ const t=r.topic||'Genel'; tcount[t]=(tcount[t]||0)+1; });
+    const topics=Object.keys(tcount).sort((a,b)=>a.localeCompare(b,'tr'));
+    if(BA.topics) BA.topics=BA.topics.filter(t=>topics.includes(t));
+    if(BA.topics && !BA.topics.length) BA.topics=null;
+    const pool=_baPool(), dc={k:0,o:0,z:0,'':0}; pool.forEach(r=>{ dc[bankDiff(r)]++; });
+    const used30=pool.filter(r=>{ const u=bankUse(r); return u.t && Date.now()-u.t<30*86400000; }).length;
+    BA.n=Math.max(1,Math.min(BA.n,pool.length||1));
+    const chip=(a,v,t,on)=>'<button type="button" class="ba-c'+(on?' on':'')+'" data-a="'+a+'" data-v="'+esc(v)+'">'+t+'</button>';
+    $('ba-body').innerHTML=
+      (lessons.length>1?'<div class="bk-l">Ders<div class="ba-cs">'+lessons.map(l=>chip('l',l,esc(l),l===BA.lesson)).join('')+'</div></div>':'')+
+      '<div class="bk-l">Konular<div class="ba-cs">'+chip('ta','','Tümü',!BA.topics)+topics.map(t=>chip('t',t,esc(t)+' <small>'+tcount[t]+'</small>',!!(BA.topics&&BA.topics.includes(t)))).join('')+'</div></div>'+
+      '<div class="bk-l">Soru sayısı<div class="ba-n"><button type="button" data-a="n-" aria-label="Azalt">−</button><b>'+BA.n+'</b><button type="button" data-a="n+" aria-label="Artır">+</button><span>en fazla '+pool.length+'</span></div></div>'+
+      '<div class="bk-l">Zorluk<div class="tm-seg ba-mix">'+[['easy','Kolay ağırlıklı'],['bal','Dengeli'],['hard','Zor ağırlıklı'],['mix','Rastgele']].map(([v,t])=>'<button type="button" data-a="m" data-v="'+v+'"'+(BA.mix===v?' class="on"':'')+'>'+t+'</button>').join('')+'</div>'+
+        '<small class="ba-dc">Bu konularda: '+DIFF.k.t+' '+dc.k+' · '+DIFF.o.t+' '+dc.o+' · '+DIFF.z.t+' '+dc.z+(dc['']?' · zorluğu belirsiz '+dc['']+' (orta sayılır)':'')+'</small></div>'+
+      '<label class="ba-ck"><input type="checkbox" data-a="fresh"'+(BA.fresh?' checked':'')+'/> Son 30 günde kullandığım soruları alma'+(used30?' <small>('+used30+' soru)</small>':'')+'</label>'+
+      '<label class="ba-ck"><input type="checkbox" data-a="order"'+(BA.order?' checked':'')+'/> Konuya göre grupla, kolaydan zora sırala</label>'+
+      (qs.length?'<label class="ba-ck"><input type="checkbox" data-a="replace"'+(BA.replace?' checked':'')+'/> Testteki '+qs.length+' soruyu kaldır, yeni test başlat</label>':'');
+    $('ba-info').textContent=pool.length+' uygun soru';
+    $('ba-go').textContent=(qs.length && !BA.replace)?BA.n+' soruyu teste ekle →':BA.n+' soruluk test oluştur →';
+    $('ba-go').disabled=!pool.length;
+  };
+  ov.addEventListener('click',e=>{
+    if(e.target===ov){ closeTmDlg(); return; }
+    const b=e.target.closest('[data-a]'); if(!b || b.tagName==='INPUT') return;
+    const a=b.dataset.a, v=b.dataset.v;
+    if(a==='x'){ closeTmDlg(); return; }
+    if(a==='l'){ BA.lesson=v; BA.topics=null; }
+    else if(a==='ta'){ BA.topics=null; }
+    else if(a==='t'){ const T=BA.topics?BA.topics.slice():[]; const i=T.indexOf(v); if(i>=0) T.splice(i,1); else T.push(v); BA.topics=T.length?T:null; }
+    else if(a==='n-'){ BA.n=Math.max(1,BA.n-1); }
+    else if(a==='n+'){ BA.n=BA.n+1; }
+    else if(a==='m'){ BA.mix=v; }
+    else if(a==='go'){
+      const picked=_baPick(_baPool(),BA.n); if(!picked.length) return;
+      if(BA.replace && qs.length){ qs=[]; editingTest=null; try{ drawEditBar(); }catch(_){} }
+      picked.forEach(r=>qs.push(_bankToQ(r)));
+      closeTmDlg(); drawTray();
+      const by={}; picked.forEach(r=>{ const t=r.topic||'Genel'; by[t]=(by[t]||0)+1; });
+      toast(picked.length+' soru seçildi · '+Object.keys(by).map(t=>t+' '+by[t]).join(', '));
+      go('set'); try{ switchSetTab('p7'); }catch(_){}
+      return;
+    }
+    render();
+  });
+  ov.addEventListener('change',e=>{ const t=e.target.closest('input[data-a]'); if(!t) return; BA[t.dataset.a]=t.checked; render(); });
+  render();
+}
+/* PDF oluştur / Paylaş: dosya çıkınca bankadaki soruların kullanım geçmişi güncellenir */
+function _pdfOut(share){ const r=share?sharePdf():makeFile(); try{ bankMarkUsed(); }catch(_){} return r; }
+
+/* ════════ Yazılı not girişi ve sınav analizi ════════
+   Öğrenci başına soru puanları → toplam, ortalama, puan aralıkları (Ortaöğretim Kurumları Yönetmeliği),
+   soru ve öğrenme çıktısı başarısı, Excel (CSV) ve PDF analiz raporu. Notlar teste bağlı olarak cihazda saklanır. */
+const NG_BANDS=[{t:'Geçmez',r:'0–49',a:0,c:'#DC2626'},{t:'Geçer',r:'50–59',a:50,c:'#EA580C'},{t:'Orta',r:'60–69',a:60,c:'#CA8A04'},
+  {t:'İyi',r:'70–84',a:70,c:'#16A34A'},{t:'Pekiyi',r:'85–100',a:85,c:'#0E7C5A'}];
+const _ngKey=()=>'testamed_not_'+omrHash(qs).toString(36);
+function ngLoad(){ try{ const v=JSON.parse(localStorage.getItem(_ngKey())||'null'); if(v && Array.isArray(v.st)) return v; }catch(_){} return {v:1,st:[]}; }
+function ngSave(d){ d.t=Date.now(); try{ localStorage.setItem(_ngKey(),JSON.stringify(d)); return true; }catch(_){ toast('Notlar kaydedilemedi (depolama dolu)',true); return false; } }
+function ngQs(){ return qs.filter(q=>q && q.type!=='note'); }
+function _n1(v){ return String(Math.round(v*10)/10).replace('.',','); }
+function ngTot(s,Q){ let t=0, k=0; Q.forEach(q=>{ const v=s.sc&&s.sc[q.id]; if(v!=null && v!==''){ t+=+v; k++; } }); return {t:Math.round(t*100)/100,k}; }
+function ngBand(score,maxTot){ const p=maxTot>0?score*100/maxTot:0; let b=NG_BANDS[0]; NG_BANDS.forEach(x=>{ if(p>=x.a) b=x; }); return b; }
+/* bütün hesaplar tek yerde: ekran, CSV, PDF ve bankaya öğretme aynı sayıları kullanır */
+function ngStats(d){
+  const Q=ngQs(), maxTot=Q.reduce((a,q)=>a+(+q.pt||0),0);
+  const done=d.st.filter(s=>!s.abs && ngTot(s,Q).k>0);
+  const tots=done.map(s=>ngTot(s,Q).t);
+  const avg=tots.length?tots.reduce((a,v)=>a+v,0)/tots.length:0;
+  const pass=tots.filter(t=>maxTot>0 && t*100/maxTot>=50).length;
+  const bands=NG_BANDS.map(b=>({b,n:0})); tots.forEach(t=>{ const b=ngBand(t,maxTot); bands.find(x=>x.b===b).n++; });
+  const items=Q.map((q,i)=>{ const mx=+q.pt||0, vals=done.map(s=>s.sc&&s.sc[q.id]).filter(v=>v!=null && v!=='').map(Number);
+    const av=vals.length?vals.reduce((a,v)=>a+v,0)/vals.length:0;
+    return {q,i,mx,n:vals.length,av,p:mx>0?av/mx:0}; });
+  const ocs={}; items.forEach(it=>{ const k=it.q.oc||''; if(!k) return; const o=(ocs[k]=ocs[k]||{t:k,nums:[],mx:0,sum:0,cnt:0});
+    o.nums.push(it.i+1); o.mx+=it.mx; o.sum+=it.av; o.cnt+=it.n; });
+  const ocRowsN=Object.values(ocs).map(o=>({t:o.t,nums:o.nums,p:o.mx>0?o.sum/o.mx:0}));
+  return {Q,maxTot,done,tots,avg,pass,bands,items,ocs:ocRowsN,
+    hi:tots.length?Math.max(...tots):0, lo:tots.length?Math.min(...tots):0, abs:d.st.filter(s=>s.abs).length};
+}
+
+/* ── ekran ── */
+let NG_CUR=null, NG_TAB='list';
+function ngOpen(){
+  const Q=ngQs(); if(!Q.length) return toast('Önce soruları ekle',true);
+  let ov=$('ng');
+  if(!ov){
+    ov=document.createElement('div'); ov.id='ng'; ov.className='omr-ov ng-ov';
+    ov.innerHTML='<div class="omr-top"><b>✍️ Not Girişi</b><button class="omr-x" onclick="ngClose()">Kapat</button></div>'+
+      '<div class="omr-body" id="ng-body"><div class="omr-info" id="ng-info"></div><div id="ng-card"></div>'+
+      '<div class="omr-tabs" id="ng-tabs"><button type="button" data-v="list">Öğrenciler</button><button type="button" data-v="ana">Analiz</button></div>'+
+      '<div id="ng-list"></div>'+
+      '<div class="omr-acts" id="ng-acts"><button type="button" data-a="csv">📤 Excel (CSV)</button><button type="button" data-a="pdf">📄 Analiz raporu</button></div>'+
+      '<button type="button" class="ng-clear" data-a="clear">Bu testin notlarını sil</button></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click',_ngClick);
+    ov.addEventListener('input',_ngInput);
+    ov.addEventListener('change',_ngChange);
+    ov.addEventListener('keydown',e=>{ if(e.key==='Enter' && e.target.matches('.ng-q input')){ e.preventDefault(); _ngNextInput(e.target); } });
+  }
+  NG_CUR=null; ov.classList.add('on'); document.body.classList.add('showing'); ngRender();
+}
+function ngClose(){
+  const ov=$('ng'); if(ov) ov.classList.remove('on'); document.body.classList.remove('showing');
+  ngLearn();
+}
+/* soru başarılarını bankaya öğret (bankadan gelen sorular) */
+function ngLearn(){
+  try{ const d=ngLoad(); if(!d.st.length) return; const S=ngStats(d);
+    bankLearn('g'+omrHash(qs).toString(36),S.items.map(it=>({q:it.q,n:it.n,p:it.p}))); }catch(_){}
+}
+let _ngRendering=false;
+function ngRender(){
+  if(_ngRendering) return; _ngRendering=true;
+  try{ _ngRender(); } finally { _ngRendering=false; }
+}
+function _ngRender(){
+  const cfg=CFG||cfgNow(), d=ngLoad(), S=ngStats(d), Q=S.Q;
+  $('ng-info').innerHTML='<b>'+esc([cfg.lesson,cfg.kind,cfg.cls].filter(Boolean).join(' · ')||'Sınav')+'</b><span>'+Q.length+' soru · toplam '+_n1(S.maxTot)+' puan'+(d.st.length?' · '+d.st.length+' öğrenci':'')+'</span>'+
+    (S.maxTot<=0?'<em>⚠️ Sorulara puan verilmemiş — Düzen → Sorular\'da “Toplam puan”ı yaz.</em>':'<span>Soru puanları Sorular sekmesinden gelir.</span>');
+  // öğrenci kartı
+  const card=$('ng-card'), s=NG_CUR && d.st.find(x=>x.id===NG_CUR);
+  if(s){
+    const tt=ngTot(s,Q), idx=d.st.indexOf(s);
+    card.innerHTML='<div class="omr-card ng-card"><div class="ng-ch"><b>'+esc(stuLabel(s)||('Öğrenci '+(idx+1)))+'</b><span class="ng-tot" id="ng-tot">'+_n1(tt.t)+' / '+_n1(S.maxTot)+'</span></div>'+
+      '<label class="ng-abs"><input type="checkbox" data-a="abs"'+(s.abs?' checked':'')+'/> Sınava girmedi</label>'+
+      '<div class="ng-qs'+(s.abs?' off':'')+'">'+Q.map((q,i)=>{ const v=s.sc&&s.sc[q.id]; const mx=+q.pt||0;
+        return '<div class="ng-q"><span class="ng-qn">'+(i+1)+'. soru<small>'+_n1(mx)+' p</small></span>'+
+          '<div class="ng-qi"><input type="text" inputmode="decimal" enterkeyhint="next" data-q="'+esc(q.id)+'" value="'+(v==null?'':String(v).replace('.',','))+'" aria-label="'+(i+1)+'. soru puanı"'+(s.abs?' disabled':'')+'/>'+
+          '<button type="button" data-a="z" data-q="'+esc(q.id)+'" aria-label="0 puan">0</button><button type="button" data-a="f" data-q="'+esc(q.id)+'" aria-label="Tam puan">Tam</button></div></div>'; }).join('')+'</div>'+
+      '<div class="ng-nav"><button type="button" data-a="prev"'+(idx<=0?' disabled':'')+'>← Önceki</button><button type="button" class="pri" data-a="next">'+(idx<d.st.length-1?'Sonraki öğrenci →':'Bitti ✓')+'</button></div></div>';
+  } else card.innerHTML='';
+  document.querySelectorAll('#ng-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===NG_TAB));
+  const box=$('ng-list');
+  if(!d.st.length){
+    const fromCfg=(cfg.stuList||[]).length;
+    box.innerHTML='<div class="omr-card ng-setup"><b>Sınıf listesi</b><p class="omr-tip">Her satıra bir öğrenci yaz ya da e-Okul\'dan kopyalayıp yapıştır; numara başta olabilir (ör. “12 Ayşe Yılmaz”).</p>'+
+      '<textarea id="ng-ta" rows="7" placeholder="12 Ayşe Yılmaz&#10;15 Mehmet Kaya&#10;…"></textarea>'+
+      '<button type="button" class="omr-btn pri" data-a="setlist">Listeyi kaydet</button>'+
+      (fromCfg?'<button type="button" class="omr-btn" data-a="fromcfg">Öğrenciye özel kopya listesini kullan ('+fromCfg+' öğrenci)</button>':'')+'</div>';
+    $('ng-acts').style.display='none'; ov_clear(false); return;
+  }
+  $('ng-acts').style.display=''; ov_clear(true);
+  if(NG_TAB==='list'){
+    box.innerHTML='<div class="omr-sum">'+S.done.length+' / '+(d.st.length-S.abs)+' öğrencinin notu girildi'+(S.done.length?' · ort. '+_n1(S.avg):'')+(S.abs?' · '+S.abs+' girmedi':'')+'</div>'+
+      '<div class="omr-tbl ng-tbl"><div class="ng-row hd"><span>Öğrenci</span><span>Soru</span><span>Toplam</span></div>'+
+      d.st.map((x,i)=>{ const t=ngTot(x,Q), full=t.k===Q.length;
+        return '<div class="ng-row'+(NG_CUR===x.id?' on':'')+(x.abs?' abs':'')+'" data-id="'+esc(x.id)+'"><span>'+esc(stuLabel(x)||('Öğrenci '+(i+1)))+'</span>'+
+          '<span class="'+(full?'ok':'')+'">'+(x.abs?'–':t.k+'/'+Q.length)+'</span><span>'+(x.abs?'girmedi':(t.k?_n1(t.t):'—'))+'</span></div>'; }).join('')+'</div>'+
+      '<div class="ng-add"><input id="ng-new" placeholder="Öğrenci ekle (ör. 27 Ali Can)" autocomplete="off"/><button type="button" data-a="add">Ekle</button></div>'+
+      '<button type="button" class="ng-link" data-a="editlist">Sınıf listesini düzenle</button>';
+  } else {
+    if(!S.done.length){ box.innerHTML='<div class="omr-empty">Analiz için en az bir öğrencinin notunu gir.</div>'; return; }
+    const mxB=Math.max(1,...S.bands.map(x=>x.n));
+    const weak=S.items.filter(it=>it.n && it.p<0.5).map(it=>it.i+1);
+    box.innerHTML='<div class="ng-stats"><div><b>'+_n1(S.avg)+'</b>Ortalama</div><div><b>'+_n1(S.hi)+'</b>En yüksek</div><div><b>'+_n1(S.lo)+'</b>En düşük</div>'+
+        '<div class="pu"><b>%'+Math.round(S.pass*100/S.done.length)+'</b>Başarı (50+)</div></div>'+
+      '<div class="ng-h">Puan dağılımı</div><div class="ng-dist">'+S.bands.map(x=>'<div><i style="height:'+Math.round(x.n/mxB*100)+'%;background:'+x.b.c+'"></i><b>'+x.n+'</b><span>'+x.b.t+'<small>'+x.b.r+'</small></span></div>').join('')+'</div>'+
+      '<div class="ng-h">Soru analizi</div><div class="ng-items">'+S.items.map(it=>{ const pc=Math.round(it.p*100), lv=pc>=70?'kolay':(pc>=50?'orta':'zor');
+        return '<div class="ng-it"><span class="ng-in">'+(it.i+1)+'.</span><div class="ng-bar"><i class="'+lv+'" style="width:'+pc+'%"></i></div><span class="ng-ip lv '+lv+'">%'+pc+'</span><small>ort. '+_n1(it.av)+' / '+_n1(it.mx)+'</small></div>'; }).join('')+'</div>'+
+      (S.ocs.length?'<div class="ng-h">Öğrenme çıktıları</div><div class="ng-ocs">'+S.ocs.map(o=>{ const pc=Math.round(o.p*100), lv=pc>=70?'kolay':(pc>=50?'orta':'zor');
+        return '<div class="ng-oc"><div><b>'+esc(o.t)+'</b><small>'+ocRange(o.nums)+'. soru</small></div><span class="lv '+lv+'">%'+pc+'</span></div>'; }).join('')+'</div>':'')+
+      (weak.length?'<div class="ng-note">Başarısı %50\'nin altında kalan sorular: <b>'+weak.join(', ')+'</b>. Bu soruların ölçtüğü konular tekrar edilebilir.</div>':'<div class="ng-note ok">Bütün sorularda sınıf başarısı %50 ve üzerinde.</div>');
+  }
+}
+function ov_clear(on){ const b=document.querySelector('#ng .ng-clear'); if(b){ b.style.display=on?'':'none'; b.classList.remove('sure'); b.textContent='Bu testin notlarını sil'; } }
+function _ngStu(no,name){ return {id:'s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),no:no||'',name:name||'',sc:{},abs:false}; }
+/* yeni liste, eskisiyle numara (ya da ad) üzerinden birleşir: girilmiş notlar kaybolmaz */
+function ngMergeList(d,parsed){
+  const key=s=>s.no?('#'+s.no):('@'+_trLow(s.name));
+  const old=new Map(d.st.map(s=>[key(s),s]));
+  d.st=parsed.map(p=>{ const o=old.get(key(p)); if(o){ o.name=p.name||o.name; o.no=p.no||o.no; return o; } return _ngStu(p.no,p.name); });
+}
+function _ngSetScore(qid,val,commit){
+  const d=ngLoad(), s=d.st.find(x=>x.id===NG_CUR); if(!s) return;
+  const q=ngQs().find(x=>x.id===qid); if(!q) return;
+  const mx=+q.pt||0; s.sc=s.sc||{};
+  let v=String(val==null?'':val).trim().replace(',','.');
+  const inp=document.querySelector('#ng-card input[data-q="'+CSS.escape(qid)+'"]');
+  if(v===''){ delete s.sc[qid]; if(inp) inp.classList.remove('bad'); }
+  else { let n=parseFloat(v); if(isNaN(n)){ if(inp) inp.classList.add('bad'); return; }
+    const bad=n<0 || (mx>0 && n>mx); if(inp) inp.classList.toggle('bad',bad);
+    if(commit){ if(n<0) n=0; if(mx>0 && n>mx) n=mx; if(inp){ inp.value=String(n).replace('.',','); inp.classList.remove('bad'); } }
+    else if(bad) return;
+    s.sc[qid]=Math.round(n*100)/100; }
+  ngSave(d);
+  const t=$('ng-tot'), S=ngQs(); if(t){ const tt=ngTot(s,S); t.textContent=_n1(tt.t)+' / '+_n1(S.reduce((a,q)=>a+(+q.pt||0),0)); }
+}
+function _ngNextInput(inp){
+  const all=[...document.querySelectorAll('#ng-card .ng-q input')], i=all.indexOf(inp);
+  if(i>=0 && i<all.length-1){ all[i+1].focus(); all[i+1].select && all[i+1].select(); }
+  else { _ngMove(1,true); }
+}
+function _ngMove(dir,focus){
+  const d=ngLoad(), i=d.st.findIndex(x=>x.id===NG_CUR);
+  const j=i+dir;
+  if(j<0) return;
+  if(j>=d.st.length){ NG_CUR=null; ngRender(); toast('Notlar kaydedildi'); return; }
+  NG_CUR=d.st[j].id; ngRender();
+  if(focus){ const f=document.querySelector('#ng-card .ng-q input'); if(f){ f.focus(); } }
+  try{ $('ng-card').scrollIntoView({block:'start',behavior:'smooth'}); }catch(_){}
+}
+function _ngInput(e){
+  const inp=e.target.closest('#ng-card .ng-q input'); if(inp) _ngSetScore(inp.dataset.q,inp.value,false);
+}
+function _ngChange(e){
+  const t=e.target;
+  if(t.matches('#ng-card .ng-q input')){ _ngSetScore(t.dataset.q,t.value,true); return; }
+  if(t.matches('#ng-card input[data-a="abs"]')){ const d=ngLoad(), s=d.st.find(x=>x.id===NG_CUR); if(s){ s.abs=t.checked; ngSave(d); ngRender(); } }
+}
+function _ngClick(e){
+  const tab=e.target.closest('#ng-tabs button[data-v]'); if(tab){ NG_TAB=tab.dataset.v; if(NG_TAB==='ana') NG_CUR=null; ngRender(); return; }
+  const row=e.target.closest('.ng-row[data-id]');
+  if(row){ NG_CUR=row.dataset.id; ngRender(); try{ $('ng-card').scrollIntoView({block:'start',behavior:'smooth'}); }catch(_){} return; }
+  const b=e.target.closest('button[data-a]'); if(!b) return;
+  const a=b.dataset.a;
+  if(a==='z' || a==='f'){ const q=ngQs().find(x=>x.id===b.dataset.q); if(!q) return;
+    const v=a==='z'?0:(+q.pt||0); const inp=document.querySelector('#ng-card input[data-q="'+CSS.escape(q.id)+'"]'); if(inp) inp.value=String(v).replace('.',',');
+    _ngSetScore(q.id,v,true); if(inp) _ngNextInput(inp); return; }
+  if(a==='prev'){ _ngMove(-1,false); return; }
+  if(a==='next'){ _ngMove(1,true); return; }
+  if(a==='setlist' || a==='fromcfg'){
+    const cfg=CFG||cfgNow();
+    const parsed=a==='fromcfg'?(cfg.stuList||[]):stuParse(($('ng-ta')||{}).value);
+    if(!parsed.length){ toast('Listeye en az bir öğrenci yaz',true); return; }
+    const d=ngLoad(); ngMergeList(d,parsed); if(ngSave(d)){ NG_CUR=d.st[0].id; ngRender(); toast(d.st.length+' öğrenci · ilk öğrenciden başla'); }
+    return;
+  }
+  if(a==='add'){ const inp=$('ng-new'); const p=stuParse(inp&&inp.value)[0]; if(!p){ toast('Öğrencinin adını yaz',true); return; }
+    const d=ngLoad(), s=_ngStu(p.no,p.name); d.st.push(s); if(ngSave(d)){ NG_CUR=s.id; ngRender(); } return; }
+  if(a==='editlist'){ ngListDlg(); return; }
+  if(a==='csv'){ ngCsv(); return; }
+  if(a==='pdf'){ ngPdf(); return; }
+  if(a==='clear'){
+    if(!b.classList.contains('sure')){ b.classList.add('sure'); b.textContent='Emin misin? Bütün notlar silinir'; return; }
+    try{ localStorage.removeItem(_ngKey()); }catch(_){} NG_CUR=null; ngRender(); toast('Notlar silindi'); return;
+  }
+}
+function ngListDlg(){
+  const d=ngLoad(); closeTmDlg();
+  const ov=document.createElement('div'); ov.className='tm-ov'; ov.id='tm-dlg'; ov.style.zIndex='10001';
+  ov.innerHTML='<div class="tm-dlg" role="dialog" aria-label="Sınıf listesi"><h3>Sınıf listesi</h3>'+
+    '<p class="tm-p">Her satıra bir öğrenci. Numarası ya da adı aynı kalan öğrencilerin notları korunur; listeden çıkardığın öğrencinin notları silinir.</p>'+
+    '<textarea id="nl-ta" rows="10">'+esc(d.st.map(s=>[s.no,s.name].filter(Boolean).join(' ')).join('\n'))+'</textarea>'+
+    '<div class="tm-btns"><button type="button" id="nl-no">Vazgeç</button><button type="button" class="tm-pri" id="nl-ok">Kaydet</button></div></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click',e=>{ if(e.target===ov) closeTmDlg(); });
+  ov.querySelector('#nl-no').onclick=closeTmDlg;
+  ov.querySelector('#nl-ok').onclick=()=>{ const p=stuParse(ov.querySelector('#nl-ta').value); if(!p.length){ toast('Liste boş olamaz',true); return; }
+    const d2=ngLoad(); ngMergeList(d2,p); ngSave(d2); closeTmDlg(); if(NG_CUR && !d2.st.some(s=>s.id===NG_CUR)) NG_CUR=null; ngRender(); toast(d2.st.length+' öğrenci'); };
+}
+
+/* ── dışa aktarma ── */
+function _ngBase(){ const cfg=CFG||cfgNow(); return (([cfg.lesson,cfg.kind,cfg.cls].filter(Boolean).join('-'))||'sinav').replace(/[^\wğüşıöçĞÜŞİÖÇ\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,''); }
+async function _ngShare(blob,name,title){
+  try{ const f=new File([blob],name,{type:blob.type}); if(navigator.canShare && navigator.share && navigator.canShare({files:[f]})){ await navigator.share({title,files:[f]}); return; } }
+  catch(e){ if(e && e.name==='AbortError') return; }
+  const u=URL.createObjectURL(blob), a=document.createElement('a'); a.href=u; a.download=name; a.target='_blank'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),8000);
+}
+function ngCsv(){
+  const d=ngLoad(); if(!d.st.length) return toast('Önce öğrenci listesini gir',true);
+  const S=ngStats(d), Q=S.Q, f=v=>String(Math.round(v*100)/100).replace('.',',');
+  const head=['Sıra','No','Adı Soyadı'].concat(Q.map((q,i)=>(i+1)+'. soru ('+f(+q.pt||0)+')'),['Toplam','Durum']);
+  const rows=d.st.map((s,i)=>{ const t=ngTot(s,Q);
+    return [i+1,s.no||'',s.name||''].concat(Q.map(q=>{ const v=s.sc&&s.sc[q.id]; return (v==null||s.abs)?'':f(v); }),[s.abs?'':(t.k?f(t.t):''),s.abs?'Girmedi':(!t.k?'Not girilmedi':(t.k<Q.length?'Eksik ('+t.k+'/'+Q.length+')':''))]); });
+  rows.push([]);
+  rows.push(['','','Soru ortalaması'].concat(S.items.map(it=>it.n?f(it.av):''),[S.done.length?f(S.avg):'','']));
+  rows.push(['','','Başarı yüzdesi'].concat(S.items.map(it=>it.n?'%'+Math.round(it.p*100):''),[S.done.length?'%'+Math.round(S.pass*100/S.done.length):'','']));
+  const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const csv='﻿'+[head].concat(rows).map(r=>r.map(q).join(';')).join('\r\n');
+  _ngShare(new Blob([csv],{type:'text/csv;charset=utf-8'}),_ngBase()+'-notlar.csv','Yazılı notları');
+  ngLearn();
+}
+function ngPdf(){
+  const d=ngLoad(); if(!d.st.length) return toast('Önce öğrenci listesini gir',true);
+  if(!window.jspdf) return toast('PDF kütüphanesi yüklenemedi — internet bağlantını kontrol et',true);
+  try{
+    const doc=ngReport(d);
+    _ngShare(doc.output('blob'),_ngBase()+'-analiz.pdf','Sınav analizi');
+    ngLearn();
+  }catch(e){ toast('Rapor oluşturulamadı: '+e.message,true); }
+}
+/* A4 analiz raporu: not listesi (soru puanlarıyla) + soru analizi + öğrenme çıktıları + dağılım */
+function ngReport(d){
+  const cfg=CFG||cfgNow(), S=ngStats(d), Q=S.Q, th=P_THEME(cfg.hdrtheme), D=th.d;
+  const land=Q.length>12;
+  const doc=newPdfDoc({orientation:land?'landscape':'portrait',unit:'mm',format:'a4'});
+  const PW=land?297:210, PH=land?210:297, M=12, W=PW-2*M;
+  const f=v=>String(Math.round(v*100)/100).replace('.',',');
+  const title=(t,sub)=>{
+    doc.setFillColor(D[0],D[1],D[2]); doc.rect(M,M,W,1.4,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(D[0],D[1],D[2]); doc.text(t,M,M+9);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.8); doc.setTextColor(95);
+    const info=[cfg.school,cfg.lesson,cfg.cls,cfg.kind,cfg.date].filter(Boolean).join('  ·  ');
+    if(info) doc.text(info,M,M+14.5);
+    if(sub){ doc.text(sub,PW-M,M+9,{align:'right'}); }
+    return M+20;
+  };
+  // ── 1. sayfa: özet + not listesi
+  let y=title('YAZILI SINAV ANALİZİ', Q.length+' soru · '+f(S.maxTot)+' puan');
+  const boxes=[['Öğrenci',S.done.length+' / '+(d.st.length-S.abs)],['Ortalama',f(S.avg)],['En yüksek',f(S.hi)],['En düşük',f(S.lo)],['Başarı (50+)',S.done.length?'%'+Math.round(S.pass*100/S.done.length):'—']];
+  const bw=(W-4*3)/5;
+  boxes.forEach((b,i)=>{ const x=M+i*(bw+3); doc.setFillColor(246,247,244); doc.roundedRect(x,y,bw,13,2,2,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(20); doc.text(b[1],x+bw/2,y+6.4,{align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.4); doc.setTextColor(110); doc.text(b[0],x+bw/2,y+10.8,{align:'center'}); });
+  y+=19;
+  const cS=8, cN=13, cT=15, cName=Math.min(52,Math.max(34,W-cS-cN-cT-Q.length*7)), cQ=(W-cS-cN-cName-cT)/Math.max(1,Q.length);
+  const rh=5.6;
+  const head=()=>{ doc.setFillColor(D[0],D[1],D[2]); doc.rect(M,y,W,7,'F'); doc.setFont('helvetica','bold'); doc.setFontSize(7.4); doc.setTextColor(255);
+    let x=M; doc.text('Sıra',x+cS/2,y+4.6,{align:'center'}); x+=cS; doc.text('No',x+cN/2,y+4.6,{align:'center'}); x+=cN; doc.text('Adı Soyadı',x+2,y+4.6); x+=cName;
+    Q.forEach((q,i)=>{ doc.text(String(i+1),x+cQ/2,y+3.3,{align:'center'}); doc.setFontSize(5.6); doc.text('('+f(+q.pt||0)+')',x+cQ/2,y+6.1,{align:'center'}); doc.setFontSize(7.4); x+=cQ; });
+    doc.text('Toplam',x+cT/2,y+4.6,{align:'center'}); y+=7; };
+  head();
+  const fit=(t,w)=>{ let s=String(t); while(s.length>1 && doc.getTextWidth(s)>w) s=s.slice(0,-1); return s.length<String(t).length?s.slice(0,-1)+'…':s; };
+  d.st.forEach((s,i)=>{
+    if(y+rh>PH-M-8){ doc.addPage('a4',land?'landscape':'portrait'); y=M+4; head(); }
+    if(i%2===1){ doc.setFillColor(248,249,247); doc.rect(M,y,W,rh,'F'); }
+    const t=ngTot(s,Q); let x=M;
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.6); doc.setTextColor(40);
+    doc.text(String(i+1),x+cS/2,y+3.9,{align:'center'}); x+=cS;
+    doc.text(String(s.no||''),x+cN/2,y+3.9,{align:'center'}); x+=cN;
+    doc.text(fit(s.name||'',cName-3),x+2,y+3.9); x+=cName;
+    Q.forEach(q=>{ const v=s.sc&&s.sc[q.id]; if(!s.abs && v!=null){ const mx=+q.pt||0; if(mx>0 && v<mx/2) doc.setTextColor(190,40,40); else doc.setTextColor(40); doc.text(f(v),x+cQ/2,y+3.9,{align:'center'}); } x+=cQ; });
+    doc.setTextColor(20); doc.setFont('helvetica','bold');
+    doc.text(s.abs?'G':(t.k?f(t.t):''),x+cT/2,y+3.9,{align:'center'});
+    doc.setDrawColor(225); doc.setLineWidth(0.15); doc.line(M,y+rh,M+W,y+rh);
+    y+=rh;
+  });
+  // ortalama + başarı satırı
+  if(y+2*rh+2>PH-M-8){ doc.addPage('a4',land?'landscape':'portrait'); y=M+4; head(); }
+  [['Soru ortalaması',it=>it.n?f(it.av):'',S.done.length?f(S.avg):''],['Başarı %',it=>it.n?'%'+Math.round(it.p*100):'',S.done.length?'%'+Math.round(S.pass*100/S.done.length):'']].forEach(([lab,fn,tot])=>{
+    doc.setFillColor(236,240,236); doc.rect(M,y,W,rh,'F'); let x=M+cS+cN;
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.4); doc.setTextColor(30); doc.text(lab,x+2,y+3.9); x+=cName;
+    S.items.forEach(it=>{ doc.text(fn(it),x+cQ/2,y+3.9,{align:'center'}); x+=cQ; }); doc.text(tot,x+cT/2,y+3.9,{align:'center'}); y+=rh; });
+  doc.setFont('helvetica','normal'); doc.setFontSize(6.8); doc.setTextColor(120);
+  doc.text('G: sınava girmedi · kırmızı: sorunun yarı puanının altında',M,y+4);
+  // ── 2. sayfa: soru analizi, öğrenme çıktıları, dağılım
+  doc.addPage('a4','portrait');
+  const PW2=210, W2=PW2-2*M;
+  let y2=M;
+  doc.setFillColor(D[0],D[1],D[2]); doc.rect(M,y2,W2,1.4,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(D[0],D[1],D[2]); doc.text('SORU ANALİZİ',M,y2+9);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.8); doc.setTextColor(95);
+  doc.text([cfg.school,cfg.lesson,cfg.cls,cfg.kind].filter(Boolean).join('  ·  '),M,y2+14.5);
+  y2+=21;
+  const sec=t=>{ doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(D[0],D[1],D[2]); doc.text(t,M,y2+4); y2+=7; };
+  const lvC=p=>p>=0.7?[22,163,74]:(p>=0.5?[202,138,4]:[220,38,38]);
+  sec('Soru başarı yüzdeleri');
+  S.items.forEach(it=>{
+    if(y2>297-M-30){ doc.addPage('a4','portrait'); y2=M+4; }
+    const pc=Math.round(it.p*100), C=lvC(it.p);
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.4); doc.setTextColor(30); doc.text((it.i+1)+'. soru',M,y2+3.6);
+    doc.setFont('helvetica','normal'); doc.setTextColor(110); doc.setFontSize(7.6); doc.text(f(it.mx)+' puan · ort. '+f(it.av),M+17,y2+3.6);
+    const bx=M+62, bwid=W2-62-16; doc.setFillColor(236,238,235); doc.roundedRect(bx,y2+0.8,bwid,3.6,1.2,1.2,'F');
+    if(pc>0){ doc.setFillColor(C[0],C[1],C[2]); doc.roundedRect(bx,y2+0.8,Math.max(2.4,bwid*pc/100),3.6,1.2,1.2,'F'); }
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.4); doc.setTextColor(C[0],C[1],C[2]); doc.text('%'+pc,M+W2,y2+3.6,{align:'right'});
+    y2+=6.2;
+  });
+  if(S.ocs.length){
+    y2+=3; if(y2>297-M-40){ doc.addPage('a4','portrait'); y2=M+4; }
+    sec('Öğrenme çıktılarına göre başarı');
+    S.ocs.forEach(o=>{
+      doc.setFont('helvetica','normal'); doc.setFontSize(8.2);
+      const lines=doc.splitTextToSize(o.t,W2-42), h=Math.max(lines.length*3.9+2.6,7);
+      if(y2+h>297-M-12){ doc.addPage('a4','portrait'); y2=M+4; }
+      const pc=Math.round(o.p*100), C=lvC(o.p);
+      doc.setFillColor(248,249,247); doc.rect(M,y2,W2,h,'F');
+      doc.setTextColor(30); doc.text(lines,M+2,y2+4.2);
+      doc.setFontSize(7); doc.setTextColor(120); doc.text(ocRange(o.nums)+'. soru',M+W2-26,y2+4.2,{align:'right'});
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(C[0],C[1],C[2]); doc.text('%'+pc,M+W2-2,y2+4.4,{align:'right'});
+      y2+=h+1.4;
+    });
+  }
+  y2+=4; if(y2>297-M-56){ doc.addPage('a4','portrait'); y2=M+4; }
+  sec('Puan dağılımı');
+  const mxB=Math.max(1,...S.bands.map(x=>x.n)), cw=W2/5, chH=30;
+  S.bands.forEach((x,i)=>{
+    const C=x.b.c.match(/\w\w/g).map(h=>parseInt(h,16)), bx=M+i*cw+cw*0.22, bwid=cw*0.56, bh=chH*x.n/mxB;
+    doc.setFillColor(238,240,236); doc.rect(bx,y2,bwid,chH,'F');
+    if(x.n){ doc.setFillColor(C[0],C[1],C[2]); doc.rect(bx,y2+chH-bh,bwid,bh,'F'); }
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(30); doc.text(String(x.n),bx+bwid/2,y2+chH-bh-1.4,{align:'center'});
+    doc.setFontSize(8); doc.text(x.b.t,M+i*cw+cw/2,y2+chH+4.6,{align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(120); doc.text(x.b.r,M+i*cw+cw/2,y2+chH+8.4,{align:'center'});
+  });
+  y2+=chH+14;
+  const weak=S.items.filter(it=>it.n && it.p<0.5).map(it=>it.i+1);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.6); doc.setTextColor(50);
+  const note=weak.length?('Başarısı %50\'nin altında kalan sorular: '+weak.join(', ')+'. Bu soruların ölçtüğü konular tekrar edilebilir.'):'Bütün sorularda sınıf başarısı %50 ve üzerindedir.';
+  const nl=doc.splitTextToSize(note,W2); if(y2+nl.length*4+24>297-M){ doc.addPage('a4','portrait'); y2=M+4; }
+  doc.text(nl,M,y2); y2+=nl.length*4+12;
+  doc.setFontSize(7.4); doc.setTextColor(120); doc.text('Puan aralıkları Ortaöğretim Kurumları Yönetmeliği\'ne göredir (85–100 Pekiyi, 70–84 İyi, 60–69 Orta, 50–59 Geçer, 0–49 Geçmez).',M,y2,{maxWidth:W2}); y2+=12;
+  if(cfg.teacher){ doc.setFontSize(9); doc.setTextColor(40); doc.text('Ders Öğretmeni',PW2-M-40,y2,{align:'center'}); doc.setFont('helvetica','bold'); doc.text(cfg.teacher,PW2-M-40,y2+5,{align:'center'}); }
+  return doc;
+}
+
+/* ── önizleme düğmesi ve Testlerim kısayolu ── */
+function ngBtnSync(){
+  const c=CFG||{}; document.body.classList.toggle('ng-mode',!!c.yazili); document.body.classList.toggle('ng-optic',!!c.optic);
+}
+async function openTestGrades(t){
+  applyTestRecord(t); editingTest=t; drawTray();
+  await build(); ngOpen();
+}
+function ngCountFor(t){
+  try{ const v=JSON.parse(localStorage.getItem('testamed_not_'+omrHash(t.qs||[]).toString(36))||'null');
+    if(!v || !Array.isArray(v.st)) return 0; const Q=(t.qs||[]).filter(q=>q && q.type!=='note');
+    return v.st.filter(s=>!s.abs && Q.some(q=>s.sc && s.sc[q.id]!=null)).length; }catch(_){ return 0; }
+}
+function drawTestBody(){
+  const filt=$('lfilter'), body=$('lbody'), foot=$('lfoot');
+  filt.style.display='none'; foot.style.display='none';
+  if(!testItems.length){ body.innerHTML='<div class="lempty">Henüz kayıtlı test yok.</div>'; return; }
+  body.innerHTML='';
+  testItems.sort((a,b)=>b.ts-a.ts).forEach(t=>{
+    const yaz=!!(t.cfg && t.cfg.yazili), nn=ngCountFor(t);
+    const r=document.createElement('div'); r.className='trow';
+    r.innerHTML='<div class="ti"><div class="tn">'+esc(t.name)+'</div>'+
+      '<div class="tm">'+esc(t.lesson||'')+' · '+(t.qs||[]).length+' soru · '+esc(t.date||'')+(nn?' · ✍️ '+nn+' not':'')+'</div></div>';
+    if(yaz || nn){ const g=document.createElement('button'); g.className='tb-ng'; g.textContent='✍️'; g.title='Not girişi ve analiz'; g.setAttribute('aria-label','Not girişi');
+      g.onclick=()=>openTestGrades(t); r.appendChild(g); }
+    const edit=document.createElement('button'); edit.className='tb-edit'; edit.textContent='Düzenle'; edit.onclick=()=>openTest(t,true);
+    const open=document.createElement('button'); open.className='tb-open'; open.textContent='PDF'; open.onclick=()=>openTest(t,false);
+    const del=document.createElement('button'); del.className='tb-del'; del.textContent='Sil';
+    del.onclick=async()=>{ if(confirm('“'+t.name+'” silinsin mi?')){ await DB.del('tests',t.id); await refreshLib(); drawLib(); } };
+    r.append(edit,open,del); body.appendChild(r);
+  });
+}
+
+/* ── kurulum ── */
+function _bgStart(){
+  _wrapAfter('drawPages',ngBtnSync);
+  _wrapAfter('omrClose',()=>{ bankLearnOmr(); });
+  _wrapAfter('omrOpen',()=>{
+    const b=document.querySelector('#omr .omr-body');
+    if(b && !b.querySelector('.omr-link')){ const l=document.createElement('button'); l.type='button'; l.className='omr-link';
+      l.textContent='Yazılı mı? Puanları elle girmek için ✍️ Not girişi'; l.onclick=()=>{ omrClose(); ngOpen(); }; b.appendChild(l); }
+  });
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',_bgStart); else _bgStart();
 </script>
 
 <!-- ════════ Öğretmen Paneli & İstatistik Modülü ════════ -->
