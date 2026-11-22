@@ -1669,6 +1669,137 @@ body.qfocus #pbar #b-ng{display:none!important}
 .vk-cc{background:conic-gradient(#ef4444,#f59e0b,#eab308,#22c55e,#06b6d4,#3b82f6,#8b5cf6,#ec4899,#ef4444);overflow:hidden}
 .vk-cc::after{content:'';position:absolute;inset:7px;border-radius:50%;background:var(--c)}
 .vk-cc input{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;padding:0;cursor:pointer}
+
+/* ═════════ YENİ TASARIM: sade ana ekran · sekmesiz Düzen · katlanır föy blokları ═════════ */
+#t-lib{display:none!important}
+body:not(.rd-flow) #rail{display:none}
+body:not(.rd-flow) #top{padding-bottom:11px}
+
+/* ortak: bölüm adı, satır, sayfa (sheet) */
+.rd-sec{font:800 11.5px var(--body);color:var(--soft);text-transform:uppercase;letter-spacing:.06em;margin:20px 4px 9px}
+.rd-row{width:100%;display:flex;align-items:center;gap:12px;padding:12px 12px 12px 12px;background:var(--w);border:1px solid var(--line);border-radius:14px;
+  text-align:left;color:var(--ink);font:inherit;margin-bottom:8px;transition:transform .12s}
+.rd-row:active{transform:scale(.985)}
+.rd-row .rd-ic{flex:0 0 38px;height:38px;border-radius:11px;background:var(--tint);color:var(--or);display:flex;align-items:center;justify-content:center}
+.rd-row .rd-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.rd-row .rd-tx b{font:700 14.5px var(--body);color:var(--ink)}
+.rd-row .rd-tx small{font-size:12.5px;color:var(--soft);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd-row .rd-chev{flex:0 0 auto;color:#A8B3AE;font-size:22px;line-height:1;margin-right:2px}
+.rd-row .rd-thumb{flex:0 0 auto;width:84px;height:30px;object-fit:cover;object-position:top left;border-radius:6px;border:1px solid var(--line);background:#fff}
+.rd-grp{background:var(--w);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.rd-grp .rd-row{border:none;border-radius:0;margin:0;border-top:1px solid var(--line)}
+.rd-grp .rd-row:first-child{border-top:none}
+
+.rd-sheet{position:fixed;inset:0;z-index:880;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1)}
+.rd-sheet.on{transform:none}
+.rd-sh-h{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:12px 14px;padding-top:calc(12px + env(safe-area-inset-top));background:var(--w);border-bottom:1px solid var(--line)}
+.rd-sh-h b{flex:1;text-align:center;font:800 16px var(--disp);letter-spacing:-.01em;color:var(--ink)}
+.rd-sh-h button{flex:0 0 auto;min-width:70px;padding:9px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--w);font:700 13.5px var(--body);color:var(--ink)}
+.rd-sh-h .rd-sh-ok{background:var(--or);border-color:var(--or);color:#fff}
+.rd-sh-b{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(28px + var(--safe))}
+.rd-sh-b .set-pane{display:block!important;animation:none}
+.rd-sh-b #hdrprev{display:block!important;position:static;margin:0 0 14px}
+/* föy ayarları sayfası */
+.rd-sh-b > .foy-set-b{background:var(--w);border:1px solid var(--line);border-radius:16px;padding:14px;gap:10px;margin-bottom:12px}
+.rd-sh-b > .foy-set-b #foy-hdrprev{width:100%;border-radius:8px;border:1px solid var(--line)}
+.rd-sh-b > .foy-theme{background:var(--w);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+
+/* alttan açılan seçim penceresi */
+.rd-act-ov{position:fixed;inset:0;z-index:920;background:rgba(14,26,23,.38);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .18s}
+.rd-act-ov.on{opacity:1}
+.rd-act{width:100%;max-width:520px;background:var(--w);border-radius:20px 20px 0 0;padding:10px 14px calc(16px + var(--safe));transform:translateY(30px);transition:transform .2s}
+.rd-act-ov.on .rd-act{transform:none}
+.rd-act .rd-grab{width:38px;height:5px;border-radius:9px;background:var(--line);margin:2px auto 10px}
+.rd-act h3{font:800 17px var(--disp);margin:2px 4px 4px;color:var(--ink)}
+.rd-act p{font-size:13px;color:var(--soft);font-weight:600;line-height:1.45;margin:0 4px 10px}
+.rd-act .rd-row{margin-bottom:7px}
+.rd-act .rd-cancel{width:100%;margin-top:4px;padding:13px;border-radius:14px;border:none;background:var(--bg);font:700 14.5px var(--body);color:var(--ink2)}
+.rd-act .rd-cur{background:var(--tint);border:1px solid #CFE3D4;border-radius:14px;padding:11px 12px;margin:0 0 10px;font-size:13px;color:var(--ink2);font-weight:600;line-height:1.45}
+.rd-act .rd-cur b{color:var(--ink)}
+.rd-act .rd-cur-b{display:flex;gap:8px;margin-top:9px}
+.rd-act .rd-cur-b button{flex:1;padding:10px;border-radius:12px;border:1.5px solid var(--or);background:var(--w);color:var(--or);font:700 13.5px var(--body)}
+.rd-act .rd-cur-b button.pri{background:var(--or);color:#fff}
+
+/* ── Ana ekran ── */
+#s-home.rd > .card, #s-home.rd > .hint{display:none}
+#rd-home .rdh-hi{font:800 23px var(--disp);letter-spacing:-.03em;color:var(--ink);margin:4px 4px 14px}
+#rd-home .rdh-big{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.rdh-tile{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:16px 14px 15px;border-radius:20px;border:none;
+  background:linear-gradient(160deg,#1E7A3C,#17633A);color:#fff;box-shadow:0 6px 18px rgba(23,99,58,.22);min-height:150px;transition:transform .12s}
+.rdh-tile:active{transform:scale(.97)}
+.rdh-tile.foy{background:linear-gradient(160deg,#C2410C,#9A3412);box-shadow:0 6px 18px rgba(154,52,18,.22)}
+.rdh-tile .rdh-ic{width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;margin-bottom:auto}
+.rdh-tile b{font:800 17px var(--disp);letter-spacing:-.02em;margin-top:14px}
+.rdh-tile small{font-size:12px;line-height:1.35;opacity:.88;font-weight:600}
+#rdh-cont .hcard{margin-bottom:9px}
+#rdh-cont-t.off{display:none}
+.rdh-tools{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.rdh-tools .rd-row{margin:0;padding:11px;gap:10px;flex-direction:row}
+.rdh-tools .rd-row .rd-ic{flex-basis:34px;height:34px;border-radius:10px}
+.rdh-tools .rd-row .rd-tx b{font-size:14px}
+.rdh-tools .rd-row .rd-tx small{font-size:11.5px;white-space:normal;line-height:1.3}
+#s-home.rd #appver{margin-top:22px}
+
+/* ── Soru seçme ── */
+#bar.rd #files{display:none}
+#bar.rd .brow{padding:6px 10px}
+#bar.rd .brow.nav{gap:5px}
+#bar.rd .rd-file{flex:1 1 auto;min-width:0;max-width:52%;display:flex;align-items:center;gap:6px;justify-content:flex-start;background:var(--w);border:1.5px solid var(--line)}
+#bar.rd .rd-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#bar.rd .rd-file i{font-style:normal;color:var(--soft);font-size:11px}
+#bar.rd .brow.nav .gap{flex:1 1 4px}
+#bar.rd #zminfo{display:none}
+#bar.rd .brow.tools{gap:6px}
+#bar.rd .brow.tools .bb{padding:8px 10px;font-size:12.5px}
+#bar.rd .brow.tools #undo{margin-left:auto}
+
+/* ── Düzen ── */
+#s-set.rd .set-tabs{display:none}
+#s-set.rd .set-panes{top:0;padding-top:12px}
+#s-set.rd .set-panes > .set-pane{display:none}
+#s-set.rd .set-panes > #p7{display:block}
+#s-set.rd .set-panes > #hdrprev{display:none!important}
+#s-set.rd #p7 > .addbar{display:none}
+#s-set.rd .rd-qhead{display:flex;align-items:center;gap:8px;margin:2px 0 10px}
+#s-set.rd .rd-qhead .sec{flex:1;margin:0}
+.rd-qadd{flex:0 0 auto;padding:9px 13px;border-radius:999px;border:none;background:var(--or);color:#fff;font:700 13px var(--body);box-shadow:0 2px 8px rgba(30,122,60,.25)}
+#s-set.rd .rd-hold{display:none}
+#rd-setrows{margin-top:6px}
+
+/* ── Föy ── */
+#foy-head.rd{padding:10px 16px 10px}
+#foy-head.rd > details.foy-set, #foy-head.rd > .foy-theme{display:none}
+#foy-head.rd .foy-top{margin-bottom:8px}
+#foy-head.rd #foy-title{font:800 17px var(--disp);letter-spacing:-.01em}
+#foy-head.rd .rd-foyset{margin:8px 0 0;padding:9px 11px}
+#foy-head.rd .rd-foyset .rd-ic{flex-basis:32px;height:32px;border-radius:9px}
+#foy-head.rd .rd-foyset .rd-tx b{font-size:13.5px}
+#foy-bar.rd .rd-hide{display:none}
+.foy-b.rd-acc .foy-b-bar{cursor:pointer;display:flex;align-items:center;gap:8px}
+.foy-b.rd-acc .foy-b-t{flex:0 0 auto}
+.foy-b.rd-acc .rd-bsum{flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:none;letter-spacing:0}
+.foy-b.rd-acc .rd-bchev{flex:0 0 auto;color:#A8B3AE;font-size:18px;transition:transform .15s}
+.foy-b.rd-acc:not(.rd-open) .foy-b-body,.foy-b.rd-acc:not(.rd-open) .foy-b-actions{display:none}
+.foy-b.rd-acc.rd-open .rd-bsum{display:none}
+.foy-b.rd-acc.rd-open .rd-bchev{transform:rotate(90deg)}
+.foy-b.rd-acc:not(.rd-open){margin-bottom:8px}
+.foy-b.rd-acc.rd-open{box-shadow:0 4px 16px rgba(14,26,23,.08);border-color:#C9D6CC}
+
+/* Düzen: sorular başlığı ve test çubuğu tek satır */
+#s-set.rd .rd-qhead .sec{display:block;font-size:15px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#s-set.rd #editbar{display:flex!important;align-items:center;gap:10px;padding:10px 10px 10px 13px;margin:0 0 12px}
+#s-set.rd #editbar[style*="none"]{display:none!important}
+#s-set.rd #editbar .eb-t{flex:1;min-width:0;line-height:1.35}
+#s-set.rd #editbar .eb{margin:0;flex:0 0 auto}
+#s-set.rd #editbar .eb button{flex:0 0 auto;padding:8px 12px;border-radius:999px}
+
+/* ayar sayfası: başlığı tekrar eden bölüm adı gizli, sonunda kılavuz bağlantısı */
+.rd-sh-b #p1 > .sec:first-child,.rd-sh-b #p2 > .sec:first-child,.rd-sh-b #p3 > .sec:first-child,.rd-sh-b #p4 > .sec:first-child,.rd-sh-b #p6 > .sec:first-child{display:none}
+.rd-sh-help{display:flex;align-items:center;justify-content:center;gap:7px;margin:22px auto 4px;padding:10px 16px;border:none;background:none;color:var(--soft);font:700 13.5px var(--body)}
+.rd-sh-help svg{color:var(--or)}
+#rd-home #engine{margin:16px 4px 0;text-align:center}
+#rd-home #engine:not(.err){display:none}
+.rd-sh-b > .foy-theme select{padding:8px 10px;border:1.5px solid var(--line);border-radius:9px;background:var(--w);font-size:14px;-webkit-appearance:none;appearance:none;color:var(--ink)}
 </style>
 <base target="_blank">
 </head>
@@ -4348,7 +4479,7 @@ function hdrPreview(){
       $('hdrprev-cap').textContent=lt?'Antetli kâğıt: üst kısım boş bırakılır':(window._logoData&&!window._logoImg?'Logo yükleniyor…':'Antet önizlemesi');
       if(!lt && window._logoData && window._logoImg){
         $('hdrprev-cap').textContent = window._hdrPrevLogo ? 'Antet önizlemesi · logoya dokunup sürükleyebilirsin'
-          : 'Bu şablonda logo yeri yok · Logo & Filigran → Logo konumu: Sol / Orta / Sağ';
+          : 'Bu şablonda logo yeri yok · Logo ve filigran → Logo konumu: Sol / Orta / Sağ';
       }
     }catch(e){ $('hdrprev-cap').textContent='Önizleme çizilemedi'; }
   },140);
@@ -6497,7 +6628,7 @@ function _omrRender(){
   const cfg=CFG||cfgNow(), Q=qs.filter(q=>q && q.type!=='note'), noKey=Q.filter(q=>!q.ans).length;
   const nb=stuActive(cfg)?cfg.stuList.length+' öğrenci':(Math.max(1,cfg.book||1)>1?Math.max(1,cfg.book||1)+' kitapçık':'tek kitapçık');
   $('omr-info').innerHTML='<b>'+esc([cfg.lesson,cfg.kind].filter(Boolean).join(' · ')||'Test')+'</b><span>'+Q.length+' soru · '+nb+'</span>'+
-    (noKey?'<em>⚠️ '+noKey+' sorunun cevabı girilmemiş — Sorular sekmesinden işaretle.</em>':'<span class="ok">✓ Cevap anahtarı tamam</span>');
+    (noKey?'<em>⚠️ '+noKey+' sorunun cevabı girilmemiş — Düzen ekranındaki soru listesinden işaretle.</em>':'<span class="ok">✓ Cevap anahtarı tamam</span>');
   const L=omrResults();
   // seçili sonuç kartı
   const res=$('omr-res'), r=OMR_CUR&&L.find(x=>x.id===OMR_CUR.id);
@@ -6515,7 +6646,7 @@ function _omrRender(){
       '<div class="omr-sc"><div><b>'+s.d+'</b>Doğru</div><div><b>'+s.y+'</b>Yanlış</div><div><b>'+s.b+'</b>Boş</div><div><b>'+String(s.net).replace('.',',')+'</b>Net</div><div class="pu"><b>'+String(s.puan).replace('.',',')+'</b>Puan</div></div>'+
       '<div class="omr-grid">'+r.answers.map((a,i)=>{ const k=r.key[i]; const cls=!a?'bos':(a==='*'?'cok':(k&&a===k?'dog':'yan'));
         return '<button type="button" class="omr-cell '+cls+'" data-i="'+i+'"><i>'+(i+1)+'</i><b>'+(a==='*'?'?':(a||'–'))+'</b>'+(cls==='yan'||cls==='bos'||cls==='cok'?'<s>'+(k||'')+'</s>':'')+'</button>'; }).join('')+'</div>'+
-      '<p class="omr-tip">Yanlış okunan bir cevap varsa kutusuna dokunarak düzelt (A→B→…→boş).'+(r.stu?'':' Sınıf listesi girersen (Kitapçık & Optik → Öğrenciye özel kopyalar) öğrenci adları formdan kendiliğinden gelir.')+'</p>'+prev+
+      '<p class="omr-tip">Yanlış okunan bir cevap varsa kutusuna dokunarak düzelt (A→B→…→boş).'+(r.stu?'':' Sınıf listesi girersen (Düzen → Kitapçık, optik, kapak → Öğrenciye özel kopyalar) öğrenci adları formdan kendiliğinden gelir.')+'</p>'+prev+
       '<button type="button" class="omr-del1">Bu sonucu sil</button></div>';
   } else if(!res.querySelector('.omr-err')) res.innerHTML='';
   // sekmeler
@@ -6585,7 +6716,7 @@ function qtOC(){ const q=_selQ(); openOC(q&&q.id); }
 /* ════════ Sürüm ve güncelleme ════════
    Ana ekrana eklenen uygulamada yenile düğmesi yok: açılışta ve uygulamaya geri dönüldüğünde
    sitedeki version.json okunur; daha yeni sürüm varsa üstte "Güncelle" şeridi çıkar. */
-const APP_VERSION='2026.11.22.1';
+const APP_VERSION='2026.11.22.2';
 function _verNum(v){ return String(v||'').split(/[.\-]/).slice(0,4).map(n=>parseInt(n,10)||0).reduce((a,n)=>a*1000+n,0); }
 function verLabel(v){ const p=String(v||'').split('.'); return p.length>=3?(p[2]+'.'+p[1]+'.'+p[0]+(p[3]&&p[3]!=='1'?' ('+p[3]+')':'')):String(v); }
 let _updLast=0, _updInfo=null;
@@ -6619,31 +6750,34 @@ function applyUpdate(){
 const GUIDE=[
  {id:'genel', ic:'🧭', t:'Testamed nedir?', s:'Genel bakış',
   p:'testamed; kitaptan, PDF\'ten ya da fotoğraftan soru kırpıp A4 test, yazılı ve konu anlatım föyü hazırlamanı sağlar. Hazırladığın her şey bu cihazda saklanır.',
-  li:['Üstteki dört adım işin sırasını gösterir: Kaynak, Sorular, Düzen ve Çıktı.',
+  li:['Ana ekranda iki büyük düğme var: Test hazırla ve Föy hazırla. Yarım kalan işlerin Devam et başlığı altında; Kitaplık, Panel, Kılavuz ve Yedek Araçlar başlığı altında durur.',
+      'Test hazırlarken üstteki dört adım işin sırasını gösterir: Kaynak, Sorular, Düzen ve Çıktı.',
       'Kaynak: PDF ya da fotoğraf açar, soruları kırparsın.',
       'Sorular: kırptığın soruları görür, doğru cevaplarını işaretlersin.',
-      'Düzen: antet, renk, sütun, kitapçık gibi bütün ayarları yaparsın.',
+      'Düzen: en üstte soru listesi, altında ayar satırları (Görünüm, Sınav bilgileri, Sayfa düzeni…) durur. Bir satıra dokununca o ayarın sayfası açılır; Tamam ile geri dönersin.',
       'Çıktı: sayfaları önizler, düzeltir ve PDF olarak alırsın.',
       {t:'Sağ üstteki ? düğmesi bu kılavuzu her ekrandan, o ekranın bölümünde açar.', s:'Sağ üstteki soru işareti düğmesi bu kılavuzu her ekrandan, o ekranın bölümünde açar.'}]},
  {id:'ekle', ic:'✂️', t:'Soru ekleme', s:'Soru ekleme',
   p:'Soruları üç yoldan eklersin: PDF ya da fotoğraftan kırparak, yapay zekaya yazdırarak ya da soru bankandan seçerek.',
-  li:['PDF aç ile kitap, föy ya da deneme PDF\'ini; Fotoğraf aç ile tahtanın, defterin ya da kitabın fotoğrafını seç.',
+  li:['Ana ekranda Test hazırla\'ya dokun. PDF aç ile kitap, föy ya da deneme PDF\'ini; Fotoğraf aç ile tahtanın, defterin ya da kitabın fotoğrafını seç.',
       'Sayfayı iki parmakla büyüt, sonra parmağınla sorunun etrafına kutu çiz.',
       {t:'Açılan küçük çubuktan doğru şıkkı (A–E) seç ve ✓ işaretine dokun; soru teste eklenir. ✕ kutuyu iptal eder.', s:'Açılan küçük çubuktan doğru şıkkı seç ve onay işaretine dokun; soru teste eklenir. Çarpı, kutuyu iptal eder.'},
       'Yazıya çevir, kutudaki soruyu metne dönüştürür; soru kökünü ve şıkları düzeltip yazı ya da resim olarak ekleyebilirsin.',
       'Döndür yan duran sayfayı çevirir; Düzelt eğik çekilmiş sayfayı doğrultur; Temizle kirli görüntüyü açar (normal ve güçlü).',
       'Sayfalar arasında oklarla geçer, artı ve eksi ile yaklaşırsın.',
+      'Birden çok dosya açtıysan sol üstteki dosya adına dokun; açık dosyalar arasında geçer ya da yeni PDF ve fotoğraf eklersin.',
       'Yapay zekaya yazdır: ders, konu ve öğrenme çıktısını yaz. Hazır metni kopyalayıp istediğin yapay zekaya yapıştır; gelen cevabı geri yapıştırınca sorular listeye gelir. API anahtarın varsa otomatik de üretebilirsin.',
-      'Kitaplık\'taki soru bankandan da soru ekleyebilirsin.']},
- {id:'sorular', ic:'📝', t:'Sorular sekmesi', s:'Sorular sekmesi',
-  p:'Düzen ekranındaki Sorular sekmesinde bütün sorular sıralıdır.',
+      'Test hazırla penceresindeki Soru bankasından ile bankandaki soruları eklersin. Düzen ekranındaki ＋ Soru ekle düğmesi de aynı yolları açar.']},
+ {id:'sorular', ic:'📝', t:'Soru listesi', s:'Soru listesi',
+  p:'Düzen ekranının en üstünde bütün sorular sıralıdır; ＋ Soru ekle ile yenilerini eklersin.',
+  sp:'Düzen ekranının en üstünde bütün sorular sıralıdır; Soru ekle düğmesiyle yenilerini eklersin.',
   li:[{t:'A–E düğmeleriyle her sorunun doğru cevabını işaretle; cevap anahtarı ve optik okuma bunu kullanır.', s:'A, B, C, D, E düğmeleriyle her sorunun doğru cevabını işaretle; cevap anahtarı ve optik okuma bunu kullanır.'},
       'Toplam puanı yazarsan puan sorulara kendiliğinden dağıtılır; toplam her zaman tam tutar, bilgi kutuları puan almaz. İstersen soru başına puan da girebilirsin.',
       'Oklarla sırayı değiştirir, çarpıyla soruyu silersin.',
       'Çerçeve düğmesi o soruya özel çerçeve seçer; not düğmesi sorunun üstüne uyarı ya da bilgi kutusu ekler.',
       {t:'⋯ düğmesi: üzerine işaretle, çözüm QR\'ı, öğrenme çıktısı ve filigran temizleme.', s:'Üç nokta düğmesi: üzerine işaretleme, çözüm kare kodu, öğrenme çıktısı ve filigran temizleme.'},
-      'Bilgi Kutusu ile sorular arasına uyarı, hatırlatma ya da formül kutusu koyabilirsin.',
-      'Soruları bankaya kaydet, soruları sonraki testlerde kullanmak üzere saklar.']},
+      {t:'＋ Soru ekle → Bilgi kutusu ile sorular arasına uyarı, hatırlatma ya da formül kutusu koyabilirsin.', s:'Soru ekle düğmesindeki Bilgi kutusu ile sorular arasına uyarı, hatırlatma ya da formül kutusu koyabilirsin.'},
+      'Listenin altındaki Soruları bankaya kaydet, soruları sonraki testlerde kullanmak üzere saklar.']},
  {id:'temizle', ic:'🧽', t:'Görseli temizleme', s:'Görseli temizleme',
   p:'Soruda kalan filigran, logo artığı ya da leke için. Sorunun ⋯ menüsünden Filigran / leke temizle\'yi ya da önizlemede Temizle\'yi seç.',
   sp:'Soruda kalan filigran, logo artığı ya da leke için. Sorunun üç nokta menüsünden filigran, leke temizle seçeneğini ya da önizlemede Temizle düğmesini seç.',
@@ -6665,10 +6799,10 @@ const GUIDE=[
       'Rengi ve kalınlığı alttan seç; Geri al son işareti, çöp kutusu hepsini siler.',
       'İşaretler soruya işlenir ama orijinal saklanır; hepsini silip kaydedersen soru eski hâline döner.']},
  {id:'sablon', ic:'🎨', t:'Şablon ve renk', s:'Şablon ve renk',
-  p:'Düzen ekranındaki Şablon & Renk sekmesi testin görünüşünü belirler. Üstteki antet önizlemesi her değişikliği hemen gösterir.',
-  sp:'Düzen ekranındaki Şablon ve Renk sekmesi testin görünüşünü belirler. Üstteki antet önizlemesi her değişikliği hemen gösterir.',
-  li:[{t:'⭐ Kayıtlı ayarlarım: Düzen ekranındaki bütün ayarları (antet, renk, logo, künye, sayfa düzeni, kitapçık…) bir adla kaydet; sonra tek dokunuşla uygula. Yanlışlıkla uyguladıysan ↩ Önceki ayarlar geri getirir; Düzenle ile adını değiştirir, günceller ya da silersin.',
-        s:'Kayıtlı ayarlarım bölümünde Düzen ekranındaki bütün ayarları, yani antet, renk, logo, künye, sayfa düzeni ve kitapçık ayarlarını bir adla kaydedersin; sonra tek dokunuşla uygularsın. Yanlışlıkla uyguladıysan Önceki ayarlar düğmesi geri getirir.'},
+  p:'Düzen ekranındaki Görünüm satırı testin görünüşünü belirler. Açılan sayfanın üstündeki antet önizlemesi her değişikliği hemen gösterir.',
+  sp:'Düzen ekranındaki Görünüm satırı testin görünüşünü belirler. Açılan sayfanın üstündeki antet önizlemesi her değişikliği hemen gösterir.',
+  li:[{t:'⭐ Kayıtlı ayarlarım (Düzen ekranındaki son satır): bütün ayarları (antet, renk, logo, künye, sayfa düzeni, kitapçık…) bir adla kaydet; sonra tek dokunuşla uygula. Yanlışlıkla uyguladıysan ↩ Önceki ayarlar geri getirir; Düzenle ile adını değiştirir, günceller ya da silersin.',
+        s:'Düzen ekranının son satırı olan Kayıtlı ayarlarım bölümünde bütün ayarları, yani antet, renk, logo, künye, sayfa düzeni ve kitapçık ayarlarını bir adla kaydedersin; sonra tek dokunuşla uygularsın. Yanlışlıkla uyguladıysan Önceki ayarlar düğmesi geri getirir.'},
       'Başlık Şablonu antet tasarımıdır; Şablonları resimli gör ile 71 şablonun hepsini görerek seçersin.',
       'Antetli Kağıda Bas şablonu, matbaadan aldığın antetli kâğıt için üst kısmı boş bırakır.',
       'Antet Rengi: 71 hazır renk. Renk düğmelerinden seçilir, artı ile hepsi açılır. Kendi rengin düğmesiyle istediğin rengi seçersen bütün tonlar ondan üretilir.',
@@ -6677,18 +6811,19 @@ const GUIDE=[
       'Soru numarası stili: daire, kare, çerçeve, ok etiketi, altı çizili gibi 12 stil; seçince altında örneği görünür.',
       'Sütun ve ayraç çizgilerinin rengini ve sayfa altındaki sayfa numarası biçimini de buradan seçersin.',
       'Antet Yazısı bölümünde yazı karakterini; test adı, ders, konu ve öğretmen yazılarının büyüklüğünü ve kalınlığını ayarlarsın.']},
- {id:'kunye', ic:'🏫', t:'Künye, kenar boşluğu, gerekli bilgiler', s:'Künye ve gerekli bilgiler',
-  li:['Künye sekmesine okul, ders, test adı, konu, öğretmen, sınıf ve tarihi yaz; antete bunlar yazılır.',
-      'Kenar Boşluk sekmesinde sayfanın dört kenar boşluğunu milimetre olarak değiştirirsin.',
-      'Gerekli bilgiler şeridi: Künye sekmesinde aç, elementlere dokunarak seç. Atom kütlesi, atom numarası ya da ikisi birden yazabilir.',
+ {id:'kunye', ic:'🏫', t:'Sınav bilgileri, kenar boşluğu, gerekli bilgiler', s:'Sınav bilgileri ve gerekli bilgiler',
+  li:['Düzen ekranındaki Sınav bilgileri satırına dokun; okul, ders, test adı, konu, öğretmen, sınıf ve tarihi yaz. Antete bunlar yazılır.',
+      'Kenar boşlukları satırında sayfanın dört kenar boşluğunu milimetre olarak değiştirirsin.',
+      'Gerekli bilgiler şeridi: Sınav bilgileri sayfasında aç, elementlere dokunarak seç. Atom kütlesi, atom numarası ya da ikisi birden yazabilir.',
       'Ek bilgi satırına Avogadro sayısı ya da molar hacim gibi değerleri yazabilirsin. Şerit ilk sayfada antetin altına basılır.']},
  {id:'logo', ic:'🖼️', t:'Logo ve filigran', s:'Logo ve filigran',
-  li:['Logo & Filigran sekmesinden logonu yükle; antete kendiliğinden yerleşir ve bu cihazda saklanır.',
+  li:['Düzen ekranındaki Logo ve filigran satırından logonu yükle; antete kendiliğinden yerleşir ve bu cihazda saklanır.',
       'Logonun boyutunu ve opaklığını kaydırıcılarla ayarlarsın.',
       'Logo konumu ile sola, ortaya ya da sağa alırsın; antet önizlemesinde logoya dokunup sürükleyerek de taşıyabilirsin.',
       'Logonun arkasına beyaz kutu ya da beyaz daire koyabilirsin.',
       'Filigran olarak bir yazı ya da resim ekler; opaklığını, boyutunu, yerini ve açısını ayarlarsın. Logoyu filigran olarak da kullanabilirsin.']},
  {id:'duzen', ic:'📐', t:'Sayfa düzeni', s:'Sayfa düzeni',
+  p:'Düzen ekranındaki Sayfa düzeni satırına dokununca açılır.',
   li:['Yazı tipi ve boyutu, metin olarak eklenen sorular içindir.',
       'Sayfa yönü dikey ya da yatay olur; sütun sayısı birden altıya kadar çıkar.',
       'Yerleşim: Dengeli soruları sayfalara eşit dağıtır, Sıkı sayfayı sonuna kadar doldurur.',
@@ -6699,6 +6834,7 @@ const GUIDE=[
       'Cevap anahtarı son sayfada, her sayfanın altında ya da her sorunun yanında olabilir; sonuncusu öğretmen nüshası içindir.',
       'Soru çerçevesi ile bütün sorulara aynı çerçeveyi verirsin.']},
  {id:'kitapcik', ic:'📚', t:'Kitapçık, kapak ve öğrenciye özel kopyalar', s:'Kitapçık ve isimli kopyalar',
+  p:'Düzen ekranındaki Kitapçık, optik, kapak satırına dokununca açılır.',
   li:['Kaç kitapçık: tek, A ve B ya da dört kitapçığa kadar; diğer kitapçıklarda sorular karışık sıralanır.',
       'Optik cevap kâğıdı ekle: her kitapçığın sonuna telefonla okunabilen optik form eklenir.',
       {t:'Cevap anahtarı QR kodu: öğrenci son sayfadaki kodu okutup cevaplarını kontrol eder.', s:'Cevap anahtarı kare kodu: öğrenci son sayfadaki kodu okutup cevaplarını kontrol eder.'},
@@ -6725,7 +6861,7 @@ const GUIDE=[
  {id:'optik', ic:'📷', t:'Optik okuma', s:'Optik okuma',
   p:'Optik form, köşelerindeki dört siyah kare ve sağ üstteki form kodu sayesinde telefonla okunur.',
   li:['Öğrenciler balonları kurşun kalemle tamamen doldurur.',
-      'Önizlemedeki Optik düğmesine ya da Kitapçık & Optik sekmesindeki düğmeye dokun.',
+      'Önizlemedeki Optik düğmesine ya da Düzen ekranında Kitapçık, optik, kapak sayfasındaki düğmeye dokun.',
       'Fotoğraf çek ile formu çek; dört köşe kadrajda olsun, gölge düşmesin. Galeriden seç ile birden çok fotoğrafı birlikte okutabilirsin.',
       'Sonuç hemen çıkar: doğru, yanlış, boş, net ve puan. Yanlış okunan bir cevabı kutusuna dokunarak düzeltebilirsin.',
       'Sınıf listesi girdiysen öğrencinin adı kendiliğinden gelir; girmediysen adı sen yazarsın.',
@@ -6744,18 +6880,18 @@ const GUIDE=[
       'Excel düğmesi bütün notları soru soru bir tabloya, Analiz raporu düğmesi okul, ders ve sınıf bilgisiyle A4 bir rapora döker.',
       'Notlar bu teste bağlı olarak telefonda saklanır ve yedeğe girer. Kapatınca, bankadan gelen soruların öğrenci başarısı bankaya işlenir.']},
  {id:'cikti', ic:'🎯', t:'Öğrenme çıktıları tablosu', s:'Öğrenme çıktıları tablosu',
-  li:['Sorular sekmesindeki Öğrenme çıktılarını eşleştir düğmesine dokun.',
+  li:['Düzen ekranındaki Öğrenme çıktıları satırına, açılan sayfada Öğrenme çıktılarını eşleştir düğmesine dokun.',
       'Önce öğrenme çıktılarını yaz; daha önce yazdıkların alttan tek dokunuşla eklenir.',
       'Her sorunun yanındaki listeden ölçtüğü çıktıyı seç.',
       'Tabloyu PDF yap ile soru numaraları, soru sayısı, puan ve oranın olduğu soru dağılım tablosunu alırsın; istersen teste son sayfa olarak da eklenir.']},
  {id:'qr', ic:'🔗', t:'Çözüm QR\'ı', s:'Çözüm kare kodu',
   li:[{t:'Sorunun ⋯ menüsünden Çözüm linki\'ne dokun ve çözüm videosunun adresini yapıştır.', s:'Sorunun üç nokta menüsünden Çözüm linki seçeneğine dokun ve çözüm videosunun adresini yapıştır.'},
       {t:'Sorunun çözüm alanının köşesine küçük bir QR basılır; öğrenci okutup çözümü açar.', s:'Sorunun çözüm alanının köşesine küçük bir kare kod basılır; öğrenci okutup çözümü açar.'},
-      {t:'Kitapçık & Optik sekmesindeki kutuyla bütün çözüm QR\'larını gizleyebilirsin.', s:'Kitapçık ve Optik sekmesindeki kutuyla bütün çözüm kare kodlarını gizleyebilirsin.'}]},
+      {t:'Düzen ekranında Kitapçık, optik, kapak sayfasındaki kutuyla bütün çözüm QR\'larını gizleyebilirsin.', s:'Düzen ekranında Kitapçık, optik, kapak sayfasındaki kutuyla bütün çözüm kare kodlarını gizleyebilirsin.'}]},
  {id:'foy', ic:'📘', t:'Konu anlatım föyü', s:'Konu anlatım föyü',
-  p:'Ana ekrandaki Konu Anlatım Föyü ile bloklardan oluşan çalışma kâğıdı hazırlarsın. İstediğin kadar föy hazırlayabilirsin.',
+  p:'Ana ekrandaki Föy hazırla ile bloklardan oluşan çalışma kâğıdı hazırlarsın. İstediğin kadar föy hazırlayabilirsin.',
   li:[{t:'📂 Föylerim bütün föylerini listeler: Aç ile istediğine geçersin, Kopya aynı föyden yenisini başlatır, Sil iki dokunuşla siler. ＋ Yeni föy boş bir föy açar; öncekiler Föylerim\'de kalır.', s:'Föylerim düğmesi bütün föylerini listeler: Aç ile istediğine geçersin, Kopya aynı föyden yenisini başlatır, Sil iki dokunuşla siler. Yeni föy düğmesi boş bir föy açar; öncekiler Föylerim\'de kalır.'},
-      'Föyler birkaç saniyede bir kendiliğinden kaydedilir; Kitaplık\'taki Föylerim sekmesinden de açılır.',
+      'Föyler birkaç saniyede bir kendiliğinden kaydedilir, ayrıca kaydetmen gerekmez; Kitaplık\'taki Föylerim sekmesinden de açılır.',
       '+ Blok ile başlık, metin, vurgu kutusu, kavram kutusu, formül listesi, tepkime, grafik, tablo, soru, test, etkinlik, eşleştirme, sıralama, boşluk doldurma ya da resim eklersin.',
       'Vurgu kutusunda 23 tür var: Dikkat, Tuzak soru, Bunu sorarlar, İpucu, Hatırlatma, Akılda kalsın, Biliyor musunuz?, Kavram yanılgısı, Çözümlü örnek, Tanım, Kural, Yasa, Formül, Deney, Müfredat dışı ve diğerleri. Türü seçince ona yakışan çerçeve gelir; 15 çerçeveden istediğine geçebilirsin.',
       'Kutunun üstündeki önizleme yazdıkça güncellenir. Açıklama satırına konu ya da sınav yazabilirsin (Asitler ve Bazlar, 2024 AYT gibi); satır başına - koyarsan madde olur.',
@@ -6765,18 +6901,18 @@ const GUIDE=[
       'Sayfa başına 4, 6 ya da 8 soru seçersen her sorunun altında çözüm boşluğu kalır; Akış soruları boşluksuz iki sütuna dizer. İleri Düzey test 8 soru, sayfada 4 olarak gelir.',
       'Cevap anahtarı yatay bir tablo olarak testin sonuna ya da föyün sonuna (bütün testlerin anahtarları bir arada) basılır; Yok seçersen basılmaz.',
       'Grafik bloğunda enerji, ısınma ve soğuma eğrilerinin yanında kendi verinle çizgi ve sütun grafik çizebilirsin.',
-      'Blokları oklarla sıralar, dokunarak düzenlersin.',
-      'Antet · sütun · alt bilgi ayarlarından antet şablonu, föy rengi, tek ya da iki sütun ve sayfa çerçevesi seçilir.',
-      'Logo filigranı açıkken logon her sayfanın ortasına soluk basılır; kareli alanlar ve kutular onu örtmez. Düzen → Logo & Filigran\'da ayrı bir filigran görseli seçtiysen o kullanılır.',
+      {t:'Bloklar kapalı kartlar olarak alt alta durur; kartın başlığında içeriğin ilk satırı görünür. Karta dokununca açılır ve düzenlersin, yeniden dokununca kapanır. Açık kartta ▲ ▼ ile sırasını değiştirir, ✕ ile silersin.', s:'Bloklar kapalı kartlar olarak alt alta durur; kartın başlığında içeriğin ilk satırı görünür. Karta dokununca açılır ve düzenlersin, yeniden dokununca kapanır. Açık kartta yukarı ve aşağı oklarla sırasını değiştirir, çarpıyla silersin.'},
+      'Föy başlığının altındaki Föy ayarları satırından antet şablonu, föy rengi, tek ya da iki sütun, alt bilgi, sayfa çerçevesi ve logo filigranı seçilir.',
+      'Logo filigranı açıkken logon her sayfanın ortasına soluk basılır; kareli alanlar ve kutular onu örtmez. Düzen → Logo ve filigran\'da ayrı bir filigran görseli seçtiysen o kullanılır.',
       'Önizle ile sayfaları görür, Oluştur ile PDF alırsın.']},
  {id:'kitaplik', ic:'🗂️', t:'Kitaplık, panel ve yedek', s:'Kitaplık ve yedek',
   li:['Kitaplık\'ta Bankam soru bankandır, Testlerim kaydettiğin testlerdir, Föylerim hazırladığın konu anlatım föyleridir.',
-      'Soruları Düzen → Sorular\'daki Soruları bankaya kaydet ile eklerken ders, konu, zorluk ve etiket verirsin. Bankada zaten olan soru ikinci kez eklenmez.',
+      'Soruları Düzen ekranındaki Soruları bankaya kaydet ile eklerken ders, konu, zorluk ve etiket verirsin. Bankada zaten olan soru ikinci kez eklenmez.',
       {t:'Her soru kartında doğru cevap, zorluk, öğrenci başarısı ve kaç testte kullanıldığı görünür. ✎ ile ders, konu, zorluk, cevap ve öğrenme çıktısını düzenlersin.', s:'Her soru kartında doğru cevap, zorluk, öğrenci başarısı ve kaç testte kullanıldığı görünür. Kalem düğmesiyle ders, konu, zorluk, cevap ve öğrenme çıktısını düzenlersin.'},
       'Üstteki Kolay, Orta, Zor ve Hiç kullanılmamış düğmeleri bankayı süzer; arama kutusu ders, konu, etiket ve öğrenme çıktısında arar.',
       {t:'🎲 Otomatik test oluştur: konuları, soru sayısını ve zorluk dengesini seç; testamed soruları konulara eşit dağıtarak seçer, istersen son 30 günde kullandığın soruları almaz ve kolaydan zora sıralar.', s:'Otomatik test oluştur düğmesiyle konuları, soru sayısını ve zorluk dengesini seçersin; testamed soruları konulara eşit dağıtarak seçer, istersen son otuz günde kullandığın soruları almaz ve kolaydan zora sıralar.'},
       'Birden çok soruyu seçip ⋯ düğmesiyle zorluk atayabilir, ders ve konusunu değiştirebilir, etiket ekleyebilir ya da silebilirsin.',
-      'Yedek sekmesindeki Yedek dosyası oluştur; bütün soru, test ve föylerini, ayarlarını, logonu, kayıtlı ayarlarını, optik sonuçlarını ve yazılı notlarını tek dosyada toplar.',
+      'Ana ekrandaki Yedek seni Kitaplık\'taki Yedek sekmesine götürür. Yedek dosyası oluştur; bütün soru, test ve föylerini, ayarlarını, logonu, kayıtlı ayarlarını, optik sonuçlarını ve yazılı notlarını tek dosyada toplar.',
       {t:'iPhone\'da 📤 Dosyalar\'a / iCloud\'a kaydet düğmesine dokun, açılan menüde Dosyalar\'a Kaydet\'i seç ve iCloud Drive\'da bir klasöre kaydet.', s:'iPhone\'da Dosyalar\'a ya da iCloud\'a kaydet düğmesine dokun, açılan menüde Dosyalar\'a Kaydet\'i seç ve iCloud Drive\'da bir klasöre kaydet.'},
       'Yeni telefonda Yedekten geri yükle ile dosyayı seç. Soru ve testleri ekle (yedekte föy varsa Soru, test ve föyleri ekle) yalnızca bunları ekler; Her şeyi geri yükle ayarları da getirir. Hiçbir seçenek mevcut sorularını silmez.',
       'Bir haftadır yedek almadıysan ana ekranda hatırlatma çıkar; Şimdi yedekle seni doğrudan yedeğe götürür. Yapay zeka API anahtarların güvenlik için yedeğe girmez.',
@@ -6790,7 +6926,7 @@ const GUIDE=[
       {t:'Yeni bir teste başlamak için Düzen ekranındaki ya da ana ekrandaki ＋ Yeni test düğmesine dokun. Test kayıtlıysa hemen boş teste geçersin; kaydedilmemişse Kaydet ve yeni test onu Testlerim\'e kaydeder, Kaydetmeden başla kaydetmeden geçer (fikrini değiştirirsen Geri al).', s:'Yeni bir teste başlamak için Düzen ekranındaki ya da ana ekrandaki Yeni test düğmesine dokun. Test kayıtlıysa hemen boş teste geçersin; kaydedilmemişse Kaydet ve yeni test onu Testlerim\'e kaydeder, Kaydetmeden başla kaydetmeden geçer; fikrini değiştirirsen Geri al.'},
       'Yeni testte antet, logo, künye ve diğer ayarların aynı kalır; yalnızca sorular boşalır.',
       'Konu anlatım föylerin de kendiliğinden kaydedilir ve Föylerim\'de durur.',
-      {t:'Önizlemede ve Sorular sekmesinde sol alttaki ↶ Geri al son işlemi geri alır: silme, taşıma, sıralama, boyut, boşluk, çerçeve, cevap. ↷ yineler. Bilgisayarda Ctrl+Z de çalışır.', s:'Önizlemede ve Sorular sekmesinde sol alttaki Geri al düğmesi son işlemi geri alır: silme, taşıma, sıralama, boyut, boşluk, çerçeve ve cevap. Yanındaki ok yineler.'},
+      {t:'Önizlemede ve Düzen ekranındaki soru listesinde sol alttaki ↶ Geri al son işlemi geri alır: silme, taşıma, sıralama, boyut, boşluk, çerçeve, cevap. ↷ yineler. Bilgisayarda Ctrl+Z de çalışır.', s:'Önizlemede ve Düzen ekranındaki soru listesinde sol alttaki Geri al düğmesi son işlemi geri alır: silme, taşıma, sıralama, boyut, boşluk, çerçeve ve cevap. Yanındaki ok yineler.'},
       'Uygulamayı internet varken bir kez açtıktan sonra internetsiz de çalışır; ana ekranın en altında internetsiz çalışır yazar. Güncelleme denetimi ve yapay zeka için internet gerekir.']},
  {id:'guncel', ic:'🔄', t:'Güncellemeler', s:'Güncellemeler',
   li:['Yeni sürüm çıkınca üstte Yeni sürüm hazır şeridi görünür; Güncelle\'ye dokunman yeterli.',
@@ -13907,7 +14043,7 @@ function pdfChecks(){
   if((cfg.pts || cfg.yazili) && real.length){
     const tot=real.reduce((a,q)=>a+(+q.pt||0),0);
     if(tot!==100) out.push({k:'pt:'+tot,lv:'warn',ic:'💯',t:'Puanların toplamı '+tot,
-      d:'Toplam 100 olmalıysa Sorular sekmesinde “Toplam puan”ı yeniden yaz; puan sorulara kendiliğinden dağılır.',fix:'pts'});
+      d:'Toplam 100 olmalıysa Düzen ekranında “Toplam puan”ı yeniden yaz; puan sorulara kendiliğinden dağılır.',fix:'pts'});
   }
   const low=[];
   (PAGES||[]).forEach(pg=>(pg.items||[]).forEach(it=>{ const q=it.q; if(!q || q.type==='note' || q.src || !q.w || !it.w) return; if(q.w/it.w<3) low.push({id:q.id,num:it.num}); }));
@@ -14165,7 +14301,7 @@ function drawLibBody(){
   shownIds=shown.map(x=>x.id);
   body.innerHTML='';
   if(!bankItems.length){
-    body.innerHTML='<div class="lempty">Henüz kayıtlı soru yok.<br>Testteki soruları <b>Düzen → Sorular → Soruları bankaya kaydet</b> ile buraya eklersin.</div>';
+    body.innerHTML='<div class="lempty">Henüz kayıtlı soru yok.<br>Testteki soruları <b>Düzen → Soruları bankaya kaydet</b> ile buraya eklersin.</div>';
     foot.style.display='none'; return;
   }
   const tools=document.createElement('div'); tools.className='bk-tools';
@@ -14471,7 +14607,7 @@ function ngRender(){
 function _ngRender(){
   const cfg=CFG||cfgNow(), d=ngLoad(), S=ngStats(d), Q=S.Q;
   $('ng-info').innerHTML='<b>'+esc([cfg.lesson,cfg.kind,cfg.cls].filter(Boolean).join(' · ')||'Sınav')+'</b><span>'+Q.length+' soru · toplam '+_n1(S.maxTot)+' puan'+(d.st.length?' · '+d.st.length+' öğrenci':'')+'</span>'+
-    (S.maxTot<=0?'<em>⚠️ Sorulara puan verilmemiş — Düzen → Sorular\'da “Toplam puan”ı yaz.</em>':'<span>Soru puanları Sorular sekmesinden gelir.</span>');
+    (S.maxTot<=0?'<em>⚠️ Sorulara puan verilmemiş — Düzen ekranında “Toplam puan”ı yaz.</em>':'<span>Soru puanları Düzen ekranındaki soru listesinden gelir.</span>');
   // öğrenci kartı
   const card=$('ng-card'), s=NG_CUR && d.st.find(x=>x.id===NG_CUR);
   if(s){
@@ -15266,8 +15402,8 @@ function foyWmDraw(doc){
 function foyWmHint(){
   const h=$('foy-wm-hint'); if(!h) return;
   const has=!!((window._wmImgData&&window._wmImgData.url)||(window._logoData&&window._logoData.url));
-  h.innerHTML=has?'Düzen → Logo & Filigran\'daki filigran görseli, o yoksa logo kullanılır. Kareli alanlar ve kutular filigranı örtmez.'
-    :'<b>Önce logo yükle:</b> Düzen → Logo & Filigran sekmesinden logonu ya da filigran görselini seç.';
+  h.innerHTML=has?'Düzen → Logo ve filigran\'daki filigran görseli, o yoksa logo kullanılır. Kareli alanlar ve kutular filigranı örtmez.'
+    :'<b>Önce logo yükle:</b> Düzen → Logo ve filigran satırından logonu ya da filigran görselini seç.';
 }
 
 /* ── kurulum ── */
@@ -15772,6 +15908,313 @@ function _vkStart(){
   }
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',_vkStart); else _vkStart();
+
+/* ═════════ YENİ TASARIM: sade ana ekran · sekmesiz Düzen · katlanır föy blokları ═════════
+   Var olan öğeler (id'leri, olayları) korunur; yalnızca yerleri ve görünümleri değişir. */
+const RD_IC={
+  test:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>',
+  foy:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',
+  lib:'<path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="m15.6 5.3 3.5-.9 3.3 15-3.5.9z"/>',
+  panel:'<path d="M4 20V11M10 20V5M16 20v-6M2 20h20"/>',
+  help:'<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .8-1 1.5v.4"/><path d="M12 17h.01"/>',
+  backup:'<path d="M7 18a4.5 4.5 0 0 1-.6-9 6 6 0 0 1 11.6 1.5A3.8 3.8 0 0 1 17.5 18z"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>',
+  img:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/>',
+  ai:'<path d="M12 3l2 6.5L20.5 12 14 14.5 12 21l-2-6.5L3.5 12 10 9.5z"/>',
+  bank:'<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+  note:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5"/>',
+  look:'<path d="M12 3a9 9 0 1 0 0 18c1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.7 1.7-1.7h2A4.6 4.6 0 0 0 21 10.6C21 6.4 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.1"/><circle cx="10" cy="7" r="1.1"/><circle cx="14.5" cy="7" r="1.1"/>',
+  info:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h6M7 14h10"/>',
+  layout:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M4 9h8M12 13h8"/>',
+  logo:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 16-5-5-9 9"/>',
+  key:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h1M8 12h1M8 16h1M12 8h4M12 12h4M12 16h4"/>',
+  margin:'<rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7.5" y="7.5" width="9" height="9" rx="1"/>',
+  star:'<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8L3.5 9.7l5.9-.9z"/>',
+  target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4 5.3 5.3"/>'
+};
+function rdIc(n,s){ s=s||22; return '<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(RD_IC[n]||'')+'</svg>'; }
+function rdRowHTML(ic,t,sub,attrs,extra){ return '<button type="button" class="rd-row" '+(attrs||'')+'><span class="rd-ic">'+rdIc(ic)+'</span><span class="rd-tx"><b>'+t+'</b>'+(sub!=null?'<small>'+sub+'</small>':'')+'</span>'+(extra!=null?extra:'<span class="rd-chev">›</span>')+'</button>'; }
+
+/* ── tam ekran ayar sayfası: var olan öğeleri içine taşır, kapanınca yerine koyar ── */
+let _rdSheet=null;
+function rdSheet(title,nodes,onClose,help){
+  rdSheetClose(true);
+  const ov=document.createElement('div'); ov.className='rd-sheet';
+  ov.innerHTML='<div class="rd-sh-h"><button type="button" class="rd-sh-x">‹ Geri</button><b>'+esc(title)+'</b><button type="button" class="rd-sh-ok">Tamam</button></div><div class="rd-sh-b"></div>';
+  const body=ov.querySelector('.rd-sh-b'), back=[];
+  nodes.forEach(n=>{ if(!n) return; back.push([n,n.parentNode,n.nextSibling]); body.appendChild(n); });
+  if(help){ const hb=document.createElement('button'); hb.type='button'; hb.className='rd-sh-help'; hb.innerHTML=rdIc('help',17)+'<span>Kılavuzda bu bölüm</span>';
+    hb.onclick=()=>{ try{ openGuide(help); }catch(_){} }; body.appendChild(hb); }
+  ov.querySelector('.rd-sh-x').onclick=()=>rdSheetClose();
+  ov.querySelector('.rd-sh-ok').onclick=()=>rdSheetClose();
+  document.body.appendChild(ov);
+  _rdSheet={ov,back,onClose};
+  requestAnimationFrame(()=>requestAnimationFrame(()=>ov.classList.add('on')));
+  return body;
+}
+function rdSheetClose(quick){
+  const s=_rdSheet; if(!s) return false; _rdSheet=null;
+  for(let k=s.back.length-1;k>=0;k--){ const [n,p,nx]=s.back[k]; if(p) p.insertBefore(n,(nx && nx.parentNode===p)?nx:null); }
+  try{ s.onClose && s.onClose(); }catch(_){}
+  if(quick) s.ov.remove(); else { s.ov.classList.remove('on'); setTimeout(()=>s.ov.remove(),230); }
+  return true;
+}
+/* ── alttan açılan seçim penceresi ── */
+function rdAction(title,desc,rows,top){
+  document.querySelectorAll('.rd-act-ov').forEach(x=>x.remove());
+  const ov=document.createElement('div'); ov.className='rd-act-ov';
+  ov.innerHTML='<div class="rd-act" role="dialog"><div class="rd-grab"></div><h3>'+esc(title)+'</h3>'+(desc?'<p>'+desc+'</p>':'')+(top||'')+
+    rows.map((r,i)=>rdRowHTML(r.ic,esc(r.t),r.s!=null?esc(r.s):null,'data-i="'+i+'"')).join('')+
+    '<button type="button" class="rd-cancel">Vazgeç</button></div>';
+  const close=()=>{ ov.classList.remove('on'); setTimeout(()=>ov.remove(),180); };
+  ov.onclick=e=>{
+    if(e.target===ov || e.target.closest('.rd-cancel')){ close(); return; }
+    const b=e.target.closest('[data-i]'); if(b){ const r=rows[+b.dataset.i]; ov.remove(); r.fn(); return; }
+    const c=e.target.closest('[data-c]'); if(c){ ov.remove(); (top && rdAction._top && rdAction._top[c.dataset.c]) && rdAction._top[c.dataset.c](); }
+  };
+  document.body.appendChild(ov);
+  requestAnimationFrame(()=>ov.classList.add('on'));
+  return ov;
+}
+
+/* ═════ 1. Ana ekran ═════ */
+function rdHome(){
+  const h=$('s-home'); if(!h || h.classList.contains('rd')) return;
+  h.classList.add('rd');
+  const tool=(a,ic,t,s)=>rdRowHTML(ic,t,s,'data-a="'+a+'"','');
+  const w=document.createElement('div'); w.id='rd-home';
+  w.innerHTML='<div class="rdh-hi">Bugün ne hazırlıyoruz?</div>'+
+    '<div class="rdh-big">'+
+      '<button type="button" class="rdh-tile" data-a="test"><span class="rdh-ic">'+rdIc('test',26)+'</span><b>Test hazırla</b><small>Kitaptan, fotoğraftan ya da bankadan soru seç</small></button>'+
+      '<button type="button" class="rdh-tile foy" data-a="foy"><span class="rdh-ic">'+rdIc('foy',26)+'</span><b>Föy hazırla</b><small>Konu anlatımı, örnek ve test bölümleri</small></button>'+
+    '</div>'+
+    '<div class="rd-sec off" id="rdh-cont-t">Devam et</div><div id="rdh-cont"><div id="rdh-foy"></div></div>'+
+    '<div class="rd-sec">Araçlar</div>'+
+    '<div class="rdh-tools">'+tool('lib','lib','Kitaplık','Sorular, testler, föyler')+tool('panel','panel','Panel','Hedef ve takvim')+
+      tool('help','help','Kılavuz','Yazılı ve sesli anlatım')+tool('bk','backup','Yedek','iCloud\'a yedekle')+'</div>';
+  h.insertBefore(w,h.firstChild);
+  const en=$('engine'); if(en) w.appendChild(en);
+  const hc=$('homecards'); if(hc) $('rdh-cont').insertBefore(hc,$('rdh-foy'));
+  w.addEventListener('click',e=>{
+    const b=e.target.closest('[data-a]'); if(!b || b.closest('#homecards')) return;
+    const a=b.dataset.a;
+    if(a==='test') rdTestStart();
+    else if(a==='foy') go('foy');
+    else if(a==='lib') go('lib');
+    else if(a==='panel') go('panel');
+    else if(a==='help') openGuide();
+    else if(a==='bk'){ window._libWant='yedek'; go('lib'); }
+    else if(a==='fc') go('foy');
+    else if(a==='fn'){ go('foy'); try{ foyNew(); }catch(_){} }
+  });
+  const mo=new MutationObserver(rdHomeSec); mo.observe($('rdh-cont'),{childList:true,subtree:true});
+}
+function rdHomeFoy(){
+  const box=$('rdh-foy'); if(!box) return;
+  const n=(typeof foyBlocks!=='undefined')?foyBlocks.length:0, t=(($('foy-title')||{}).value||'').trim();
+  if(!n && !t){ box.innerHTML=''; return; }
+  box.innerHTML='<div class="hcard foyc"><div class="hc-ic">📘</div><div class="hc-tx"><b>Hazırladığın föy</b><small>'+esc([t||'Adsız föy',n+' blok'].join(' · '))+'</small></div>'+
+    '<div class="hc-btns"><button type="button" class="hc-x" data-a="fn">＋ Yeni föy</button><button type="button" class="hc-go" data-a="fc">Devam et →</button></div></div>';
+}
+function rdHomeSec(){ const t=$('rdh-cont-t'), c=$('rdh-cont'); if(t && c) t.classList.toggle('off', !c.querySelector('.hcard')); }
+function rdTestStart(){
+  const nq=(typeof qs!=='undefined')?qs.filter(q=>q && q.type!=='note').length:0;
+  let top='';
+  if(nq){
+    top='<div class="rd-cur">Şu an açık test: <b>'+esc(_testName())+' · '+nq+' soru</b>. Eklediğin sorular bu teste girer.'+
+      '<div class="rd-cur-b"><button type="button" data-c="nt">＋ Yeni test</button><button type="button" class="pri" data-c="ct">Teste devam et →</button></div></div>';
+    rdAction._top={nt:()=>newTestDialog(), ct:()=>{ go('set'); }};
+  }
+  rdAction(nq?'Soru ekle':'Test hazırla', nq?'':'Soruları nereden alacaksın?',[
+    {ic:'test',t:'PDF aç',s:'Kitap, föy ya da deneme sınavı',fn:()=>pick('pdf')},
+    {ic:'img',t:'Fotoğraf aç',s:'Tahtadan, defterden ya da kitaptan',fn:()=>pick('img')},
+    {ic:'bank',t:'Soru bankasından',s:'Biriktirdiğin sorular, otomatik test',fn:()=>{ go('lib'); try{ libTab('bank'); }catch(_){} }},
+    {ic:'ai',t:'Yapay zekaya yazdır',s:'Konuyu yaz, sorular gelsin',fn:()=>go('ai')}
+  ],top);
+}
+
+/* ═════ 2. Soru seçme ═════ */
+function rdView(){
+  const bar=$('bar'); if(!bar || bar.classList.contains('rd')) return;
+  bar.classList.add('rd');
+  const nav=bar.querySelector('.brow.nav'); if(!nav) return;
+  const fb=document.createElement('button'); fb.type='button'; fb.className='bb rd-file'; fb.id='rd-file';
+  fb.innerHTML='<span>Dosya</span><i>▾</i>'; fb.onclick=rdFileSheet;
+  nav.insertBefore(fb,nav.firstChild);
+  const g=nav.querySelector('.gap'); if(g) nav.insertBefore(g,fb.nextSibling);
+  rdFileName();
+}
+function rdFileName(){
+  const fb=$('rd-file'); if(!fb) return;
+  const n=(typeof active!=='undefined' && active)?active.name:'';
+  fb.querySelector('span').textContent=n||'Dosya ekle';
+  fb.title=n||'';
+}
+function rdFileSheet(){
+  const chips=[...$('files').querySelectorAll('.ftab')], list=(typeof docs!=='undefined')?docs:[];
+  const rows=list.map((d,i)=>({ic:d.kind==='img'?'img':'test', t:(active&&active.id===d.id?'✓ ':'')+d.name, s:d.kind==='img'?'Fotoğraf':((d.pages||'')+' sayfa'), fn:()=>{ if(chips[i]) chips[i].click(); }}));
+  rows.push({ic:'test',t:'＋ PDF ekle',s:'Başka bir kitap ya da deneme',fn:()=>pick('pdf')});
+  rows.push({ic:'img',t:'＋ Fotoğraf ekle',s:'Galeriden ya da kameradan',fn:()=>pick('img')});
+  rdAction('Dosyalar', list.length?'Açık dosyalar arasında geçiş yap ya da yeni dosya ekle.':'', rows);
+}
+
+/* ═════ 3. Düzen: sekmeler yerine soru listesi + ayar özetleri ═════ */
+const RD_PANES=[
+  ['p1','look','Görünüm','Antet şablonu, renk, yazı'],
+  ['p3','info','Sınav bilgileri','Okul, ders, test adı, tarih'],
+  ['p5','layout','Sayfa düzeni','Sütun, yazılı modu, cevap anahtarı'],
+  ['p4','logo','Logo ve filigran',''],
+  ['p6','key','Kitapçık, optik, kapak',''],
+  ['oc','target','Öğrenme çıktıları','Eşleştir, dağılım tablosu'],
+  ['p2','margin','Kenar boşlukları',''],
+  ['ps','star','Kayıtlı ayarlarım','Bu ayarları kaydet, tek dokunuşla geri getir']
+];
+function rdSet(){
+  const s=$('s-set'); if(!s || s.classList.contains('rd')) return;
+  s.classList.add('rd');
+  const panes=s.querySelector('.set-panes'), p7=$('p7'); if(!panes || !p7) return;
+  // soru listesinin başlığına "＋ Soru ekle"
+  const sec=p7.querySelector('.sec');
+  if(sec){ const hd=document.createElement('div'); hd.className='rd-qhead'; p7.insertBefore(hd,sec); hd.appendChild(sec);
+    const ad=document.createElement('button'); ad.type='button'; ad.className='rd-qadd'; ad.textContent='＋ Soru ekle'; ad.onclick=rdAddQ; hd.appendChild(ad); }
+  // öğrenme çıktıları ve kayıtlı ayarlar kendi sayfalarına
+  const hold=document.createElement('div'); hold.className='rd-hold'; hold.id='rd-hold'; panes.appendChild(hold);
+  const ocb=p7.querySelector('.set-act'), occ=$('f-octable')&&$('f-octable').closest('.chk');
+  const oc=document.createElement('div'); oc.id='rd-oc';
+  oc.innerHTML='<p class="rd-note" style="font-size:13px;color:var(--soft);font-weight:600;line-height:1.45;margin:0 2px 12px">Soruları öğrenme çıktılarıyla eşleştir; teste soru dağılım tablosu ekleyebilirsin.</p>';
+  if(ocb) oc.appendChild(ocb); if(occ) oc.appendChild(occ);
+  hold.appendChild(oc);
+  const pb=$('presetbox'); if(pb) hold.appendChild(pb);
+  // ayar satırları
+  const rows=document.createElement('div'); rows.id='rd-setrows';
+  rows.innerHTML='<div class="rd-sec">Ayarlar</div><div class="rd-grp">'+RD_PANES.map(r=>rdRowHTML(r[1],r[2],'<span data-sum="'+r[0]+'">'+esc(r[3])+'</span>','data-p="'+r[0]+'"',
+    r[0]==='p1'?'<img class="rd-thumb" id="rd-hdrthumb" alt=""/><span class="rd-chev">›</span>':null)).join('')+'</div>';
+  p7.appendChild(rows);
+  rows.addEventListener('click',e=>{ const b=e.target.closest('[data-p]'); if(b) rdOpenPane(b.dataset.p); });
+  const img=$('hdrprev-img'); if(img) img.addEventListener('load',()=>{ const t=$('rd-hdrthumb'); if(t) t.src=img.src; });
+  // sekme değiştirme isteği → ilgili ayar sayfası (gizli sekmelerde "açık" olan hep Sorular'dır)
+  _rdTab('p7');
+  const prev=window.switchSetTab;
+  window.switchSetTab=function(id){
+    if(id==='p7' || !id){ rdSheetClose(true); _rdTab('p7'); const sp=document.querySelector('.set-panes'); if(sp) sp.scrollTop=0; }
+    else if(!(_rdSheet && _rdSheet.pane===id)) rdOpenPane(id);
+    ((prev&&prev._afters)||[]).forEach(f=>{ try{ f(id); }catch(_){} });
+  };
+  window.switchSetTab._afters=(prev&&prev._afters)||[];
+}
+function _rdTab(id){ document.querySelectorAll('.set-tab').forEach(b=>b.classList.toggle('on',b.dataset.pane===id)); }
+const RD_HELP={p1:'sablon',p2:'kunye',p3:'kunye',p4:'logo',p5:'duzen',p6:'kitapcik',oc:'cikti',ps:'sablon'};
+function rdOpenPane(id){
+  const r=RD_PANES.find(x=>x[0]===id); if(!r) return;
+  let nodes;
+  if(id==='oc') nodes=[$('rd-oc')];
+  else if(id==='ps') nodes=[$('presetbox')];
+  else nodes=[(id==='p1'||id==='p3'||id==='p4')?$('hdrprev'):null, $(id)];
+  rdSheet(r[2],nodes,()=>{ _rdTab('p7'); rdSetSums(); try{ preview(); }catch(_){} try{ undoUI(); }catch(_){} }, RD_HELP[id]);
+  _rdSheet.pane=id; _rdTab(id); try{ undoUI(); }catch(_){}
+  if(id==='p1'||id==='p3'||id==='p4'){ try{ hdrPreview(); }catch(_){} }
+  if(id==='ps'){ try{ presetsRender(); }catch(_){} }
+}
+function _rdSelTxt(id){ const e=$(id); if(!e || !e.options || e.selectedIndex<0) return ''; return (e.options[e.selectedIndex].text||'').split('—')[0].split('(')[0].trim(); }
+function _rdChk(id){ const e=$(id); return !!(e && e.checked); }
+function _rdVal(id){ const e=$(id); return e?String(e.value||'').trim():''; }
+function rdSetSums(){
+  const put=(k,t)=>{ const e=document.querySelector('[data-sum="'+k+'"]'); if(e && t) e.textContent=t; };
+  put('p1',[_rdSelTxt('f-template'),_rdSelTxt('f-hdrtheme')].filter(Boolean).join(' · '));
+  put('p3',[_rdVal('f-lesson'),_rdVal('f-kind'),_rdVal('f-date')].filter(Boolean).join(' · ')||'Okul, ders, test adı, tarih');
+  put('p5',[_rdSelTxt('f-orient'),_rdSelTxt('f-cols'),_rdChk('f-yazili')?'yazılı modu':'',_rdChk('f-key')?'cevap anahtarı':''].filter(Boolean).join(' · '));
+  put('p4',[window._logoData?'Logo var':'Logo yok',(_rdVal('f-watermark')||window._wmImgData)?'filigran var':''].filter(Boolean).join(' · '));
+  put('p6',[_rdSelTxt('f-book'),_rdChk('f-optic')?'optik form':'',_rdChk('f-cover')?'kapak':'',_rdChk('f-stu-on')?'öğrenciye özel':''].filter(Boolean).join(' · '));
+  put('p2',[_rdVal('f-mleft'),_rdVal('f-mright'),_rdVal('f-mtop'),_rdVal('f-mbot')].join(' · ')+' mm');
+  let np=0; try{ np=(presetsGet()||[]).length; }catch(_){}
+  put('ps',np?np+' kayıtlı ayar':'Bu ayarları kaydet, tek dokunuşla geri getir');
+}
+function rdAddQ(){
+  rdAction('Soru ekle','',[
+    {ic:'test',t:'PDF ya da fotoğraftan',s:'Kitaptan kırp',fn:()=>addMore('file')},
+    {ic:'bank',t:'Soru bankasından',s:'Biriktirdiğin sorular',fn:()=>addMore('bank')},
+    {ic:'note',t:'Bilgi kutusu',s:'Sorular arasına uyarı, ipucu, not',fn:()=>addNoteBlock()},
+    {ic:'ai',t:'Yapay zekaya yazdır',s:'Konuya göre yeni sorular',fn:()=>go('ai')}
+  ]);
+}
+
+/* ═════ 4. Föy: tek ayar satırı + katlanır bloklar ═════ */
+function rdFoy(){
+  const fh=$('foy-head'); if(!fh || fh.classList.contains('rd')) return;
+  fh.classList.add('rd');
+  const t=$('foy-title'); if(t) t.placeholder='Föy başlığı (örn. Atomun Yapısı)';
+  const r=document.createElement('div'); r.innerHTML=rdRowHTML('gear','Föy ayarları','<span id="rd-foyset-sum"></span>','id="rd-foyset"');
+  const row=r.firstChild; row.classList.add('rd-foyset'); row.onclick=rdFoySheet;
+  const det=$('foy-set'); fh.insertBefore(row,det);
+  const fb=$('foy-bar'); if(fb){ fb.classList.add('rd'); fb.querySelectorAll('button').forEach(b=>{ if(/foySave\(\)/.test(b.getAttribute('onclick')||'')) b.classList.add('rd-hide'); }); }
+  rdFoySum();
+}
+function rdFoySum(){
+  const e=$('rd-foyset-sum'); if(!e) return;
+  let s=''; try{ foySetSummary(); s=($('foy-set-sum')||{}).textContent||''; }catch(_){}
+  const fr=_rdSelTxt('foy-frame'), wm=_rdChk('foy-wm-on');
+  e.textContent=[s,fr&&!/^Yok/.test(fr)?fr.toLocaleLowerCase('tr'):'',wm?'filigran':''].filter(Boolean).join(' · ')||'Antet, sütun, renk, çerçeve';
+}
+function rdFoySheet(){
+  const det=$('foy-set'), b=det&&det.querySelector('.foy-set-b'), th=[...document.querySelectorAll('#foy-head .foy-theme')];
+  rdSheet('Föy ayarları',[b].concat(th),()=>{ rdFoySum(); try{ foyRender(); }catch(_){} },'foy');
+  try{ foyHdrPreview(); }catch(_){}
+}
+let _rdOpenB=null, _rdSeen=new WeakSet(), _rdSeenAny=false;
+function rdBlockSum(b){
+  if(!b) return '';
+  const one=s=>String(s||'').split('\n').map(x=>x.trim()).filter(Boolean)[0]||'';
+  let t='';
+  if(b.type==='test') t=(b.title||'Test')+' · '+((b.qs||[]).length)+' soru';
+  else if(b.type==='note') t=one(b.text)||one(b.yw)||one(b.cq)||one(b.sub);
+  else if(b.type==='space') t=(b.h||20)+' mm boşluk';
+  else if(b.type==='pdf') t=b.cap||(b.img?'Görsel':'Görsel seçilmedi');
+  else if(b.type==='graf') t=b.title||({enerji:'Enerji grafiği',isinma:'Isınma eğrisi',sogumma:'Soğuma eğrisi',derisim:'Derişim–zaman',cizgi:'Çizgi grafik',sutun:'Sütun grafik'})[b.chart]||'Grafik';
+  else t=one(b.title)||one(b.label)||one(b.text)||one(b.items)||one(b.rows)||one(b.eqs);
+  return t?foyTxt(t).replace(/\*\*/g,''):'boş — düzenlemek için dokun';
+}
+function rdFoyCards(){
+  const cards=[...document.querySelectorAll('#foy-list .foy-b')];
+  // yalnızca tek bir blok yeni eklendiyse onu aç (başka föy açılınca hepsi kapalı gelir)
+  const fresh=foyBlocks.filter(b=>b && typeof b==='object' && !_rdSeen.has(b));
+  if(_rdSeenAny && fresh.length===1) _rdOpenB=fresh[0];
+  foyBlocks.forEach(b=>{ if(b && typeof b==='object') _rdSeen.add(b); }); _rdSeenAny=true;
+  cards.forEach((c,i)=>{
+    const b=foyBlocks[i]; if(!b) return;
+    c.classList.add('rd-acc'); c.classList.toggle('rd-open',b===_rdOpenB);
+    const bar=c.querySelector('.foy-b-bar'); if(!bar) return;
+    if(!bar.querySelector('.rd-bsum')){
+      const sm=document.createElement('span'); sm.className='rd-bsum';
+      const tt=bar.querySelector('.foy-b-t'); if(tt) tt.after(sm); else bar.appendChild(sm);
+      const ch=document.createElement('span'); ch.className='rd-bchev'; ch.textContent='›'; bar.appendChild(ch);
+    }
+    bar.querySelector('.rd-bsum').textContent=rdBlockSum(b);
+    bar.onclick=e=>{
+      if(e.target.closest('.foy-b-actions')) return;
+      _rdOpenB=(_rdOpenB===b)?null:b; rdFoyCards();
+      if(_rdOpenB===b) setTimeout(()=>{ try{ c.scrollIntoView({block:'nearest',behavior:'smooth'}); }catch(_){} try{ vkPaintAll(); }catch(_){} },40);
+    };
+  });
+}
+
+/* ═════ başlangıç ═════ */
+function _rdStart(){
+  rdHome(); rdView(); rdSet(); rdFoy();
+  _wrapAfter('go',s=>{
+    rdSheetClose(true);
+    document.body.classList.toggle('rd-flow',s==='view'||s==='set'||s==='prev');
+    if(s==='home'){ rdHomeFoy(); rdHomeSec(); }
+    if(s==='set'){ rdSetSums(); setTimeout(()=>{ try{ hdrPreview(); }catch(_){} },60); }
+    if(s==='foy') rdFoySum();
+  });
+  _wrapAfter('foyRender',rdFoyCards);
+  _wrapAfter('drawFiles',rdFileName);
+  const b0=window.back;
+  if(typeof b0==='function' && !b0._rd){ const nb=function(){ if(rdSheetClose()) return; const a=document.querySelectorAll('.rd-act-ov'); if(a.length){ a.forEach(x=>x.remove()); return; } return b0.apply(this,arguments); }; nb._rd=1; nb._afters=b0._afters; window.back=nb; }
+  document.body.classList.toggle('rd-flow',['view','set','prev'].indexOf(typeof screen==='string'?screen:'home')>=0);
+  rdHomeFoy(); rdHomeSec(); rdFoyCards();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',_rdStart); else _rdStart();
 </script>
 
 <!-- ════════ Öğretmen Paneli & İstatistik Modülü ════════ -->
